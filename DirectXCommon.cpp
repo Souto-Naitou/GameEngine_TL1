@@ -1,4 +1,4 @@
-﻿#include "DirectXCommon.h"
+#include "DirectXCommon.h"
 #include <cassert>
 #include <format>
 #include "Logger.h"
@@ -205,10 +205,10 @@ int DirectXCommon::Initialize()
     rasterizerDesc_.FillMode = D3D12_FILL_MODE_SOLID;
 
     /// ShaderをCompileする
-    vertexShaderBlob_ = CompileShader(L"Object3D.VS.hlsl", L"vs_6_0", dxcUtils_.Get(), dxcCompiler_.Get(), includeHandler_.Get());
+    vertexShaderBlob_ = CompileShader(L"Resources/shaders/Object3D.VS.hlsl", L"vs_6_6", dxcUtils_.Get(), dxcCompiler_.Get(), includeHandler_.Get());
     assert(vertexShaderBlob_ != nullptr);
 
-    pixelShaderBlob_ = CompileShader(L"Object3D.PS.hlsl", L"ps_6_0", dxcUtils_.Get(), dxcCompiler_.Get(), includeHandler_.Get());
+    pixelShaderBlob_ = CompileShader(L"Resources/shaders/Object3D.PS.hlsl", L"ps_6_6", dxcUtils_.Get(), dxcCompiler_.Get(), includeHandler_.Get());
     assert(pixelShaderBlob_ != nullptr);
 
     // DespStencilResource

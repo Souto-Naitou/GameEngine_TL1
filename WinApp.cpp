@@ -1,4 +1,4 @@
-﻿#include "WinApp.h"
+#include "WinApp.h"
 #include <cassert>
 
 void WinApp::Initialize()

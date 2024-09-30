@@ -5,30 +5,30 @@
 
 void CreateDevice(Microsoft::WRL::ComPtr<ID3D12Device>& _device, Microsoft::WRL::ComPtr<IDXGIAdapter4>& _adapter)
 {
-	/// D3D12Device‚Ì¶¬
+	/// D3D12Deviceã®ç”Ÿæˆ
 
-	// ‹@”\ƒŒƒxƒ‹‚ÆƒƒOo—Í—p‚Ì•¶š—ñ
+	// æ©Ÿèƒ½ãƒ¬ãƒ™ãƒ«ã¨ãƒ­ã‚°å‡ºåŠ›ç”¨ã®æ–‡å­—åˆ—
 	D3D_FEATURE_LEVEL featureLevels[] =
 	{
 		D3D_FEATURE_LEVEL_12_2, D3D_FEATURE_LEVEL_12_1, D3D_FEATURE_LEVEL_12_0
 	};
 	const char* featureLevelStrings[] = { "12.2", "12.1", "12.0" };
-	// ‚‚¢‡‚É¶¬‚Å‚«‚é‚©‚µ‚Ä‚¢‚­
+	// é«˜ã„é †ã«ç”Ÿæˆã§ãã‚‹ã‹è©¦ã—ã¦ã„ã
 	for (size_t i = 0; i < _countof(featureLevels); ++i)
 	{
-		// Ì—p‚µ‚½ƒAƒ_ƒvƒ^[‚ÅƒfƒoƒCƒX‚ğ¶¬
+		// æ¡ç”¨ã—ãŸã‚¢ãƒ€ãƒ—ã‚¿ãƒ¼ã§ãƒ‡ãƒã‚¤ã‚¹ã‚’ç”Ÿæˆ
 		HRESULT hr = D3D12CreateDevice(_adapter.Get(), featureLevels[i], IID_PPV_ARGS(&_device));
-		// w’è‚µ‚½‹@”\ƒŒƒxƒ‹‚ÅƒfƒoƒCƒX‚ª¶¬‚Å‚«‚½‚©‚ğŠm”F
+		// æŒ‡å®šã—ãŸæ©Ÿèƒ½ãƒ¬ãƒ™ãƒ«ã§ãƒ‡ãƒã‚¤ã‚¹ãŒç”Ÿæˆã§ããŸã‹ã‚’ç¢ºèª
 		if (SUCCEEDED(hr))
 		{
-			// ¶¬‚Å‚«‚½‚Ì‚ÅƒƒOo—Í‚ğs‚Á‚Äƒ‹[ƒv‚ğ”²‚¯‚é
+			// ç”Ÿæˆã§ããŸã®ã§ãƒ­ã‚°å‡ºåŠ›ã‚’è¡Œã£ã¦ãƒ«ãƒ¼ãƒ—ã‚’æŠœã‘ã‚‹
 			Log(std::format("FeatureLevel : {}\n", featureLevelStrings[i]));
 			break;
 		}
 	}
-	// ƒfƒoƒCƒX‚Ì¶¬‚ª‚¤‚Ü‚­‚¢‚©‚È‚©‚Á‚½‚Ì‚Å‹N“®‚Å‚«‚È‚¢
-	assert(_device && "ƒfƒoƒCƒX‚Ì¶¬‚É¸”s");
-	Log("Complete create D3D12Device!!!\n"); // ‰Šú‰»Š®—¹‚ÌƒƒO‚ğo—Í
+	// ãƒ‡ãƒã‚¤ã‚¹ã®ç”ŸæˆãŒã†ã¾ãã„ã‹ãªã‹ã£ãŸã®ã§èµ·å‹•ã§ããªã„
+	assert(_device && "ãƒ‡ãƒã‚¤ã‚¹ã®ç”Ÿæˆã«å¤±æ•—");
+	Log("Complete create D3D12Device!!!\n"); // åˆæœŸåŒ–å®Œäº†ã®ãƒ­ã‚°ã‚’å‡ºåŠ›
 }
 
 void PauseError(Microsoft::WRL::ComPtr<ID3D12Device>& _device, Microsoft::WRL::ComPtr<ID3D12InfoQueue>& _infoQ)
@@ -36,29 +36,29 @@ void PauseError(Microsoft::WRL::ComPtr<ID3D12Device>& _device, Microsoft::WRL::C
 #ifdef _DEBUG
 	if (SUCCEEDED(_device->QueryInterface(IID_PPV_ARGS(&_infoQ))))
 	{
-		// ‚â‚Î‚¢ƒGƒ‰[‚É~‚Ü‚é@
+		// ã‚„ã°ã„ã‚¨ãƒ©ãƒ¼æ™‚ã«æ­¢ã¾ã‚‹ã€€
 		_infoQ->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_CORRUPTION, true);
-		// ƒGƒ‰[‚É~‚Ü‚é <- ‰ğ•ú–Y‚ê‚ª”»–¾‚µ‚½‚çAƒRƒƒ“ƒgƒAƒEƒg
+		// ã‚¨ãƒ©ãƒ¼æ™‚ã«æ­¢ã¾ã‚‹ <- è§£æ”¾å¿˜ã‚ŒãŒåˆ¤æ˜ã—ãŸã‚‰ã€ã‚³ãƒ¡ãƒ³ãƒˆã‚¢ã‚¦ãƒˆ
 		_infoQ->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_ERROR, true);
-		//Œx‚É~‚Ü‚é
+		//è­¦å‘Šæ™‚ã«æ­¢ã¾ã‚‹
 		_infoQ->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_WARNING, true);
-		// ŠJ•ú
+		// é–‹æ”¾
 		_infoQ->Release();
 
-		// —}§‚·‚éƒƒbƒZ[ƒW‚ÌID
+		// æŠ‘åˆ¶ã™ã‚‹ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã®ID
 		D3D12_MESSAGE_ID denyIds[] = {
-			// Windows11‚Å‚ÌDXGIƒfƒoƒbƒOƒŒƒCƒ„[‚ÆDX12ƒfƒoƒbƒOƒŒƒCƒ„[‚Ì‘ŠŒİì—pƒoƒO‚É‚æ‚éƒGƒ‰[ƒƒbƒZ[ƒW
+			// Windows11ã§ã®DXGIãƒ‡ãƒãƒƒã‚°ãƒ¬ã‚¤ãƒ¤ãƒ¼ã¨DX12ãƒ‡ãƒãƒƒã‚°ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ç›¸äº’ä½œç”¨ãƒã‚°ã«ã‚ˆã‚‹ã‚¨ãƒ©ãƒ¼ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸
 			D3D12_MESSAGE_ID_RESOURCE_BARRIER_MISMATCHING_COMMAND_LIST_TYPE
 		};
 
-		// —}§‚·‚éƒŒƒxƒ‹
+		// æŠ‘åˆ¶ã™ã‚‹ãƒ¬ãƒ™ãƒ«
 		D3D12_MESSAGE_SEVERITY severities[] = { D3D12_MESSAGE_SEVERITY_INFO };
 		D3D12_INFO_QUEUE_FILTER filter{};
 		filter.DenyList.NumIDs = _countof(denyIds);
 		filter.DenyList.pIDList = denyIds;
 		filter.DenyList.NumSeverities = _countof(severities);
 		filter.DenyList.pSeverityList = severities;
-		// w’è‚µ‚½ƒƒbƒZ[ƒW‚Ì•\¦‚ğ§ŒÀ‚·‚é
+		// æŒ‡å®šã—ãŸãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã®è¡¨ç¤ºã‚’åˆ¶é™ã™ã‚‹
 		_infoQ->PushStorageFilter(&filter);
 	}
 #endif // _DEBUG
