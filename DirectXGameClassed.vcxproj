@@ -43,6 +43,12 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <IncludePath>$(ProjectDir);$(ProjectDir)/Utility;$(ProjectDir)/Core/Win32/;$(ProjectDir)/Core/DirectX12;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <IncludePath>$(ProjectDir);$(ProjectDir)/Utility;$(ProjectDir)/Core/Win32/;$(ProjectDir)/Core/DirectX12;$(IncludePath)</IncludePath>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -94,20 +100,25 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </FxCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="ConvertString\ConvertString.cpp" />
-    <ClCompile Include="DirectXCommon.cpp" />
-    <ClCompile Include="DirectXCommonHelper.cpp" />
-    <ClCompile Include="Logger.cpp" />
+    <ClCompile Include="Core\DirectX12\BlendMode.cpp" />
+    <ClCompile Include="Core\DirectX12\DirectXCommon.cpp" />
+    <ClCompile Include="Core\DirectX12\DirectXCommonHelper.cpp" />
+    <ClCompile Include="Core\DirectX12\PipelineState.cpp" />
+    <ClCompile Include="Core\Win32\Win32Application.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="WinApp.cpp" />
+    <ClCompile Include="Utility\ConvertString.cpp" />
+    <ClCompile Include="Utility\Logger.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ConvertString\ConvertString.h" />
-    <ClInclude Include="Logger.h" />
+    <ClInclude Include="Core\DirectX12\BaseConfigurator.h" />
+    <ClInclude Include="Core\DirectX12\BlendMode.h" />
+    <ClInclude Include="Core\DirectX12\DirectXCommon.h" />
+    <ClInclude Include="Core\DirectX12\DirectXCommonHelper.h" />
+    <ClInclude Include="Core\DirectX12\PipelineState.h" />
+    <ClInclude Include="Core\Win32\Win32Application.h" />
     <ClInclude Include="structs.h" />
-    <ClInclude Include="WinApp.h" />
-    <ClInclude Include="DirectXCommon.h" />
-    <ClInclude Include="DirectXCommonHelper.h" />
+    <ClInclude Include="Utility\ConvertString.h" />
+    <ClInclude Include="Utility\Logger.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig">

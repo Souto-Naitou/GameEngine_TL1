@@ -13,51 +13,78 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="WinApp">
-      <UniqueIdentifier>{5c7e8f14-1bd4-48f2-80b9-2ad2124c12e5}</UniqueIdentifier>
-    </Filter>
     <Filter Include="DirectX">
       <UniqueIdentifier>{ac715943-915e-4e06-b2a7-2d0007b822e9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DirectX\BlendMode">
+      <UniqueIdentifier>{5b932dba-25b3-44fa-b520-44d23baacdf8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DirectX\BaseConfigurator">
+      <UniqueIdentifier>{9ad991a4-8c33-405f-9e02-a17777a109bd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Win32Application">
+      <UniqueIdentifier>{5c7e8f14-1bd4-48f2-80b9-2ad2124c12e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DirectX\Common">
+      <UniqueIdentifier>{9d45caf0-12bd-4b07-8640-26c638ce0ae7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DirectX\PipelineState">
+      <UniqueIdentifier>{dc0cdaae-faef-4cfa-846c-ad71ac93d2d1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="WinApp.cpp">
+    <ClCompile Include="Core\DirectX12\DirectXCommonHelper.cpp">
+      <Filter>DirectX</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\DirectX12\BlendMode.cpp">
+      <Filter>DirectX\BlendMode</Filter>
+    </ClCompile>
+    <ClCompile Include="Utility\ConvertString.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="DirectXCommon.cpp">
+    <ClCompile Include="Utility\Logger.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="ConvertString\ConvertString.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="Core\Win32\Win32Application.cpp">
+      <Filter>Win32Application</Filter>
     </ClCompile>
-    <ClCompile Include="Logger.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="Core\DirectX12\DirectXCommon.cpp">
+      <Filter>DirectX\Common</Filter>
     </ClCompile>
-    <ClCompile Include="DirectXCommonHelper.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="Core\DirectX12\PipelineState.cpp">
+      <Filter>DirectX\PipelineState</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="WinApp.h">
-      <Filter>WinApp</Filter>
-    </ClInclude>
-    <ClInclude Include="DirectXCommon.h">
-      <Filter>DirectX</Filter>
-    </ClInclude>
-    <ClInclude Include="ConvertString\ConvertString.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Logger.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="DirectXCommonHelper.h">
-      <Filter>DirectX</Filter>
-    </ClInclude>
     <ClInclude Include="structs.h">
       <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\DirectX12\DirectXCommonHelper.h">
+      <Filter>DirectX</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\DirectX12\BlendMode.h">
+      <Filter>DirectX\BlendMode</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\DirectX12\BaseConfigurator.h">
+      <Filter>DirectX\BaseConfigurator</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility\ConvertString.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility\Logger.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Win32\Win32Application.h">
+      <Filter>Win32Application</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\DirectX12\DirectXCommon.h">
+      <Filter>DirectX\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\DirectX12\PipelineState.h">
+      <Filter>DirectX\PipelineState</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

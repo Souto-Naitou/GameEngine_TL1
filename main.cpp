@@ -1,24 +1,24 @@
-﻿#include <Windows.h>
-#include "DirectXCommon.h"
-#include "WinApp.h"
+#include <Windows.h>
+#include <DirectXCommon.h>
+#include <Win32Application.h>
 
 int _stdcall WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
-	WinApp* pWinApp = WinApp::GetInstance();
+	Win32Application* pWin32App = Win32Application::GetInstance();
 	DirectXCommon* pDirectXCommon = DirectXCommon::GetInstance();
 
-	pWinApp->Initialize();
-	pWinApp->ShowWnd();
+	pWin32App->Initialize();
+	pWin32App->ShowWnd();
 
 	pDirectXCommon->Initialize();
 
-	while (pWinApp->GetMsg() != WM_QUIT)
+	while (pWin32App->GetMsg() != WM_QUIT)
 	{
 
 	}
 
 	pDirectXCommon->Finalize();
-	pWinApp->Finalize();
+	pWin32App->Finalize();
 
 	return 0;
 }
