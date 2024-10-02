@@ -2,9 +2,9 @@
 #include <cassert>
 #include <format>
 #include "Logger.h"
-#include "ConvertString/ConvertString.h"
+#include "ConvertString.h"
 #include "DirectXCommonHelper.h"
-#include "WinApp.h"
+#include "Win32Application.h"
 
 #pragma comment(lib, "d3d12.lib")
 #pragma comment(lib, "dxgi.lib")
@@ -24,7 +24,7 @@ int DirectXCommon::Initialize()
 #endif // _DEBUG
 
     // ウィンドウハンドルを取得
-    hwnd_ = WinApp::GetInstance()->GetHwnd();
+    hwnd_ = Win32Application::GetInstance()->GetHwnd();
 
     /// DXGIファクトリーの生成
     hr_ = CreateDXGIFactory(IID_PPV_ARGS(&dxgiFactory_));
@@ -196,7 +196,8 @@ int DirectXCommon::Initialize()
 
     /// BlendStateの設定
     // すべての色要素を書き込む
-    blendDesc_.RenderTarget[0].RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
+    pBlendModeConfigurator_ = std::make_unique<BlendMode::Configurator>();
+    pBlendModeConfigurator_->Initialize(BlendMode::BlendModes::Normal);
 
     /// RasterizerStateの設定
     // 裏面（時計回り）を表示しない (背面カリング)
@@ -235,7 +236,7 @@ int DirectXCommon::Initialize()
     graphicsPipelineStateDesc_.InputLayout = inputLayoutDesc_;	// InputLayout
     graphicsPipelineStateDesc_.VS = { vertexShaderBlob_.Get()->GetBufferPointer(), vertexShaderBlob_.Get()->GetBufferSize() }; // VertexShader
     graphicsPipelineStateDesc_.PS = { pixelShaderBlob_.Get()->GetBufferPointer(), pixelShaderBlob_.Get()->GetBufferSize() }; // PixelShader
-    graphicsPipelineStateDesc_.BlendState = blendDesc_; // BlendState
+    graphicsPipelineStateDesc_.BlendState = pBlendModeConfigurator_->GetDesc(); // BlendState
     graphicsPipelineStateDesc_.RasterizerState = rasterizerDesc_; // RasterizerState
     // 書き込むRTVの情報
     graphicsPipelineStateDesc_.NumRenderTargets = 1;

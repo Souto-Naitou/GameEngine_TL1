@@ -1,25 +1,25 @@
-#include "WinApp.h"
+#include "Win32Application.h"
 #include <cassert>
 
-void WinApp::Initialize()
+void Win32Application::Initialize()
 {
 	HRESULT hr = CoInitializeEx(0, COINIT_MULTITHREADED);
 	assert(SUCCEEDED(hr) && "初期化失敗");
 
-    wc_.lpfnWndProc = WinApp::WindowProcedure;
+    wc_.lpfnWndProc = Win32Application::WindowProcedure;
     wc_.lpszClassName = L"DXWindowClass";
     wc_.hInstance = GetModuleHandle(nullptr);
     wc_.hCursor = LoadCursor(nullptr, IDC_ARROW);
     RegisterClass(&wc_);
 }
 
-void WinApp::Finalize()
+void Win32Application::Finalize()
 {
 	CloseWindow(hwnd_);
 	CoUninitialize();
 }
 
-void WinApp::ShowWnd()
+void Win32Application::ShowWnd()
 {
     RECT wrc = { 0,0,kClientWidth, kClientHeight };
     AdjustWindowRect(&wrc, WS_OVERLAPPEDWINDOW, false);
@@ -39,7 +39,7 @@ void WinApp::ShowWnd()
 	ShowWindow(hwnd_, SW_SHOW);
 }
 
-UINT WinApp::GetMsg()
+UINT Win32Application::GetMsg()
 {
 	// Windowにメッセージが来てたら最優先で処理させる
 	if (PeekMessage(&msg_, NULL, 0, 0, PM_REMOVE))
@@ -50,7 +50,7 @@ UINT WinApp::GetMsg()
 	return msg_.message;
 }
 
-LRESULT CALLBACK WinApp::WindowProcedure(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
+LRESULT CALLBACK Win32Application::WindowProcedure(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 {
 	//if (ImGui_ImplWin32_WndProcHandler(hwnd, msg, wparam, lparam))
 	//{

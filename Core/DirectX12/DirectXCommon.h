@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include <d3d12.h>
 #include <dxgi1_6.h>
 #include <dxcapi.h>
@@ -7,6 +7,9 @@
 #include <Windows.h>
 #include <stdint.h>
 #include <string>
+#include <memory>
+
+#include <BlendMode.h>
 
 class DirectXCommon
 {
@@ -18,7 +21,14 @@ public:
 
     static DirectXCommon* GetInstance() { static DirectXCommon instance; return &instance;}
 
+    /// <summary>
+    /// 初期化
+    /// </summary>
+    /// <returns>成否</returns>
     int Initialize();
+    /// <summary>
+    /// 終了処理
+    /// </summary>
     void Finalize();
 
 private:
@@ -63,7 +73,6 @@ private:
     D3D12_ROOT_SIGNATURE_DESC                           descriptionRootSignature_       = {};
     D3D12_INPUT_ELEMENT_DESC                            inputElementDescs_[3]           = {};
     D3D12_INPUT_LAYOUT_DESC                             inputLayoutDesc_                = {};
-    D3D12_BLEND_DESC                                    blendDesc_                      = {};
     D3D12_DEPTH_STENCIL_VIEW_DESC                       dsvDesc_                        = {};
     D3D12_DEPTH_STENCIL_DESC                            depthStencilDesc_               = {};
     D3D12_GRAPHICS_PIPELINE_STATE_DESC                  graphicsPipelineStateDesc_      = {};
@@ -71,6 +80,7 @@ private:
     D3D12_RASTERIZER_DESC                               rasterizerDesc_                 = {};
     HANDLE                                              fenceEvent_                     = {};
     uint64_t                                            fenceValue_                     = 0u;            // フェンス値
+    std::unique_ptr<BlendMode::Configurator>            pBlendModeConfigurator_         = nullptr;
 
 private: /// ======= プライベート関数
     Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> CreateDescriptorHeap(
