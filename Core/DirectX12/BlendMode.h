@@ -1,6 +1,6 @@
 #pragma once
 
-#include <BaseConfigurator.h>
+#include <BaseConfiguratorForEnum.h>
 
 #include <utility>
 
@@ -26,15 +26,10 @@ namespace BlendMode
     /// <summary>
     /// 設定クラス
     /// </summary>
-    class Configurator : public BaseConfigurator<BlendModes>
+    class Configurator : public BaseConfiguratorForEnum<BlendModes, D3D12_BLEND_DESC>
     {
     public:
         void Initialize(BlendModes _mode);
-        void ApplyMode(BlendModes _mode);
-
-        inline D3D12_BLEND_DESC GetDesc() const { return blendDesc_; }
-
-    private:
-        D3D12_BLEND_DESC blendDesc_;
+        void Apply(BlendModes _mode) override;
     };
 }

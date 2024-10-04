@@ -19,9 +19,6 @@
     <Filter Include="DirectX\BlendMode">
       <UniqueIdentifier>{5b932dba-25b3-44fa-b520-44d23baacdf8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="DirectX\BaseConfigurator">
-      <UniqueIdentifier>{9ad991a4-8c33-405f-9e02-a17777a109bd}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Win32Application">
       <UniqueIdentifier>{5c7e8f14-1bd4-48f2-80b9-2ad2124c12e5}</UniqueIdentifier>
     </Filter>
@@ -30,6 +27,27 @@
     </Filter>
     <Filter Include="DirectX\PipelineState">
       <UniqueIdentifier>{dc0cdaae-faef-4cfa-846c-ad71ac93d2d1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DirectX\RootSignature">
+      <UniqueIdentifier>{3733786b-2f27-45f8-a15c-95a13cee6629}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DirectX\Base">
+      <UniqueIdentifier>{9ad991a4-8c33-405f-9e02-a17777a109bd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DirectX\RootParameters">
+      <UniqueIdentifier>{d0ca0545-14ee-4419-80ca-fc131d33ab81}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DescriptorRange">
+      <UniqueIdentifier>{1572e578-5cca-4055-ada6-291866a11f0c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DirectX\StaticSamplers">
+      <UniqueIdentifier>{157749c7-58b7-4a90-a8fd-141c10e3d03a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DirectX\InputLayout">
+      <UniqueIdentifier>{1a60ef8f-6baf-4077-96e8-013876dc02b3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DirectX\ShaderBin">
+      <UniqueIdentifier>{186f5fa7-290c-4651-8c9a-81889bac6192}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -57,6 +75,24 @@
     <ClCompile Include="Core\DirectX12\PipelineState.cpp">
       <Filter>DirectX\PipelineState</Filter>
     </ClCompile>
+    <ClCompile Include="Core\DirectX12\RootSignature.cpp">
+      <Filter>DirectX\RootSignature</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\DirectX12\RootParameters.cpp">
+      <Filter>DirectX\RootParameters</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\DirectX12\DescriptorRange.cpp">
+      <Filter>DescriptorRange</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\DirectX12\StaticSamplers.cpp">
+      <Filter>DirectX\StaticSamplers</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\DirectX12\InputLayout.cpp">
+      <Filter>DirectX\InputLayout</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\DirectX12\ShaderBin.cpp">
+      <Filter>DirectX\ShaderBin</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="structs.h">
@@ -69,7 +105,7 @@
       <Filter>DirectX\BlendMode</Filter>
     </ClInclude>
     <ClInclude Include="Core\DirectX12\BaseConfigurator.h">
-      <Filter>DirectX\BaseConfigurator</Filter>
+      <Filter>DirectX\Base</Filter>
     </ClInclude>
     <ClInclude Include="Utility\ConvertString.h">
       <Filter>ヘッダー ファイル</Filter>
@@ -85,6 +121,27 @@
     </ClInclude>
     <ClInclude Include="Core\DirectX12\PipelineState.h">
       <Filter>DirectX\PipelineState</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\DirectX12\RootSignature.h">
+      <Filter>DirectX\RootSignature</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\DirectX12\BaseConfiguratorForEnum.h">
+      <Filter>DirectX\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\DirectX12\RootParameters.h">
+      <Filter>DirectX\RootParameters</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\DirectX12\DescriptorRange.h">
+      <Filter>DescriptorRange</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\DirectX12\StaticSamplers.h">
+      <Filter>DirectX\StaticSamplers</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\DirectX12\InputLayout.h">
+      <Filter>DirectX\InputLayout</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\DirectX12\ShaderBin.h">
+      <Filter>DirectX\ShaderBin</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

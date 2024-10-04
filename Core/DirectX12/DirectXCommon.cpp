@@ -236,7 +236,7 @@ int DirectXCommon::Initialize()
     graphicsPipelineStateDesc_.InputLayout = inputLayoutDesc_;	// InputLayout
     graphicsPipelineStateDesc_.VS = { vertexShaderBlob_.Get()->GetBufferPointer(), vertexShaderBlob_.Get()->GetBufferSize() }; // VertexShader
     graphicsPipelineStateDesc_.PS = { pixelShaderBlob_.Get()->GetBufferPointer(), pixelShaderBlob_.Get()->GetBufferSize() }; // PixelShader
-    graphicsPipelineStateDesc_.BlendState = pBlendModeConfigurator_->GetDesc(); // BlendState
+    graphicsPipelineStateDesc_.BlendState = pBlendModeConfigurator_->Get(); // BlendState
     graphicsPipelineStateDesc_.RasterizerState = rasterizerDesc_; // RasterizerState
     // 書き込むRTVの情報
     graphicsPipelineStateDesc_.NumRenderTargets = 1;

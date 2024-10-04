@@ -2,8 +2,11 @@
 
 #include <BaseConfigurator.h>
 #include <BlendMode.h>
+#include <RootSignature.h>
+#include <InputLayout.h>
 
 #include <memory>
+#include <d3d12.h>
 
 namespace PipelineState
 {
@@ -24,11 +27,15 @@ namespace PipelineState
     class Configurator : public BaseConfigurator<PipelineState::Types>
     {
     public:
-        void Initialize(Types _type);
+        Configurator();
+        
+        void Initialize(Types _type, ID3D12Device* _device);
 
 
     private:
         std::unique_ptr<BlendMode::Configurator> pBlendModeCfg_;
+        std::unique_ptr<RootSignature::Configurator> pRootSignature_;
+        std::unique_ptr<InputLayout::Configurator> pInputLayoutDesc_;
     };
 
 }

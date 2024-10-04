@@ -101,9 +101,15 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Core\DirectX12\BlendMode.cpp" />
+    <ClCompile Include="Core\DirectX12\DescriptorRange.cpp" />
     <ClCompile Include="Core\DirectX12\DirectXCommon.cpp" />
     <ClCompile Include="Core\DirectX12\DirectXCommonHelper.cpp" />
+    <ClCompile Include="Core\DirectX12\InputLayout.cpp" />
     <ClCompile Include="Core\DirectX12\PipelineState.cpp" />
+    <ClCompile Include="Core\DirectX12\RootParameters.cpp" />
+    <ClCompile Include="Core\DirectX12\RootSignature.cpp" />
+    <ClCompile Include="Core\DirectX12\ShaderBin.cpp" />
+    <ClCompile Include="Core\DirectX12\StaticSamplers.cpp" />
     <ClCompile Include="Core\Win32\Win32Application.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Utility\ConvertString.cpp" />
@@ -111,10 +117,17 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\DirectX12\BaseConfigurator.h" />
+    <ClInclude Include="Core\DirectX12\BaseConfiguratorForEnum.h" />
     <ClInclude Include="Core\DirectX12\BlendMode.h" />
+    <ClInclude Include="Core\DirectX12\DescriptorRange.h" />
     <ClInclude Include="Core\DirectX12\DirectXCommon.h" />
     <ClInclude Include="Core\DirectX12\DirectXCommonHelper.h" />
+    <ClInclude Include="Core\DirectX12\InputLayout.h" />
     <ClInclude Include="Core\DirectX12\PipelineState.h" />
+    <ClInclude Include="Core\DirectX12\RootParameters.h" />
+    <ClInclude Include="Core\DirectX12\RootSignature.h" />
+    <ClInclude Include="Core\DirectX12\ShaderBin.h" />
+    <ClInclude Include="Core\DirectX12\StaticSamplers.h" />
     <ClInclude Include="Core\Win32\Win32Application.h" />
     <ClInclude Include="structs.h" />
     <ClInclude Include="Utility\ConvertString.h" />
