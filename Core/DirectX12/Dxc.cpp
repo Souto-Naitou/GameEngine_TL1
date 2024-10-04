@@ -1,31 +1,53 @@
-#include "ShaderBin.h"
+#include <Dxc.h>
 
 #include <Utility/Logger.h>
 #include <Utility/ConvertString.h>
 #include <format>
 #include <cassert>
 
-void ShaderBin::Configurator::Initialize()
+void DxcUtils::Configurator::Initialize()
 {
     /// dxcCompilerを初期化
-    HRESULT hr_ = DxcCreateInstance(CLSID_DxcUtils, IID_PPV_ARGS(&dxcUtils_));
+    HRESULT hr_ = DxcCreateInstance(CLSID_DxcUtils, IID_PPV_ARGS(&current_));
     assert(SUCCEEDED(hr_) && "DirectX Shader Compilerの初期化に失敗しました [DxcUtils]");
-    hr_ = DxcCreateInstance(CLSID_DxcCompiler, IID_PPV_ARGS(&dxcCompiler_));
-    assert(SUCCEEDED(hr_) && "DirectX Shader Compilerの初期化に失敗しました [DxcCompiler]");
-
-    /// 現時点でincludeはしないが、includeに対応するための設定を行っておく
-    hr_ = dxcUtils_->CreateDefaultIncludeHandler(&includeHandler_);
-    assert(SUCCEEDED(hr_) && "includeに対応する設定に失敗しました");
-
-    /// ShaderをCompileする
-    vertexShaderBlob_ = CompileShader(L"Resources/shaders/Object3D.VS.hlsl", L"vs_6_6", dxcUtils_.Get(), dxcCompiler_.Get(), includeHandler_.Get());
-    assert(vertexShaderBlob_ != nullptr);
-
-    pixelShaderBlob_ = CompileShader(L"Resources/shaders/Object3D.PS.hlsl", L"ps_6_6", dxcUtils_.Get(), dxcCompiler_.Get(), includeHandler_.Get());
-    assert(pixelShaderBlob_ != nullptr);
 }
 
-Microsoft::WRL::ComPtr<IDxcBlob> ShaderBin::Configurator::CompileShader(
+void DxcCompiler::Configurator::Initialize()
+{
+    HRESULT hr_ = DxcCreateInstance(CLSID_DxcCompiler, IID_PPV_ARGS(&current_));
+    assert(SUCCEEDED(hr_) && "DirectX Shader Compilerの初期化に失敗しました [DxcCompiler]");
+}
+
+void IncludeHandler::Configurator::Initialize()
+{
+    /// 現時点でincludeはしないが、includeに対応するための設定を行っておく
+    HRESULT hr_ = DxcUtils::Configurator::GetInstance()->Get()->CreateDefaultIncludeHandler(&current_);
+    assert(SUCCEEDED(hr_) && "includeに対応する設定に失敗しました");
+}
+
+void VertexShaderBlob::Configurator::Initialize()
+{
+    pDxcUtils_ = DxcUtils::Configurator::GetInstance();
+    pDxcCompiler_ = DxcCompiler::Configurator::GetInstance();
+    pIncludeHandler_ = IncludeHandler::Configurator::GetInstance();
+
+    /// ShaderをCompileする
+    current_ = CompileShader(L"Resources/shaders/Object3D.VS.hlsl", L"vs_6_6", pDxcUtils_->Get().Get(), pDxcCompiler_->Get().Get(), pIncludeHandler_->Get().Get());
+    assert(current_ != nullptr);
+}
+
+void PixelShaderBlob::Configurator::initialize()
+{
+    pDxcUtils_ = DxcUtils::Configurator::GetInstance();
+    pDxcCompiler_ = DxcCompiler::Configurator::GetInstance();
+    pIncludeHandler_ = IncludeHandler::Configurator::GetInstance();
+
+    /// ShaderをCompileする
+    current_ = CompileShader(L"Resources/shaders/Object3D.PS.hlsl", L"ps_6_6", pDxcUtils_->Get().Get(), pDxcCompiler_->Get().Get(), pIncludeHandler_->Get().Get());
+    assert(current_ != nullptr);
+}
+
+Microsoft::WRL::ComPtr<IDxcBlob> CompileShader(
     const std::wstring& filePath,
     const wchar_t* profile,
     const Microsoft::WRL::ComPtr<IDxcUtils>& dxcUtils,
@@ -90,3 +112,4 @@ Microsoft::WRL::ComPtr<IDxcBlob> ShaderBin::Configurator::CompileShader(
     // 実行用のバイナリを返却
     return shaderBlob;
 }
+

@@ -8,6 +8,14 @@ PipelineState::Configurator::Configurator()
     pInputLayoutDesc_ = std::make_unique<InputLayout::Configurator>();
 
     pRootSignature_ = std::make_unique<RootSignature::Configurator>();
+
+    pVertexShaderBlob_ = std::make_unique<VertexShaderBlob::Configurator>();
+
+    pPixelShaderBlob_ = std::make_unique<PixelShaderBlob::Configurator>();
+
+    pRasterizerState_ = std::make_unique<RasterizerState::Configurator>();
+
+    pDepthStencil_ = std::make_unique<DepthStencil::Configurator>();
 }
 
 void PipelineState::Configurator::Initialize(Types _type, ID3D12Device* _device)
@@ -23,13 +31,13 @@ void PipelineState::Configurator::Initialize(Types _type, ID3D12Device* _device)
     // InputLayout
     pipelineStateDesc.InputLayout = pInputLayoutDesc_->Get();
     // VertexShader
-    pipelineStateDesc.VS = { vertexShaderBlob_.Get()->GetBufferPointer(), vertexShaderBlob_.Get()->GetBufferSize() };
+    pipelineStateDesc.VS = { pVertexShaderBlob_->Get().Get()->GetBufferPointer(), pVertexShaderBlob_->Get().Get()->GetBufferSize()};
     // PixelShader
-    pipelineStateDesc.PS = { pixelShaderBlob_.Get()->GetBufferPointer(), pixelShaderBlob_.Get()->GetBufferSize() };
+    pipelineStateDesc.PS = { pPixelShaderBlob_->Get().Get()->GetBufferPointer(), pPixelShaderBlob_->Get().Get()->GetBufferSize()};
     // BlendState
     pipelineStateDesc.BlendState = pBlendModeCfg_->Get();
     // RasterizerState
-    pipelineStateDesc.RasterizerState = rasterizerDesc_;
+    pipelineStateDesc.RasterizerState = pRasterizerState_->Get();
     // 書き込むRTVの情報
     pipelineStateDesc.NumRenderTargets = 1;
     pipelineStateDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
@@ -40,6 +48,6 @@ void PipelineState::Configurator::Initialize(Types _type, ID3D12Device* _device)
     pipelineStateDesc.SampleDesc.Count = 1;
     pipelineStateDesc.SampleMask = D3D12_DEFAULT_SAMPLE_MASK;
     // DepthStencilの設定
-    pipelineStateDesc.DepthStencilState = depthStencilDesc_;
+    pipelineStateDesc.DepthStencilState = pDepthStencil_->Get();
     pipelineStateDesc.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
 }

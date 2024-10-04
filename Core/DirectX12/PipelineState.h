@@ -4,6 +4,9 @@
 #include <BlendMode.h>
 #include <RootSignature.h>
 #include <InputLayout.h>
+#include <Dxc.h>
+#include <RasterizerState.h>
+#include <DepthStencil.h>
 
 #include <memory>
 #include <d3d12.h>
@@ -36,6 +39,10 @@ namespace PipelineState
         std::unique_ptr<BlendMode::Configurator> pBlendModeCfg_;
         std::unique_ptr<RootSignature::Configurator> pRootSignature_;
         std::unique_ptr<InputLayout::Configurator> pInputLayoutDesc_;
+        std::unique_ptr<VertexShaderBlob::Configurator> pVertexShaderBlob_;
+        std::unique_ptr<PixelShaderBlob::Configurator> pPixelShaderBlob_;
+        std::unique_ptr<RasterizerState::Configurator> pRasterizerState_;
+        std::unique_ptr<DepthStencil::Configurator> pDepthStencil_;
     };
 
 }

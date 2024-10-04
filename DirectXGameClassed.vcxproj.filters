@@ -49,6 +49,12 @@
     <Filter Include="DirectX\ShaderBin">
       <UniqueIdentifier>{186f5fa7-290c-4651-8c9a-81889bac6192}</UniqueIdentifier>
     </Filter>
+    <Filter Include="DirectX\RasterizerState">
+      <UniqueIdentifier>{b63e5338-56e9-4b17-830f-e9d3c7461e03}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DirectX\DepthStencil">
+      <UniqueIdentifier>{47e3114f-9fbb-445f-866e-e4f4424942dc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -90,8 +96,14 @@
     <ClCompile Include="Core\DirectX12\InputLayout.cpp">
       <Filter>DirectX\InputLayout</Filter>
     </ClCompile>
-    <ClCompile Include="Core\DirectX12\ShaderBin.cpp">
+    <ClCompile Include="Core\DirectX12\Dxc.cpp">
       <Filter>DirectX\ShaderBin</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\DirectX12\RasterizerState.cpp">
+      <Filter>DirectX\RasterizerState</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\DirectX12\DepthStencil.cpp">
+      <Filter>DirectX\DepthStencil</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -140,8 +152,14 @@
     <ClInclude Include="Core\DirectX12\InputLayout.h">
       <Filter>DirectX\InputLayout</Filter>
     </ClInclude>
-    <ClInclude Include="Core\DirectX12\ShaderBin.h">
+    <ClInclude Include="Core\DirectX12\Dxc.h">
       <Filter>DirectX\ShaderBin</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\DirectX12\RasterizerState.h">
+      <Filter>DirectX\RasterizerState</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\DirectX12\DepthStencil.h">
+      <Filter>DirectX\DepthStencil</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
