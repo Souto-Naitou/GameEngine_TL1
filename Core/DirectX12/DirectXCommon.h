@@ -9,7 +9,7 @@
 #include <string>
 #include <memory>
 
-#include <BlendMode.h>
+#include <PipelineState.h>
 
 class DirectXCommon
 {
@@ -52,14 +52,8 @@ private:
     Microsoft::WRL::ComPtr<IDXGISwapChain4>             swapChain_                      = nullptr;      // スワップチェーン
     Microsoft::WRL::ComPtr<ID3D12Resource>              swapChainResources[2]           = {};           // スワップチェーンリソース
     Microsoft::WRL::ComPtr<ID3D12Fence>                 fence_                          = nullptr;      // フェンス
-    Microsoft::WRL::ComPtr<IDxcUtils>                   dxcUtils_                       = nullptr;      // DirectX Shader Utilities
-    Microsoft::WRL::ComPtr<IDxcCompiler3>               dxcCompiler_                    = nullptr;      // DirectX Shader Compiler
-    Microsoft::WRL::ComPtr<IDxcIncludeHandler>          includeHandler_                 = nullptr;      // インクルードハンドラ
     Microsoft::WRL::ComPtr<ID3D12RootSignature>         rootSignature_                  = nullptr;      // ルート署名
-    Microsoft::WRL::ComPtr<IDxcBlob>                    vertexShaderBlob_               = nullptr;
-    Microsoft::WRL::ComPtr<IDxcBlob>                    pixelShaderBlob_                = nullptr;
     Microsoft::WRL::ComPtr<ID3D12Resource>              depthStencilResource_           = nullptr;
-    Microsoft::WRL::ComPtr<ID3D12PipelineState>         graphicsPipelineState_          = nullptr;
     Microsoft::WRL::ComPtr<ID3D12DescriptorHeap>        rtvDescriptorHeap_              = nullptr;
     Microsoft::WRL::ComPtr<ID3D12DescriptorHeap>        srvDescriptorHeap_              = nullptr;
     Microsoft::WRL::ComPtr<ID3DBlob>                    signatureBlob_                  = nullptr;
@@ -71,16 +65,12 @@ private:
     D3D12_RENDER_TARGET_VIEW_DESC                       rtvDesc_                        = {};           // RTVの設定
     D3D12_DESCRIPTOR_RANGE                              descriptorRange_[1]             = {};
     D3D12_ROOT_SIGNATURE_DESC                           descriptionRootSignature_       = {};
-    D3D12_INPUT_ELEMENT_DESC                            inputElementDescs_[3]           = {};
     D3D12_INPUT_LAYOUT_DESC                             inputLayoutDesc_                = {};
     D3D12_DEPTH_STENCIL_VIEW_DESC                       dsvDesc_                        = {};
     D3D12_DEPTH_STENCIL_DESC                            depthStencilDesc_               = {};
-    D3D12_GRAPHICS_PIPELINE_STATE_DESC                  graphicsPipelineStateDesc_      = {};
-    D3D12_STATIC_SAMPLER_DESC                           staticSamplers_[1]              = {};
-    D3D12_RASTERIZER_DESC                               rasterizerDesc_                 = {};
     HANDLE                                              fenceEvent_                     = {};
     uint64_t                                            fenceValue_                     = 0u;            // フェンス値
-    std::unique_ptr<BlendMode::Configurator>            pBlendModeConfigurator_         = nullptr;
+    std::unique_ptr<PipelineState::Configurator>        pPipelineConfig_                = nullptr;
 
 private: /// ======= プライベート関数
     Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> CreateDescriptorHeap(

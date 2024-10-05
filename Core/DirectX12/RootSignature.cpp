@@ -11,10 +11,10 @@ void RootSignature::Configurator::Initialize(ID3D12Device* _device)
     pStaticSamplerCfg_->Initialize();
 
     current_.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
-    current_.pParameters = &pRootParametersCfg_->Get()[0];           // ルートパラメータ配列へのポインタ
-    current_.NumParameters = pRootParametersCfg_->Get().size();      // 配列の長さ
-    current_.pStaticSamplers = &pStaticSamplerCfg_->Get()[0];
-    current_.NumStaticSamplers = pStaticSamplerCfg_->Get().size();
+    current_.pParameters = pRootParametersCfg_->Get()->data();           // ルートパラメータ配列へのポインタ
+    current_.NumParameters = pRootParametersCfg_->Get()->size();      // 配列の長さ
+    current_.pStaticSamplers = pStaticSamplerCfg_->Get()->data();
+    current_.NumStaticSamplers = pStaticSamplerCfg_->Get()->size();
 
     /// シリアライズしてバイナリにする
     HRESULT hr_ = D3D12SerializeRootSignature(&current_,

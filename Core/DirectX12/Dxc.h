@@ -5,11 +5,11 @@
 #include <dxcapi.h>
 #include <string>
 
-#include <BaseConfigurator.h>
+#include <BaseConfiguratorForComPtr.h>
 
 namespace DxcUtils
 {
-    class Configurator : public BaseConfigurator<Microsoft::WRL::ComPtr<IDxcUtils>>
+    class Configurator : public BaseConfiguratorForComPtr<IDxcUtils>
     {
     public:
         Configurator(const Configurator&) = delete;
@@ -17,8 +17,9 @@ namespace DxcUtils
         Configurator& operator=(const Configurator&) = delete;
         Configurator& operator=(const Configurator&&) = delete;
 
-        void Initialize();
+        void Initialize() override;
         static Configurator* GetInstance() { static Configurator instance; return &instance; }
+
     private:
         Configurator() = default;
     };
@@ -26,7 +27,7 @@ namespace DxcUtils
 
 namespace DxcCompiler
 {
-    class Configurator : public BaseConfigurator<Microsoft::WRL::ComPtr<IDxcCompiler3>>
+    class Configurator : public BaseConfiguratorForComPtr<IDxcCompiler3>
     {
     public:
         Configurator(const Configurator&) = delete;
@@ -34,7 +35,7 @@ namespace DxcCompiler
         Configurator& operator=(const Configurator&) = delete;
         Configurator& operator=(const Configurator&&) = delete;
 
-        void Initialize();
+        void Initialize() override;
         static Configurator* GetInstance() { static Configurator instance; return &instance; }
 
     private:
@@ -44,7 +45,7 @@ namespace DxcCompiler
 
 namespace IncludeHandler
 {
-    class Configurator : public BaseConfigurator<Microsoft::WRL::ComPtr<IDxcIncludeHandler>>
+    class Configurator : public BaseConfiguratorForComPtr<IDxcIncludeHandler>
     {
     public:
         Configurator(const Configurator&) = delete;
@@ -62,36 +63,23 @@ namespace IncludeHandler
 
 namespace VertexShaderBlob
 {
-    class Configurator : public BaseConfigurator<Microsoft::WRL::ComPtr<IDxcBlob>>
+    class Configurator : public BaseConfiguratorForComPtr<IDxcBlob>
     {
     public:
         void Initialize();
-
-    private:
-        DxcUtils::Configurator* pDxcUtils_;
-        DxcCompiler::Configurator* pDxcCompiler_;
-        IncludeHandler::Configurator* pIncludeHandler_;
     };
 }
 
 namespace PixelShaderBlob
 {
-    class Configurator : public BaseConfigurator<Microsoft::WRL::ComPtr<IDxcBlob>>
+    class Configurator : public BaseConfiguratorForComPtr<IDxcBlob>
     {
     public:
-        void initialize();
-
-    private:
-        DxcUtils::Configurator* pDxcUtils_;
-        DxcCompiler::Configurator* pDxcCompiler_;
-        IncludeHandler::Configurator* pIncludeHandler_;
+        void Initialize() override;
     };
 }
 
 Microsoft::WRL::ComPtr<IDxcBlob> CompileShader(
     const std::wstring& filePath,
-    const wchar_t* profile,
-    const Microsoft::WRL::ComPtr<IDxcUtils>& dxcUtils,
-    const Microsoft::WRL::ComPtr<IDxcCompiler3>& dxcCompiler,
-    const Microsoft::WRL::ComPtr<IDxcIncludeHandler>& includeHandler
+    const wchar_t* profile
 );

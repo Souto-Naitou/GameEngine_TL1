@@ -161,6 +161,9 @@
     <ClInclude Include="Core\DirectX12\DepthStencil.h">
       <Filter>DirectX\DepthStencil</Filter>
     </ClInclude>
+    <ClInclude Include="BaseConfiguratorForComPtr.h">
+      <Filter>DirectX\Base</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

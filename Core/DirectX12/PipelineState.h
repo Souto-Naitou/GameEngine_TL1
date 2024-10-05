@@ -10,6 +10,7 @@
 
 #include <memory>
 #include <d3d12.h>
+#include <wrl.h>
 
 namespace PipelineState
 {
@@ -27,13 +28,13 @@ namespace PipelineState
         Screen,     // !< スクリーン
     };
 
-    class Configurator : public BaseConfigurator<PipelineState::Types>
+    class Configurator : public BaseConfiguratorForEnum<PipelineState::Types, Microsoft::WRL::ComPtr<ID3D12PipelineState>>
     {
     public:
         Configurator();
         
         void Initialize(Types _type, ID3D12Device* _device);
-
+        void Apply(Types _type);
 
     private:
         std::unique_ptr<BlendMode::Configurator> pBlendModeCfg_;

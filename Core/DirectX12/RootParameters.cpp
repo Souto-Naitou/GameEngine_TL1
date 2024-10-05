@@ -17,8 +17,8 @@ void RootParameters::Configurator::Initialize()
 
     current_[2].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;       // DescriptorTableを使う
     current_[2].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;                 // PixelShaderで使う
-    current_[2].DescriptorTable.pDescriptorRanges = &pDescriptorRangeCfg_->Get()[0];       // Tableの中身の配列を指定
-    current_[2].DescriptorTable.NumDescriptorRanges = pDescriptorRangeCfg_->Get().size();  // Tableで利用する数
+    current_[2].DescriptorTable.pDescriptorRanges = &(*pDescriptorRangeCfg_->Get())[0];       // Tableの中身の配列を指定
+    current_[2].DescriptorTable.NumDescriptorRanges = pDescriptorRangeCfg_->Get()->size();  // Tableで利用する数
 
     current_[3].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;                    // CBVを使用する
     current_[3].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;                 // PixelShaderで使用する

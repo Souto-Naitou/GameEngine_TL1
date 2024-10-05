@@ -11,7 +11,7 @@ public:
     /// <param name="_mode">モード</param>
     inline void Set(T& _data) const { current_ = _data; }
 
-    inline T Get() const { return current_; }
+    inline T* Get() { return &current_; }
 
 protected:
     T current_ = {};

@@ -112,105 +112,14 @@ int DirectXCommon::Initialize()
     fenceEvent_ = CreateEvent(NULL, FALSE, FALSE, NULL);
     assert(fenceEvent_ != nullptr);
 
-    /// dxcCompilerを初期化
-    hr_ = DxcCreateInstance(CLSID_DxcUtils, IID_PPV_ARGS(&dxcUtils_));
-    assert(SUCCEEDED(hr_) && "DirectX Shader Compilerの初期化に失敗しました [DxcUtils]");
-    hr_ = DxcCreateInstance(CLSID_DxcCompiler, IID_PPV_ARGS(&dxcCompiler_));
-    assert(SUCCEEDED(hr_) && "DirectX Shader Compilerの初期化に失敗しました [DxcCompiler]");
-
-    /// 現時点でincludeはしないが、includeに対応するための設定を行っておく
-    hr_ = dxcUtils_->CreateDefaultIncludeHandler(&includeHandler_);
-    assert(SUCCEEDED(hr_) && "includeに対応する設定に失敗しました");
+    pPipelineConfig_ = std::make_unique<PipelineState::Configurator>();
+    pPipelineConfig_->Initialize(PipelineState::Types::Add, device_.Get());
 
     /// ディスクリプタテーブルのディスクリプタレンジを設定する (SRVを通じてシェーダにリソースへのアクセスを提供・t0)
     descriptorRange_[0].BaseShaderRegister = 0; // 0から始まる
     descriptorRange_[0].NumDescriptors = 1; // 数は1つ
     descriptorRange_[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV; // SRVを使う
     descriptorRange_[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND; // Offsetを自動計算
-
-    /// RootSignature作成
-    descriptionRootSignature_.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
-    descriptionRootSignature_.pParameters = rootParameters_;                              // ルートパラメータ配列へのポインタ
-    descriptionRootSignature_.NumParameters = _countof(rootParameters_);                  // 配列の長さ
-
-    /// RootParameter作成。複数設定できるので配列。
-    rootParameters_[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;                    // CBVを使う
-    rootParameters_[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;                 // PixelShaderで使う
-    rootParameters_[0].Descriptor.ShaderRegister = 0;                                    // レジスタ番号０とバインド
-
-    rootParameters_[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;                    // CBVを使う
-    rootParameters_[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;                // VertexShaderで使う
-    rootParameters_[1].Descriptor.ShaderRegister = 0;                                    // レジスタ番号０とバインド
-
-    rootParameters_[2].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;       // DescriptorTableを使う
-    rootParameters_[2].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;                 // PixelShaderで使う
-    rootParameters_[2].DescriptorTable.pDescriptorRanges = descriptorRange_;              // Tableの中身の配列を指定
-    rootParameters_[2].DescriptorTable.NumDescriptorRanges = _countof(descriptorRange_);  // Tableで利用する数
-
-    rootParameters_[3].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;                    // CBVを使用する
-    rootParameters_[3].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;                 // PixelShaderで使用する
-    rootParameters_[3].Descriptor.ShaderRegister = 1;                                    // レジスタ番号1を使用する
-
-    staticSamplers_[0].Filter = D3D12_FILTER_MIN_MAG_MIP_LINEAR;                         // BilinearFilter
-    staticSamplers_[0].AddressU = D3D12_TEXTURE_ADDRESS_MODE_WRAP;                       // 0 ~ 1の範囲外をリピート
-    staticSamplers_[0].AddressV = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
-    staticSamplers_[0].AddressW = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
-    staticSamplers_[0].ComparisonFunc = D3D12_COMPARISON_FUNC_NEVER;                     // 比較しない
-    staticSamplers_[0].MaxLOD = D3D12_FLOAT32_MAX;                                       // ありったけのーを使う
-    staticSamplers_[0].ShaderRegister = 0;                                               // レジスタ番号0を使用する
-    staticSamplers_[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;                 // PixelShaderを使う
-
-    descriptionRootSignature_.pStaticSamplers = staticSamplers_;
-    descriptionRootSignature_.NumStaticSamplers = _countof(staticSamplers_);
-
-    /// シリアライズしてバイナリにする
-    hr_ = D3D12SerializeRootSignature(&descriptionRootSignature_,
-        D3D_ROOT_SIGNATURE_VERSION_1, &signatureBlob_, &errorBlob_);
-    if (FAILED(hr_))
-    {
-        Log(reinterpret_cast<char*>(errorBlob_->GetBufferPointer()));
-        assert(false);
-    }
-
-    // バイナリをもとに生成
-    hr_ = device_->CreateRootSignature(0, signatureBlob_->GetBufferPointer(),
-        signatureBlob_->GetBufferSize(), IID_PPV_ARGS(&rootSignature_));
-    assert(SUCCEEDED(hr_));
-
-    /// InputLayout
-    inputElementDescs_[0].SemanticName = "POSITION";
-    inputElementDescs_[0].SemanticIndex = 0;
-    inputElementDescs_[0].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
-    inputElementDescs_[0].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
-    inputElementDescs_[1].SemanticName = "TEXCOORD";
-    inputElementDescs_[1].SemanticIndex = 0;
-    inputElementDescs_[1].Format = DXGI_FORMAT_R32G32_FLOAT;
-    inputElementDescs_[1].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
-    inputElementDescs_[2].SemanticName = "NORMAL";
-    inputElementDescs_[2].SemanticIndex = 0;
-    inputElementDescs_[2].Format = DXGI_FORMAT_R32G32B32_FLOAT;
-    inputElementDescs_[2].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
-
-    inputLayoutDesc_.pInputElementDescs = inputElementDescs_;
-    inputLayoutDesc_.NumElements = _countof(inputElementDescs_);
-
-    /// BlendStateの設定
-    // すべての色要素を書き込む
-    pBlendModeConfigurator_ = std::make_unique<BlendMode::Configurator>();
-    pBlendModeConfigurator_->Initialize(BlendMode::BlendModes::Normal);
-
-    /// RasterizerStateの設定
-    // 裏面（時計回り）を表示しない (背面カリング)
-    rasterizerDesc_.CullMode = D3D12_CULL_MODE_BACK;
-    // 三角形の中を塗りつぶす
-    rasterizerDesc_.FillMode = D3D12_FILL_MODE_SOLID;
-
-    /// ShaderをCompileする
-    vertexShaderBlob_ = CompileShader(L"Resources/shaders/Object3D.VS.hlsl", L"vs_6_6", dxcUtils_.Get(), dxcCompiler_.Get(), includeHandler_.Get());
-    assert(vertexShaderBlob_ != nullptr);
-
-    pixelShaderBlob_ = CompileShader(L"Resources/shaders/Object3D.PS.hlsl", L"ps_6_6", dxcUtils_.Get(), dxcCompiler_.Get(), includeHandler_.Get());
-    assert(pixelShaderBlob_ != nullptr);
 
     // DespStencilResource
     depthStencilResource_ = CreateDepthStencilTextureResource(device_, clientWidth_, clientHeight_);
@@ -222,40 +131,6 @@ int DirectXCommon::Initialize()
     dsvDesc_.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D; // 2dTexture
     // DSVHeapの戦闘にDSVを作る
     device_->CreateDepthStencilView(depthStencilResource_.Get(), &dsvDesc_, dsvDescriptorHeap_.Get()->GetCPUDescriptorHandleForHeapStart());
-
-    /// DepthStencilStateの設定
-    // Depthの機能を有効にする
-    depthStencilDesc_.DepthEnable = true;
-    // 書き込みする
-    depthStencilDesc_.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
-    // 比較関数はLessEqual。つまり、近ければ描画される
-    depthStencilDesc_.DepthFunc = D3D12_COMPARISON_FUNC_LESS_EQUAL;
-
-    /// PSOを生成する
-    graphicsPipelineStateDesc_.pRootSignature = rootSignature_.Get();	// RootSignature
-    graphicsPipelineStateDesc_.InputLayout = inputLayoutDesc_;	// InputLayout
-    graphicsPipelineStateDesc_.VS = { vertexShaderBlob_.Get()->GetBufferPointer(), vertexShaderBlob_.Get()->GetBufferSize() }; // VertexShader
-    graphicsPipelineStateDesc_.PS = { pixelShaderBlob_.Get()->GetBufferPointer(), pixelShaderBlob_.Get()->GetBufferSize() }; // PixelShader
-    graphicsPipelineStateDesc_.BlendState = pBlendModeConfigurator_->Get(); // BlendState
-    graphicsPipelineStateDesc_.RasterizerState = rasterizerDesc_; // RasterizerState
-    // 書き込むRTVの情報
-    graphicsPipelineStateDesc_.NumRenderTargets = 1;
-    graphicsPipelineStateDesc_.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
-    // 利用するトポロジ（形状）のタイプ。三角形
-    graphicsPipelineStateDesc_.PrimitiveTopologyType =
-        D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
-    // どのように画面に色を打ち込むかの設定（気にしなくて良い）
-    graphicsPipelineStateDesc_.SampleDesc.Count = 1;
-    graphicsPipelineStateDesc_.SampleMask = D3D12_DEFAULT_SAMPLE_MASK;
-    // DepthStencilの設定
-    graphicsPipelineStateDesc_.DepthStencilState = depthStencilDesc_;
-    graphicsPipelineStateDesc_.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
-
-    /// 実際に生成
-    hr_ = device_->CreateGraphicsPipelineState(&graphicsPipelineStateDesc_,
-        IID_PPV_ARGS(&graphicsPipelineState_));
-    assert(SUCCEEDED(hr_));
-    if (!graphicsPipelineState_) return -1;
 
     return 0;
 }

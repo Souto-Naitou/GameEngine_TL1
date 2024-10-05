@@ -11,5 +11,8 @@ namespace InputLayout
     {
     public:
         void Initialize();
+
+    private:
+        D3D12_INPUT_ELEMENT_DESC inputElementDescs_[3] = {};
     };
 }

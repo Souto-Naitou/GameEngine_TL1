@@ -27,41 +27,34 @@ void IncludeHandler::Configurator::Initialize()
 
 void VertexShaderBlob::Configurator::Initialize()
 {
-    pDxcUtils_ = DxcUtils::Configurator::GetInstance();
-    pDxcCompiler_ = DxcCompiler::Configurator::GetInstance();
-    pIncludeHandler_ = IncludeHandler::Configurator::GetInstance();
-
     /// ShaderをCompileする
-    current_ = CompileShader(L"Resources/shaders/Object3D.VS.hlsl", L"vs_6_6", pDxcUtils_->Get().Get(), pDxcCompiler_->Get().Get(), pIncludeHandler_->Get().Get());
+    current_ = CompileShader(L"Resources/Shaders/Object3d.VS.hlsl", L"vs_6_0");
     assert(current_ != nullptr);
 }
 
-void PixelShaderBlob::Configurator::initialize()
+void PixelShaderBlob::Configurator::Initialize()
 {
-    pDxcUtils_ = DxcUtils::Configurator::GetInstance();
-    pDxcCompiler_ = DxcCompiler::Configurator::GetInstance();
-    pIncludeHandler_ = IncludeHandler::Configurator::GetInstance();
-
     /// ShaderをCompileする
-    current_ = CompileShader(L"Resources/shaders/Object3D.PS.hlsl", L"ps_6_6", pDxcUtils_->Get().Get(), pDxcCompiler_->Get().Get(), pIncludeHandler_->Get().Get());
+    current_ = CompileShader(L"Resources/Shaders/Object3d.PS.hlsl", L"ps_6_0");
     assert(current_ != nullptr);
 }
 
 Microsoft::WRL::ComPtr<IDxcBlob> CompileShader(
     const std::wstring& filePath,
-    const wchar_t* profile,
-    const Microsoft::WRL::ComPtr<IDxcUtils>& dxcUtils,
-    const Microsoft::WRL::ComPtr<IDxcCompiler3>& dxcCompiler,
-    const Microsoft::WRL::ComPtr<IDxcIncludeHandler>& includeHandler
+    const wchar_t* profile
 )
 {
+    DxcUtils::Configurator* pDxcUtils_ = DxcUtils::Configurator::GetInstance();
+    DxcCompiler::Configurator* pDxcCompiler_ = DxcCompiler::Configurator::GetInstance();
+    IncludeHandler::Configurator* pIncludeHandler_ = IncludeHandler::Configurator::GetInstance();
+
     /// 1. hlslファイルを読み込む
 
     // これからシェーダーをコンパイルする旨をログに出す
     Log(ConvertString(std::format(L"Begin CompileShader, path:{}, profile:{}\n", filePath, profile)));
     // hlslファイルを読む
     Microsoft::WRL::ComPtr<IDxcBlobEncoding> shaderSource = nullptr;
-    HRESULT hr = dxcUtils->LoadFile(filePath.c_str(), nullptr, &shaderSource);
+    HRESULT hr = pDxcUtils_->Get()->LoadFile(filePath.c_str(), nullptr, &shaderSource);
     // 読めなかったら止める
     assert(SUCCEEDED(hr));
     // 読み込んだファイルの内容を設定する
@@ -81,12 +74,12 @@ Microsoft::WRL::ComPtr<IDxcBlob> CompileShader(
     };
     // 実際にShaderをコンパイルする
     Microsoft::WRL::ComPtr<IDxcResult> shaderResult = nullptr;
-    hr = dxcCompiler->Compile(
-        &shaderSourceBuffer,		// 読み込んだファイル
-        arguments,					// コンパイルオプション
-        _countof(arguments),		// コンパイルオプションの数
-        includeHandler.Get(),				// includeが含まれた諸々
-        IID_PPV_ARGS(&shaderResult)	// コンパイル結果
+    hr = pDxcCompiler_->Get()->Compile(
+        &shaderSourceBuffer,                // 読み込んだファイル
+        arguments,                          // コンパイルオプション
+        _countof(arguments),                // コンパイルオプションの数
+        pIncludeHandler_->Get(),   // includeが含まれた諸々
+        IID_PPV_ARGS(&shaderResult)         // コンパイル結果
     );
     // コンパイルエラーではなくdxcが起動できないなど致命的な状況
     assert(SUCCEEDED(hr));
