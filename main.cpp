@@ -1,5 +1,5 @@
 #include <Windows.h>
-#include <DirectXCommon.h>
+#include "Core/DirectX12/DirectX12.h"
 #include <Win32Application.h>
 
 int _stdcall WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
