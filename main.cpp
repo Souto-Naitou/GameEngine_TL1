@@ -4,21 +4,20 @@
 
 int _stdcall WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
-	Win32Application* pWin32App = Win32Application::GetInstance();
-	DirectXCommon* pDirectXCommon = DirectXCommon::GetInstance();
+    Win32Application* pWin32App = Win32Application::GetInstance();
+    DirectX12* pDirectX = DirectX12::GetInstance();
 
-	pWin32App->Initialize();
-	pWin32App->ShowWnd();
+    pWin32App->Initialize();
+    pWin32App->ShowWnd();
 
-	pDirectXCommon->Initialize();
+    pDirectX->Initialize();
 
-	while (pWin32App->GetMsg() != WM_QUIT)
-	{
+    while (pWin32App->GetMsg() != WM_QUIT)
+    {
 
-	}
+    }
 
-	pDirectXCommon->Finalize();
-	pWin32App->Finalize();
+    pWin32App->Finalize();
 
-	return 0;
+    return 0;
 }

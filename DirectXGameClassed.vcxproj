@@ -102,20 +102,26 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </FxCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Core\DirectX12\BlendMode.cpp" />
     <ClCompile Include="Core\DirectX12\DirectX12.cpp" />
+    <ClCompile Include="Core\DirectX12\DirectX12_Impl.cpp" />
+    <ClCompile Include="Core\DirectX12\DX12Helper.cpp" />
     <ClCompile Include="Core\Win32\Win32Application.cpp" />
-    <ClCompile Include="Input\Input.cpp" />
+    <ClCompile Include="Features\Input.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Utility\ConvertString.cpp" />
     <ClCompile Include="Utility\Logger.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Core\DirectX12\BlendMode.h" />
     <ClInclude Include="Core\DirectX12\DirectX12.h" />
+    <ClInclude Include="Core\DirectX12\DX12Helper.h" />
     <ClInclude Include="Core\Win32\Win32Application.h" />
-    <ClInclude Include="Input\Input.h" />
+    <ClInclude Include="Features\Input.h" />
     <ClInclude Include="structs.h" />
     <ClInclude Include="Utility\ConvertString.h" />
     <ClInclude Include="Utility\Logger.h" />
+    <ClInclude Include="Utility\ReakChecker.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig">

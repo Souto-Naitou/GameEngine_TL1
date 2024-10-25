@@ -22,6 +22,9 @@
     <Filter Include="Input">
       <UniqueIdentifier>{8803f867-4d11-4cec-883f-32df44af6c30}</UniqueIdentifier>
     </Filter>
+    <Filter Include="DirectX12\BlendMode">
+      <UniqueIdentifier>{fb9d6f31-4fb9-4701-bd6d-64c85dfa071b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -39,8 +42,17 @@
     <ClCompile Include="Core\DirectX12\DirectX12.cpp">
       <Filter>DirectX12</Filter>
     </ClCompile>
-    <ClCompile Include="Input\Input.cpp">
+    <ClCompile Include="Core\DirectX12\BlendMode.cpp">
+      <Filter>DirectX12\BlendMode</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\DirectX12\DX12Helper.cpp">
+      <Filter>DirectX12</Filter>
+    </ClCompile>
+    <ClCompile Include="Features\Input.cpp">
       <Filter>Input</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\DirectX12\DirectX12_Impl.cpp">
+      <Filter>DirectX12</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -59,7 +71,16 @@
     <ClInclude Include="Core\DirectX12\DirectX12.h">
       <Filter>DirectX12</Filter>
     </ClInclude>
-    <ClInclude Include="Input\Input.h">
+    <ClInclude Include="Utility\ReakChecker.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\DirectX12\BlendMode.h">
+      <Filter>DirectX12\BlendMode</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\DirectX12\DX12Helper.h">
+      <Filter>DirectX12</Filter>
+    </ClInclude>
+    <ClInclude Include="Features\Input.h">
       <Filter>Input</Filter>
     </ClInclude>
   </ItemGroup>
