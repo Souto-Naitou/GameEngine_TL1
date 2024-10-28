@@ -50,12 +50,6 @@ void DirectX12::Initialize()
     DX12Helper::PauseError(device_, infoQueue_);
 
 
-    /// Descriptorのサイズを取得 (動的に変わらないもの)
-    kDescriptorSizeDSV = device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
-    kDescriptorSizeRTV = device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
-    kDescriptorSizeDSV = device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
-
-
     /// 出力ウィンドウに初期化完了を出力
     Log(std::format("DirectX12 Initialized.\n"));
 
@@ -68,5 +62,18 @@ void DirectX12::Initialize()
     CreateSwapChainAndResource();
 
 
+    /// DSVの生成とステートの設定
+    CreateDSVAndSettingState();
 
+
+    /// ビューポートとシザー矩形の設定
+    SetViewportAndScissorRect();
+
+
+    /// DXCの初期化
+    CreateDirectXShaderCompiler();
+
+
+    /// ImGuiの初期化
+    InitializeImGui();
 }

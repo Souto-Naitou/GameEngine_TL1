@@ -1,6 +1,10 @@
 #include "Win32Application.h"
 #include <cassert>
 
+#include <imgui.h>
+
+extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+
 void Win32Application::Initialize()
 {
 	HRESULT hr = CoInitializeEx(0, COINIT_MULTITHREADED);
@@ -33,7 +37,7 @@ void Win32Application::ShowWnd()
 		wrc.bottom - wrc.top,	// ウィンドウ縦幅
 		nullptr,				// 親ウィンドウハンドル(子ウィンドウ作るときに使うかも？)
 		nullptr,				// メニューハンドル
-		wc_.hInstance,			// インスタンスハンドル	
+		wc_.hInstance,			// インスタンスハンドル
 		nullptr					// オプション
 	);
 	ShowWindow(hwnd_, SW_SHOW);

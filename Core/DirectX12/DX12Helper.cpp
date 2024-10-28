@@ -67,7 +67,7 @@ void DX12Helper::PauseError(Microsoft::WRL::ComPtr<ID3D12Device>& _device, Micro
 }
 
 
-Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> DX12Helper::CreateDescriptorHeap(const Microsoft::WRL::ComPtr<ID3D12Device>& _device, D3D12_DESCRIPTOR_HEAP_TYPE _heapType, UINT _numDescriptors, bool _shaderVisible)
+Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> DX12Helper::CreateDescriptorHeap(Microsoft::WRL::ComPtr<ID3D12Device>& _device, D3D12_DESCRIPTOR_HEAP_TYPE _heapType, UINT _numDescriptors, bool _shaderVisible)
 {
     Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> descriptorHeap = nullptr;
     D3D12_DESCRIPTOR_HEAP_DESC descriptorHeapDesc{};
@@ -76,4 +76,44 @@ Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> DX12Helper::CreateDescriptorHeap(co
     descriptorHeapDesc.Flags = _shaderVisible ? D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE : D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
     HRESULT hr = _device->CreateDescriptorHeap(&descriptorHeapDesc, IID_PPV_ARGS(&descriptorHeap));
     return descriptorHeap;
+}
+
+Microsoft::WRL::ComPtr<ID3D12Resource> DX12Helper::CreateDepthStencilTextureResource(const Microsoft::WRL::ComPtr<ID3D12Device>& _device, int32_t _width, int32_t _height)
+{
+    D3D12_RESOURCE_DESC resourceDesc{};
+    resourceDesc.Width = _width;                                    // 幅
+    resourceDesc.Height = _height;                                  // 高さ
+    resourceDesc.MipLevels = 1;                                     // mipmapの数
+    resourceDesc.DepthOrArraySize = 1;	                            // 奥行き or 配列Textureの配列数
+    resourceDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;            // フォーマット
+    resourceDesc.SampleDesc.Count = 1;                              // サンプリング数
+    resourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;    // 2DTexture
+    resourceDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL;   // DepthStencilとして使う通知
+
+
+    /// 利用するHeapの設定
+    D3D12_HEAP_PROPERTIES heapProperties{};
+    heapProperties.Type = D3D12_HEAP_TYPE_DEFAULT;                  // VRAMに
+
+
+    /// 深度値のクリア設定
+    D3D12_CLEAR_VALUE depthClearValue{};
+    depthClearValue.DepthStencil.Depth = 1.0f;                      // 1.0f(最大値)でクリア
+    depthClearValue.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;         // フォーマット。Resourceと合わせる
+
+
+    /// Resourceの生成
+    Microsoft::WRL::ComPtr<ID3D12Resource> resource = nullptr;
+    HRESULT hr = _device->CreateCommittedResource(
+        &heapProperties,
+        D3D12_HEAP_FLAG_NONE,
+        &resourceDesc,
+        D3D12_RESOURCE_STATE_DEPTH_WRITE,
+        &depthClearValue,
+        IID_PPV_ARGS(&resource)
+    );
+    assert(SUCCEEDED(hr));
+
+
+    return resource;
 }

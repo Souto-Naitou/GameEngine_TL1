@@ -49,19 +49,25 @@ private:
     Microsoft::WRL::ComPtr<ID3D12DescriptorHeap>        srvDescriptorHeap_              = nullptr;
     Microsoft::WRL::ComPtr<ID3D12DescriptorHeap>        dsvDescriptorHeap_              = nullptr;
     Microsoft::WRL::ComPtr<ID3D12DescriptorHeap>        descriptorHeaps_                = nullptr;
+    Microsoft::WRL::ComPtr<ID3D12Resource>              depthStencilResource_           = nullptr;      // 深度ステンシルリソース
+    Microsoft::WRL::ComPtr<IDxcUtils>                   dxcUtils_                       = nullptr;
+    Microsoft::WRL::ComPtr<IDxcCompiler3>               dxcCompiler_                    = nullptr;
+    Microsoft::WRL::ComPtr<IDxcIncludeHandler>          includeHandler_                 = nullptr;
     D3D12_RESOURCE_BARRIER                              barrier_                        = {};
     D3D12_COMMAND_QUEUE_DESC                            commandQueueDesc_               = {};           // コマンドキューの設定
     DXGI_SWAP_CHAIN_DESC1                               swapChainDesc_                  = {};           // スワップチェーンの設定
     D3D12_RENDER_TARGET_VIEW_DESC                       rtvDesc_                        = {};           // RTVの設定
     HANDLE                                              fenceEvent_                     = {};
-    uint64_t                                            fenceValue_                     = 0u;            // フェンス値
+    uint64_t                                            fenceValue_                     = 0u;           // フェンス値
+    D3D12_VIEWPORT                                      viewport_                       = {};           // ビューポート
+    D3D12_RECT                                          scissorRect_                    = {};           // シザーレクト
 
     uint32_t clientWidth_ = 1280u;
     uint32_t clientHeight_ = 720u;
 
-    uint32_t kDescriptorSizeSRV;
-    uint32_t kDescriptorSizeRTV;
-    uint32_t kDescriptorSizeDSV;
+    uint32_t kDescriptorSizeSRV = 0u;
+    uint32_t kDescriptorSizeRTV = 0u;
+    uint32_t kDescriptorSizeDSV = 0u;
 
 
 private:
@@ -85,7 +91,31 @@ private:
 
 
     /// <summary>
+    /// DepthStencilViewの生成
+    /// </summary>
+    void CreateDSVAndSettingState();
+
+
+    /// <summary>
     /// フェンスの生成とイベントの生成
     /// </summary>
     void CreateFenceAndEvent();
+
+
+    /// <summary>
+    /// ビューポートとシザー矩形の設定
+    /// </summary>
+    void SetViewportAndScissorRect();
+
+
+    /// <summary>
+    /// DirectXShaderCompilerの生成
+    /// </summary>
+    void CreateDirectXShaderCompiler();
+
+
+    /// <summary>
+    /// ImGuiの初期化
+    /// </summary>
+    void InitializeImGui();
 };
