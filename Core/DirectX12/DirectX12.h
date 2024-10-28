@@ -8,6 +8,7 @@
 #include <stdint.h>
 #include <string>
 #include <memory>
+#include "Framerate.h"
 
 #include "ReakChecker.h"
 
@@ -30,12 +31,16 @@ public:
     void PresentDraw();
     void PostDraw();
 
+private: /// Getter
+    ID3D12Device*               GetDevice()         const { return device_.Get(); }
+    ID3D12GraphicsCommandList*  GetCommandList()    const { return commandList_.Get(); }
+
 private:
     DirectX12() = default;
     ~DirectX12() = default;
 
-    HRESULT hr_ = 0;
-    HWND hwnd_ = {};
+    HRESULT hr_     = 0;
+    HWND    hwnd_   = {};
 
     Microsoft::WRL::ComPtr<ID3D12Debug1>                debugController_                = nullptr;      // デバッグコントローラ
     Microsoft::WRL::ComPtr<IDXGIFactory7>               dxgiFactory_                    = nullptr;      // DXGIファクトリ
@@ -68,10 +73,11 @@ private:
 
     float                                               clearColor_[4]                  = { 0.2f, 0.2f, 0.4f, 1.0f };
 
-    uint32_t                                            backBufferIndex_                = 0u;
 
-    uint32_t clientWidth_ = 1280u;
-    uint32_t clientHeight_ = 720u;
+    uint32_t clientWidth_       = 1280u;
+    uint32_t clientHeight_      = 720u;
+
+    uint32_t backBufferIndex_   = 0u;
 
     uint32_t kDescriptorSizeSRV = 0u;
     uint32_t kDescriptorSizeRTV = 0u;
@@ -143,4 +149,8 @@ private:
         D3D12_RESOURCE_STATES _before,
         D3D12_RESOURCE_STATES _after
     );
+
+private: /// 他クラスのインスタンス(シングルトンなど)
+    FrameRate* pFramerate_ = nullptr;
+
 };

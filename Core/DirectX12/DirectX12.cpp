@@ -30,6 +30,8 @@ void DirectX12::Initialize()
     }
 #endif // _DEBUG
 
+    pFramerate_ = FrameRate::GetInstance();
+    pFramerate_->Initialize();
 
     // ウィンドウハンドルを取得
     hwnd_ = Win32Application::GetInstance()->GetHwnd();
@@ -152,6 +154,10 @@ void DirectX12::PostDraw()
         // イベントを待つ
         WaitForSingleObject(fenceEvent_, INFINITE);
     }
+
+
+    /// フレームレート固定
+    pFramerate_->FixFramerate();
 
 
     /// 次のフレーム用のコマンドリストを準備

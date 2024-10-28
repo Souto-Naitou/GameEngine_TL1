@@ -4,10 +4,12 @@
 #include <d3d12.h>
 #include <dxgi1_6.h>
 #include <stdint.h>
+#include <dxcapi.h>
+#include <string>
+#include <Externals/DirectXTex/DirectXTex.h>
 
 namespace DX12Helper
 {
-
     /// <summary>
     /// デバイスを生成する
     /// </summary>
@@ -47,4 +49,37 @@ namespace DX12Helper
     /// <param name="_height">高さ</param>
     /// <returns>リソース</returns>
     Microsoft::WRL::ComPtr<ID3D12Resource> CreateDepthStencilTextureResource(const Microsoft::WRL::ComPtr<ID3D12Device>& _device, int32_t _width, int32_t _height);
+
+
+    /// <summary>
+    /// シェーダーをコンパイル
+    /// </summary>
+    /// <param name="filePath">ファイルパス</param>
+    /// <param name="profile">プロファイル</param>
+    /// <param name="dxcUtils">DXCユーティリティ</param>
+    /// <param name="dxcCompiler">DXCコンパイラ</param>
+    /// <param name="includeHandler">インクルードハンドラ</param>
+    /// <returns>コンパイル結果</returns>
+    Microsoft::WRL::ComPtr<IDxcBlob> CompileShader(
+        const std::wstring& filePath,
+        const wchar_t* profile,
+        const Microsoft::WRL::ComPtr<IDxcUtils>& dxcUtils,
+        const Microsoft::WRL::ComPtr<IDxcCompiler3>& dxcCompiler,
+        const Microsoft::WRL::ComPtr<IDxcIncludeHandler>& includeHandler);
+
+
+    /// <summary>
+    /// バッファリソースを生成
+    /// </summary>
+    /// <param name="_device">デバイス</param>
+    /// <param name="_sizeInBytes">バイト数</param>
+    /// <returns>リソース</returns>
+    Microsoft::WRL::ComPtr<ID3D12Resource> CreateBufferResource(const Microsoft::WRL::ComPtr<ID3D12Device>& _device, size_t _sizeInBytes);
+
+
+    /// <summary>
+    /// テクスチャリソースを生成
+    /// </summary>
+    /// <param name="_filePath">ファイルパス</param>
+    DirectX::ScratchImage LoadTexture(const std::string _filePath);
 }
