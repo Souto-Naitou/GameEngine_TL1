@@ -12,9 +12,14 @@ int _stdcall WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
     pDirectX->Initialize();
 
+
+
     while (pWin32App->GetMsg() != WM_QUIT)
     {
         pDirectX->PresentDraw();
+
+
+
         pDirectX->PostDraw();
     }
 

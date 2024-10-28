@@ -44,10 +44,10 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(ProjectDir);$(ProjectDir)Utility;$(ProjectDir)Core/Win32/;$(ProjectDir)Core/DirectX12;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir);$(ProjectDir)Utility;$(ProjectDir)Core/Win32/;$(ProjectDir)Core/DirectX12;$(ProjectDir)Externals\Timer;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(ProjectDir);$(ProjectDir)Utility;$(ProjectDir)Core/Win32/;$(ProjectDir)Core/DirectX12;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir);$(ProjectDir)Utility;$(ProjectDir)Core/Win32/;$(ProjectDir)Core/DirectX12;$(ProjectDir)Externals\Timer;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -117,6 +117,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Externals\imgui\imgui_impl_win32.cpp" />
     <ClCompile Include="Externals\imgui\imgui_tables.cpp" />
     <ClCompile Include="Externals\imgui\imgui_widgets.cpp" />
+    <ClCompile Include="Externals\Timer\Timer.cpp" />
     <ClCompile Include="Features\Input.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Utility\ConvertString.cpp" />
@@ -136,6 +137,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Externals\imgui\imstb_rectpack.h" />
     <ClInclude Include="Externals\imgui\imstb_textedit.h" />
     <ClInclude Include="Externals\imgui\imstb_truetype.h" />
+    <ClInclude Include="Externals\Timer\Timer.h" />
     <ClInclude Include="Features\Input.h" />
     <ClInclude Include="structs.h" />
     <ClInclude Include="Utility\ConvertString.h" />

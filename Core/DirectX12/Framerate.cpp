@@ -28,3 +28,20 @@ void FrameRate::FixFramerate()
 
     reference_ = std::chrono::steady_clock::now();
 }
+
+void FrameRate::MeasureFPS()
+{
+    if (!timer_.GetIsStart())
+    {
+        timer_.Start();
+    }
+    /// フレームレート計算
+    if (timer_.GetNow() - elapsedFrameCount_ >= intervalCalcurationFPS_)
+    {
+        fps_ = frameCount_ * 1.0 / (timer_.GetNow() - elapsedFrameCount_);
+
+        frameCount_ = 0;
+        elapsedFrameCount_ = timer_.GetNow();
+    }
+    frameCount_++;
+}
