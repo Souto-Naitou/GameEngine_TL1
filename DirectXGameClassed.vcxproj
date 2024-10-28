@@ -44,10 +44,10 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(ProjectDir);$(ProjectDir)Utility;$(ProjectDir)Core/Win32/;$(ProjectDir)Core/DirectX12;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir);$(ProjectDir)Utility;$(ProjectDir)Core/Win32/;$(ProjectDir)Core/DirectX12;$(ProjectDir)Externals\Timer;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(ProjectDir);$(ProjectDir)Utility;$(ProjectDir)Core/Win32/;$(ProjectDir)Core/DirectX12;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir);$(ProjectDir)Utility;$(ProjectDir)Core/Win32/;$(ProjectDir)Core/DirectX12;$(ProjectDir)Externals\Timer;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -108,6 +108,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Core\DirectX12\DirectX12.cpp" />
     <ClCompile Include="Core\DirectX12\DirectX12_Impl.cpp" />
     <ClCompile Include="Core\DirectX12\DX12Helper.cpp" />
+    <ClCompile Include="Core\DirectX12\Framerate.cpp" />
     <ClCompile Include="Core\Win32\Win32Application.cpp" />
     <ClCompile Include="Externals\imgui\imgui.cpp" />
     <ClCompile Include="Externals\imgui\imgui_demo.cpp" />
@@ -116,6 +117,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Externals\imgui\imgui_impl_win32.cpp" />
     <ClCompile Include="Externals\imgui\imgui_tables.cpp" />
     <ClCompile Include="Externals\imgui\imgui_widgets.cpp" />
+    <ClCompile Include="Externals\Timer\Timer.cpp" />
     <ClCompile Include="Features\Input.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Utility\ConvertString.cpp" />
@@ -125,6 +127,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Core\DirectX12\BlendMode.h" />
     <ClInclude Include="Core\DirectX12\DirectX12.h" />
     <ClInclude Include="Core\DirectX12\DX12Helper.h" />
+    <ClInclude Include="Core\DirectX12\Framerate.h" />
     <ClInclude Include="Core\Win32\Win32Application.h" />
     <ClInclude Include="Externals\imgui\imconfig.h" />
     <ClInclude Include="Externals\imgui\imgui.h" />
@@ -134,6 +137,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Externals\imgui\imstb_rectpack.h" />
     <ClInclude Include="Externals\imgui\imstb_textedit.h" />
     <ClInclude Include="Externals\imgui\imstb_truetype.h" />
+    <ClInclude Include="Externals\Timer\Timer.h" />
     <ClInclude Include="Features\Input.h" />
     <ClInclude Include="structs.h" />
     <ClInclude Include="Utility\ConvertString.h" />
@@ -163,6 +167,11 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="Externals\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">
+      <Project>{371b9fa9-4c90-4ac6-a123-aced756d6c77}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

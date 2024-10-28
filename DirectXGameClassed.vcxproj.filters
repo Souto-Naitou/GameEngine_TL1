@@ -31,6 +31,12 @@
     <Filter Include="Externals\ImGui">
       <UniqueIdentifier>{4e0e1071-96e2-47d3-94bc-1cfffb313b95}</UniqueIdentifier>
     </Filter>
+    <Filter Include="DirectX12\FPS">
+      <UniqueIdentifier>{88cff5bd-cd25-4ccd-9324-62389d1650c2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Externals\Timer">
+      <UniqueIdentifier>{eadfca40-62e7-4a72-b41e-3818d23dafb1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -80,6 +86,12 @@
     </ClCompile>
     <ClCompile Include="Externals\imgui\imgui_widgets.cpp">
       <Filter>Externals\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\DirectX12\Framerate.cpp">
+      <Filter>DirectX12\FPS</Filter>
+    </ClCompile>
+    <ClCompile Include="Externals\Timer\Timer.cpp">
+      <Filter>Externals\Timer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -133,6 +145,12 @@
     </ClInclude>
     <ClInclude Include="Externals\imgui\imstb_truetype.h">
       <Filter>Externals\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\DirectX12\Framerate.h">
+      <Filter>DirectX12\FPS</Filter>
+    </ClInclude>
+    <ClInclude Include="Externals\Timer\Timer.h">
+      <Filter>Externals\Timer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
