@@ -13,58 +13,34 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="DirectX">
-      <UniqueIdentifier>{ac715943-915e-4e06-b2a7-2d0007b822e9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="DirectX\BlendMode">
-      <UniqueIdentifier>{5b932dba-25b3-44fa-b520-44d23baacdf8}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Win32Application">
       <UniqueIdentifier>{5c7e8f14-1bd4-48f2-80b9-2ad2124c12e5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="DirectX\Common">
-      <UniqueIdentifier>{9d45caf0-12bd-4b07-8640-26c638ce0ae7}</UniqueIdentifier>
+    <Filter Include="DirectX12">
+      <UniqueIdentifier>{55c061c3-927c-45ed-a4ab-5d06972fc5bb}</UniqueIdentifier>
     </Filter>
-    <Filter Include="DirectX\PipelineState">
-      <UniqueIdentifier>{dc0cdaae-faef-4cfa-846c-ad71ac93d2d1}</UniqueIdentifier>
+    <Filter Include="Input">
+      <UniqueIdentifier>{8803f867-4d11-4cec-883f-32df44af6c30}</UniqueIdentifier>
     </Filter>
-    <Filter Include="DirectX\RootSignature">
-      <UniqueIdentifier>{3733786b-2f27-45f8-a15c-95a13cee6629}</UniqueIdentifier>
+    <Filter Include="DirectX12\BlendMode">
+      <UniqueIdentifier>{fb9d6f31-4fb9-4701-bd6d-64c85dfa071b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="DirectX\Base">
-      <UniqueIdentifier>{9ad991a4-8c33-405f-9e02-a17777a109bd}</UniqueIdentifier>
+    <Filter Include="Externals">
+      <UniqueIdentifier>{4a863a72-ff1f-460f-9840-3ea3ebb8c64f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="DirectX\RootParameters">
-      <UniqueIdentifier>{d0ca0545-14ee-4419-80ca-fc131d33ab81}</UniqueIdentifier>
+    <Filter Include="Externals\ImGui">
+      <UniqueIdentifier>{4e0e1071-96e2-47d3-94bc-1cfffb313b95}</UniqueIdentifier>
     </Filter>
-    <Filter Include="DescriptorRange">
-      <UniqueIdentifier>{1572e578-5cca-4055-ada6-291866a11f0c}</UniqueIdentifier>
+    <Filter Include="DirectX12\FPS">
+      <UniqueIdentifier>{88cff5bd-cd25-4ccd-9324-62389d1650c2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="DirectX\StaticSamplers">
-      <UniqueIdentifier>{157749c7-58b7-4a90-a8fd-141c10e3d03a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="DirectX\InputLayout">
-      <UniqueIdentifier>{1a60ef8f-6baf-4077-96e8-013876dc02b3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="DirectX\ShaderBin">
-      <UniqueIdentifier>{186f5fa7-290c-4651-8c9a-81889bac6192}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="DirectX\RasterizerState">
-      <UniqueIdentifier>{b63e5338-56e9-4b17-830f-e9d3c7461e03}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="DirectX\DepthStencil">
-      <UniqueIdentifier>{47e3114f-9fbb-445f-866e-e4f4424942dc}</UniqueIdentifier>
+    <Filter Include="Externals\Timer">
+      <UniqueIdentifier>{eadfca40-62e7-4a72-b41e-3818d23dafb1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
       <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\DirectX12\DirectXCommonHelper.cpp">
-      <Filter>DirectX</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\DirectX12\BlendMode.cpp">
-      <Filter>DirectX\BlendMode</Filter>
     </ClCompile>
     <ClCompile Include="Utility\ConvertString.cpp">
       <Filter>ソース ファイル</Filter>
@@ -75,49 +51,52 @@
     <ClCompile Include="Core\Win32\Win32Application.cpp">
       <Filter>Win32Application</Filter>
     </ClCompile>
-    <ClCompile Include="Core\DirectX12\DirectXCommon.cpp">
-      <Filter>DirectX\Common</Filter>
+    <ClCompile Include="Core\DirectX12\DirectX12.cpp">
+      <Filter>DirectX12</Filter>
     </ClCompile>
-    <ClCompile Include="Core\DirectX12\PipelineState.cpp">
-      <Filter>DirectX\PipelineState</Filter>
+    <ClCompile Include="Core\DirectX12\BlendMode.cpp">
+      <Filter>DirectX12\BlendMode</Filter>
     </ClCompile>
-    <ClCompile Include="Core\DirectX12\RootSignature.cpp">
-      <Filter>DirectX\RootSignature</Filter>
+    <ClCompile Include="Core\DirectX12\DX12Helper.cpp">
+      <Filter>DirectX12</Filter>
     </ClCompile>
-    <ClCompile Include="Core\DirectX12\RootParameters.cpp">
-      <Filter>DirectX\RootParameters</Filter>
+    <ClCompile Include="Features\Input.cpp">
+      <Filter>Input</Filter>
     </ClCompile>
-    <ClCompile Include="Core\DirectX12\DescriptorRange.cpp">
-      <Filter>DescriptorRange</Filter>
+    <ClCompile Include="Core\DirectX12\DirectX12_Impl.cpp">
+      <Filter>DirectX12</Filter>
     </ClCompile>
-    <ClCompile Include="Core\DirectX12\StaticSamplers.cpp">
-      <Filter>DirectX\StaticSamplers</Filter>
+    <ClCompile Include="Externals\imgui\imgui.cpp">
+      <Filter>Externals\ImGui</Filter>
     </ClCompile>
-    <ClCompile Include="Core\DirectX12\InputLayout.cpp">
-      <Filter>DirectX\InputLayout</Filter>
+    <ClCompile Include="Externals\imgui\imgui_demo.cpp">
+      <Filter>Externals\ImGui</Filter>
     </ClCompile>
-    <ClCompile Include="Core\DirectX12\Dxc.cpp">
-      <Filter>DirectX\ShaderBin</Filter>
+    <ClCompile Include="Externals\imgui\imgui_draw.cpp">
+      <Filter>Externals\ImGui</Filter>
     </ClCompile>
-    <ClCompile Include="Core\DirectX12\RasterizerState.cpp">
-      <Filter>DirectX\RasterizerState</Filter>
+    <ClCompile Include="Externals\imgui\imgui_impl_dx12.cpp">
+      <Filter>Externals\ImGui</Filter>
     </ClCompile>
-    <ClCompile Include="Core\DirectX12\DepthStencil.cpp">
-      <Filter>DirectX\DepthStencil</Filter>
+    <ClCompile Include="Externals\imgui\imgui_impl_win32.cpp">
+      <Filter>Externals\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="Externals\imgui\imgui_tables.cpp">
+      <Filter>Externals\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="Externals\imgui\imgui_widgets.cpp">
+      <Filter>Externals\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\DirectX12\Framerate.cpp">
+      <Filter>DirectX12\FPS</Filter>
+    </ClCompile>
+    <ClCompile Include="Externals\Timer\Timer.cpp">
+      <Filter>Externals\Timer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="structs.h">
       <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\DirectX12\DirectXCommonHelper.h">
-      <Filter>DirectX</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\DirectX12\BlendMode.h">
-      <Filter>DirectX\BlendMode</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\DirectX12\BaseConfigurator.h">
-      <Filter>DirectX\Base</Filter>
     </ClInclude>
     <ClInclude Include="Utility\ConvertString.h">
       <Filter>ヘッダー ファイル</Filter>
@@ -128,41 +107,50 @@
     <ClInclude Include="Core\Win32\Win32Application.h">
       <Filter>Win32Application</Filter>
     </ClInclude>
-    <ClInclude Include="Core\DirectX12\DirectXCommon.h">
-      <Filter>DirectX\Common</Filter>
+    <ClInclude Include="Core\DirectX12\DirectX12.h">
+      <Filter>DirectX12</Filter>
     </ClInclude>
-    <ClInclude Include="Core\DirectX12\PipelineState.h">
-      <Filter>DirectX\PipelineState</Filter>
+    <ClInclude Include="Utility\ReakChecker.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Core\DirectX12\RootSignature.h">
-      <Filter>DirectX\RootSignature</Filter>
+    <ClInclude Include="Core\DirectX12\BlendMode.h">
+      <Filter>DirectX12\BlendMode</Filter>
     </ClInclude>
-    <ClInclude Include="Core\DirectX12\BaseConfiguratorForEnum.h">
-      <Filter>DirectX\Base</Filter>
+    <ClInclude Include="Core\DirectX12\DX12Helper.h">
+      <Filter>DirectX12</Filter>
     </ClInclude>
-    <ClInclude Include="Core\DirectX12\RootParameters.h">
-      <Filter>DirectX\RootParameters</Filter>
+    <ClInclude Include="Features\Input.h">
+      <Filter>Input</Filter>
     </ClInclude>
-    <ClInclude Include="Core\DirectX12\DescriptorRange.h">
-      <Filter>DescriptorRange</Filter>
+    <ClInclude Include="Externals\imgui\imconfig.h">
+      <Filter>Externals\ImGui</Filter>
     </ClInclude>
-    <ClInclude Include="Core\DirectX12\StaticSamplers.h">
-      <Filter>DirectX\StaticSamplers</Filter>
+    <ClInclude Include="Externals\imgui\imgui.h">
+      <Filter>Externals\ImGui</Filter>
     </ClInclude>
-    <ClInclude Include="Core\DirectX12\InputLayout.h">
-      <Filter>DirectX\InputLayout</Filter>
+    <ClInclude Include="Externals\imgui\imgui_impl_dx12.h">
+      <Filter>Externals\ImGui</Filter>
     </ClInclude>
-    <ClInclude Include="Core\DirectX12\Dxc.h">
-      <Filter>DirectX\ShaderBin</Filter>
+    <ClInclude Include="Externals\imgui\imgui_impl_win32.h">
+      <Filter>Externals\ImGui</Filter>
     </ClInclude>
-    <ClInclude Include="Core\DirectX12\RasterizerState.h">
-      <Filter>DirectX\RasterizerState</Filter>
+    <ClInclude Include="Externals\imgui\imgui_internal.h">
+      <Filter>Externals\ImGui</Filter>
     </ClInclude>
-    <ClInclude Include="Core\DirectX12\DepthStencil.h">
-      <Filter>DirectX\DepthStencil</Filter>
+    <ClInclude Include="Externals\imgui\imstb_rectpack.h">
+      <Filter>Externals\ImGui</Filter>
     </ClInclude>
-    <ClInclude Include="BaseConfiguratorForComPtr.h">
-      <Filter>DirectX\Base</Filter>
+    <ClInclude Include="Externals\imgui\imstb_textedit.h">
+      <Filter>Externals\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Externals\imgui\imstb_truetype.h">
+      <Filter>Externals\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\DirectX12\Framerate.h">
+      <Filter>DirectX12\FPS</Filter>
+    </ClInclude>
+    <ClInclude Include="Externals\Timer\Timer.h">
+      <Filter>Externals\Timer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

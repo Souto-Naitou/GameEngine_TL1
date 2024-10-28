@@ -1,7 +1,5 @@
 #pragma once
 
-#include <BaseConfiguratorForEnum.h>
-
 #include <utility>
 
 #include <d3d12.h>
@@ -9,8 +7,9 @@
 /// <summary>
 /// ブレンドモード関連
 /// </summary>
-namespace BlendMode
+class BlendMode
 {
+public:
     enum class BlendModes
     {
         None,       // !< ブレンドなし
@@ -23,13 +22,12 @@ namespace BlendMode
         COUNT,      // !< カウント用
     };
 
-    /// <summary>
-    /// 設定クラス
-    /// </summary>
-    class Configurator : public BaseConfiguratorForEnum<BlendModes, D3D12_BLEND_DESC>
-    {
-    public:
-        void Initialize(BlendModes _mode);
-        void Apply(BlendModes _mode) override;
-    };
-}
+    const D3D12_BLEND_DESC& GetBlendDesc() const { return blendDesc_; }
+
+    void Initialize(BlendModes _mode);
+    void Apply(BlendModes _mode);
+
+private:
+    D3D12_BLEND_DESC blendDesc_;
+    BlendModes currentMode_;
+};
