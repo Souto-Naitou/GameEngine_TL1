@@ -38,7 +38,6 @@ void DirectX12::ChooseAdapter()
     assert(useAdapter_ != nullptr && "アダプタが見つかりませんでした。");
 }
 
-
 void DirectX12::CreateCommandResources()
 {
     /// コマンドキューを生成
@@ -58,7 +57,6 @@ void DirectX12::CreateCommandResources()
     assert(SUCCEEDED(hr_) && "コマンドリストの生成がうまくいかなかったので起動できない");
 
 }
-
 
 void DirectX12::CreateSwapChainAndResource()
 {
@@ -91,15 +89,25 @@ void DirectX12::CreateSwapChainAndResource()
 
 
     /// SwapChainからResourceを引っ張ってくる
-    hr_ = swapChain_->GetBuffer(0, IID_PPV_ARGS(&swapChainResources[0]));
+    hr_ = swapChain_->GetBuffer(0, IID_PPV_ARGS(&swapChainResources_[0]));
     assert(SUCCEEDED(hr_) && "SwapChainからリソースを取得できませんでした [0]");
-    hr_ = swapChain_->GetBuffer(1, IID_PPV_ARGS(&swapChainResources[1]));
+    hr_ = swapChain_->GetBuffer(1, IID_PPV_ARGS(&swapChainResources_[1]));
     assert(SUCCEEDED(hr_) && "SwapChainからリソースを取得できませんでした [1]");
 
 
     /// RTVの設定
     rtvDesc_.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
     rtvDesc_.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
+
+
+    /// RTVの生成
+    D3D12_CPU_DESCRIPTOR_HANDLE rtvStartHandle = rtvDescriptorHeap_->GetCPUDescriptorHandleForHeapStart();
+    // 1つ目のRTVを作成
+    rtvHandles_[0] = rtvStartHandle;
+    device_->CreateRenderTargetView(swapChainResources_[0].Get(), &rtvDesc_, rtvHandles_[0]);
+    // 2つ目のRTVを作成
+    rtvHandles_[1].ptr = rtvHandles_[0].ptr + device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
+    device_->CreateRenderTargetView(swapChainResources_[1].Get(), &rtvDesc_, rtvHandles_[1]);
 }
 
 void DirectX12::CreateDSVAndSettingState()
@@ -123,7 +131,6 @@ void DirectX12::CreateDSVAndSettingState()
     depthStencilDesc.StencilEnable = true;                          // ステンシルテストを有効
     depthStencilDesc.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;   // ステンシル書き込みを有効
 }
-
 
 void DirectX12::CreateFenceAndEvent()
 {
@@ -185,4 +192,21 @@ void DirectX12::InitializeImGui()
         srvDescriptorHeap_->GetCPUDescriptorHandleForHeapStart(),
         srvDescriptorHeap_->GetGPUDescriptorHandleForHeapStart()
     );
+}
+
+void DirectX12::SetResourceBarrier(
+    D3D12_RESOURCE_BARRIER_TYPE _type, D3D12_RESOURCE_BARRIER_FLAGS _flag,
+    ID3D12Resource* _resource,
+    D3D12_RESOURCE_STATES _before, D3D12_RESOURCE_STATES _after)
+{
+    /// ResourceBarrierの設定
+    barrier_.Type = _type;                      // Transitionに設定
+    barrier_.Flags = _flag;                     // フラグ
+    barrier_.Transition.pResource = _resource;  // リソース
+    barrier_.Transition.StateBefore = _before;  // 遷移前の状態
+    barrier_.Transition.StateAfter = _after;    // 遷移後の状態
+
+
+    /// Barrierを張る
+    commandList_->ResourceBarrier(1, &barrier_);
 }

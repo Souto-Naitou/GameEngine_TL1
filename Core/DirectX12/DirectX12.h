@@ -27,6 +27,9 @@ public:
 
     void Initialize();
 
+    void PresentDraw();
+    void PostDraw();
+
 private:
     DirectX12() = default;
     ~DirectX12() = default;
@@ -43,7 +46,7 @@ private:
     Microsoft::WRL::ComPtr<ID3D12CommandAllocator>      commandAllocator_               = nullptr;      // コマンドアロケータ
     Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>   commandList_                    = nullptr;      // コマンドアロケータ
     Microsoft::WRL::ComPtr<IDXGISwapChain4>             swapChain_                      = nullptr;      // スワップチェーン
-    Microsoft::WRL::ComPtr<ID3D12Resource>              swapChainResources[2]           = {};           // スワップチェーンリソース
+    Microsoft::WRL::ComPtr<ID3D12Resource>              swapChainResources_[2]          = {};           // スワップチェーンリソース
     Microsoft::WRL::ComPtr<ID3D12Fence>                 fence_                          = nullptr;      // フェンス
     Microsoft::WRL::ComPtr<ID3D12DescriptorHeap>        rtvDescriptorHeap_              = nullptr;
     Microsoft::WRL::ComPtr<ID3D12DescriptorHeap>        srvDescriptorHeap_              = nullptr;
@@ -61,6 +64,11 @@ private:
     uint64_t                                            fenceValue_                     = 0u;           // フェンス値
     D3D12_VIEWPORT                                      viewport_                       = {};           // ビューポート
     D3D12_RECT                                          scissorRect_                    = {};           // シザーレクト
+    D3D12_CPU_DESCRIPTOR_HANDLE                         rtvHandles_[2]                  = {};
+
+    float                                               clearColor_[4]                  = { 0.2f, 0.2f, 0.4f, 1.0f };
+
+    uint32_t                                            backBufferIndex_                = 0u;
 
     uint32_t clientWidth_ = 1280u;
     uint32_t clientHeight_ = 720u;
@@ -118,4 +126,21 @@ private:
     /// ImGuiの初期化
     /// </summary>
     void InitializeImGui();
+
+
+    /// <summary>
+    /// リソースバリアの設定
+    /// </summary>
+    /// <param name="_type">バリアの種類</param>
+    /// <param name="_flag">フラグ</param>
+    /// <param name="_resource">リソース</param>
+    /// <param name="_before">変更前のステート</param>
+    /// <param name="_after">変更後のステート</param>
+    void SetResourceBarrier(
+        D3D12_RESOURCE_BARRIER_TYPE _type,
+        D3D12_RESOURCE_BARRIER_FLAGS _flag,
+        ID3D12Resource* _resource,
+        D3D12_RESOURCE_STATES _before,
+        D3D12_RESOURCE_STATES _after
+    );
 };
