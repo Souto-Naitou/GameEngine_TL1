@@ -19,9 +19,6 @@
     <Filter Include="DirectX12">
       <UniqueIdentifier>{55c061c3-927c-45ed-a4ab-5d06972fc5bb}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Input">
-      <UniqueIdentifier>{8803f867-4d11-4cec-883f-32df44af6c30}</UniqueIdentifier>
-    </Filter>
     <Filter Include="DirectX12\BlendMode">
       <UniqueIdentifier>{fb9d6f31-4fb9-4701-bd6d-64c85dfa071b}</UniqueIdentifier>
     </Filter>
@@ -36,6 +33,15 @@
     </Filter>
     <Filter Include="Externals\Timer">
       <UniqueIdentifier>{eadfca40-62e7-4a72-b41e-3818d23dafb1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Feature">
+      <UniqueIdentifier>{a77adb65-0ab2-4143-a805-264c3fa04373}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Feature\Input">
+      <UniqueIdentifier>{8803f867-4d11-4cec-883f-32df44af6c30}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Feature\Sprite">
+      <UniqueIdentifier>{0bf046c0-33e6-4cba-8c94-fdb514b3af33}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -61,7 +67,7 @@
       <Filter>DirectX12</Filter>
     </ClCompile>
     <ClCompile Include="Features\Input.cpp">
-      <Filter>Input</Filter>
+      <Filter>Feature\Input</Filter>
     </ClCompile>
     <ClCompile Include="Core\DirectX12\DirectX12_Impl.cpp">
       <Filter>DirectX12</Filter>
@@ -93,6 +99,12 @@
     <ClCompile Include="Externals\Timer\Timer.cpp">
       <Filter>Externals\Timer</Filter>
     </ClCompile>
+    <ClCompile Include="Features\Sprite\Sprite.cpp">
+      <Filter>Feature\Sprite</Filter>
+    </ClCompile>
+    <ClCompile Include="Features\Sprite\SpriteSystem.cpp">
+      <Filter>Feature\Sprite</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="structs.h">
@@ -120,7 +132,7 @@
       <Filter>DirectX12</Filter>
     </ClInclude>
     <ClInclude Include="Features\Input.h">
-      <Filter>Input</Filter>
+      <Filter>Feature\Input</Filter>
     </ClInclude>
     <ClInclude Include="Externals\imgui\imconfig.h">
       <Filter>Externals\ImGui</Filter>
@@ -151,6 +163,12 @@
     </ClInclude>
     <ClInclude Include="Externals\Timer\Timer.h">
       <Filter>Externals\Timer</Filter>
+    </ClInclude>
+    <ClInclude Include="Features\Sprite\Sprite.h">
+      <Filter>Feature\Sprite</Filter>
+    </ClInclude>
+    <ClInclude Include="Features\Sprite\SpriteSystem.h">
+      <Filter>Feature\Sprite</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
