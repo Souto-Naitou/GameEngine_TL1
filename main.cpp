@@ -24,6 +24,7 @@ int _stdcall WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
     {
         pDirectX->PresentDraw();
 
+        pSpriteSystem->PresentDraw();
 
 
         pDirectX->PostDraw();

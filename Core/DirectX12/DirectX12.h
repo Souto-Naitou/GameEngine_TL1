@@ -31,9 +31,16 @@ public:
     void PresentDraw();
     void PostDraw();
 
-private: /// Getter
-    ID3D12Device*               GetDevice()         const { return device_.Get(); }
-    ID3D12GraphicsCommandList*  GetCommandList()    const { return commandList_.Get(); }
+
+public: /// Getter
+    ID3D12Device*               GetDevice()                 { return device_.Get(); }
+    ID3D12GraphicsCommandList*  GetCommandList()    const   { return commandList_.Get(); }
+    IDxcUtils*                  GetDxcUtils()       const   { return dxcUtils_.Get(); }
+    IDxcCompiler3*              GetDxcCompiler()    const   { return dxcCompiler_.Get(); }
+    IDxcIncludeHandler*         GetIncludeHandler() const   { return includeHandler_.Get(); }
+
+    uint32_t                    GetClientWidth()    const   { return clientWidth_; }
+    uint32_t                    GetClientHeight()   const   { return clientHeight_; }
 
 private:
     DirectX12() = default;
@@ -71,11 +78,10 @@ private:
     D3D12_RECT                                          scissorRect_                    = {};           // シザーレクト
     D3D12_CPU_DESCRIPTOR_HANDLE                         rtvHandles_[2]                  = {};
 
+    uint32_t clientWidth_ = 1280u;
+    uint32_t clientHeight_ = 720u;
+
     float                                               clearColor_[4]                  = { 0.2f, 0.2f, 0.4f, 1.0f };
-
-
-    uint32_t clientWidth_       = 1280u;
-    uint32_t clientHeight_      = 720u;
 
     uint32_t backBufferIndex_   = 0u;
 

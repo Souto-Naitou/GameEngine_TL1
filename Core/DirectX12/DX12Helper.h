@@ -35,7 +35,7 @@ namespace DX12Helper
     /// <param name="_shaderVisible">シェーダーが参照可能か</param>
     /// <returns></returns>
     Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> CreateDescriptorHeap(
-        Microsoft::WRL::ComPtr<ID3D12Device>& _device,
+        const Microsoft::WRL::ComPtr<ID3D12Device>& _device,
         D3D12_DESCRIPTOR_HEAP_TYPE _heapType,
         UINT _numDescriptors,
         bool _shaderVisible);
