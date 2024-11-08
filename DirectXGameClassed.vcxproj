@@ -122,6 +122,13 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Features\Sprite\Sprite.cpp" />
     <ClCompile Include="Features\Sprite\SpriteSystem.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Math\impl\Matrix4x4.cpp" />
+    <ClCompile Include="Math\impl\Rect2.cpp" />
+    <ClCompile Include="Math\impl\Vector2.cpp" />
+    <ClCompile Include="Math\impl\Vector3.cpp" />
+    <ClCompile Include="Math\impl\vector3calc.cpp" />
+    <ClCompile Include="Math\impl\Vector4.cpp" />
+    <ClCompile Include="Math\MathExtension\mathExtension.cpp" />
     <ClCompile Include="Utility\ConvertString.cpp" />
     <ClCompile Include="Utility\Logger.cpp" />
   </ItemGroup>
@@ -143,6 +150,12 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Features\Input.h" />
     <ClInclude Include="Features\Sprite\Sprite.h" />
     <ClInclude Include="Features\Sprite\SpriteSystem.h" />
+    <ClInclude Include="Math\MathExtension\mathExtension.h" />
+    <ClInclude Include="Math\Matrix4x4.h" />
+    <ClInclude Include="Math\Rect2.h" />
+    <ClInclude Include="Math\Vector2.h" />
+    <ClInclude Include="Math\Vector3.h" />
+    <ClInclude Include="Math\Vector4.h" />
     <ClInclude Include="structs.h" />
     <ClInclude Include="Utility\ConvertString.h" />
     <ClInclude Include="Utility\Logger.h" />
