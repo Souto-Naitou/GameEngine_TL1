@@ -44,10 +44,10 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(ProjectDir);$(ProjectDir)Utility;$(ProjectDir)Core/Win32/;$(ProjectDir)Core/DirectX12;$(ProjectDir)Externals\Timer;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)Math;$(ProjectDir);$(ProjectDir)Utility;$(ProjectDir)Core/Win32/;$(ProjectDir)Core/DirectX12;$(ProjectDir)Externals\Timer;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(ProjectDir);$(ProjectDir)Utility;$(ProjectDir)Core/Win32/;$(ProjectDir)Core/DirectX12;$(ProjectDir)Externals\Timer;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)Math;$(ProjectDir);$(ProjectDir)Utility;$(ProjectDir)Core/Win32/;$(ProjectDir)Core/DirectX12;$(ProjectDir)Externals\Timer;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
