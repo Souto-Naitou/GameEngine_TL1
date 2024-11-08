@@ -75,7 +75,7 @@ public:
     /// ==========
     /// minus sign
     /// ==========
-    
+
     Vector3 operator-() const;
 
     /// =======
@@ -119,10 +119,13 @@ public:
 Vector3 operator*(const float _f, const Vector3& _v);
 Vector3 operator/(const float _f, const Vector3& _v);
 
-Vector3 Add(const Vector3& _v1, const Vector3& _v2);
-Vector3 Subtract(const Vector3& _v1, const Vector3& _v2);
-Vector3 Multiply(float _scalar, const Vector3& _v);
-float   Dot(const Vector3& _v1, const Vector3& _v2);
-float   Length(const Vector3& _v);
-Vector3 Normalize(const Vector3& _v);
-Vector3 Transform(const Vector3& _vector, const Matrix4x4& _matrix);
+namespace FMath
+{
+    Vector3 Add(const Vector3& _v1, const Vector3& _v2);
+    Vector3 Subtract(const Vector3& _v1, const Vector3& _v2);
+    Vector3 Multiply(float _scalar, const Vector3& _v);
+    float   Dot(const Vector3& _v1, const Vector3& _v2);
+    float   Length(const Vector3& _v);
+    Vector3 Normalize(const Vector3& _v);
+    Vector3 Transform(const Vector3& _vector, const Matrix4x4& _matrix);
+}

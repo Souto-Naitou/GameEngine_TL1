@@ -120,13 +120,13 @@
     <ClCompile Include="Math\impl\Vector3.cpp">
       <Filter>Math</Filter>
     </ClCompile>
-    <ClCompile Include="Math\impl\vector3calc.cpp">
-      <Filter>Math</Filter>
-    </ClCompile>
     <ClCompile Include="Math\impl\Vector4.cpp">
       <Filter>Math</Filter>
     </ClCompile>
     <ClCompile Include="Math\MathExtension\mathExtension.cpp">
+      <Filter>Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Math\impl\Vector3Fn.cpp">
       <Filter>Math</Filter>
     </ClCompile>
   </ItemGroup>

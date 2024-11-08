@@ -126,7 +126,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Math\impl\Rect2.cpp" />
     <ClCompile Include="Math\impl\Vector2.cpp" />
     <ClCompile Include="Math\impl\Vector3.cpp" />
-    <ClCompile Include="Math\impl\vector3calc.cpp" />
+    <ClCompile Include="Math\impl\Vector3Fn.cpp" />
     <ClCompile Include="Math\impl\Vector4.cpp" />
     <ClCompile Include="Math\MathExtension\mathExtension.cpp" />
     <ClCompile Include="Utility\ConvertString.cpp" />
