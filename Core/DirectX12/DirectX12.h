@@ -31,9 +31,28 @@ public:
     void PresentDraw();
     void PostDraw();
 
-private: /// Getter
-    ID3D12Device*               GetDevice()         const { return device_.Get(); }
-    ID3D12GraphicsCommandList*  GetCommandList()    const { return commandList_.Get(); }
+
+    static const uint32_t kMaxSRVCount_;
+
+public: /// Getter
+    ID3D12Device*               GetDevice()                                 { return device_.Get(); }
+    ID3D12GraphicsCommandList*  GetCommandList()                    const   { return commandList_.Get(); }
+    IDxcUtils*                  GetDxcUtils()                       const   { return dxcUtils_.Get(); }
+    IDxcCompiler3*              GetDxcCompiler()                    const   { return dxcCompiler_.Get(); }
+    IDxcIncludeHandler*         GetIncludeHandler()                 const   { return includeHandler_.Get(); }
+
+    uint32_t                    GetClientWidth()                    const   { return clientWidth_; }
+    uint32_t                    GetClientHeight()                   const   { return clientHeight_; }
+
+    uint32_t                    GetDescriptorSizeSRV()              const   { return kDescriptorSizeSRV; }
+
+    int32_t                     GetNumUploadedTexture()             const   { return numUploadedTexture; }
+
+    ID3D12DescriptorHeap*       GetSRVDescriptorHeap()              const   { return srvDescriptorHeap_.Get(); }
+
+    std::vector<D3D12_GPU_DESCRIPTOR_HANDLE>&   GetSRVHandlesGPUList()      { return srvHandlesGPUList_; }
+    std::vector<D3D12_CPU_DESCRIPTOR_HANDLE>&   GetSRVHandlesCPUList()      { return srvHandlesCPUList_; }
+    std::vector<Microsoft::WRL::ComPtr<ID3D12Resource>>& GetTextureResources() { return textureResources_; }
 
 private:
     DirectX12() = default;
@@ -41,6 +60,11 @@ private:
 
     HRESULT hr_     = 0;
     HWND    hwnd_   = {};
+
+
+    std::vector<D3D12_GPU_DESCRIPTOR_HANDLE>            srvHandlesGPUList_              = {};           // SRVハンドルリスト(GPU)
+    std::vector<D3D12_CPU_DESCRIPTOR_HANDLE>            srvHandlesCPUList_              = {};           // SRVハンドルリスト(CPU)
+    std::vector<Microsoft::WRL::ComPtr<ID3D12Resource>> textureResources_               = {};           // テクスチャリソース
 
     Microsoft::WRL::ComPtr<ID3D12Debug1>                debugController_                = nullptr;      // デバッグコントローラ
     Microsoft::WRL::ComPtr<IDXGIFactory7>               dxgiFactory_                    = nullptr;      // DXGIファクトリ
@@ -69,20 +93,21 @@ private:
     uint64_t                                            fenceValue_                     = 0u;           // フェンス値
     D3D12_VIEWPORT                                      viewport_                       = {};           // ビューポート
     D3D12_RECT                                          scissorRect_                    = {};           // シザーレクト
-    D3D12_CPU_DESCRIPTOR_HANDLE                         rtvHandles_[2]                  = {};
+
+    D3D12_CPU_DESCRIPTOR_HANDLE                         rtvHandles_[2]                  = {};           // RTVハンドル
+
+    uint32_t                                            clientWidth_                    = 1280u;
+    uint32_t                                            clientHeight_                   = 720u;
 
     float                                               clearColor_[4]                  = { 0.2f, 0.2f, 0.4f, 1.0f };
 
+    uint32_t                                            backBufferIndex_                = 0u;
 
-    uint32_t clientWidth_       = 1280u;
-    uint32_t clientHeight_      = 720u;
+    uint32_t                                            kDescriptorSizeSRV              = 0u;
+    uint32_t                                            kDescriptorSizeRTV              = 0u;
+    uint32_t                                            kDescriptorSizeDSV              = 0u;
 
-    uint32_t backBufferIndex_   = 0u;
-
-    uint32_t kDescriptorSizeSRV = 0u;
-    uint32_t kDescriptorSizeRTV = 0u;
-    uint32_t kDescriptorSizeDSV = 0u;
-
+    int32_t                                             numUploadedTexture              = 0;
 
 private:
 
