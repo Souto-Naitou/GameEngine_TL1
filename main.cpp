@@ -27,6 +27,13 @@ int _stdcall WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
     while (pWin32App->GetMsg() != WM_QUIT)
     {
+        /// スプライトを回転させる
+        Vector2 size = pSprite->GetSize();
+        size.x += 0.1f;
+        size.y += 0.1f;
+
+        pSprite->SetSize(size);
+
         pSprite->Update();
 
         pDirectX->PresentDraw();

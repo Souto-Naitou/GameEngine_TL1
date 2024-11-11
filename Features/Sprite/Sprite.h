@@ -42,6 +42,18 @@ public:
     void Draw();
     void Finalize();
 
+public: /// Getter
+    const float GetRotation() const { return rotate_; }
+    const Vector2& GetPosition() const { return translate_; }
+    const Vector4& GetColor() const { return materialData_->color; }
+    const Vector2& GetSize() const { return size_; }
+
+public: /// Setter
+    void SetRotation(const float _rotation) { rotate_ = _rotation; }
+    void SetPosition(const Vector2& _position) { translate_ = _position; }
+    void SetColor(const Vector4& _color) { materialData_->color = _color; }
+    void SetSize(const Vector2& _size) { size_ = _size; }
+
 private: /// 他クラスが所持するインスタンスへのポインタ
     SpriteSystem* pSpriteSystem_ = nullptr;
     DirectX12* pDx12_ = nullptr;
@@ -49,9 +61,14 @@ private: /// 他クラスが所持するインスタンスへのポインタ
 
 private: /// メンバ変数
 
-    Transform transform_;
-    Transform uvTransform_;
-    Matrix4x4 uvTransformMatrix_;
+    Transform transform_ = {};
+
+    Vector2 size_ = {};
+    float rotate_ = {};
+    Vector2 translate_ = {};
+
+    Transform uvTransform_ = {};
+    Matrix4x4 uvTransformMatrix_ = {};
 
     /// バッファリソース
     Microsoft::WRL::ComPtr<ID3D12Resource> vertexResource_ = nullptr;

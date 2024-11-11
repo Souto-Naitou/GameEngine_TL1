@@ -73,6 +73,28 @@ void Sprite::Update()
     uint32_t clientWidth = pDx12_->GetClientWidth();
     uint32_t clientHeight = pDx12_->GetClientHeight();
 
+    // 左下
+    vertexData_[0].position = { 0.0f, 1.0f, 0.0f, 1.0f };
+    vertexData_[0].texcoord = { 0.0f, 1.0f };
+    vertexData_[0].normal = { 0.0f, 0.0f, -1.0f };
+    // 左上
+    vertexData_[1].position = { 0.0f, 0.0f, 0.0f, 1.0f };
+    vertexData_[1].texcoord = { 0.0f, 0.0f };
+    vertexData_[1].normal = { 0.0f, 0.0f, -1.0f };
+    // 右下
+    vertexData_[2].position = { 1.0f, 1.0f, 0.0f, 1.0f };
+    vertexData_[2].texcoord = { 1.0f, 1.0f };
+    vertexData_[2].normal = { 0.0f, 0.0f, -1.0f };
+    // 右上
+    vertexData_[3].position = { 1.0f, 0.0f, 0.0f, 1.0f };
+    vertexData_[3].texcoord = { 1.0f, 0.0f };
+    vertexData_[3].normal = { 0.0f, 0.0f, -1.0f };
+
+
+    transform_.scale = { size_.x, size_.y, 1.0f };
+    transform_.rotate = { 0.0f, 0.0f, rotate_ };
+    transform_.translate = translate_;
+
     // WVPMatrixの作成
     Matrix4x4 worldMatrix = Matrix4x4::AffineMatrix(transform_.scale, transform_.rotate, transform_.translate);
     Matrix4x4 viewMatrix = Matrix4x4::Identity();
@@ -152,16 +174,6 @@ void Sprite::CreateIndexBufferView()
 void Sprite::MapVertexData()
 {
     vertexResource_->Map(0, nullptr, reinterpret_cast<void**>(&vertexData_));
-    // 1枚目の三角形
-    vertexData_[0].position = { 0.0f, 360.0f, 0.0f, 1.0f }; // 左下
-    vertexData_[0].texcoord = { 0.0f, 1.0f };
-    vertexData_[1].position = { 0.0f, 0.0f, 0.0f, 1.0f }; // 左上
-    vertexData_[1].texcoord = { 0.0f, 0.0f };
-    vertexData_[2].position = { 640.0f, 360.0f, 0.0f, 1.0f }; // 右下
-    vertexData_[2].texcoord = { 1.0f, 1.0f };
-    vertexData_[3].position = { 640.0f, 0.0f, 0.0f, 1.0f }; // 右上
-    vertexData_[3].texcoord = { 1.0f, 0.0f };
-
 }
 
 
