@@ -7,8 +7,8 @@
 
 float cotanf(float _x);
 float clamp(
-	float _x,
-	float _min,
+	float _x, 
+	float _min, 
 	float _max
 );
 int clamp(

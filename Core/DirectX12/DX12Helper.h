@@ -7,6 +7,7 @@
 #include <dxcapi.h>
 #include <string>
 #include <Externals/DirectXTex/DirectXTex.h>
+#include <vector>
 
 namespace DX12Helper
 {
@@ -82,4 +83,25 @@ namespace DX12Helper
     /// </summary>
     /// <param name="_filePath">ファイルパス</param>
     DirectX::ScratchImage LoadTexture(const std::string _filePath);
+
+    Microsoft::WRL::ComPtr<ID3D12Resource> CreateTextureResource(const Microsoft::WRL::ComPtr<ID3D12Device>& _device, const DirectX::TexMetadata& _metadata);
+    void UploadTextureData(const Microsoft::WRL::ComPtr<ID3D12Resource>& _texture, const DirectX::ScratchImage& _mipImages);
+    D3D12_CPU_DESCRIPTOR_HANDLE GetCPUDescriptorHandle(const Microsoft::WRL::ComPtr<ID3D12DescriptorHeap>& _descriptorHeap, uint32_t _descriptorSize, uint32_t _index);
+    D3D12_GPU_DESCRIPTOR_HANDLE GetGPUDescriptorHandle(const Microsoft::WRL::ComPtr<ID3D12DescriptorHeap>& _descriptorHeap, uint32_t _descriptorSize, uint32_t _index);
+
+
+    /// <summary>
+    /// テクスチャリソースを生成
+    /// </summary>
+    /// <param name="_device">デバイス</param>
+    /// <param name="_srvDescriptorHeap">SRVディスクリプタヒープ</param>
+    /// <param name="_kDescriptorSizeSRV">SRVディスクリプタサイズ</param>
+    /// <param name="_path">ファイルパス</param>
+    /// <param name="_textureResources">テクスチャリソース</param>
+    /// <returns></returns>
+    void CreateNewTexture(const Microsoft::WRL::ComPtr<ID3D12Device>& _device,
+        const Microsoft::WRL::ComPtr<ID3D12DescriptorHeap>& _srvDescriptorHeap,
+        const uint32_t _kDescriptorSizeSRV,
+        const char* _path,
+        std::vector<Microsoft::WRL::ComPtr<ID3D12Resource>>& _textureResources);
 }

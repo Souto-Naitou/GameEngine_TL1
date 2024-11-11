@@ -5,6 +5,7 @@
 #include <format>
 #include <intsafe.h>
 #include <ConvertString.h>
+#include <DirectX12.h>
 
 void DX12Helper::CreateDevice(Microsoft::WRL::ComPtr<ID3D12Device>& _device, Microsoft::WRL::ComPtr<IDXGIAdapter4>& _adapter)
 {
@@ -218,4 +219,102 @@ DirectX::ScratchImage DX12Helper::LoadTexture(const std::string _filePath)
     assert(SUCCEEDED(hr));
 
     return mipImages;
+}
+
+Microsoft::WRL::ComPtr<ID3D12Resource> DX12Helper::CreateTextureResource(const Microsoft::WRL::ComPtr<ID3D12Device>& _device, const DirectX::TexMetadata& _metadata)
+{
+    // metadataをもとにResourceの設定
+    D3D12_RESOURCE_DESC resourceDesc{};
+    resourceDesc.Width = UINT(_metadata.width);
+    resourceDesc.Height = UINT(_metadata.height);
+    resourceDesc.MipLevels = UINT16(_metadata.mipLevels);
+    resourceDesc.DepthOrArraySize = UINT16(_metadata.arraySize);
+    resourceDesc.Format = _metadata.format;
+    resourceDesc.SampleDesc.Count = 1;
+    resourceDesc.Dimension = D3D12_RESOURCE_DIMENSION(_metadata.dimension);
+
+    // 利用するHeapの設定。非常に特殊な運用。 02_04exで一般的なケース版がある
+    D3D12_HEAP_PROPERTIES heapProperties{};
+    heapProperties.Type = D3D12_HEAP_TYPE_CUSTOM;
+    heapProperties.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_WRITE_BACK;
+    heapProperties.MemoryPoolPreference = D3D12_MEMORY_POOL_L0;
+
+    // Resourceの生成
+    Microsoft::WRL::ComPtr<ID3D12Resource> resource = nullptr;
+    HRESULT hr = _device->CreateCommittedResource(
+        &heapProperties,
+        D3D12_HEAP_FLAG_NONE,
+        &resourceDesc,
+        D3D12_RESOURCE_STATE_GENERIC_READ,
+        nullptr,
+        IID_PPV_ARGS(&resource));
+    assert(SUCCEEDED(hr));
+    return resource;
+}
+
+void DX12Helper::UploadTextureData(const Microsoft::WRL::ComPtr<ID3D12Resource>& _texture, const DirectX::ScratchImage& _mipImages)
+{
+    // Meta情報を取得
+    const DirectX::TexMetadata& metadata = _mipImages.GetMetadata();
+    // 全MipMapについて
+    for (size_t mipLevel = 0; mipLevel < metadata.mipLevels; ++mipLevel)
+    {
+        // MipMapLevelを指定して各Imageを取得
+        const DirectX::Image* img = _mipImages.GetImage(mipLevel, 0, 0);
+        // Textureに転送
+        HRESULT hr = _texture->WriteToSubresource(
+            UINT(mipLevel),
+            nullptr,
+            img->pixels,
+            UINT(img->rowPitch),
+            UINT(img->slicePitch)
+        );
+        assert(SUCCEEDED(hr));
+    }
+}
+
+void DX12Helper::CreateNewTexture(const Microsoft::WRL::ComPtr<ID3D12Device>& _device,
+    const Microsoft::WRL::ComPtr<ID3D12DescriptorHeap>& _srvDescriptorHeap,
+    const uint32_t _kDescriptorSizeSRV,
+    const char* _path,
+    std::vector<Microsoft::WRL::ComPtr<ID3D12Resource>>& _textureResources)
+{
+    DirectX12* pDx12 = DirectX12::GetInstance();
+    int32_t numUploadedTexture = pDx12->GetNumUploadedTexture();
+    std::vector<D3D12_CPU_DESCRIPTOR_HANDLE>& textureSrvHandleCPUs = pDx12->GetSRVHandlesCPUList();
+    std::vector<D3D12_GPU_DESCRIPTOR_HANDLE>& textureSrvHandleGPUs = pDx12->GetSRVHandlesGPUList();
+
+    DirectX::ScratchImage mipImage = LoadTexture(_path);
+    const DirectX::TexMetadata& metadata = mipImage.GetMetadata();
+    Microsoft::WRL::ComPtr<ID3D12Resource> textureResource = CreateTextureResource(_device, metadata);
+    _textureResources.push_back(textureResource);
+    UploadTextureData(textureResource, mipImage);
+
+    D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};
+    srvDesc.Format = metadata.format;
+    srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+    srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
+    srvDesc.Texture2D.MipLevels = UINT(metadata.mipLevels);
+
+    numUploadedTexture++;
+    D3D12_CPU_DESCRIPTOR_HANDLE textureSrvHandleCPU = GetCPUDescriptorHandle(_srvDescriptorHeap, _kDescriptorSizeSRV, numUploadedTexture);
+    D3D12_GPU_DESCRIPTOR_HANDLE textureSrvHandleGPU = GetGPUDescriptorHandle(_srvDescriptorHeap, _kDescriptorSizeSRV, numUploadedTexture);
+    textureSrvHandleCPUs.push_back(textureSrvHandleCPU);
+    textureSrvHandleGPUs.push_back(textureSrvHandleGPU);
+    _device->CreateShaderResourceView(textureResource.Get(), &srvDesc, textureSrvHandleCPU);
+    return;
+}
+
+D3D12_CPU_DESCRIPTOR_HANDLE DX12Helper::GetCPUDescriptorHandle(const Microsoft::WRL::ComPtr<ID3D12DescriptorHeap>& _descriptorHeap, uint32_t _descriptorSize, uint32_t _index)
+{
+    D3D12_CPU_DESCRIPTOR_HANDLE handleCPU = _descriptorHeap->GetCPUDescriptorHandleForHeapStart();
+    handleCPU.ptr += (_descriptorSize * _index); // ポインタをヒープの始めからインデックス分インクリメント
+    return handleCPU;
+}
+
+D3D12_GPU_DESCRIPTOR_HANDLE DX12Helper::GetGPUDescriptorHandle(const Microsoft::WRL::ComPtr<ID3D12DescriptorHeap>& _descriptorHeap, uint32_t _descriptorSize, uint32_t _index)
+{
+    D3D12_GPU_DESCRIPTOR_HANDLE handleGPU = _descriptorHeap->GetGPUDescriptorHandleForHeapStart();
+    handleGPU.ptr += (_descriptorSize * _index);
+    return handleGPU;
 }

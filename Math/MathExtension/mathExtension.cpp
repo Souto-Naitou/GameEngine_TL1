@@ -48,10 +48,10 @@ Vector3 Lerp(const Vector3& _vx, const Vector3& _vy, float _t)
 
 Vector3 Slerp(const Vector3& _vx, const Vector3& _vy, float _t)
 {
-	Vector3 normvx = Normalize(_vx);
-	Vector3 normvy = Normalize(_vy);
+	Vector3 normvx = FMath::Normalize(_vx);
+	Vector3 normvy = FMath::Normalize(_vy);
 	// dot
-	float dot = Dot(normvx, normvy);
+	float dot = FMath::Dot(normvx, normvy);
 	// gosa
 	dot = dot > 1.0f ? 1.0f : dot;
 	// arccos
@@ -73,8 +73,8 @@ Vector3 Slerp(const Vector3& _vx, const Vector3& _vy, float _t)
 		// 球面線形補間したベクトル
 		normalizedInterpVector = (sinThetaFrom * normvx + sinThetaTo * normvy) * (1.0f / sinTheta);
 	}
-	float lengthx = Length(_vx);
-	float lengthy = Length(_vy);
+	float lengthx = FMath::Length(_vx);
+	float lengthy = FMath::Length(_vy);
 	float length = Lerp(lengthx, lengthy, _t);
 
 	//float vxlen = Length(_vx);
