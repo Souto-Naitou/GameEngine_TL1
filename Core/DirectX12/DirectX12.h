@@ -32,6 +32,8 @@ public:
     void PostDraw();
 
 
+    static const uint32_t kMaxSRVCount_;
+
 public: /// Getter
     ID3D12Device*               GetDevice()                                 { return device_.Get(); }
     ID3D12GraphicsCommandList*  GetCommandList()                    const   { return commandList_.Get(); }
@@ -58,6 +60,7 @@ private:
 
     HRESULT hr_     = 0;
     HWND    hwnd_   = {};
+
 
     std::vector<D3D12_GPU_DESCRIPTOR_HANDLE>            srvHandlesGPUList_              = {};           // SRVハンドルリスト(GPU)
     std::vector<D3D12_CPU_DESCRIPTOR_HANDLE>            srvHandlesCPUList_              = {};           // SRVハンドルリスト(CPU)

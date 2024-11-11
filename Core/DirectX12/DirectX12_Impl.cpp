@@ -1,3 +1,5 @@
+/// DirectX12クラスの実装部分
+
 #include "Core/DirectX12/DirectX12.h"
 
 #include "Logger.h"
@@ -14,7 +16,7 @@
 #include <dxcapi.h>
 #pragma comment(lib, "dxcompiler.lib")
 
-/// DirectX12クラスの実装部分
+const uint32_t DirectX12::kMaxSRVCount_ = 512ui32;
 
 void DirectX12::ChooseAdapter()
 {
@@ -51,7 +53,6 @@ void DirectX12::CreateCommandResources()
     assert(SUCCEEDED(hr_) && "コマンドアロケータの生成に失敗");
     if (!commandAllocator_) return;
 
-
     /// コマンドリストを生成
     hr_ = device_->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, commandAllocator_.Get(), nullptr, IID_PPV_ARGS(&commandList_));
     assert(SUCCEEDED(hr_) && "コマンドリストの生成がうまくいかなかったので起動できない");
@@ -77,14 +78,14 @@ void DirectX12::CreateSwapChainAndResource()
 
 
     /// Descriptorのサイズを取得 (動的に変わらないもの)
-    kDescriptorSizeDSV = device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+    kDescriptorSizeSRV = device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
     kDescriptorSizeRTV = device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
     kDescriptorSizeDSV = device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
 
 
     /// ディスクリプタヒープの生成も行う
     rtvDescriptorHeap_ = DX12Helper::CreateDescriptorHeap(device_, D3D12_DESCRIPTOR_HEAP_TYPE_RTV, 2, false);
-    srvDescriptorHeap_ = DX12Helper::CreateDescriptorHeap(device_, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, 128, true);
+    srvDescriptorHeap_ = DX12Helper::CreateDescriptorHeap(device_, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, kMaxSRVCount_, true);
     dsvDescriptorHeap_ = DX12Helper::CreateDescriptorHeap(device_, D3D12_DESCRIPTOR_HEAP_TYPE_DSV, 1, false);
 
 

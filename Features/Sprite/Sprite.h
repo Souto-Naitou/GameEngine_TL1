@@ -70,6 +70,9 @@ private: /// メンバ変数
     Transform uvTransform_ = {};
     Matrix4x4 uvTransformMatrix_ = {};
 
+    // テクスチャハンドル
+    uint32_t textureIndex_ = 0;
+
     /// バッファリソース
     Microsoft::WRL::ComPtr<ID3D12Resource> vertexResource_ = nullptr;
     Microsoft::WRL::ComPtr<ID3D12Resource> indexResource_ = nullptr;

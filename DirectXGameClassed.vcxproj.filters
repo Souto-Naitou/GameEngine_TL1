@@ -46,6 +46,9 @@
     <Filter Include="Math">
       <UniqueIdentifier>{da3950f7-d8ed-4f70-ade0-9820e872ac5b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="DirectX12\TextureManager">
+      <UniqueIdentifier>{b645dc65-bf36-43cb-90e8-e823724f366b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -129,6 +132,9 @@
     <ClCompile Include="Math\impl\Vector3Fn.cpp">
       <Filter>Math</Filter>
     </ClCompile>
+    <ClCompile Include="Core\DirectX12\TextureManager.cpp">
+      <Filter>DirectX12\TextureManager</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="structs.h">
@@ -211,6 +217,9 @@
     </ClInclude>
     <ClInclude Include="Math\Vector4.h">
       <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\DirectX12\TextureManager.h">
+      <Filter>DirectX12\TextureManager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

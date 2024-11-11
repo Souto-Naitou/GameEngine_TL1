@@ -109,6 +109,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Core\DirectX12\DirectX12_Impl.cpp" />
     <ClCompile Include="Core\DirectX12\DX12Helper.cpp" />
     <ClCompile Include="Core\DirectX12\Framerate.cpp" />
+    <ClCompile Include="Core\DirectX12\TextureManager.cpp" />
     <ClCompile Include="Core\Win32\Win32Application.cpp" />
     <ClCompile Include="Externals\imgui\imgui.cpp" />
     <ClCompile Include="Externals\imgui\imgui_demo.cpp" />
@@ -137,6 +138,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Core\DirectX12\DirectX12.h" />
     <ClInclude Include="Core\DirectX12\DX12Helper.h" />
     <ClInclude Include="Core\DirectX12\Framerate.h" />
+    <ClInclude Include="Core\DirectX12\TextureManager.h" />
     <ClInclude Include="Core\Win32\Win32Application.h" />
     <ClInclude Include="Externals\imgui\imconfig.h" />
     <ClInclude Include="Externals\imgui\imgui.h" />

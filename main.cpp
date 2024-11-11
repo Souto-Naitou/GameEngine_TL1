@@ -3,6 +3,7 @@
 #include <Win32Application.h>
 #include "Features/Sprite/SpriteSystem.h"
 #include "Features/Sprite/Sprite.h"
+#include "Core/DirectX12/TextureManager.h"
 
 int _stdcall WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
@@ -10,6 +11,8 @@ int _stdcall WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
     DirectX12* pDirectX = DirectX12::GetInstance();
     SpriteSystem* pSpriteSystem = new SpriteSystem();
     Sprite* pSprite = new Sprite();
+    Sprite* pSpriteMB = new Sprite();
+    TextureManager::GetInstance()->Initialize();
 
     /// ウィンドウの初期化
     pWin32App->Initialize();
@@ -20,26 +23,26 @@ int _stdcall WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
     /// スプライトシステムの初期化
     pSpriteSystem->Initialize();
-    Vector3 scale = { 1.0f, 1.0f, 1.0f };
     Vector3 rotate = { 0.0f, 0.0f, 0.0f };
     Vector3 transform = { 0.0f, 0.0f, 0.0f };
-    pSprite->Initialize(pSpriteSystem, "uvChecker.png", scale, rotate, transform);
+    pSprite->Initialize(pSpriteSystem, "uvChecker.png", {128,128}, rotate, transform);
+    pSpriteMB->Initialize(pSpriteSystem, "monsterBall.png", {128,64}, rotate, transform);
 
     while (pWin32App->GetMsg() != WM_QUIT)
     {
-        /// スプライトを回転させる
-        Vector2 size = pSprite->GetSize();
-        size.x += 0.1f;
-        size.y += 0.1f;
+        /// スプライトを移動させる
 
-        pSprite->SetSize(size);
+        pSprite->SetPosition({0.f, 0.f});
+        pSpriteMB->SetPosition({0.f, 360.f});
 
         pSprite->Update();
+        pSpriteMB->Update();
 
         pDirectX->PresentDraw();
 
         pSpriteSystem->PresentDraw();
         pSprite->Draw();
+        pSpriteMB->Draw();
 
         pDirectX->PostDraw();
     }
@@ -48,6 +51,7 @@ int _stdcall WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 
     delete pSprite;
+    delete pSpriteMB;
     delete pSpriteSystem;
 
     return 0;

@@ -3,7 +3,7 @@
 #include "Features/Sprite/SpriteSystem.h"
 #include "DX12Helper.h"
 #include <Matrix4x4.h>
-
+#include <TextureManager.h>
 
 Sprite::Sprite()
 {
@@ -57,14 +57,21 @@ void Sprite::Initialize(SpriteSystem* _spriteSystem, std::string _filepath, Vect
     std::string textureName = _filepath;
     texturePath = "Resources/" + textureName;
 
-    ID3D12DescriptorHeap* srvDescriptorHeap = pDx12_->GetSRVDescriptorHeap();
-    uint32_t kDescriptorSizeSRV = pDx12_->GetDescriptorSizeSRV();
-    std::vector<Microsoft::WRL::ComPtr<ID3D12Resource>>& textureResources = pDx12_->GetTextureResources();
-    DX12Helper::CreateNewTexture(device_, srvDescriptorHeap, kDescriptorSizeSRV, texturePath.c_str(), textureResources);
+    TextureManager::GetInstance()->LoadTexture(texturePath);
+    textureIndex_ = TextureManager::GetInstance()->GetTextureIndexByFilePath(texturePath);
+
+    //ID3D12DescriptorHeap* srvDescriptorHeap = pDx12_->GetSRVDescriptorHeap();
+    //uint32_t kDescriptorSizeSRV = pDx12_->GetDescriptorSizeSRV();
+    //std::vector<Microsoft::WRL::ComPtr<ID3D12Resource>>& textureResources = pDx12_->GetTextureResources();
+    //DX12Helper::CreateNewTexture(device_, srvDescriptorHeap, kDescriptorSizeSRV, texturePath.c_str(), textureResources);
 
     transform_.scale = _scale;
     transform_.rotate = _rotate;
     transform_.translate = _transform;
+
+    size_ = _scale.xy();
+    rotate_ = _rotate.z;
+    translate_ = _transform.xy();
 }
 
 
@@ -123,7 +130,7 @@ void Sprite::Draw()
     // TransformationMatrixCBufferの場所を設定
     commandList->SetGraphicsRootConstantBufferView(1, transformationMatrixResource_->GetGPUVirtualAddress());
     // SRVの設定
-    commandList->SetGraphicsRootDescriptorTable(2, textureSrvHandleGPUs[0]);
+    commandList->SetGraphicsRootDescriptorTable(2, TextureManager::GetInstance()->GetSrvHandleGPU(textureIndex_));
 
     // 描画！（DrawCall/ドローコール）
     commandList->DrawIndexedInstanced(6, 1, 0, 0, 0);
