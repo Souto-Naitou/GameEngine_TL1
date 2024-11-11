@@ -24,8 +24,10 @@ public:
     /// <param name="_filePath">テクスチャファイルのパス</param>
     void LoadTexture(const std::string& _filePath);
 
+public: /// Getter
     uint32_t GetTextureIndexByFilePath(const std::string& _filePath);
     D3D12_GPU_DESCRIPTOR_HANDLE GetSrvHandleGPU(uint32_t _textureIndex);
+    const DirectX::TexMetadata& GetMetaData(uint32_t _textureIndex);
 
 private:
     struct TextureData

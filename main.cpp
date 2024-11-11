@@ -9,10 +9,11 @@ int _stdcall WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
     Win32Application* pWin32App = Win32Application::GetInstance();
     DirectX12* pDirectX = DirectX12::GetInstance();
+    TextureManager::GetInstance()->Initialize();
+
     SpriteSystem* pSpriteSystem = new SpriteSystem();
     Sprite* pSprite = new Sprite();
     Sprite* pSpriteMB = new Sprite();
-    TextureManager::GetInstance()->Initialize();
 
     /// ウィンドウの初期化
     pWin32App->Initialize();
@@ -25,8 +26,8 @@ int _stdcall WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
     pSpriteSystem->Initialize();
     Vector3 rotate = { 0.0f, 0.0f, 0.0f };
     Vector3 transform = { 0.0f, 0.0f, 0.0f };
-    pSprite->Initialize(pSpriteSystem, "uvChecker.png", {128,128}, rotate, transform);
-    pSpriteMB->Initialize(pSpriteSystem, "monsterBall.png", {128,64}, rotate, transform);
+    pSprite->Initialize(pSpriteSystem, "uvChecker.png");
+    pSpriteMB->Initialize(pSpriteSystem, "monsterBall.png");
 
     while (pWin32App->GetMsg() != WM_QUIT)
     {
@@ -50,8 +51,8 @@ int _stdcall WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
     pWin32App->Finalize();
 
 
-    delete pSprite;
     delete pSpriteMB;
+    delete pSprite;
     delete pSpriteSystem;
 
     return 0;

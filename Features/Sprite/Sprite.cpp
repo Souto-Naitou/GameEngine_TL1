@@ -16,7 +16,7 @@ Sprite::~Sprite()
 }
 
 
-void Sprite::Initialize(SpriteSystem* _spriteSystem, std::string _filepath, Vector3 _scale, Vector3 _rotate, Vector3 _transform)
+void Sprite::Initialize(SpriteSystem* _spriteSystem, std::string _filepath)
 {
     pSpriteSystem_ = _spriteSystem;
     pDx12_ = pSpriteSystem_->GetDx12();
@@ -60,18 +60,7 @@ void Sprite::Initialize(SpriteSystem* _spriteSystem, std::string _filepath, Vect
     TextureManager::GetInstance()->LoadTexture(texturePath);
     textureIndex_ = TextureManager::GetInstance()->GetTextureIndexByFilePath(texturePath);
 
-    //ID3D12DescriptorHeap* srvDescriptorHeap = pDx12_->GetSRVDescriptorHeap();
-    //uint32_t kDescriptorSizeSRV = pDx12_->GetDescriptorSizeSRV();
-    //std::vector<Microsoft::WRL::ComPtr<ID3D12Resource>>& textureResources = pDx12_->GetTextureResources();
-    //DX12Helper::CreateNewTexture(device_, srvDescriptorHeap, kDescriptorSizeSRV, texturePath.c_str(), textureResources);
-
-    transform_.scale = _scale;
-    transform_.rotate = _rotate;
-    transform_.translate = _transform;
-
-    size_ = _scale.xy();
-    rotate_ = _rotate.z;
-    translate_ = _transform.xy();
+    AdjustSpriteSize();
 }
 
 
@@ -79,30 +68,58 @@ void Sprite::Update()
 {
     uint32_t clientWidth = pDx12_->GetClientWidth();
     uint32_t clientHeight = pDx12_->GetClientHeight();
+    const DirectX::TexMetadata& metadata = TextureManager::GetInstance()->GetMetaData(textureIndex_);
+
 
     // 左下
-    vertexData_[0].position = { 0.0f, 1.0f, 0.0f, 1.0f };
-    vertexData_[0].texcoord = { 0.0f, 1.0f };
     vertexData_[0].normal = { 0.0f, 0.0f, -1.0f };
     // 左上
-    vertexData_[1].position = { 0.0f, 0.0f, 0.0f, 1.0f };
-    vertexData_[1].texcoord = { 0.0f, 0.0f };
     vertexData_[1].normal = { 0.0f, 0.0f, -1.0f };
     // 右下
-    vertexData_[2].position = { 1.0f, 1.0f, 0.0f, 1.0f };
-    vertexData_[2].texcoord = { 1.0f, 1.0f };
     vertexData_[2].normal = { 0.0f, 0.0f, -1.0f };
     // 右上
-    vertexData_[3].position = { 1.0f, 0.0f, 0.0f, 1.0f };
-    vertexData_[3].texcoord = { 1.0f, 0.0f };
     vertexData_[3].normal = { 0.0f, 0.0f, -1.0f };
 
+    /// アンカーポイントの設定と適用
+    float left      = 0.0f - anchorPoint_.x;
+    float right     = 1.0f - anchorPoint_.x;
+    float top       = 0.0f - anchorPoint_.y;
+    float bottom    = 1.0f - anchorPoint_.y;
 
+    if (isFlipX)
+    {
+        left = -left;
+        right = -right;
+    }
+
+    if (isFlipY)
+    {
+        top = -top;
+        bottom = -bottom;
+    }
+
+    vertexData_[0].position = { left, bottom, 0.0f, 1.0f };
+    vertexData_[1].position = { left, top, 0.0f, 1.0f };
+    vertexData_[2].position = { right, bottom, 0.0f, 1.0f };
+    vertexData_[3].position = { right, top, 0.0f, 1.0f };
+
+    /// UV座標の設定と適用 (範囲指定)
+    float tex_left = textureLeftTop_.x / metadata.width;
+    float tex_top = textureLeftTop_.y / metadata.height;
+    float tex_right = (textureLeftTop_.x + textureSize_.x) / metadata.width;
+    float tex_bottom = (textureLeftTop_.y + textureSize_.y) / metadata.height;
+
+    vertexData_[0].texcoord = { tex_left, tex_bottom };
+    vertexData_[1].texcoord = { tex_left, tex_top };
+    vertexData_[2].texcoord = { tex_right, tex_bottom };
+    vertexData_[3].texcoord = { tex_right, tex_top };
+
+    /// トランスフォームの更新
     transform_.scale = { size_.x, size_.y, 1.0f };
     transform_.rotate = { 0.0f, 0.0f, rotate_ };
     transform_.translate = translate_;
 
-    // WVPMatrixの作成
+    /// WVPMatrixの更新
     Matrix4x4 worldMatrix = Matrix4x4::AffineMatrix(transform_.scale, transform_.rotate, transform_.translate);
     Matrix4x4 viewMatrix = Matrix4x4::Identity();
     Matrix4x4 projectionMatrix = Matrix4x4::OrthographicMatrix(0.0f, 0.0f, float(clientWidth), float(clientHeight), 0.0f, 100.0f);
@@ -215,4 +232,19 @@ void Sprite::CreateTransformationMatrixResource()
     // 単位行列を書き込んでおく
     transformationMatrixData_->wvp = Matrix4x4::Identity();
     transformationMatrixData_->world = Matrix4x4::Identity();
+}
+
+void Sprite::AdjustSpriteSize()
+{
+    // テクスチャのサイズを取得
+    const DirectX::TexMetadata& metadata = TextureManager::GetInstance()->GetMetaData(textureIndex_);
+
+    // テクスチャのサイズを取得
+    float textureWidth = static_cast<float>(metadata.width);
+    float textureHeight = static_cast<float>(metadata.height);
+
+    // サイズを調整
+    size_ = Vector2(textureWidth, textureHeight);
+    textureLeftTop_ = Vector2(0.0f, 0.0f);
+    textureSize_ = Vector2(textureWidth, textureHeight);
 }
