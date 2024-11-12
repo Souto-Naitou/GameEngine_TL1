@@ -5,6 +5,7 @@
 
 #include "Vector3.h"
 #include "Vector2.h"
+#include "Color.h"
 
 /// <summary>
 /// 4th Dimension Vector
@@ -72,6 +73,12 @@ public:
         return;
     }
 
+    inline Vector4(const Color& _color)
+    {
+        *this = _color.Vec4();
+        return;
+    }
+
     inline Vector3 xyz() { return Vector3(x, y, z); }
 
     inline Vector2 xy() { return Vector2(x, y); }
@@ -119,7 +126,7 @@ public:
     /// =======
     /// Vector3
     /// =======
-    
+
     Vector4& operator+=(const Vector3& _rv);
     Vector4& operator-=(const Vector3& _rv);
     Vector4& operator*=(const Vector3& _rv);
