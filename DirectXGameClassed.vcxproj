@@ -120,6 +120,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Externals\imgui\imgui_widgets.cpp" />
     <ClCompile Include="Externals\Timer\Timer.cpp" />
     <ClCompile Include="Features\Input.cpp" />
+    <ClCompile Include="Features\Object3d\Object3d.cpp" />
+    <ClCompile Include="Features\Object3d\Object3dSystem.cpp" />
     <ClCompile Include="Features\Sprite\Sprite.cpp" />
     <ClCompile Include="Features\Sprite\SpriteSystem.cpp" />
     <ClCompile Include="main.cpp" />
@@ -150,6 +152,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Externals\imgui\imstb_truetype.h" />
     <ClInclude Include="Externals\Timer\Timer.h" />
     <ClInclude Include="Features\Input.h" />
+    <ClInclude Include="Features\Object3d\Object3d.h" />
+    <ClInclude Include="Features\Object3d\Object3dSystem.h" />
     <ClInclude Include="Features\Sprite\Sprite.h" />
     <ClInclude Include="Features\Sprite\SpriteSystem.h" />
     <ClInclude Include="Math\MathExtension\mathExtension.h" />
