@@ -26,7 +26,7 @@ void SpriteSystem::PresentDraw()
     ID3D12GraphicsCommandList* commandList = pDx12_->GetCommandList();
 
     /// ルートシグネチャをセットする
-    commandList->SetGraphicsRootSignature(rootSignature_);
+    commandList->SetGraphicsRootSignature(rootSignature_.Get());
 
     /// グラフィックスパイプラインステートをセットする
     commandList->SetPipelineState(graphicsPipelineState_.Get());
@@ -50,7 +50,7 @@ void SpriteSystem::CreateRootSignature()
     descriptionRootSignature.Flags =
         D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
 
-    // RootParameter作成。複数設定できるので配列。今回は結果1つだけなので長さ１の配列
+    // RootParameter作成。複数設定できるので配列
     D3D12_ROOT_PARAMETER rootParameters[4] = {};
     rootParameters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;	// CBVを使う
     rootParameters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;	// PixelShaderで使う
@@ -171,7 +171,7 @@ void SpriteSystem::CreatePipelineState()
 
     /// PSOを生成する
     D3D12_GRAPHICS_PIPELINE_STATE_DESC graphicsPipelineStateDesc{};
-    graphicsPipelineStateDesc.pRootSignature = rootSignature_;	// RootSignature
+    graphicsPipelineStateDesc.pRootSignature = rootSignature_.Get();	// RootSignature
     graphicsPipelineStateDesc.InputLayout = inputLayoutDesc;	// InputLayout
     graphicsPipelineStateDesc.VS = { vertexShaderBlob.Get()->GetBufferPointer(),
     vertexShaderBlob.Get()->GetBufferSize() };						// VertexShader

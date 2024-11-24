@@ -4,8 +4,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.10.34928.147
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DirectXGameClassed", "DirectXGameClassed.vcxproj", "{9FD2D32D-DAB0-40A1-B430-CBC12517B87C}"
+	ProjectSection(ProjectDependencies) = postProject
+		{F83F6C46-AEE0-480C-95FC-2319E6FEB02B} = {F83F6C46-AEE0-480C-95FC-2319E6FEB02B}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DirectXTex", "Externals\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj", "{371B9FA9-4C90-4AC6-A123-ACED756D6C77}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ImGui", "Externals\ImGui\ImGui.vcxproj", "{F83F6C46-AEE0-480C-95FC-2319E6FEB02B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -31,6 +36,14 @@ Global
 		{371B9FA9-4C90-4AC6-A123-ACED756D6C77}.Release|x64.Build.0 = Release|x64
 		{371B9FA9-4C90-4AC6-A123-ACED756D6C77}.Release|x86.ActiveCfg = Release|Win32
 		{371B9FA9-4C90-4AC6-A123-ACED756D6C77}.Release|x86.Build.0 = Release|Win32
+		{F83F6C46-AEE0-480C-95FC-2319E6FEB02B}.Debug|x64.ActiveCfg = Debug|x64
+		{F83F6C46-AEE0-480C-95FC-2319E6FEB02B}.Debug|x64.Build.0 = Debug|x64
+		{F83F6C46-AEE0-480C-95FC-2319E6FEB02B}.Debug|x86.ActiveCfg = Debug|Win32
+		{F83F6C46-AEE0-480C-95FC-2319E6FEB02B}.Debug|x86.Build.0 = Debug|Win32
+		{F83F6C46-AEE0-480C-95FC-2319E6FEB02B}.Release|x64.ActiveCfg = Release|x64
+		{F83F6C46-AEE0-480C-95FC-2319E6FEB02B}.Release|x64.Build.0 = Release|x64
+		{F83F6C46-AEE0-480C-95FC-2319E6FEB02B}.Release|x86.ActiveCfg = Release|Win32
+		{F83F6C46-AEE0-480C-95FC-2319E6FEB02B}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

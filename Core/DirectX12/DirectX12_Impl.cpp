@@ -179,22 +179,6 @@ void DirectX12::CreateDirectXShaderCompiler()
     assert(SUCCEEDED(hr_));
 }
 
-void DirectX12::InitializeImGui()
-{
-    IMGUI_CHECKVERSION();
-    ImGui::CreateContext();
-    ImGui::StyleColorsDark();
-    ImGui_ImplWin32_Init(hwnd_);
-    ImGui_ImplDX12_Init(
-        device_.Get(),
-        swapChainDesc_.BufferCount,
-        rtvDesc_.Format,
-        srvDescriptorHeap_.Get(),
-        srvDescriptorHeap_->GetCPUDescriptorHandleForHeapStart(),
-        srvDescriptorHeap_->GetGPUDescriptorHandleForHeapStart()
-    );
-}
-
 void DirectX12::SetResourceBarrier(
     D3D12_RESOURCE_BARRIER_TYPE _type, D3D12_RESOURCE_BARRIER_FLAGS _flag,
     ID3D12Resource* _resource,

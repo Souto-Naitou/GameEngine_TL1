@@ -44,10 +44,10 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(ProjectDir)Math;$(ProjectDir);$(ProjectDir)Utility;$(ProjectDir)Core/Win32/;$(ProjectDir)Core/DirectX12;$(ProjectDir)Externals\Timer;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)Math\;$(ProjectDir);$(ProjectDir)Utility\;$(ProjectDir)Core/Win32/;$(ProjectDir)Core/DirectX12\;$(ProjectDir)Externals\Timer\;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(ProjectDir)Math;$(ProjectDir);$(ProjectDir)Utility;$(ProjectDir)Core/Win32/;$(ProjectDir)Core/DirectX12;$(ProjectDir)Externals\Timer;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)Math\;$(ProjectDir);$(ProjectDir)Utility\;$(ProjectDir)Core/Win32/;$(ProjectDir)Core/DirectX12\;$(ProjectDir)Externals\Timer\;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -57,12 +57,13 @@
       <ConformanceMode>true</ConformanceMode>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalOptions>/source-charset:utf-8 %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalIncludeDirectories>$(ProjectDir)Externals\imgui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>$(ProjectDir)Externals\imgui\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>$(ProjectDir)Externals\ImGui\Build\$(Configuration)\ImGui.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxcompiler.dll" "$(TargetDir)dxcompiler.dll"
@@ -82,16 +83,17 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalOptions>/source-charset:utf-8 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(ProjectDir)Externals\imgui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Externals\imgui\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>$(ProjectDir)Externals\ImGui\Build\$(Configuration)\ImGui.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxcompiler.dll" "$(TargetDir)dxcompiler.dll"
@@ -111,6 +113,9 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Core\DirectX12\Framerate.cpp" />
     <ClCompile Include="Core\DirectX12\TextureManager.cpp" />
     <ClCompile Include="Core\Win32\Win32Application.cpp" />
+    <ClCompile Include="DebugTools\DebugManager\DebugManager.cpp" />
+    <ClCompile Include="DebugTools\ImGuiManager\ImGuiManager.cpp" />
+    <ClCompile Include="DebugTools\ImGuiTemplates\ImGuiTemplates.cpp" />
     <ClCompile Include="Externals\imgui\imgui.cpp" />
     <ClCompile Include="Externals\imgui\imgui_demo.cpp" />
     <ClCompile Include="Externals\imgui\imgui_draw.cpp" />
@@ -120,6 +125,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Externals\imgui\imgui_widgets.cpp" />
     <ClCompile Include="Externals\Timer\Timer.cpp" />
     <ClCompile Include="Features\Input.cpp" />
+    <ClCompile Include="Features\Model\Helper\ModelHelper.cpp" />
     <ClCompile Include="Features\Object3d\Object3d.cpp" />
     <ClCompile Include="Features\Object3d\Object3dSystem.cpp" />
     <ClCompile Include="Features\Sprite\Sprite.cpp" />
@@ -142,6 +148,10 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Core\DirectX12\Framerate.h" />
     <ClInclude Include="Core\DirectX12\TextureManager.h" />
     <ClInclude Include="Core\Win32\Win32Application.h" />
+    <ClInclude Include="DebugTools\DebugManager\DebugManager.h" />
+    <ClInclude Include="DebugTools\ImGuiManager\ImGuiManager.h" />
+    <ClInclude Include="DebugTools\ImGuiTemplates\ImGuiTemplates.h" />
+    <ClInclude Include="define.h" />
     <ClInclude Include="Externals\imgui\imconfig.h" />
     <ClInclude Include="Externals\imgui\imgui.h" />
     <ClInclude Include="Externals\imgui\imgui_impl_dx12.h" />
@@ -152,6 +162,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Externals\imgui\imstb_truetype.h" />
     <ClInclude Include="Externals\Timer\Timer.h" />
     <ClInclude Include="Features\Input.h" />
+    <ClInclude Include="Features\Model\Helper\ModelHelper.h" />
     <ClInclude Include="Features\Object3d\Object3d.h" />
     <ClInclude Include="Features\Object3d\Object3dSystem.h" />
     <ClInclude Include="Features\Sprite\Sprite.h" />
@@ -194,6 +205,9 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
   <ItemGroup>
     <ProjectReference Include="Externals\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">
       <Project>{371b9fa9-4c90-4ac6-a123-aced756d6c77}</Project>
+    </ProjectReference>
+    <ProjectReference Include="Externals\ImGui\ImGui.vcxproj">
+      <Project>{f83f6c46-aee0-480c-95fc-2319e6feb02b}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

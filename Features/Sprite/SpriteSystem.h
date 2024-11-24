@@ -17,7 +17,7 @@ public:
 
 private:
     DirectX12* pDx12_ = nullptr;
-    ID3D12RootSignature* rootSignature_ = nullptr;
+    Microsoft::WRL::ComPtr<ID3D12RootSignature> rootSignature_ = nullptr;
     Microsoft::WRL::ComPtr<ID3D12PipelineState> graphicsPipelineState_;
 
 private:
