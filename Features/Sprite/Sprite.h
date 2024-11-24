@@ -9,14 +9,6 @@
 class SpriteSystem;
 
 
-struct VertexData
-{
-    Vector4 position;
-    Vector2 texcoord;
-    Vector3 normal;
-};
-
-
 class Sprite
 {
 public:
@@ -28,19 +20,13 @@ public:
         Matrix4x4   uvTransform;
     };
 
-    struct TransformationMatrix
-    {
-        Matrix4x4 wvp;
-        Matrix4x4 world;
-    };
-
     Sprite();
     ~Sprite();
 
     void                Initialize(SpriteSystem* _spriteSystem, std::string _filepath);
     void                Update();
     void                Draw();
-    void                Finalize();
+    void                Finalize() {};
 
 
 public: /// Getter

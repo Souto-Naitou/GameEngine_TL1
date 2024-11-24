@@ -104,4 +104,10 @@ namespace DX12Helper
         const uint32_t _kDescriptorSizeSRV,
         const char* _path,
         std::vector<Microsoft::WRL::ComPtr<ID3D12Resource>>& _textureResources);
+
+    /// <summary>
+    /// 頂点リソースを生成
+    /// </summary>
+    /// <param name="_device">デバイス</param>
+    Microsoft::WRL::ComPtr<ID3D12Resource> CreateVertexResource(const Microsoft::WRL::ComPtr<ID3D12Device> _device, unsigned int _countVertex);
 }

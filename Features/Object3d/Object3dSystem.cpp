@@ -1,27 +1,20 @@
-#include "SpriteSystem.h"
-#include "Core/DirectX12/DX12Helper.h"
+#include "Object3dSystem.h"
 #include "Logger.h"
+#include <cassert>
+#include "DX12Helper.h"
 
-SpriteSystem::SpriteSystem()
+Object3dSystem::Object3dSystem()
 {
     pDx12_ = DirectX12::GetInstance();
 }
 
-SpriteSystem::~SpriteSystem()
-{
-}
-
-void SpriteSystem::Initialize()
+void Object3dSystem::Initialize()
 {
     CreateRootSignature();
     CreatePipelineState();
 }
 
-void SpriteSystem::Update()
-{
-}
-
-void SpriteSystem::PresentDraw()
+void Object3dSystem::PresentDraw()
 {
     ID3D12GraphicsCommandList* commandList = pDx12_->GetCommandList();
 
@@ -35,7 +28,7 @@ void SpriteSystem::PresentDraw()
     commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 }
 
-void SpriteSystem::CreateRootSignature()
+void Object3dSystem::CreateRootSignature()
 {
     ID3D12Device* device = pDx12_->GetDevice();
 
@@ -52,34 +45,34 @@ void SpriteSystem::CreateRootSignature()
 
     // RootParameter作成。複数設定できるので配列
     D3D12_ROOT_PARAMETER rootParameters[4] = {};
-    rootParameters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;	// CBVを使う
-    rootParameters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;	// PixelShaderで使う
-    rootParameters[0].Descriptor.ShaderRegister = 0;					// レジスタ番号０とバインド
+    rootParameters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;                    // CBVを使う
+    rootParameters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;                 // PixelShaderで使う
+    rootParameters[0].Descriptor.ShaderRegister = 0;                                    // レジスタ番号０とバインド
 
-    rootParameters[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;	// CBVを使う
-    rootParameters[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;// VertexShaderで使う
-    rootParameters[1].Descriptor.ShaderRegister = 0;					// レジスタ番号０とバインド
+    rootParameters[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;                    // CBVを使う
+    rootParameters[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;                // VertexShaderで使う
+    rootParameters[1].Descriptor.ShaderRegister = 0;                                    // レジスタ番号０とバインド
 
-    rootParameters[2].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE; // DescriptorTableを使う
-    rootParameters[2].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL; // PixelShaderで使う
-    rootParameters[2].DescriptorTable.pDescriptorRanges = descriptorRange; // Tableの中身の配列を指定
-    rootParameters[2].DescriptorTable.NumDescriptorRanges = _countof(descriptorRange); // Tableで利用する数
+    rootParameters[2].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;       // DescriptorTableを使う
+    rootParameters[2].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;                 // PixelShaderで使う
+    rootParameters[2].DescriptorTable.pDescriptorRanges = descriptorRange;              // Tableの中身の配列を指定
+    rootParameters[2].DescriptorTable.NumDescriptorRanges = _countof(descriptorRange);  // Tableで利用する数
 
-    rootParameters[3].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV; // CBVを使用する
-    rootParameters[3].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL; // PixelShaderで使用する
-    rootParameters[3].Descriptor.ShaderRegister = 1;					// レジスタ番号1を使用する
+    rootParameters[3].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;                    // CBVを使用する
+    rootParameters[3].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;                 // PixelShaderで使用する
+    rootParameters[3].Descriptor.ShaderRegister = 1;                                    // レジスタ番号1を使用する
 
-    descriptionRootSignature.pParameters = rootParameters;				// ルートパラメータ配列へのポインタ
-    descriptionRootSignature.NumParameters = _countof(rootParameters);	// 配列の長さ
+    descriptionRootSignature.pParameters = rootParameters;                              // ルートパラメータ配列へのポインタ
+    descriptionRootSignature.NumParameters = _countof(rootParameters);                  // 配列の長さ
 
     D3D12_STATIC_SAMPLER_DESC staticSamplers[1] = {};
-    staticSamplers[0].Filter = D3D12_FILTER_MIN_MAG_MIP_LINEAR; // BilinearFilter
-    staticSamplers[0].AddressU = D3D12_TEXTURE_ADDRESS_MODE_WRAP; // 0 ~ 1の範囲外をリピート
+    staticSamplers[0].Filter = D3D12_FILTER_MIN_MAG_MIP_LINEAR;                         // BilinearFilter
+    staticSamplers[0].AddressU = D3D12_TEXTURE_ADDRESS_MODE_WRAP;                       // 0 ~ 1の範囲外をリピート
     staticSamplers[0].AddressV = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
     staticSamplers[0].AddressW = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
-    staticSamplers[0].ComparisonFunc = D3D12_COMPARISON_FUNC_NEVER; // 比較しない
-    staticSamplers[0].MaxLOD = D3D12_FLOAT32_MAX; // ありったけのーを使う
-    staticSamplers[0].ShaderRegister = 0; // レジスタ番号0を使用する
+    staticSamplers[0].ComparisonFunc = D3D12_COMPARISON_FUNC_NEVER;                     // 比較しない
+    staticSamplers[0].MaxLOD = D3D12_FLOAT32_MAX;                                       // ありったけのーを使う
+    staticSamplers[0].ShaderRegister = 0;                                               // レジスタ番号0を使用する
     staticSamplers[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL; // PixelShaderを使う
     descriptionRootSignature.pStaticSamplers = staticSamplers;
     descriptionRootSignature.NumStaticSamplers = _countof(staticSamplers);
@@ -100,7 +93,7 @@ void SpriteSystem::CreateRootSignature()
     assert(SUCCEEDED(hr));
 }
 
-void SpriteSystem::CreatePipelineState()
+void Object3dSystem::CreatePipelineState()
 {
     ID3D12Device* device = pDx12_->GetDevice();
     IDxcUtils* dxcUtils = pDx12_->GetDxcUtils();
@@ -171,14 +164,14 @@ void SpriteSystem::CreatePipelineState()
 
     /// PSOを生成する
     D3D12_GRAPHICS_PIPELINE_STATE_DESC graphicsPipelineStateDesc{};
-    graphicsPipelineStateDesc.pRootSignature = rootSignature_.Get();	// RootSignature
-    graphicsPipelineStateDesc.InputLayout = inputLayoutDesc;	// InputLayout
+    graphicsPipelineStateDesc.pRootSignature = rootSignature_.Get();    // RootSignature
+    graphicsPipelineStateDesc.InputLayout = inputLayoutDesc;    // InputLayout
     graphicsPipelineStateDesc.VS = { vertexShaderBlob.Get()->GetBufferPointer(),
-    vertexShaderBlob.Get()->GetBufferSize() };						// VertexShader
+    vertexShaderBlob.Get()->GetBufferSize() };                        // VertexShader
     graphicsPipelineStateDesc.PS = { pixelShaderBlob.Get()->GetBufferPointer(),
-    pixelShaderBlob.Get()->GetBufferSize() };							// PixelShader
-    graphicsPipelineStateDesc.BlendState = blendDesc;			// BlendState
-    graphicsPipelineStateDesc.RasterizerState = rasterizerDesc;	// RasterizerState
+    pixelShaderBlob.Get()->GetBufferSize() };                            // PixelShader
+    graphicsPipelineStateDesc.BlendState = blendDesc;            // BlendState
+    graphicsPipelineStateDesc.RasterizerState = rasterizerDesc;    // RasterizerState
     // 書き込むRTVの情報
     graphicsPipelineStateDesc.NumRenderTargets = 1;
     graphicsPipelineStateDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;

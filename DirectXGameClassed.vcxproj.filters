@@ -49,6 +49,27 @@
     <Filter Include="DirectX12\TextureManager">
       <UniqueIdentifier>{b645dc65-bf36-43cb-90e8-e823724f366b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Feature\Object3d">
+      <UniqueIdentifier>{e1b1b091-2477-475f-b508-9b6faaf83efc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Feature\Model">
+      <UniqueIdentifier>{cce5abac-cdc3-482f-9133-860593c9bb69}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Feature\Model\Helper">
+      <UniqueIdentifier>{34f07039-7af5-434d-b971-4084ae536b3f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DebugTools">
+      <UniqueIdentifier>{2d966475-f2b4-417a-b53b-98a2e95ea8a0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DebugTools\DebugManager">
+      <UniqueIdentifier>{67c70dc1-3fc3-4b92-8745-04c264ebcfd5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DebugTools\Templates">
+      <UniqueIdentifier>{b53e2fc5-1d01-4842-8274-a707748c6d7d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ImGuiManager">
+      <UniqueIdentifier>{e4815223-2288-4cdb-9168-0d4dca0b53d5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -135,6 +156,24 @@
     <ClCompile Include="Core\DirectX12\TextureManager.cpp">
       <Filter>DirectX12\TextureManager</Filter>
     </ClCompile>
+    <ClCompile Include="Features\Object3d\Object3dSystem.cpp">
+      <Filter>Feature\Object3d</Filter>
+    </ClCompile>
+    <ClCompile Include="Features\Object3d\Object3d.cpp">
+      <Filter>Feature\Object3d</Filter>
+    </ClCompile>
+    <ClCompile Include="Features\Model\Helper\ModelHelper.cpp">
+      <Filter>Feature\Model\Helper</Filter>
+    </ClCompile>
+    <ClCompile Include="DebugTools\DebugManager\DebugManager.cpp">
+      <Filter>DebugTools\DebugManager</Filter>
+    </ClCompile>
+    <ClCompile Include="DebugTools\ImGuiTemplates\ImGuiTemplates.cpp">
+      <Filter>DebugTools\Templates</Filter>
+    </ClCompile>
+    <ClCompile Include="DebugTools\ImGuiManager\ImGuiManager.cpp">
+      <Filter>ImGuiManager</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="structs.h">
@@ -220,6 +259,27 @@
     </ClInclude>
     <ClInclude Include="Core\DirectX12\TextureManager.h">
       <Filter>DirectX12\TextureManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Features\Object3d\Object3dSystem.h">
+      <Filter>Feature\Object3d</Filter>
+    </ClInclude>
+    <ClInclude Include="Features\Object3d\Object3d.h">
+      <Filter>Feature\Object3d</Filter>
+    </ClInclude>
+    <ClInclude Include="Features\Model\Helper\ModelHelper.h">
+      <Filter>Feature\Model\Helper</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugTools\DebugManager\DebugManager.h">
+      <Filter>DebugTools\DebugManager</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugTools\ImGuiTemplates\ImGuiTemplates.h">
+      <Filter>DebugTools\Templates</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugTools\ImGuiManager\ImGuiManager.h">
+      <Filter>ImGuiManager</Filter>
+    </ClInclude>
+    <ClInclude Include="define.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

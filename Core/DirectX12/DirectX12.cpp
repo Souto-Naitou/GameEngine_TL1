@@ -78,10 +78,6 @@ void DirectX12::Initialize()
 
     /// DXCの初期化
     CreateDirectXShaderCompiler();
-
-
-    /// ImGuiの初期化
-    InitializeImGui();
 }
 
 void DirectX12::PresentDraw()

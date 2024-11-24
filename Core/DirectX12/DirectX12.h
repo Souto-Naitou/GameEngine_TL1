@@ -35,20 +35,21 @@ public:
     static const uint32_t kMaxSRVCount_;
 
 public: /// Getter
-    ID3D12Device*               GetDevice()                                 { return device_.Get(); }
-    ID3D12GraphicsCommandList*  GetCommandList()                    const   { return commandList_.Get(); }
-    IDxcUtils*                  GetDxcUtils()                       const   { return dxcUtils_.Get(); }
-    IDxcCompiler3*              GetDxcCompiler()                    const   { return dxcCompiler_.Get(); }
-    IDxcIncludeHandler*         GetIncludeHandler()                 const   { return includeHandler_.Get(); }
+    ID3D12Device*                               GetDevice()                                 { return device_.Get(); }
+    ID3D12GraphicsCommandList*                  GetCommandList()                    const   { return commandList_.Get(); }
+    IDxcUtils*                                  GetDxcUtils()                       const   { return dxcUtils_.Get(); }
+    IDxcCompiler3*                              GetDxcCompiler()                    const   { return dxcCompiler_.Get(); }
+    IDxcIncludeHandler*                         GetIncludeHandler()                 const   { return includeHandler_.Get(); }
 
-    uint32_t                    GetClientWidth()                    const   { return clientWidth_; }
-    uint32_t                    GetClientHeight()                   const   { return clientHeight_; }
+    uint32_t                                    GetClientWidth()                    const   { return clientWidth_; }
+    uint32_t                                    GetClientHeight()                   const   { return clientHeight_; }
 
-    uint32_t                    GetDescriptorSizeSRV()              const   { return kDescriptorSizeSRV; }
+    uint32_t                                    GetDescriptorSizeSRV()              const   { return kDescriptorSizeSRV; }
 
-    int32_t                     GetNumUploadedTexture()             const   { return numUploadedTexture; }
+    int32_t                                     GetNumUploadedTexture()             const   { return numUploadedTexture; }
 
-    ID3D12DescriptorHeap*       GetSRVDescriptorHeap()              const   { return srvDescriptorHeap_.Get(); }
+    ID3D12DescriptorHeap*                       GetSRVDescriptorHeap()              const   { return srvDescriptorHeap_.Get(); }
+    const DXGI_SWAP_CHAIN_DESC1&                GetSwapChainDesc()                  const   { return swapChainDesc_; }
 
     std::vector<D3D12_GPU_DESCRIPTOR_HANDLE>&   GetSRVHandlesGPUList()      { return srvHandlesGPUList_; }
     std::vector<D3D12_CPU_DESCRIPTOR_HANDLE>&   GetSRVHandlesCPUList()      { return srvHandlesCPUList_; }
@@ -66,10 +67,10 @@ private:
     std::vector<D3D12_CPU_DESCRIPTOR_HANDLE>            srvHandlesCPUList_              = {};           // SRVハンドルリスト(CPU)
     std::vector<Microsoft::WRL::ComPtr<ID3D12Resource>> textureResources_               = {};           // テクスチャリソース
 
+    Microsoft::WRL::ComPtr<ID3D12Device>                device_                         = nullptr;      // デバイス
     Microsoft::WRL::ComPtr<ID3D12Debug1>                debugController_                = nullptr;      // デバッグコントローラ
     Microsoft::WRL::ComPtr<IDXGIFactory7>               dxgiFactory_                    = nullptr;      // DXGIファクトリ
     Microsoft::WRL::ComPtr<IDXGIAdapter4>               useAdapter_                     = nullptr;      // 使うアダプタ
-    Microsoft::WRL::ComPtr<ID3D12Device>                device_                         = nullptr;      // デバイス
     Microsoft::WRL::ComPtr<ID3D12InfoQueue>             infoQueue_                      = nullptr;
     Microsoft::WRL::ComPtr<ID3D12CommandQueue>          commandQueue_                   = nullptr;      // コマンドキュー
     Microsoft::WRL::ComPtr<ID3D12CommandAllocator>      commandAllocator_               = nullptr;      // コマンドアロケータ
@@ -151,12 +152,6 @@ private:
     /// DirectXShaderCompilerの生成
     /// </summary>
     void CreateDirectXShaderCompiler();
-
-
-    /// <summary>
-    /// ImGuiの初期化
-    /// </summary>
-    void InitializeImGui();
 
 
     /// <summary>

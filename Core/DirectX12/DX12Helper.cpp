@@ -6,6 +6,7 @@
 #include <intsafe.h>
 #include <ConvertString.h>
 #include <DirectX12.h>
+#include <structs.h>
 
 void DX12Helper::CreateDevice(Microsoft::WRL::ComPtr<ID3D12Device>& _device, Microsoft::WRL::ComPtr<IDXGIAdapter4>& _adapter)
 {
@@ -303,6 +304,13 @@ void DX12Helper::CreateNewTexture(const Microsoft::WRL::ComPtr<ID3D12Device>& _d
     textureSrvHandleGPUs.push_back(textureSrvHandleGPU);
     _device->CreateShaderResourceView(textureResource.Get(), &srvDesc, textureSrvHandleCPU);
     return;
+}
+
+Microsoft::WRL::ComPtr<ID3D12Resource> DX12Helper::CreateVertexResource(const Microsoft::WRL::ComPtr<ID3D12Device> _device, unsigned int _countVertex)
+{
+    // 頂点リソースを作る
+    Microsoft::WRL::ComPtr<ID3D12Resource> vertexResource = CreateBufferResource(_device, sizeof(VertexData) * _countVertex);
+    return vertexResource;
 }
 
 D3D12_CPU_DESCRIPTOR_HANDLE DX12Helper::GetCPUDescriptorHandle(const Microsoft::WRL::ComPtr<ID3D12DescriptorHeap>& _descriptorHeap, uint32_t _descriptorSize, uint32_t _index)

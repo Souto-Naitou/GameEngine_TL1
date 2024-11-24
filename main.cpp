@@ -1,19 +1,28 @@
+#include <define.h>
 #include <Windows.h>
 #include "Core/DirectX12/DirectX12.h"
 #include <Win32Application.h>
 #include "Features/Sprite/SpriteSystem.h"
 #include "Features/Sprite/Sprite.h"
+#include "Features/Object3d/Object3dSystem.h"
+#include "Features/Object3d/Object3d.h"
 #include "Core/DirectX12/TextureManager.h"
+#include <DebugTools/DebugManager/DebugManager.h>
+#include <DebugTools/ImGuiManager/ImGuiManager.h>
 
 int _stdcall WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
-    Win32Application* pWin32App = Win32Application::GetInstance();
     DirectX12* pDirectX = DirectX12::GetInstance();
+    Win32Application* pWin32App = Win32Application::GetInstance();
     TextureManager::GetInstance()->Initialize();
+    DebugManager* pDebugManager = DebugManager::GetInstance();
+
+    ImGuiManager* pImGuiManager = new ImGuiManager();
 
     SpriteSystem* pSpriteSystem = new SpriteSystem();
-    Sprite* pSprite = new Sprite();
-    Sprite* pSpriteMB = new Sprite();
+
+    Object3dSystem* pObject3dSystem = new Object3dSystem();
+    Object3d* pObject3d = new Object3d();
 
     /// ウィンドウの初期化
     pWin32App->Initialize();
@@ -22,38 +31,51 @@ int _stdcall WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
     /// DirectX12の初期化
     pDirectX->Initialize();
 
-    /// スプライトシステムの初期化
+    /// スプライト関連の初期化
     pSpriteSystem->Initialize();
     Vector3 rotate = { 0.0f, 0.0f, 0.0f };
     Vector3 transform = { 0.0f, 0.0f, 0.0f };
-    pSprite->Initialize(pSpriteSystem, "uvChecker.png");
-    pSpriteMB->Initialize(pSpriteSystem, "monsterBall.png");
+
+    /// 3Dオブジェクト関連の初期化
+    pObject3dSystem->Initialize();
+    pObject3d->Initialize(pObject3dSystem, "plane.obj");
+    pObject3d->SetScale({ -1.0f, 1.0f, 1.0f });
+
+    pImGuiManager->Initialize(pDirectX);
+
 
     while (pWin32App->GetMsg() != WM_QUIT)
     {
+        pImGuiManager->BeginFrame();
+
+        pDebugManager->DrawUI();
+
+        pImGuiManager->Render();
+
         /// スプライトを移動させる
 
-        pSprite->SetPosition({0.f, 0.f});
-        pSpriteMB->SetPosition({0.f, 360.f});
-
-        pSprite->Update();
-        pSpriteMB->Update();
+        pObject3d->Update();
 
         pDirectX->PresentDraw();
 
         pSpriteSystem->PresentDraw();
-        pSprite->Draw();
-        pSpriteMB->Draw();
 
+        pObject3dSystem->PresentDraw();
+        pObject3d->Draw();
+
+        pImGuiManager->EndFrame();
         pDirectX->PostDraw();
+
     }
 
+    pObject3d->Finalize();
+    pImGuiManager->Finalize();
     pWin32App->Finalize();
 
-
-    delete pSpriteMB;
-    delete pSprite;
+    delete pObject3d;
+    delete pObject3dSystem;
     delete pSpriteSystem;
+    delete pImGuiManager;
 
     return 0;
 }
