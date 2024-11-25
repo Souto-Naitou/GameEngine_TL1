@@ -51,9 +51,9 @@ public: /// Getter
     ID3D12DescriptorHeap*                       GetSRVDescriptorHeap()              const   { return srvDescriptorHeap_.Get(); }
     const DXGI_SWAP_CHAIN_DESC1&                GetSwapChainDesc()                  const   { return swapChainDesc_; }
 
-    std::vector<D3D12_GPU_DESCRIPTOR_HANDLE>&   GetSRVHandlesGPUList()      { return srvHandlesGPUList_; }
-    std::vector<D3D12_CPU_DESCRIPTOR_HANDLE>&   GetSRVHandlesCPUList()      { return srvHandlesCPUList_; }
-    std::vector<Microsoft::WRL::ComPtr<ID3D12Resource>>& GetTextureResources() { return textureResources_; }
+    std::vector<D3D12_GPU_DESCRIPTOR_HANDLE>&   GetSRVHandlesGPUList()                      { return srvHandlesGPUList_; }
+    std::vector<D3D12_CPU_DESCRIPTOR_HANDLE>&   GetSRVHandlesCPUList()                      { return srvHandlesCPUList_; }
+    std::vector<Microsoft::WRL::ComPtr<ID3D12Resource>>& GetTextureResources()              { return textureResources_; }
 
 private:
     DirectX12() = default;

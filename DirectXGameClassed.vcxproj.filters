@@ -153,6 +153,9 @@
     <ClCompile Include="Model.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="ModelManager.cpp">
+      <Filter>Feature\Model</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="structs.h">
@@ -239,7 +242,7 @@
     <ClInclude Include="Model.h">
       <Filter>Feature\Model</Filter>
     </ClInclude>
-    <ClInclude Include="ModelCommon.h">
+    <ClInclude Include="ModelManager.h">
       <Filter>Feature\Model</Filter>
     </ClInclude>
   </ItemGroup>
