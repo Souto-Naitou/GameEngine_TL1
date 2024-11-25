@@ -92,31 +92,6 @@ void Object3d::Finalize()
 #endif // DEBUG_ENGINE
 }
 
-void Object3d::CreateVertexResource()
-{
-    /// 頂点リソースを作成
-    vertexResource_ = DX12Helper::CreateBufferResource(device_, sizeof(VertexData) * modelData_.vertices.size());
-    vertexResource_->Map(0, nullptr, reinterpret_cast<void**>(&vertexData_));
-
-    /// 頂点データを初期化
-    std::memcpy(vertexData_, modelData_.vertices.data(), sizeof(VertexData) * modelData_.vertices.size());
-
-    /// 頂点バッファービューを初期化
-    vertexBufferView_.BufferLocation = vertexResource_->GetGPUVirtualAddress();
-    vertexBufferView_.SizeInBytes = static_cast<uint32_t>(sizeof(VertexData) * modelData_.vertices.size());
-    vertexBufferView_.StrideInBytes = sizeof(VertexData);
-}
-
-void Object3d::CreateMaterialResource()
-{
-    /// マテリアルリソースを作成
-    materialResource_ = DX12Helper::CreateBufferResource(device_, sizeof(Material));
-    materialResource_->Map(0, nullptr, reinterpret_cast<void**>(&materialData_));
-    /// マテリアルデータを初期化
-    materialData_->color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
-    materialData_->enableLighting = false;
-    materialData_->uvTransform = Matrix4x4::Identity();
-}
 
 void Object3d::CreateTransformationMatrixResource()
 {

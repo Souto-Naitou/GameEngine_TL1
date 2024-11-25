@@ -49,19 +49,9 @@ public: /// Setter
     void SetTranslate(const Vector3& _translate) { transform_.translate = _translate; }
 
 private:
-    static const std::string kDefaultDirectoryPath;
 
     Transform transform_ = {};
     Transform cameraTransform_ = {};
-
-    ModelData modelData_ = {};
-
-    Microsoft::WRL::ComPtr<ID3D12Resource> vertexResource_ = nullptr;
-    VertexData* vertexData_ = nullptr;
-    D3D12_VERTEX_BUFFER_VIEW vertexBufferView_ = {};
-
-    Microsoft::WRL::ComPtr<ID3D12Resource> materialResource_ = nullptr;
-    Material* materialData_ = nullptr;
 
     Microsoft::WRL::ComPtr<ID3D12Resource> transformationMatrixResource_ = nullptr;
     TransformationMatrix* transformationMatrixData_ = nullptr;
@@ -72,8 +62,6 @@ private:
     D3D12_GPU_DESCRIPTOR_HANDLE textureSrvHandleGPU_ = {};
 
 private:
-    void CreateVertexResource();
-    void CreateMaterialResource();
     void CreateTransformationMatrixResource();
     void CreateDirectionalLightResource();
     void LoadModelTexture();
