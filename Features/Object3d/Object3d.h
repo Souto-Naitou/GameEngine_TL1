@@ -5,10 +5,9 @@
 #include "Object3dSystem.h"
 #include <string>
 #include <define.h>
+#include <Model.h>
 
 /// 前方宣言
-struct ModelData;
-struct VertexData;
 struct DirectionalLight;
 
 class DirectX12;
@@ -26,7 +25,7 @@ public:
     /// <summary>
     /// 初期化
     /// </summary>
-    void Initialize(Object3dSystem* _system, std::string _filepath);
+    void Initialize(Object3dSystem* _system);
 
     /// <summary>
     /// 更新
@@ -43,50 +42,43 @@ public:
     /// </summary>
     void Finalize();
 
+public: /// Getter
+    const Vector3& GetScale() const { return transform_.scale; }
+    const Vector3& GetRotate() const { return transform_.rotate; }
+    const Vector3& GetTranslate() const { return transform_.translate; }
+
+
 public: /// Setter
     void SetScale(const Vector3& _scale) { transform_.scale = _scale; }
     void SetRotate(const Vector3& _rotate) { transform_.rotate = _rotate; }
     void SetTranslate(const Vector3& _translate) { transform_.translate = _translate; }
+    void SetModel(Model* _pModel) { pModel_ = _pModel; }
 
 private:
-    static const std::string kDefaultDirectoryPath;
+    Transform                                   transform_                      = {};
+    Transform                                   cameraTransform_                = {};
 
-    Transform transform_ = {};
-    Transform cameraTransform_ = {};
+    Microsoft::WRL::ComPtr<ID3D12Resource>      transformationMatrixResource_   = nullptr;
+    Microsoft::WRL::ComPtr<ID3D12Resource>      directionalLightResource_       = nullptr;
 
-    ModelData modelData_ = {};
-
-    Microsoft::WRL::ComPtr<ID3D12Resource> vertexResource_ = nullptr;
-    VertexData* vertexData_ = nullptr;
-    D3D12_VERTEX_BUFFER_VIEW vertexBufferView_ = {};
-
-    Microsoft::WRL::ComPtr<ID3D12Resource> materialResource_ = nullptr;
-    Material* materialData_ = nullptr;
-
-    Microsoft::WRL::ComPtr<ID3D12Resource> transformationMatrixResource_ = nullptr;
-    TransformationMatrix* transformationMatrixData_ = nullptr;
-
-    Microsoft::WRL::ComPtr<ID3D12Resource> directionalLightResource_ = nullptr;
-    DirectionalLight* directionalLight_ = nullptr;
-
-    D3D12_GPU_DESCRIPTOR_HANDLE textureSrvHandleGPU_ = {};
+    TransformationMatrix*                       transformationMatrixData_       = nullptr;
+    DirectionalLight*                           directionalLight_               = nullptr;
 
 private:
-    void CreateVertexResource();
-    void CreateMaterialResource();
     void CreateTransformationMatrixResource();
     void CreateDirectionalLightResource();
-    void LoadModelTexture();
 
 #ifdef DEBUG_ENGINE
     void DebugWindow();
 #endif // DEBUG_ENGINE
 
+
 private: /// 他クラスが所持するインスタンスへのポインタ
-    DirectX12* pDx12_ = nullptr;
-    ID3D12Device* device_ = nullptr;
+    DirectX12*      pDx12_          = nullptr;
+    ID3D12Device*   device_         = nullptr;
+    Model*          pModel_         = nullptr;
 
 #ifdef DEBUG_ENGINE
-    DebugManager* pDebugManager_ = nullptr;
+    DebugManager*   pDebugManager_  = nullptr;
 #endif // DEBUG_ENGINE
 };

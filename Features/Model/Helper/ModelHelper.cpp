@@ -93,7 +93,7 @@ ModelData ModelHelper::LoadObjFile(const std::string& _directoryPath, const std:
         }
     }
     // 4 Return ModelData
-    return std::move(modelData);
+    return modelData;
 }
 
 MaterialData ModelHelper::LoadMaterialTemplateFile(const std::string& _directoryPath, const std::string& _filename)

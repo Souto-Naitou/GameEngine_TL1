@@ -9,20 +9,27 @@
 #include "Core/DirectX12/TextureManager.h"
 #include <DebugTools/DebugManager/DebugManager.h>
 #include <DebugTools/ImGuiManager/ImGuiManager.h>
+#include <ModelManager.h>
 
 int _stdcall WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
     DirectX12* pDirectX = DirectX12::GetInstance();
+    DebugManager* pDebugManager = DebugManager::GetInstance();
+
     Win32Application* pWin32App = Win32Application::GetInstance();
     TextureManager::GetInstance()->Initialize();
 
+    ModelManager* modelManager = ModelManager::GetInstance();
+    modelManager->Initialize();
+
+    /// 基盤の初期化
     ImGuiManager* pImGuiManager = new ImGuiManager();
-    DebugManager* pDebugManager = DebugManager::GetInstance();
-
     SpriteSystem* pSpriteSystem = new SpriteSystem();
-
     Object3dSystem* pObject3dSystem = new Object3dSystem();
+
+    /// ゲーム内オブジェクトの宣言
     Object3d* pObject3d = new Object3d();
+    Model* planeObj = nullptr;
 
     /// ウィンドウの初期化
     pWin32App->Initialize();
@@ -31,15 +38,19 @@ int _stdcall WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
     /// DirectX12の初期化
     pDirectX->Initialize();
 
-    /// スプライト関連の初期化
+    /// スプライト基盤の初期化
     pSpriteSystem->Initialize();
-    Vector3 rotate = { 0.0f, 0.0f, 0.0f };
-    Vector3 transform = { 0.0f, 0.0f, 0.0f };
 
-    /// 3Dオブジェクト関連の初期化
+    /// 3Dオブジェクト基盤の初期化
     pObject3dSystem->Initialize();
-    pObject3d->Initialize(pObject3dSystem, "plane.obj");
+
+    /// ゲーム内オブジェクトの初期化
+    pObject3d->Initialize(pObject3dSystem);
     pObject3d->SetScale({ -1.0f, 1.0f, 1.0f });
+
+    modelManager->LoadModel("plane.obj");
+    planeObj = modelManager->FindModel("plane.obj");
+    pObject3d->SetModel(planeObj);
 
     pImGuiManager->Initialize(pDirectX);
 

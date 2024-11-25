@@ -13,9 +13,8 @@
 #include <DebugTools/DebugManager/DebugManager.h>
 #endif // DEBUG_ENGINE
 
-const std::string Object3d::kDefaultDirectoryPath = "resources";
 
-void Object3d::Initialize(Object3dSystem* _system, std::string _filepath)
+void Object3d::Initialize(Object3dSystem* _system)
 {
     /// 必要なインスタンスを取得
     pDx12_ = _system->GetDx12();
@@ -36,23 +35,11 @@ void Object3d::Initialize(Object3dSystem* _system, std::string _filepath)
     cameraTransform_.rotate = Vector3(0.0f, 0.0f, 0.0f);
     cameraTransform_.translate = Vector3(0.0f, 0.0f, -10.0f);
 
-    /// モデルデータを読み込む
-    modelData_ = ModelHelper::LoadObjFile(kDefaultDirectoryPath, _filepath);
-
-    /// 頂点リソースを作成
-    CreateVertexResource();
-
-    /// マテリアルリソースを作成
-    CreateMaterialResource();
-
     /// 座標変換行列リソースを作成
     CreateTransformationMatrixResource();
 
     /// 平行光源リソースを作成
     CreateDirectionalLightResource();
-
-    /// モデルのテクスチャを読み込む
-    LoadModelTexture();
 }
 
 void Object3d::Update()
@@ -71,18 +58,12 @@ void Object3d::Draw()
     ID3D12GraphicsCommandList* commandList = pDx12_->GetCommandList();
     std::vector<D3D12_GPU_DESCRIPTOR_HANDLE> textureSrvHandleGPUs = pDx12_->GetSRVHandlesGPUList();
 
-
-    // 頂点バッファを設定
-    commandList->IASetVertexBuffers(0, 1, &vertexBufferView_);
-    // マテリアルCBufferの場所を設定
-    commandList->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());
     // TransformationMatrixCBufferの場所を設定
     commandList->SetGraphicsRootConstantBufferView(1, transformationMatrixResource_->GetGPUVirtualAddress());
-    // SRVの設定
-    commandList->SetGraphicsRootDescriptorTable(2, textureSrvHandleGPU_);
+    // 平行光源CBufferの場所を設定
+    commandList->SetGraphicsRootConstantBufferView(3, directionalLightResource_->GetGPUVirtualAddress());
 
-    // 描画！（DrawCall/ドローコール）。頂点
-    commandList->DrawInstanced(static_cast<uint32_t>(modelData_.vertices.size()), 1, 0, 0);
+    if (pModel_) pModel_->Draw();
 }
 
 void Object3d::Finalize()
@@ -92,31 +73,6 @@ void Object3d::Finalize()
 #endif // DEBUG_ENGINE
 }
 
-void Object3d::CreateVertexResource()
-{
-    /// 頂点リソースを作成
-    vertexResource_ = DX12Helper::CreateBufferResource(device_, sizeof(VertexData) * modelData_.vertices.size());
-    vertexResource_->Map(0, nullptr, reinterpret_cast<void**>(&vertexData_));
-
-    /// 頂点データを初期化
-    std::memcpy(vertexData_, modelData_.vertices.data(), sizeof(VertexData) * modelData_.vertices.size());
-
-    /// 頂点バッファービューを初期化
-    vertexBufferView_.BufferLocation = vertexResource_->GetGPUVirtualAddress();
-    vertexBufferView_.SizeInBytes = static_cast<uint32_t>(sizeof(VertexData) * modelData_.vertices.size());
-    vertexBufferView_.StrideInBytes = sizeof(VertexData);
-}
-
-void Object3d::CreateMaterialResource()
-{
-    /// マテリアルリソースを作成
-    materialResource_ = DX12Helper::CreateBufferResource(device_, sizeof(Material));
-    materialResource_->Map(0, nullptr, reinterpret_cast<void**>(&materialData_));
-    /// マテリアルデータを初期化
-    materialData_->color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
-    materialData_->enableLighting = false;
-    materialData_->uvTransform = Matrix4x4::Identity();
-}
 
 void Object3d::CreateTransformationMatrixResource()
 {
@@ -137,14 +93,6 @@ void Object3d::CreateDirectionalLightResource()
     directionalLight_->color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
     directionalLight_->direction = Vector3(0.0f, -1.0f, 0.0f);
     directionalLight_->intensity = 1.0f;
-}
-
-void Object3d::LoadModelTexture()
-{
-    TextureManager* textureManager = TextureManager::GetInstance();
-    textureManager->LoadTexture(modelData_.materialData.textureFilePath);
-    modelData_.materialData.textureIndex = textureManager->GetTextureIndexByFilePath(modelData_.materialData.textureFilePath);
-    textureSrvHandleGPU_ = TextureManager::GetInstance()->GetSrvHandleGPU(modelData_.materialData.textureIndex);
 }
 
 #ifdef DEBUG_ENGINE
