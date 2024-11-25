@@ -1,6 +1,5 @@
 #include "DebugTools/DebugManager/DebugManager.h"
 
-
 #ifdef _DEBUG
 #include <imgui.h>
 #include <imgui_impl_dx12.h>
@@ -54,6 +53,7 @@ void DebugManager::DebugWindowOverall()
 
 void DebugManager::MeasureFPS()
 {
+#ifdef _DEBUG
     if (!timer_.GetIsStart())
     {
         timer_.Start();
@@ -67,6 +67,7 @@ void DebugManager::MeasureFPS()
         elapsedFrameCount_ = timer_.GetNow();
     }
     frameCount_++;
+#endif // _DEBUG
 }
 
 void DebugManager::Window_ObjectList()
@@ -201,7 +202,7 @@ void DebugManager::DrawUI()
         {
             std::string tabName;
             if (parentID.compare("null-name") == 0) tabName = childID;
-            else tabName = parentID + childID;
+            else tabName = parentID + '_' + childID;
 
             std::string id_str = tabName + "TABITEM";
             ImGui::PushID(id_str.c_str());
@@ -255,6 +256,7 @@ void DebugManager::ChangeFont()
 
 void DebugManager::PhotoshopStyle()
 {
+#ifdef _DEBUG
     // Photoshop style by Derydoca from ImThemes
     ImGuiStyle& style = ImGui::GetStyle();
 
@@ -342,11 +344,13 @@ void DebugManager::PhotoshopStyle()
     style.Colors[ImGuiCol_NavWindowingHighlight] = ImVec4(1.0f, 0.3882353007793427f, 0.0f, 1.0f);
     style.Colors[ImGuiCol_NavWindowingDimBg] = ImVec4(0.0f, 0.0f, 0.0f, 0.5860000252723694f);
     style.Colors[ImGuiCol_ModalWindowDimBg] = ImVec4(0.0f, 0.0f, 0.0f, 0.5860000252723694f);
+#endif // _DEBUG
 }
 
 
 void DebugManager::RoundedVisualStudioStyle()
 {
+#ifdef _DEBUG
     // Rounded Visual Studio style by RedNicStone from ImThemes
     ImGuiStyle& style = ImGui::GetStyle();
 
@@ -439,4 +443,5 @@ void DebugManager::RoundedVisualStudioStyle()
     //style.Colors[ImGuiCol_NavWindowingHighlight] = ImVec4(1.0f, 1.0f, 1.0f, 0.699999988079071f);
     //style.Colors[ImGuiCol_NavWindowingDimBg] = ImVec4(0.800000011920929f, 0.800000011920929f, 0.800000011920929f, 0.2000000029802322f);
     //style.Colors[ImGuiCol_ModalWindowDimBg] = ImVec4(0.1450980454683304f, 0.1450980454683304f, 0.1490196138620377f, 1.0f);
+#endif // _DEBUG
 }
