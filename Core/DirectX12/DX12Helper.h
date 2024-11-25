@@ -17,6 +17,7 @@ namespace DX12Helper
     /// <param name="_device">生成先</param>
     /// <param name="_adapter">使用するアダプタ</param>
     void CreateDevice(Microsoft::WRL::ComPtr<ID3D12Device>& _device, Microsoft::WRL::ComPtr<IDXGIAdapter4>& _adapter);
+    void CreateDevice(ID3D12Device** _device, Microsoft::WRL::ComPtr<IDXGIAdapter4>& _adapter);
 
 
     /// <summary>
@@ -25,6 +26,7 @@ namespace DX12Helper
     /// <param name="_device">デバイス</param>
     /// <param name="_infoQ">情報キュー</param>
     void PauseError(Microsoft::WRL::ComPtr<ID3D12Device>& _device, Microsoft::WRL::ComPtr<ID3D12InfoQueue>& _infoQ);
+    void PauseError(ID3D12Device* _device, Microsoft::WRL::ComPtr<ID3D12InfoQueue>& _infoQ);
 
 
     /// <summary>

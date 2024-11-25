@@ -7,6 +7,7 @@
 
 #include <cassert>
 #include <format>
+#include <iostream>
 
 #pragma comment(lib, "d3d12.lib")
 #pragma comment(lib, "dxgi.lib")
@@ -45,7 +46,7 @@ void DirectX12::Initialize()
 
 
     /// デバイス生成
-    DX12Helper::CreateDevice(device_, useAdapter_);
+    DX12Helper::CreateDevice(&device_, useAdapter_);
 
 
     /// エラー時停止処理
@@ -164,4 +165,18 @@ void DirectX12::PostDraw()
     hr_ = commandList_->Reset(commandAllocator_.Get(), nullptr);
     assert(SUCCEEDED(hr_));
 
+}
+
+DirectX12::~DirectX12()
+{
+    const UINT64 fenceSignalValue = ++fenceValue_;
+    ID3D12Fence* fence = fence_.Get();
+
+    commandQueue_->Signal(fence, fenceSignalValue);
+    if (fence->GetCompletedValue() < fenceSignalValue)
+    {
+        fence->SetEventOnCompletion(fenceSignalValue, fenceEvent_);
+        WaitForSingleObject(fenceEvent_, INFINITE);
+    }
+    //auto ref = device_->Release();
 }

@@ -59,6 +59,8 @@ public:
 
     void DrawUI();
     void ChangeFont();
+    void PhotoshopStyle();
+    void RoundedVisualStudioStyle();
     void SetDisplay(bool _isEnable) { onDisplay_ = _isEnable; }
 
 private:

@@ -24,7 +24,7 @@ void Object3d::Initialize(Object3dSystem* _system, std::string _filepath)
 #ifdef DEBUG_ENGINE
     pDebugManager_ = DebugManager::GetInstance();
     std::stringstream ss;
-    ss << "0x" << std::hex << this;
+    ss << "##0x" << std::hex << this;
     pDebugManager_->SetComponent("Object3d", ss.str(), std::bind(&Object3d::DebugWindow, this));
 #endif // DEBUG_ENGINE
 
