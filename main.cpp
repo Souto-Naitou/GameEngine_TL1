@@ -14,6 +14,7 @@
 int _stdcall WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
     DirectX12* pDirectX = DirectX12::GetInstance();
+    DebugManager* pDebugManager = DebugManager::GetInstance();
 
     Win32Application* pWin32App = Win32Application::GetInstance();
     TextureManager::GetInstance()->Initialize();
@@ -23,7 +24,6 @@ int _stdcall WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
     /// 基盤の初期化
     ImGuiManager* pImGuiManager = new ImGuiManager();
-    DebugManager* pDebugManager = DebugManager::GetInstance();
     SpriteSystem* pSpriteSystem = new SpriteSystem();
     Object3dSystem* pObject3dSystem = new Object3dSystem();
 
