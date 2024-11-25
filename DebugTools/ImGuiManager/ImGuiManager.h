@@ -1,7 +1,10 @@
 #pragma once
 
 #include <d3d12.h>
+
+#ifdef _DEBUG
 #include <imgui.h>
+#endif // _DEBUG
 
 class DirectX12;
 

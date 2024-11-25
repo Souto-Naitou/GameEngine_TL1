@@ -9,9 +9,11 @@
 #include "DX12Helper.h"
 
 /// ImGui
+#ifdef _DEBUG
 #include <imgui.h>
 #include <imgui_impl_win32.h>
 #include <imgui_impl_dx12.h>
+#endif // _DEBUG
 
 #include <dxcapi.h>
 #pragma comment(lib, "dxcompiler.lib")

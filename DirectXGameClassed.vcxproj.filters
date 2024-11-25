@@ -25,9 +25,6 @@
     <Filter Include="Externals">
       <UniqueIdentifier>{4a863a72-ff1f-460f-9840-3ea3ebb8c64f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Externals\ImGui">
-      <UniqueIdentifier>{4e0e1071-96e2-47d3-94bc-1cfffb313b95}</UniqueIdentifier>
-    </Filter>
     <Filter Include="DirectX12\FPS">
       <UniqueIdentifier>{88cff5bd-cd25-4ccd-9324-62389d1650c2}</UniqueIdentifier>
     </Filter>
@@ -98,27 +95,6 @@
     </ClCompile>
     <ClCompile Include="Core\DirectX12\DirectX12_Impl.cpp">
       <Filter>DirectX12</Filter>
-    </ClCompile>
-    <ClCompile Include="Externals\imgui\imgui.cpp">
-      <Filter>Externals\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="Externals\imgui\imgui_demo.cpp">
-      <Filter>Externals\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="Externals\imgui\imgui_draw.cpp">
-      <Filter>Externals\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="Externals\imgui\imgui_impl_dx12.cpp">
-      <Filter>Externals\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="Externals\imgui\imgui_impl_win32.cpp">
-      <Filter>Externals\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="Externals\imgui\imgui_tables.cpp">
-      <Filter>Externals\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="Externals\imgui\imgui_widgets.cpp">
-      <Filter>Externals\ImGui</Filter>
     </ClCompile>
     <ClCompile Include="Core\DirectX12\Framerate.cpp">
       <Filter>DirectX12\FPS</Filter>
@@ -202,30 +178,6 @@
     </ClInclude>
     <ClInclude Include="Features\Input.h">
       <Filter>Feature\Input</Filter>
-    </ClInclude>
-    <ClInclude Include="Externals\imgui\imconfig.h">
-      <Filter>Externals\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="Externals\imgui\imgui.h">
-      <Filter>Externals\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="Externals\imgui\imgui_impl_dx12.h">
-      <Filter>Externals\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="Externals\imgui\imgui_impl_win32.h">
-      <Filter>Externals\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="Externals\imgui\imgui_internal.h">
-      <Filter>Externals\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="Externals\imgui\imstb_rectpack.h">
-      <Filter>Externals\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="Externals\imgui\imstb_textedit.h">
-      <Filter>Externals\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="Externals\imgui\imstb_truetype.h">
-      <Filter>Externals\ImGui</Filter>
     </ClInclude>
     <ClInclude Include="Core\DirectX12\Framerate.h">
       <Filter>DirectX12\FPS</Filter>

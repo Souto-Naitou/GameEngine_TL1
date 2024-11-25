@@ -150,6 +150,7 @@ void Object3d::LoadModelTexture()
 #ifdef DEBUG_ENGINE
 void Object3d::DebugWindow()
 {
+#ifdef _DEBUG
     ImGui::SeparatorText("Transform");
     ImGui::PushID("TRANSFORM");
     ImGui::DragFloat3("Scale", &transform_.scale.x, 0.01f);
@@ -162,5 +163,6 @@ void Object3d::DebugWindow()
     ImGui::DragFloat3("Rotate", &cameraTransform_.rotate.x, 0.01f);
     ImGui::DragFloat3("Translate", &cameraTransform_.translate.x, 0.01f);
     ImGui::PopID();
+#endif // _DEBUG
 }
 #endif // DEBUG_ENGINE
