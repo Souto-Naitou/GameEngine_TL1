@@ -94,6 +94,7 @@ void DirectX12::CreateSwapChainAndResource()
     assert(SUCCEEDED(hr_) && "SwapChainからリソースを取得できませんでした [0]");
     hr_ = swapChain_->GetBuffer(1, IID_PPV_ARGS(&swapChainResources_[1]));
     assert(SUCCEEDED(hr_) && "SwapChainからリソースを取得できませんでした [1]");
+    swapChain_->SetColorSpace1(DXGI_COLOR_SPACE_RGB_FULL_G22_NONE_P709);
 
 
     /// RTVの設定

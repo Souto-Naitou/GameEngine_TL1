@@ -15,9 +15,9 @@ int _stdcall WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
     DirectX12* pDirectX = DirectX12::GetInstance();
     Win32Application* pWin32App = Win32Application::GetInstance();
     TextureManager::GetInstance()->Initialize();
-    DebugManager* pDebugManager = DebugManager::GetInstance();
 
     ImGuiManager* pImGuiManager = new ImGuiManager();
+    DebugManager* pDebugManager = DebugManager::GetInstance();
 
     SpriteSystem* pSpriteSystem = new SpriteSystem();
 
@@ -51,8 +51,6 @@ int _stdcall WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
         pDebugManager->DrawUI();
 
         pImGuiManager->Render();
-
-        /// スプライトを移動させる
 
         pObject3d->Update();
 

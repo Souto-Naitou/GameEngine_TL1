@@ -35,7 +35,7 @@ public:
     static const uint32_t kMaxSRVCount_;
 
 public: /// Getter
-    ID3D12Device*                               GetDevice()                                 { return device_.Get(); }
+    ID3D12Device*                               GetDevice()                         const   { return device_.Get(); }
     ID3D12GraphicsCommandList*                  GetCommandList()                    const   { return commandList_.Get(); }
     IDxcUtils*                                  GetDxcUtils()                       const   { return dxcUtils_.Get(); }
     IDxcCompiler3*                              GetDxcCompiler()                    const   { return dxcCompiler_.Get(); }
@@ -57,7 +57,7 @@ public: /// Getter
 
 private:
     DirectX12() = default;
-    ~DirectX12() = default;
+    ~DirectX12();
 
     HRESULT hr_     = 0;
     HWND    hwnd_   = {};
