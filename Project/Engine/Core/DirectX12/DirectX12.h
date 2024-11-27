@@ -10,7 +10,7 @@
 #include <memory>
 #include "Framerate.h"
 
-#include "ReakChecker.h"
+#include <Utility/ReakChecker.h>
 
 class DirectX12
 {

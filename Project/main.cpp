@@ -1,7 +1,7 @@
 #include <Common\define.h>
 #include <Windows.h>
 #include <Core/DirectX12/DirectX12.h>
-#include <Win32Application.h>
+#include <Core/Win32/Win32Application.h>
 #include <Features/Sprite/SpriteSystem.h>
 #include <Features/Sprite/Sprite.h>
 #include <Features/Object3d/Object3dSystem.h>

@@ -1,8 +1,8 @@
 #include "TextureManager.h"
 #include "DirectX12.h"
-#include "DX12Helper.h"
+#include <Core/DirectX12/DX12Helper.h>
 
-#include <ConvertString.h>
+#include <Utility/ConvertString.h>
 
 uint32_t TextureManager::kSRVIndexTop = 1ui32;
 

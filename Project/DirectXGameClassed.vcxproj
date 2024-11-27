@@ -58,7 +58,7 @@
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalIncludeDirectories>$(ProjectDir)Externals\imgui\;%(AdditionalIncludeDirectories);$(ProjectDir)Externals\;$(ProjectDir)Math\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Externals\imgui\;%(AdditionalIncludeDirectories);$(ProjectDir)Externals\;$(ProjectDir)Engine\Math\;$(ProjectDir)Engine</AdditionalIncludeDirectories>
       <TreatWarningAsError>false</TreatWarningAsError>
     </ClCompile>
     <Link>
@@ -107,66 +107,68 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </FxCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Core\DirectX12\BlendMode.cpp" />
-    <ClCompile Include="Core\DirectX12\DirectX12.cpp" />
-    <ClCompile Include="Core\DirectX12\DirectX12_Impl.cpp" />
-    <ClCompile Include="Core\DirectX12\DX12Helper.cpp" />
-    <ClCompile Include="Core\DirectX12\Framerate.cpp" />
-    <ClCompile Include="Core\DirectX12\TextureManager.cpp" />
-    <ClCompile Include="Core\Win32\Win32Application.cpp" />
-    <ClCompile Include="DebugTools\DebugManager\DebugManager.cpp" />
-    <ClCompile Include="DebugTools\ImGuiManager\ImGuiManager.cpp" />
-    <ClCompile Include="DebugTools\ImGuiTemplates\ImGuiTemplates.cpp" />
+    <ClCompile Include="Engine\Core\DirectX12\BlendMode.cpp" />
+    <ClCompile Include="Engine\Core\DirectX12\DirectX12.cpp" />
+    <ClCompile Include="Engine\Core\DirectX12\DirectX12_Impl.cpp" />
+    <ClCompile Include="Engine\Core\DirectX12\DX12Helper.cpp" />
+    <ClCompile Include="Engine\Core\DirectX12\Framerate.cpp" />
+    <ClCompile Include="Engine\Core\DirectX12\TextureManager.cpp" />
+    <ClCompile Include="Engine\Core\Win32\Win32Application.cpp" />
+    <ClCompile Include="Engine\DebugTools\DebugManager\DebugManager.cpp" />
+    <ClCompile Include="Engine\DebugTools\ImGuiManager\ImGuiManager.cpp" />
+    <ClCompile Include="Engine\DebugTools\ImGuiTemplates\ImGuiTemplates.cpp" />
+    <ClCompile Include="Engine\Features\Input\Input.cpp" />
+    <ClCompile Include="Engine\Features\Model\Helper\ModelHelper.cpp" />
+    <ClCompile Include="Engine\Features\Model\Model.cpp" />
+    <ClCompile Include="Engine\Features\Model\ModelManager.cpp" />
+    <ClCompile Include="Engine\Features\Object3d\Object3d.cpp" />
+    <ClCompile Include="Engine\Features\Object3d\Object3dSystem.cpp" />
+    <ClCompile Include="Engine\Features\Sprite\Sprite.cpp" />
+    <ClCompile Include="Engine\Features\Sprite\SpriteSystem.cpp" />
+    <ClCompile Include="Engine\Math\impl\Color.cpp" />
+    <ClCompile Include="Engine\Math\impl\Matrix4x4.cpp" />
+    <ClCompile Include="Engine\Math\impl\Rect2.cpp" />
+    <ClCompile Include="Engine\Math\impl\Vector2.cpp" />
+    <ClCompile Include="Engine\Math\impl\Vector3.cpp" />
+    <ClCompile Include="Engine\Math\impl\Vector3Fn.cpp" />
+    <ClCompile Include="Engine\Math\impl\Vector4.cpp" />
+    <ClCompile Include="Engine\Math\MathExtension\mathExtension.cpp" />
+    <ClCompile Include="Engine\Utility\ConvertString.cpp" />
+    <ClCompile Include="Engine\Utility\Logger.cpp" />
     <ClCompile Include="Externals\Timer\Timer.cpp" />
-    <ClCompile Include="Features\Input\Input.cpp" />
-    <ClCompile Include="Features\Model\Helper\ModelHelper.cpp" />
-    <ClCompile Include="Features\Model\Model.cpp" />
-    <ClCompile Include="Features\Model\ModelManager.cpp" />
-    <ClCompile Include="Features\Object3d\Object3d.cpp" />
-    <ClCompile Include="Features\Object3d\Object3dSystem.cpp" />
-    <ClCompile Include="Features\Sprite\Sprite.cpp" />
-    <ClCompile Include="Features\Sprite\SpriteSystem.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Math\impl\Matrix4x4.cpp" />
-    <ClCompile Include="Math\impl\Rect2.cpp" />
-    <ClCompile Include="Math\impl\Vector2.cpp" />
-    <ClCompile Include="Math\impl\Vector3.cpp" />
-    <ClCompile Include="Math\impl\Vector3Fn.cpp" />
-    <ClCompile Include="Math\impl\Vector4.cpp" />
-    <ClCompile Include="Math\MathExtension\mathExtension.cpp" />
-    <ClCompile Include="Utility\ConvertString.cpp" />
-    <ClCompile Include="Utility\Logger.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Common\define.h" />
-    <ClInclude Include="Common\structs.h" />
-    <ClInclude Include="Core\DirectX12\BlendMode.h" />
-    <ClInclude Include="Core\DirectX12\DirectX12.h" />
-    <ClInclude Include="Core\DirectX12\DX12Helper.h" />
-    <ClInclude Include="Core\DirectX12\Framerate.h" />
-    <ClInclude Include="Core\DirectX12\TextureManager.h" />
-    <ClInclude Include="Core\Win32\Win32Application.h" />
-    <ClInclude Include="DebugTools\DebugManager\DebugManager.h" />
-    <ClInclude Include="DebugTools\ImGuiManager\ImGuiManager.h" />
-    <ClInclude Include="DebugTools\ImGuiTemplates\ImGuiTemplates.h" />
+    <ClInclude Include="Engine\Common\define.h" />
+    <ClInclude Include="Engine\Common\structs.h" />
+    <ClInclude Include="Engine\Core\DirectX12\BlendMode.h" />
+    <ClInclude Include="Engine\Core\DirectX12\DirectX12.h" />
+    <ClInclude Include="Engine\Core\DirectX12\DX12Helper.h" />
+    <ClInclude Include="Engine\Core\DirectX12\Framerate.h" />
+    <ClInclude Include="Engine\Core\DirectX12\TextureManager.h" />
+    <ClInclude Include="Engine\Core\Win32\Win32Application.h" />
+    <ClInclude Include="Engine\DebugTools\DebugManager\DebugManager.h" />
+    <ClInclude Include="Engine\DebugTools\ImGuiManager\ImGuiManager.h" />
+    <ClInclude Include="Engine\DebugTools\ImGuiTemplates\ImGuiTemplates.h" />
+    <ClInclude Include="Engine\Features\Input\Input.h" />
+    <ClInclude Include="Engine\Features\Model\Helper\ModelHelper.h" />
+    <ClInclude Include="Engine\Features\Model\Model.h" />
+    <ClInclude Include="Engine\Features\Model\ModelManager.h" />
+    <ClInclude Include="Engine\Features\Object3d\Object3d.h" />
+    <ClInclude Include="Engine\Features\Object3d\Object3dSystem.h" />
+    <ClInclude Include="Engine\Features\Sprite\Sprite.h" />
+    <ClInclude Include="Engine\Features\Sprite\SpriteSystem.h" />
+    <ClInclude Include="Engine\Math\Color.h" />
+    <ClInclude Include="Engine\Math\MathExtension\mathExtension.h" />
+    <ClInclude Include="Engine\Math\Matrix4x4.h" />
+    <ClInclude Include="Engine\Math\Rect2.h" />
+    <ClInclude Include="Engine\Math\Vector2.h" />
+    <ClInclude Include="Engine\Math\Vector3.h" />
+    <ClInclude Include="Engine\Math\Vector4.h" />
+    <ClInclude Include="Engine\Utility\ConvertString.h" />
+    <ClInclude Include="Engine\Utility\Logger.h" />
+    <ClInclude Include="Engine\Utility\ReakChecker.h" />
     <ClInclude Include="Externals\Timer\Timer.h" />
-    <ClInclude Include="Features\Input\Input.h" />
-    <ClInclude Include="Features\Model\Helper\ModelHelper.h" />
-    <ClInclude Include="Features\Model\Model.h" />
-    <ClInclude Include="Features\Model\ModelManager.h" />
-    <ClInclude Include="Features\Object3d\Object3d.h" />
-    <ClInclude Include="Features\Object3d\Object3dSystem.h" />
-    <ClInclude Include="Features\Sprite\Sprite.h" />
-    <ClInclude Include="Features\Sprite\SpriteSystem.h" />
-    <ClInclude Include="Math\MathExtension\mathExtension.h" />
-    <ClInclude Include="Math\Matrix4x4.h" />
-    <ClInclude Include="Math\Rect2.h" />
-    <ClInclude Include="Math\Vector2.h" />
-    <ClInclude Include="Math\Vector3.h" />
-    <ClInclude Include="Math\Vector4.h" />
-    <ClInclude Include="Utility\ConvertString.h" />
-    <ClInclude Include="Utility\Logger.h" />
-    <ClInclude Include="Utility\ReakChecker.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig">

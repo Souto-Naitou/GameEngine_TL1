@@ -1,11 +1,11 @@
 #include "DX12Helper.h"
 
 #include <cassert>
-#include <Logger.h>
+#include <Utility/Logger.h>
 #include <format>
 #include <intsafe.h>
-#include <ConvertString.h>
-#include <DirectX12.h>
+#include <Utility/ConvertString.h>
+#include <Core/DirectX12/DirectX12.h>
 #include <Common\structs.h>
 
 void DX12Helper::CreateDevice(Microsoft::WRL::ComPtr<ID3D12Device>& _device, Microsoft::WRL::ComPtr<IDXGIAdapter4>& _adapter)

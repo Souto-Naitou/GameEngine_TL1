@@ -1,7 +1,7 @@
 #include "ImGuiManager.h"
 
-#include <Win32Application.h>
-#include <DirectX12.h>
+#include <Core/Win32/Win32Application.h>
+#include <Core/DirectX12/DirectX12.h>
 #include <DebugTools/DebugManager/DebugManager.h>
 
 #ifdef _DEBUG

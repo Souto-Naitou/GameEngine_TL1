@@ -76,183 +76,192 @@
     <Filter Include="HLSL">
       <UniqueIdentifier>{0c17c647-2548-407e-b3bf-708a04226c6c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="DirectX12\Helper">
+      <UniqueIdentifier>{f3a365ef-b3a8-406d-bad8-e97f350d9e50}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Core\Win32\Win32Application.cpp">
-      <Filter>Win32Application</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\DirectX12\DirectX12.cpp">
-      <Filter>DirectX12</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\DirectX12\BlendMode.cpp">
-      <Filter>DirectX12\BlendMode</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\DirectX12\DX12Helper.cpp">
-      <Filter>DirectX12</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\DirectX12\DirectX12_Impl.cpp">
-      <Filter>DirectX12</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\DirectX12\Framerate.cpp">
-      <Filter>DirectX12\FPS</Filter>
-    </ClCompile>
     <ClCompile Include="Externals\Timer\Timer.cpp">
       <Filter>Externals\Timer</Filter>
-    </ClCompile>
-    <ClCompile Include="Features\Sprite\Sprite.cpp">
-      <Filter>Feature\Sprite</Filter>
-    </ClCompile>
-    <ClCompile Include="Features\Sprite\SpriteSystem.cpp">
-      <Filter>Feature\Sprite</Filter>
-    </ClCompile>
-    <ClCompile Include="Math\impl\Matrix4x4.cpp">
-      <Filter>Math</Filter>
-    </ClCompile>
-    <ClCompile Include="Math\impl\Rect2.cpp">
-      <Filter>Math</Filter>
-    </ClCompile>
-    <ClCompile Include="Math\impl\Vector2.cpp">
-      <Filter>Math</Filter>
-    </ClCompile>
-    <ClCompile Include="Math\impl\Vector3.cpp">
-      <Filter>Math</Filter>
-    </ClCompile>
-    <ClCompile Include="Math\impl\Vector4.cpp">
-      <Filter>Math</Filter>
-    </ClCompile>
-    <ClCompile Include="Math\MathExtension\mathExtension.cpp">
-      <Filter>Math</Filter>
-    </ClCompile>
-    <ClCompile Include="Math\impl\Vector3Fn.cpp">
-      <Filter>Math</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\DirectX12\TextureManager.cpp">
-      <Filter>DirectX12\TextureManager</Filter>
-    </ClCompile>
-    <ClCompile Include="Features\Object3d\Object3dSystem.cpp">
-      <Filter>Feature\Object3d</Filter>
-    </ClCompile>
-    <ClCompile Include="Features\Object3d\Object3d.cpp">
-      <Filter>Feature\Object3d</Filter>
-    </ClCompile>
-    <ClCompile Include="Features\Model\Helper\ModelHelper.cpp">
-      <Filter>Feature\Model\Helper</Filter>
-    </ClCompile>
-    <ClCompile Include="DebugTools\DebugManager\DebugManager.cpp">
-      <Filter>DebugTools\DebugManager</Filter>
-    </ClCompile>
-    <ClCompile Include="DebugTools\ImGuiTemplates\ImGuiTemplates.cpp">
-      <Filter>DebugTools\Templates</Filter>
-    </ClCompile>
-    <ClCompile Include="DebugTools\ImGuiManager\ImGuiManager.cpp">
-      <Filter>ImGuiManager</Filter>
-    </ClCompile>
-    <ClCompile Include="Features\Model\Model.cpp">
-      <Filter>Feature\Model</Filter>
-    </ClCompile>
-    <ClCompile Include="Features\Model\ModelManager.cpp">
-      <Filter>Feature\Model</Filter>
-    </ClCompile>
-    <ClCompile Include="Utility\ConvertString.cpp">
-      <Filter>Utility</Filter>
-    </ClCompile>
-    <ClCompile Include="Utility\Logger.cpp">
-      <Filter>Utility</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Features\Input\Input.cpp">
+    <ClCompile Include="Engine\Features\Sprite\SpriteSystem.cpp">
+      <Filter>Feature\Sprite</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Features\Sprite\Sprite.cpp">
+      <Filter>Feature\Sprite</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Features\Object3d\Object3dSystem.cpp">
+      <Filter>Feature\Object3d</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Features\Object3d\Object3d.cpp">
+      <Filter>Feature\Object3d</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Features\Model\Model.cpp">
+      <Filter>Feature\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Features\Model\ModelManager.cpp">
+      <Filter>Feature\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Features\Model\Helper\ModelHelper.cpp">
+      <Filter>Feature\Model\Helper</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Features\Input\Input.cpp">
       <Filter>Feature\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\DebugTools\ImGuiManager\ImGuiManager.cpp">
+      <Filter>ImGuiManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Math\impl\Vector4.cpp">
+      <Filter>Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Math\impl\Vector3Fn.cpp">
+      <Filter>Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Math\impl\Vector3.cpp">
+      <Filter>Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Math\impl\Vector2.cpp">
+      <Filter>Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Math\impl\Rect2.cpp">
+      <Filter>Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Math\impl\Matrix4x4.cpp">
+      <Filter>Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Math\MathExtension\mathExtension.cpp">
+      <Filter>Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\DirectX12\DX12Helper.cpp">
+      <Filter>DirectX12\Helper</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\DirectX12\DirectX12_Impl.cpp">
+      <Filter>DirectX12</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\DirectX12\DirectX12.cpp">
+      <Filter>DirectX12</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\DirectX12\TextureManager.cpp">
+      <Filter>DirectX12\TextureManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\DirectX12\Framerate.cpp">
+      <Filter>DirectX12\FPS</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\DirectX12\BlendMode.cpp">
+      <Filter>DirectX12\BlendMode</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\DebugTools\DebugManager\DebugManager.cpp">
+      <Filter>DebugTools\DebugManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\DebugTools\ImGuiTemplates\ImGuiTemplates.cpp">
+      <Filter>DebugTools\Templates</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Utility\Logger.cpp">
+      <Filter>Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Utility\ConvertString.cpp">
+      <Filter>Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Math\impl\Color.cpp">
+      <Filter>Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\Win32\Win32Application.cpp">
+      <Filter>Win32Application</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Core\Win32\Win32Application.h">
-      <Filter>Win32Application</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\DirectX12\DirectX12.h">
-      <Filter>DirectX12</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\DirectX12\BlendMode.h">
-      <Filter>DirectX12\BlendMode</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\DirectX12\DX12Helper.h">
-      <Filter>DirectX12</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\DirectX12\Framerate.h">
-      <Filter>DirectX12\FPS</Filter>
-    </ClInclude>
     <ClInclude Include="Externals\Timer\Timer.h">
       <Filter>Externals\Timer</Filter>
     </ClInclude>
-    <ClInclude Include="Features\Sprite\Sprite.h">
+    <ClInclude Include="Engine\Features\Sprite\SpriteSystem.h">
       <Filter>Feature\Sprite</Filter>
     </ClInclude>
-    <ClInclude Include="Features\Sprite\SpriteSystem.h">
+    <ClInclude Include="Engine\Features\Sprite\Sprite.h">
       <Filter>Feature\Sprite</Filter>
     </ClInclude>
-    <ClInclude Include="Math\MathExtension\mathExtension.h">
-      <Filter>Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Math\Matrix4x4.h">
-      <Filter>Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Math\Rect2.h">
-      <Filter>Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Math\Vector2.h">
-      <Filter>Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Math\Vector3.h">
-      <Filter>Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Math\Vector4.h">
-      <Filter>Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\DirectX12\TextureManager.h">
-      <Filter>DirectX12\TextureManager</Filter>
-    </ClInclude>
-    <ClInclude Include="Features\Object3d\Object3dSystem.h">
+    <ClInclude Include="Engine\Features\Object3d\Object3dSystem.h">
       <Filter>Feature\Object3d</Filter>
     </ClInclude>
-    <ClInclude Include="Features\Object3d\Object3d.h">
+    <ClInclude Include="Engine\Features\Object3d\Object3d.h">
       <Filter>Feature\Object3d</Filter>
     </ClInclude>
-    <ClInclude Include="Features\Model\Helper\ModelHelper.h">
+    <ClInclude Include="Engine\Features\Model\Model.h">
+      <Filter>Feature\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Features\Model\ModelManager.h">
+      <Filter>Feature\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Features\Model\Helper\ModelHelper.h">
       <Filter>Feature\Model\Helper</Filter>
     </ClInclude>
-    <ClInclude Include="DebugTools\DebugManager\DebugManager.h">
-      <Filter>DebugTools\DebugManager</Filter>
+    <ClInclude Include="Engine\Features\Input\Input.h">
+      <Filter>Feature\Input</Filter>
     </ClInclude>
-    <ClInclude Include="DebugTools\ImGuiTemplates\ImGuiTemplates.h">
-      <Filter>DebugTools\Templates</Filter>
-    </ClInclude>
-    <ClInclude Include="DebugTools\ImGuiManager\ImGuiManager.h">
+    <ClInclude Include="Engine\DebugTools\ImGuiManager\ImGuiManager.h">
       <Filter>ImGuiManager</Filter>
     </ClInclude>
-    <ClInclude Include="Features\Model\Model.h">
-      <Filter>Feature\Model</Filter>
+    <ClInclude Include="Engine\Math\Vector4.h">
+      <Filter>Math</Filter>
     </ClInclude>
-    <ClInclude Include="Features\Model\ModelManager.h">
-      <Filter>Feature\Model</Filter>
+    <ClInclude Include="Engine\Math\Vector3.h">
+      <Filter>Math</Filter>
     </ClInclude>
-    <ClInclude Include="Common\define.h">
+    <ClInclude Include="Engine\Math\Vector2.h">
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Math\Rect2.h">
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Math\Matrix4x4.h">
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Math\MathExtension\mathExtension.h">
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\DirectX12\DX12Helper.h">
+      <Filter>DirectX12\Helper</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\DirectX12\DirectX12.h">
+      <Filter>DirectX12</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\DirectX12\TextureManager.h">
+      <Filter>DirectX12\TextureManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\DirectX12\Framerate.h">
+      <Filter>DirectX12\FPS</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\DirectX12\BlendMode.h">
+      <Filter>DirectX12\BlendMode</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\DebugTools\DebugManager\DebugManager.h">
+      <Filter>DebugTools\DebugManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\DebugTools\ImGuiTemplates\ImGuiTemplates.h">
+      <Filter>DebugTools\Templates</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Common\structs.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="Common\structs.h">
+    <ClInclude Include="Engine\Common\define.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="Utility\ReakChecker.h">
+    <ClInclude Include="Engine\Utility\ConvertString.h">
       <Filter>Utility</Filter>
     </ClInclude>
-    <ClInclude Include="Utility\ConvertString.h">
+    <ClInclude Include="Engine\Utility\ReakChecker.h">
       <Filter>Utility</Filter>
     </ClInclude>
-    <ClInclude Include="Utility\Logger.h">
+    <ClInclude Include="Engine\Utility\Logger.h">
       <Filter>Utility</Filter>
     </ClInclude>
-    <ClInclude Include="Features\Input\Input.h">
-      <Filter>Feature\Input</Filter>
+    <ClInclude Include="Engine\Math\Color.h">
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\Win32\Win32Application.h">
+      <Filter>Win32Application</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

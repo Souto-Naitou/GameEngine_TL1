@@ -1,9 +1,9 @@
 #include "Model.h"
 
-#include <DX12Helper.h>
+#include <Core/DirectX12/DX12Helper.h>
 #include <Features/Model/Helper/ModelHelper.h>
 #include <Features/Object3d/Object3dSystem.h>
-#include <TextureManager.h>
+#include <Core/DirectX12/TextureManager.h>
 
 const std::string Model::kDefaultDirectoryPath = "resources";
 

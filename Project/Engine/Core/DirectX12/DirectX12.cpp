@@ -1,9 +1,9 @@
 #include "DirectX12.h"
 
-#include "Logger.h"             // ログ出力ラッパークラス
-#include "ConvertString.h"      // wideとの互換
-#include "Win32Application.h"   // Window関連
-#include "DX12Helper.h"         // ヘルパー
+#include <Utility/Logger.h>                 // ログ出力ラッパークラス
+#include <Utility/ConvertString.h>          // wideとの互換
+#include <Core/Win32/Win32Application.h>    // Window関連
+#include "DX12Helper.h"                     // ヘルパー
 
 #include <cassert>
 #include <format>

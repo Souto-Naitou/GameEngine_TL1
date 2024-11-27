@@ -1,9 +1,9 @@
 #include "Sprite.h"
 
 #include "SpriteSystem.h"
-#include "DX12Helper.h"
+#include <Core/DirectX12/DX12Helper.h>
 #include <Matrix4x4.h>
-#include <TextureManager.h>
+#include <Core/DirectX12/TextureManager.h>
 
 Sprite::Sprite()
 {

@@ -1,9 +1,9 @@
 /// DirectX12クラスの実装部分
 
-#include "Core/DirectX12/DirectX12.h"
+#include "DirectX12.h"
 
-#include "Logger.h"
-#include "ConvertString.h"
+#include <Utility/Logger.h>
+#include <Utility/ConvertString.h>
 #include <cassert>
 #include <format>
 #include "DX12Helper.h"

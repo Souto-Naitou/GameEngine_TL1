@@ -4,7 +4,7 @@
 #include <d3d12.h>
 #include <wrl.h>
 #include <string>
-#include <DirectX12.h>
+#include <Core/DirectX12/DirectX12.h>
 
 
 struct Material;

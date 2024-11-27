@@ -1,7 +1,7 @@
 #include "Object3dSystem.h"
-#include "Logger.h"
+#include <Utility/Logger.h>
 #include <cassert>
-#include "DX12Helper.h"
+#include <Core/DirectX12/DX12Helper.h>
 
 Object3dSystem::Object3dSystem()
 {
