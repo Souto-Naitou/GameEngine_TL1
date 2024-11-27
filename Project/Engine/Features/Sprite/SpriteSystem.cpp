@@ -1,5 +1,5 @@
 #include "SpriteSystem.h"
-#include <Core/DirectX12/DX12Helper.h>
+#include <Core/DirectX12/Helper/DX12Helper.h>
 #include <Utility/Logger.h>
 
 SpriteSystem::SpriteSystem()

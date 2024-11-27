@@ -135,9 +135,6 @@
     <ClCompile Include="Engine\Math\MathExtension\mathExtension.cpp">
       <Filter>Math</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Core\DirectX12\DX12Helper.cpp">
-      <Filter>DirectX12\Helper</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\Core\DirectX12\DirectX12_Impl.cpp">
       <Filter>DirectX12</Filter>
     </ClCompile>
@@ -170,6 +167,9 @@
     </ClCompile>
     <ClCompile Include="Engine\Core\Win32\Win32Application.cpp">
       <Filter>Win32Application</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\DirectX12\Helper\DX12Helper.cpp">
+      <Filter>DirectX12\Helper</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -221,9 +221,6 @@
     <ClInclude Include="Engine\Math\MathExtension\mathExtension.h">
       <Filter>Math</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Core\DirectX12\DX12Helper.h">
-      <Filter>DirectX12\Helper</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\Core\DirectX12\DirectX12.h">
       <Filter>DirectX12</Filter>
     </ClInclude>
@@ -262,6 +259,9 @@
     </ClInclude>
     <ClInclude Include="Engine\Core\Win32\Win32Application.h">
       <Filter>Win32Application</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\DirectX12\Helper\DX12Helper.h">
+      <Filter>DirectX12\Helper</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
