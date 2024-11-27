@@ -45,12 +45,12 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(ProjectDir)Math\;$(ProjectDir);$(ProjectDir)Utility\;$(ProjectDir)Core/Win32/;$(ProjectDir)Core/DirectX12\;$(ProjectDir)Externals\Timer\;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)Externals\VectorMatrix\Math\;$(ProjectDir);$(ProjectDir)Utility\;$(ProjectDir)Core/Win32/;$(ProjectDir)Core/DirectX12\;$(ProjectDir)Externals\Timer\;$(IncludePath)</IncludePath>
     <OutDir>$(SolutionDir)..\Bin\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)..\Bin\$(Configuration)\Int\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(ProjectDir)Math\;$(ProjectDir);$(ProjectDir)Utility\;$(ProjectDir)Core/Win32/;$(ProjectDir)Core/DirectX12\;$(ProjectDir)Externals\Timer\;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)Externals\VectorMatrix\Math\;$(ProjectDir);$(ProjectDir)Utility\;$(ProjectDir)Core/Win32/;$(ProjectDir)Core/DirectX12\;$(ProjectDir)Externals\Timer\;$(IncludePath)</IncludePath>
     <OutDir>$(SolutionDir)..\Bin\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)..\Bin\$(Configuration)\Int\</IntDir>
   </PropertyGroup>
@@ -69,7 +69,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>$(ProjectDir)Externals\ImGui\Build\$(Configuration)\ImGui.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxcompiler.dll" "$(TargetDir)dxcompiler.dll"
@@ -130,14 +130,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\Features\Object3d\Object3dSystem.cpp" />
     <ClCompile Include="Engine\Features\Sprite\Sprite.cpp" />
     <ClCompile Include="Engine\Features\Sprite\SpriteSystem.cpp" />
-    <ClCompile Include="Engine\Math\impl\Color.cpp" />
-    <ClCompile Include="Engine\Math\impl\Matrix4x4.cpp" />
-    <ClCompile Include="Engine\Math\impl\Rect2.cpp" />
-    <ClCompile Include="Engine\Math\impl\Vector2.cpp" />
-    <ClCompile Include="Engine\Math\impl\Vector3.cpp" />
-    <ClCompile Include="Engine\Math\impl\Vector3Fn.cpp" />
-    <ClCompile Include="Engine\Math\impl\Vector4.cpp" />
-    <ClCompile Include="Engine\Math\MathExtension\mathExtension.cpp" />
     <ClCompile Include="Engine\Utility\ConvertString.cpp" />
     <ClCompile Include="Engine\Utility\Logger.cpp" />
     <ClCompile Include="Externals\Timer\Timer.cpp" />
@@ -163,13 +155,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\Features\Object3d\Object3dSystem.h" />
     <ClInclude Include="Engine\Features\Sprite\Sprite.h" />
     <ClInclude Include="Engine\Features\Sprite\SpriteSystem.h" />
-    <ClInclude Include="Engine\Math\Color.h" />
-    <ClInclude Include="Engine\Math\MathExtension\mathExtension.h" />
-    <ClInclude Include="Engine\Math\Matrix4x4.h" />
-    <ClInclude Include="Engine\Math\Rect2.h" />
-    <ClInclude Include="Engine\Math\Vector2.h" />
-    <ClInclude Include="Engine\Math\Vector3.h" />
-    <ClInclude Include="Engine\Math\Vector4.h" />
     <ClInclude Include="Engine\Utility\ConvertString.h" />
     <ClInclude Include="Engine\Utility\Logger.h" />
     <ClInclude Include="Engine\Utility\ReakChecker.h" />
@@ -205,6 +190,9 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </ProjectReference>
     <ProjectReference Include="Externals\ImGui\ImGui.vcxproj">
       <Project>{f83f6c46-aee0-480c-95fc-2319e6feb02b}</Project>
+    </ProjectReference>
+    <ProjectReference Include="Externals\VectorMatrix\Project\VecMat.vcxproj">
+      <Project>{a87ad77f-cc08-4788-8630-68470354fcd3}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

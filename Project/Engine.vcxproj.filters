@@ -40,9 +40,6 @@
     <Filter Include="Feature\Sprite">
       <UniqueIdentifier>{0bf046c0-33e6-4cba-8c94-fdb514b3af33}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Math">
-      <UniqueIdentifier>{da3950f7-d8ed-4f70-ade0-9820e872ac5b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="DirectX12\TextureManager">
       <UniqueIdentifier>{b645dc65-bf36-43cb-90e8-e823724f366b}</UniqueIdentifier>
     </Filter>
@@ -114,27 +111,6 @@
     <ClCompile Include="Engine\DebugTools\ImGuiManager\ImGuiManager.cpp">
       <Filter>ImGuiManager</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Math\impl\Vector4.cpp">
-      <Filter>Math</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Math\impl\Vector3Fn.cpp">
-      <Filter>Math</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Math\impl\Vector3.cpp">
-      <Filter>Math</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Math\impl\Vector2.cpp">
-      <Filter>Math</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Math\impl\Rect2.cpp">
-      <Filter>Math</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Math\impl\Matrix4x4.cpp">
-      <Filter>Math</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Math\MathExtension\mathExtension.cpp">
-      <Filter>Math</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\Core\DirectX12\DirectX12_Impl.cpp">
       <Filter>DirectX12</Filter>
     </ClCompile>
@@ -161,9 +137,6 @@
     </ClCompile>
     <ClCompile Include="Engine\Utility\ConvertString.cpp">
       <Filter>Utility</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Math\impl\Color.cpp">
-      <Filter>Math</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Core\Win32\Win32Application.cpp">
       <Filter>Win32Application</Filter>
@@ -203,24 +176,6 @@
     <ClInclude Include="Engine\DebugTools\ImGuiManager\ImGuiManager.h">
       <Filter>ImGuiManager</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Math\Vector4.h">
-      <Filter>Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Math\Vector3.h">
-      <Filter>Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Math\Vector2.h">
-      <Filter>Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Math\Rect2.h">
-      <Filter>Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Math\Matrix4x4.h">
-      <Filter>Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Math\MathExtension\mathExtension.h">
-      <Filter>Math</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\Core\DirectX12\DirectX12.h">
       <Filter>DirectX12</Filter>
     </ClInclude>
@@ -253,9 +208,6 @@
     </ClInclude>
     <ClInclude Include="Engine\Utility\Logger.h">
       <Filter>Utility</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Math\Color.h">
-      <Filter>Math</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Core\Win32\Win32Application.h">
       <Filter>Win32Application</Filter>
