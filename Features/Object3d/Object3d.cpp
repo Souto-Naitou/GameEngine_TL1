@@ -1,13 +1,13 @@
 #include "Object3d.h"
 
-#include "DirectX12.h"
-#include "DX12Helper.h"
-#include "Features/Model/Helper/ModelHelper.h"
-#include <Win32Application.h>
-
 #include <Matrix4x4.h>
-#include <structs.h>
-#include <TextureManager.h>
+#include <Common/structs.h>
+#include <Core/Win32/Win32Application.h>
+#include <Core/DirectX12/DirectX12.h>
+#include <Core/DirectX12/DX12Helper.h>
+#include <Core/DirectX12/TextureManager.h>
+#include <Features/Model/Helper/ModelHelper.h>
+
 
 #ifdef DEBUG_ENGINE
 #include <DebugTools/DebugManager/DebugManager.h>

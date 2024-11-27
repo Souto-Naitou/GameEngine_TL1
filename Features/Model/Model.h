@@ -1,6 +1,6 @@
 #pragma once
 
-#include <structs.h>
+#include <Common/structs.h>
 #include <d3d12.h>
 #include <wrl.h>
 #include <string>

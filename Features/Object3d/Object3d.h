@@ -1,11 +1,12 @@
 #pragma once
 
+#include "Object3dSystem.h"
+
 #include <wrl.h>
 #include <d3d12.h>
-#include "Object3dSystem.h"
 #include <string>
-#include <define.h>
-#include <Model.h>
+#include <Common/structs.h>
+#include <Features/Model/Model.h>
 
 /// 前方宣言
 struct DirectionalLight;

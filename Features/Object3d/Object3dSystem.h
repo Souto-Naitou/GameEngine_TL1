@@ -1,8 +1,8 @@
 #pragma once
 
 #include <Vector4.h>
-#include <structs.h>
-#include "DirectX12.h"
+#include <Common/structs.h>
+#include <Core/DirectX12/DirectX12.h>
 
 struct Material
 {

@@ -1,15 +1,16 @@
-#include <define.h>
+#include <Common\define.h>
 #include <Windows.h>
-#include "Core/DirectX12/DirectX12.h"
+#include <Core/DirectX12/DirectX12.h>
 #include <Win32Application.h>
-#include "Features/Sprite/SpriteSystem.h"
-#include "Features/Sprite/Sprite.h"
-#include "Features/Object3d/Object3dSystem.h"
-#include "Features/Object3d/Object3d.h"
-#include "Core/DirectX12/TextureManager.h"
+#include <Features/Sprite/SpriteSystem.h>
+#include <Features/Sprite/Sprite.h>
+#include <Features/Object3d/Object3dSystem.h>
+#include <Features/Object3d/Object3d.h>
+#include <Core/DirectX12/TextureManager.h>
 #include <DebugTools/DebugManager/DebugManager.h>
 #include <DebugTools/ImGuiManager/ImGuiManager.h>
-#include <ModelManager.h>
+#include <Features/Model/ModelManager.h>
+#include <Features/Model/Model.h>
 
 int _stdcall WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {

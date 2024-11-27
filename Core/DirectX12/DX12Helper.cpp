@@ -6,7 +6,7 @@
 #include <intsafe.h>
 #include <ConvertString.h>
 #include <DirectX12.h>
-#include <structs.h>
+#include <Common\structs.h>
 
 void DX12Helper::CreateDevice(Microsoft::WRL::ComPtr<ID3D12Device>& _device, Microsoft::WRL::ComPtr<IDXGIAdapter4>& _adapter)
 {

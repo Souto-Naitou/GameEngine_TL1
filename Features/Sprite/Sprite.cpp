@@ -1,6 +1,6 @@
 #include "Sprite.h"
 
-#include "Features/Sprite/SpriteSystem.h"
+#include "SpriteSystem.h"
 #include "DX12Helper.h"
 #include <Matrix4x4.h>
 #include <TextureManager.h>

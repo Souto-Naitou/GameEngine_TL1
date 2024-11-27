@@ -58,7 +58,7 @@
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalIncludeDirectories>$(ProjectDir)Externals\imgui\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Externals\imgui\;%(AdditionalIncludeDirectories);$(ProjectDir)Externals\;$(ProjectDir)Math\</AdditionalIncludeDirectories>
       <TreatWarningAsError>false</TreatWarningAsError>
     </ClCompile>
     <Link>
@@ -87,7 +87,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(ProjectDir)Externals\;$(ProjectDir)Math\</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -118,8 +118,10 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="DebugTools\ImGuiManager\ImGuiManager.cpp" />
     <ClCompile Include="DebugTools\ImGuiTemplates\ImGuiTemplates.cpp" />
     <ClCompile Include="Externals\Timer\Timer.cpp" />
-    <ClCompile Include="Features\Input.cpp" />
+    <ClCompile Include="Features\Input\Input.cpp" />
     <ClCompile Include="Features\Model\Helper\ModelHelper.cpp" />
+    <ClCompile Include="Features\Model\Model.cpp" />
+    <ClCompile Include="Features\Model\ModelManager.cpp" />
     <ClCompile Include="Features\Object3d\Object3d.cpp" />
     <ClCompile Include="Features\Object3d\Object3dSystem.cpp" />
     <ClCompile Include="Features\Sprite\Sprite.cpp" />
@@ -132,12 +134,12 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Math\impl\Vector3Fn.cpp" />
     <ClCompile Include="Math\impl\Vector4.cpp" />
     <ClCompile Include="Math\MathExtension\mathExtension.cpp" />
-    <ClCompile Include="Model.cpp" />
-    <ClCompile Include="ModelManager.cpp" />
     <ClCompile Include="Utility\ConvertString.cpp" />
     <ClCompile Include="Utility\Logger.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Common\define.h" />
+    <ClInclude Include="Common\structs.h" />
     <ClInclude Include="Core\DirectX12\BlendMode.h" />
     <ClInclude Include="Core\DirectX12\DirectX12.h" />
     <ClInclude Include="Core\DirectX12\DX12Helper.h" />
@@ -147,10 +149,11 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="DebugTools\DebugManager\DebugManager.h" />
     <ClInclude Include="DebugTools\ImGuiManager\ImGuiManager.h" />
     <ClInclude Include="DebugTools\ImGuiTemplates\ImGuiTemplates.h" />
-    <ClInclude Include="define.h" />
     <ClInclude Include="Externals\Timer\Timer.h" />
-    <ClInclude Include="Features\Input.h" />
+    <ClInclude Include="Features\Input\Input.h" />
     <ClInclude Include="Features\Model\Helper\ModelHelper.h" />
+    <ClInclude Include="Features\Model\Model.h" />
+    <ClInclude Include="Features\Model\ModelManager.h" />
     <ClInclude Include="Features\Object3d\Object3d.h" />
     <ClInclude Include="Features\Object3d\Object3dSystem.h" />
     <ClInclude Include="Features\Sprite\Sprite.h" />
@@ -161,9 +164,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Math\Vector2.h" />
     <ClInclude Include="Math\Vector3.h" />
     <ClInclude Include="Math\Vector4.h" />
-    <ClInclude Include="Model.h" />
-    <ClInclude Include="ModelManager.h" />
-    <ClInclude Include="structs.h" />
     <ClInclude Include="Utility\ConvertString.h" />
     <ClInclude Include="Utility\Logger.h" />
     <ClInclude Include="Utility\ReakChecker.h" />

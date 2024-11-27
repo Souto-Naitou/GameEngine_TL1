@@ -1,6 +1,6 @@
 #pragma once
 
-#include "DirectX12.h"
+#include <Core/DirectX12/DirectX12.h>
 #include <wrl.h>
 
 class SpriteSystem

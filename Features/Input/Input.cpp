@@ -1,4 +1,4 @@
-#include "Features/Input.h"
+#include "Input.h"
 
 #include <cassert>
 

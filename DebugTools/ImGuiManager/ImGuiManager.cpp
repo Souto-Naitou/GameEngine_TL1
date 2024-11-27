@@ -2,11 +2,12 @@
 
 #include <Win32Application.h>
 #include <DirectX12.h>
+#include <DebugTools/DebugManager/DebugManager.h>
+
 #ifdef _DEBUG
 #include <imgui_impl_win32.h>
 #include <imgui_impl_dx12.h>
 #endif // _DEBUG
-#include <DebugTools/DebugManager/DebugManager.h>
 
 void ImGuiManager::Initialize(DirectX12* _pDx12)
 {

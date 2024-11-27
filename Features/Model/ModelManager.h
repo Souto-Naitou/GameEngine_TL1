@@ -1,10 +1,10 @@
 #pragma once
 
-#include <DirectX12.h>
 #include <unordered_map>
 #include <string>
-#include <Model.h>
 #include <memory>
+#include <DirectX12.h>
+#include "Model.h"
 
 class ModelManager
 {

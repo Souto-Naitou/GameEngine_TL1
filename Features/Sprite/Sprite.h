@@ -3,8 +3,8 @@
 #include <Vector4.h>
 #include <Vector3.h>
 #include <Vector2.h>
-#include "DirectX12.h"
-#include "structs.h"
+#include <Core/DirectX12/DirectX12.h>
+#include <Common/structs.h>
 
 class SpriteSystem;
 
