@@ -1,6 +1,6 @@
 #include "TextureManager.h"
 #include "DirectX12.h"
-#include <Core/DirectX12/DX12Helper.h>
+#include <Core/DirectX12/Helper/DX12Helper.h>
 
 #include <Utility/ConvertString.h>
 

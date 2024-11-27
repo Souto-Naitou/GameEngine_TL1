@@ -4,7 +4,7 @@
 #include <Common/structs.h>
 #include <Core/Win32/Win32Application.h>
 #include <Core/DirectX12/DirectX12.h>
-#include <Core/DirectX12/DX12Helper.h>
+#include <Core/DirectX12/Helper/DX12Helper.h>
 #include <Core/DirectX12/TextureManager.h>
 #include <Features/Model/Helper/ModelHelper.h>
 

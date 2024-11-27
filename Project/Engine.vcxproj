@@ -115,8 +115,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\Core\DirectX12\BlendMode.cpp" />
     <ClCompile Include="Engine\Core\DirectX12\DirectX12.cpp" />
     <ClCompile Include="Engine\Core\DirectX12\DirectX12_Impl.cpp" />
-    <ClCompile Include="Engine\Core\DirectX12\DX12Helper.cpp" />
     <ClCompile Include="Engine\Core\DirectX12\Framerate.cpp" />
+    <ClCompile Include="Engine\Core\DirectX12\Helper\DX12Helper.cpp" />
     <ClCompile Include="Engine\Core\DirectX12\TextureManager.cpp" />
     <ClCompile Include="Engine\Core\Win32\Win32Application.cpp" />
     <ClCompile Include="Engine\DebugTools\DebugManager\DebugManager.cpp" />
@@ -148,8 +148,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\Common\structs.h" />
     <ClInclude Include="Engine\Core\DirectX12\BlendMode.h" />
     <ClInclude Include="Engine\Core\DirectX12\DirectX12.h" />
-    <ClInclude Include="Engine\Core\DirectX12\DX12Helper.h" />
     <ClInclude Include="Engine\Core\DirectX12\Framerate.h" />
+    <ClInclude Include="Engine\Core\DirectX12\Helper\DX12Helper.h" />
     <ClInclude Include="Engine\Core\DirectX12\TextureManager.h" />
     <ClInclude Include="Engine\Core\Win32\Win32Application.h" />
     <ClInclude Include="Engine\DebugTools\DebugManager\DebugManager.h" />
