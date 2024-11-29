@@ -11,6 +11,7 @@
 #include <DebugTools/ImGuiManager/ImGuiManager.h>
 #include <Features/Model/ModelManager.h>
 #include <Features/Model/Model.h>
+#include <Features/Input/Input.h>
 
 int _stdcall WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
@@ -20,8 +21,9 @@ int _stdcall WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
     Win32Application* pWin32App = Win32Application::GetInstance();
     TextureManager::GetInstance()->Initialize();
 
-    ModelManager* modelManager = ModelManager::GetInstance();
-    modelManager->Initialize();
+    ModelManager* modelManager_ = ModelManager::GetInstance();
+    modelManager_->Initialize();
+    modelManager_->AddAutoLoadPath("resources/models");
 
     /// 基盤の初期化
     ImGuiManager* pImGuiManager = new ImGuiManager();
@@ -30,11 +32,16 @@ int _stdcall WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
     /// ゲーム内オブジェクトの宣言
     Object3d* pObject3d = new Object3d();
-    Model* planeObj = nullptr;
+    Model* planeObj = new Model();
 
     /// ウィンドウの初期化
     pWin32App->Initialize();
     pWin32App->ShowWnd();
+
+    /// 入力の初期化
+    Input* pInput = new Input();
+    pInput->Initialize(GetModuleHandleA(nullptr), pWin32App->GetHwnd());
+
 
     /// DirectX12の初期化
     pDirectX->Initialize();
@@ -46,18 +53,21 @@ int _stdcall WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
     pObject3dSystem->Initialize();
 
     /// ゲーム内オブジェクトの初期化
-    pObject3d->Initialize(pObject3dSystem);
+    modelManager_->LoadAllModel();
+    pObject3d->Initialize("plane.obj");
     pObject3d->SetScale({ -1.0f, 1.0f, 1.0f });
-
-    modelManager->LoadModel("plane.obj");
-    planeObj = modelManager->FindModel("plane.obj");
-    pObject3d->SetModel(planeObj);
 
     pImGuiManager->Initialize(pDirectX);
 
 
     while (pWin32App->GetMsg() != WM_QUIT)
     {
+        /// マネージャ更新
+        modelManager_->Update();
+
+        pInput->Update();
+
+
         pImGuiManager->BeginFrame();
 
         pDebugManager->DrawUI();
@@ -82,6 +92,7 @@ int _stdcall WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
     pImGuiManager->Finalize();
     pWin32App->Finalize();
 
+    delete planeObj;
     delete pObject3d;
     delete pObject3dSystem;
     delete pSpriteSystem;

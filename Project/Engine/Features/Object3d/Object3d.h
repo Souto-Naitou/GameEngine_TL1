@@ -26,7 +26,7 @@ public:
     /// <summary>
     /// 初期化
     /// </summary>
-    void Initialize(Object3dSystem* _system);
+    void Initialize(const std::string& _filePath);
 
     /// <summary>
     /// 更新

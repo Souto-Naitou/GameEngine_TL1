@@ -5,19 +5,17 @@
 #include <string>
 #include <tuple>
 
-#include "Externals/Timer/Timer.h"
-
-#include "DebugTools/ImGuiTemplates/ImGuiTemplates.h"
+#include <Timer/Timer.h>
 
 class DebugManager
 {
 public:
     static DebugManager* GetInstance() { static DebugManager instance; return &instance; }
 
-    DebugManager(const DebugManager&)               = delete;
-    DebugManager& operator=(const DebugManager&)    = delete;
-    DebugManager(DebugManager&&)                    = delete;
-    DebugManager& operator=(const DebugManager&&)   = delete;
+    DebugManager(const DebugManager&) = delete;
+    DebugManager& operator=(const DebugManager&) = delete;
+    DebugManager(DebugManager&&) = delete;
+    DebugManager& operator=(const DebugManager&&) = delete;
 
     /// <summary>
     /// デバッグ用コンポーネントの登録
@@ -59,25 +57,34 @@ public:
 
     void DrawUI();
     void ChangeFont();
+    void SetDisplay(bool _isEnable) { onDisplay_ = _isEnable; }
+    bool GetDisplay() const { return onDisplay_; }
+
+    void PushLog(const std::string& _log)
+    {
+        textLog_ += _log;
+        OutputDebugStringA(_log.c_str());
+    }
     void PhotoshopStyle();
     void RoundedVisualStudioStyle();
-    void SetDisplay(bool _isEnable) { onDisplay_ = _isEnable; }
 
 private:
     DebugManager();
     ~DebugManager();
 
     std::list<std::tuple<std::string, std::string, const std::function<void(void)>, bool>> componentList_;
-    Timer           timer_              = {};
-    double          elapsedFrameCount_  = 0.0;
-    double          fps_                = 0.0;
-    unsigned int    frameCount_         = 0u;
-    bool            onDisplay_          = true;
+    Timer           timer_ = {};
+    double          elapsedFrameCount_ = 0.0;
+    double          fps_ = 0.0;
+    unsigned int    frameCount_ = 0u;
+    bool            onDisplay_ = true;
+    std::string     textLog_ = "";
 
 private:
     void DebugWindowOverall();
     void MeasureFPS();
     void Window_ObjectList();
-    std::list<std::tuple<std::string,std::string,const std::function<void(void)>,bool>>::iterator
+    void Window_Log();
+    std::list<std::tuple<std::string, std::string, const std::function<void(void)>, bool>>::iterator
         GetInsertIterator(std::string _parentName);
 };

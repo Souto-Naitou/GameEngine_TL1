@@ -4,8 +4,8 @@
 #include <Features/Model/Helper/ModelHelper.h>
 #include <Features/Object3d/Object3dSystem.h>
 #include <Core/DirectX12/TextureManager.h>
-
-const std::string Model::kDefaultDirectoryPath = "resources";
+#include <Features/Model/ModelManager.h>
+#include <DebugTools/DebugManager/DebugManager.h>
 
 void Model::Initialize(const std::string& _filePath)
 {
@@ -13,17 +13,16 @@ void Model::Initialize(const std::string& _filePath)
     pDx12_ = DirectX12::GetInstance();
     device_ = pDx12_->GetDevice();
 
+    filePath_ = _filePath;
+
     /// モデルデータを読み込む
-    modelData_ = ModelHelper::LoadObjFile(kDefaultDirectoryPath, _filePath);
+    th_LoadObjectFile_ = std::thread([&](){
 
-    /// 頂点リソースを作成
-    CreateVertexResource();
-
-    /// マテリアルリソースを作成
-    CreateMaterialResource();
-
-    /// テクスチャを読み込む
-    LoadModelTexture();
+        directoryPath_ = ModelManager::GetInstance()->GetDirectoryPath(filePath_);
+        modelData_ = ModelHelper::LoadObjFile(directoryPath_, filePath_);
+        ModelManager::GetInstance()->InqueueUpload( this);
+        DebugManager::GetInstance()->PushLog("[ロード完了] path: " + filePath_ + "\n");
+    });
 }
 
 void Model::Update()
@@ -32,6 +31,7 @@ void Model::Update()
 
 void Model::Draw()
 {
+    if (th_LoadObjectFile_.joinable()) return;
     ID3D12GraphicsCommandList* commandList = pDx12_->GetCommandList();
     std::vector<D3D12_GPU_DESCRIPTOR_HANDLE> textureSrvHandleGPUs = pDx12_->GetSRVHandlesGPUList();
 
@@ -44,6 +44,11 @@ void Model::Draw()
     // 描画！（DrawCall/ドローコール）。頂点
     commandList->DrawInstanced(static_cast<uint32_t>(modelData_.vertices.size()), 1, 0, 0);
 
+}
+
+Model::~Model()
+{
+    OutputDebugStringA("Model Destructor\n");
 }
 
 void Model::CreateVertexResource()
@@ -79,4 +84,18 @@ void Model::LoadModelTexture()
     textureManager->LoadTexture(modelData_.materialData.textureFilePath);
     modelData_.materialData.textureIndex = textureManager->GetTextureIndexByFilePath(modelData_.materialData.textureFilePath);
     textureSrvHandleGPU_ = TextureManager::GetInstance()->GetSrvHandleGPU(modelData_.materialData.textureIndex);
+}
+
+void Model::Upload()
+{
+    th_LoadObjectFile_.join();
+
+    /// 頂点リソースを作成
+    CreateVertexResource();
+
+    /// マテリアルリソースを作成
+    CreateMaterialResource();
+
+    /// テクスチャを読み込む
+    LoadModelTexture();
 }
