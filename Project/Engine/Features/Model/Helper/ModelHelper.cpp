@@ -19,8 +19,31 @@ ModelData ModelHelper::LoadObjFile(const std::string& _directoryPath, const std:
     std::vector<Vector2>    texcoords;
     std::string             line;
     // 2 Open file
-    std::ifstream file(_directoryPath + "/" + _filename);
-    assert(file.is_open());
+    std::string allPath;
+    std::string directoryPath;
+    std::string filename;
+    if (_directoryPath.empty())
+    {
+        allPath = _filename;
+    }
+    else
+    {
+        allPath = _directoryPath + "/" + _filename;
+    }
+    std::filesystem::path filePath = allPath;
+    directoryPath = filePath.parent_path().string();
+    filename = filePath.filename().string();
+
+    std::ifstream file(allPath);
+    if (!file)
+    {
+        auto current = std::filesystem::current_path();
+        std::string text = "Current path -> " + current.string() + "\n";
+
+        OutputDebugStringA(text.c_str());
+        OutputDebugStringA(std::string("Missing file : " + allPath + "\n").c_str());
+        assert(file.is_open());
+    }
     OutputDebugStringA(("\tCurrentPath : " + std::filesystem::current_path().string() + '\n').c_str());
     // 3 Read file and construct ModelData
     while (std::getline(file, line))
@@ -89,7 +112,7 @@ ModelData ModelHelper::LoadObjFile(const std::string& _directoryPath, const std:
             std::string materialFilename;
             s >> materialFilename;
             // 基本的にobjファイルと同一階層にmtlを配置するためディレクトリ名とファイル名を渡す
-            modelData.materialData = LoadMaterialTemplateFile(_directoryPath, materialFilename);
+            modelData.materialData = LoadMaterialTemplateFile(directoryPath, materialFilename);
         }
     }
     // 4 Return ModelData

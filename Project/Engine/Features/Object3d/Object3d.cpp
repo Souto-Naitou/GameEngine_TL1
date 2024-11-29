@@ -6,7 +6,7 @@
 #include <Core/DirectX12/DirectX12.h>
 #include <Core/DirectX12/Helper/DX12Helper.h>
 #include <Core/DirectX12/TextureManager.h>
-#include <Features/Model/Helper/ModelHelper.h>
+#include <Features/Model/ModelManager.h>
 
 
 #ifdef DEBUG_ENGINE
@@ -14,10 +14,10 @@
 #endif // DEBUG_ENGINE
 
 
-void Object3d::Initialize(Object3dSystem* _system)
+void Object3d::Initialize(const std::string& _filePath)
 {
     /// 必要なインスタンスを取得
-    pDx12_ = _system->GetDx12();
+    pDx12_ = DirectX12::GetInstance();
     device_ = pDx12_->GetDevice();
 
 #ifdef DEBUG_ENGINE
@@ -40,6 +40,10 @@ void Object3d::Initialize(Object3dSystem* _system)
 
     /// 平行光源リソースを作成
     CreateDirectionalLightResource();
+
+    /// モデルを読み込む
+    ModelManager::GetInstance()->LoadModel(_filePath);
+    pModel_ = ModelManager::GetInstance()->FindModel(_filePath);
 }
 
 void Object3d::Update()
