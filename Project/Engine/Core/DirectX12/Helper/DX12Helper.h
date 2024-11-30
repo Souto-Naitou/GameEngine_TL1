@@ -6,7 +6,7 @@
 #include <stdint.h>
 #include <dxcapi.h>
 #include <string>
-#include <Externals/DirectXTex/DirectXTex.h>
+#include <DirectXTex/DirectXTex.h>
 #include <vector>
 
 namespace DX12Helper

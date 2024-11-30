@@ -47,7 +47,7 @@ void ImGuiManager::BeginFrame()
     if (!isChangedFont_)
     {
         DebugManager::GetInstance()->ChangeFont();
-        DebugManager::GetInstance()->RoundedVisualStudioStyle();
+        DebugManager::GetInstance()->DefaultStyle();
         isChangedFont_ = true;
     }
 

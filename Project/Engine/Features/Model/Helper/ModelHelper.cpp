@@ -88,18 +88,30 @@ ModelData ModelHelper::LoadObjFile(const std::string& _directoryPath, const std:
                 // 頂点の要素へのIndexは「位置 / UV / 法線」で格納される
                 std::istringstream v(vertexDefinition);
                 uint32_t elementIndices[3];
+                std::string indexLine;
                 for (int32_t element = 0; element < 3; ++element)
                 {
                     std::string index;
                     std::getline(v, index, '/'); // [/]区切りでインデックスを読む
+                    if (index.empty())
+                    {
+                        // ダブルスラッシュの場合
+                        index = "0";
+                    }
                     elementIndices[element] = std::stoi(index);
                 }
                 // 要素へのIndexから、実際の要素の値を取得して、頂点を構築する
                 Vector4 position = positions[elementIndices[0] - 1];
-                Vector2 texcoord = texcoords[elementIndices[1] - 1];
+
+                Vector2 texcoord = {};
+                if (texcoords.empty())
+                {
+                    int32_t func = faceVertex - 1;
+                    texcoord = (Vector2(static_cast<float>(func * func), static_cast<float>(faceVertex) * 0.5f));
+                }
+                else texcoord = texcoords[elementIndices[1] - 1];
+
                 Vector3 normal = normals[elementIndices[2] - 1];
-                //VertexData vertex = { position, texcoord, normal };
-                //modelData.vertices.push_back(vertex);
                 triangle[faceVertex] = { position, texcoord, normal };
             }
             modelData.vertices.push_back(triangle[2]);

@@ -8,6 +8,7 @@
 #include <functional>
 #include <queue>
 #include "Model.h"
+#include <filesystem>
 
 class ModelManager
 {
@@ -72,7 +73,7 @@ private:
     std::list<std::string> searchPaths_;
     std::list<std::string> autoLoadPaths_;
 
-    std::unordered_map<std::string, std::unique_ptr<Model>> models_;
+    std::unordered_map<std::filesystem::path, std::unique_ptr<Model>> models_;
 
     std::queue<Model*> uploadQueue_;
 

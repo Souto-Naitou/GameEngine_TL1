@@ -57,6 +57,7 @@ public:
 
     void DrawUI();
     void ChangeFont();
+    void DefaultStyle();
     void SetDisplay(bool _isEnable) { onDisplay_ = _isEnable; }
     bool GetDisplay() const { return onDisplay_; }
 
@@ -79,9 +80,10 @@ private:
     unsigned int    frameCount_ = 0u;
     bool            onDisplay_ = true;
     std::string     textLog_ = "";
+    bool enableAutoScroll_ = true;
 
 private:
-    void DebugWindowOverall();
+    void DebugWindowOverall() const;
     void MeasureFPS();
     void Window_ObjectList();
     void Window_Log();

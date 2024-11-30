@@ -9,9 +9,10 @@
 #include <Features/Model/ModelManager.h>
 
 
-#ifdef DEBUG_ENGINE
+#if defined (DEBUG_ENGINE) && (_DEBUG)
 #include <DebugTools/DebugManager/DebugManager.h>
-#endif // DEBUG_ENGINE
+#include <imgui.h>
+#endif // DEBUG_ENGINE && _DEBUG
 
 
 void Object3d::Initialize(const std::string& _filePath)
@@ -20,12 +21,12 @@ void Object3d::Initialize(const std::string& _filePath)
     pDx12_ = DirectX12::GetInstance();
     device_ = pDx12_->GetDevice();
 
-#ifdef DEBUG_ENGINE
+#if defined (DEBUG_ENGINE) && (_DEBUG)
     pDebugManager_ = DebugManager::GetInstance();
     std::stringstream ss;
     ss << "instance##0x" << std::hex << this;
     pDebugManager_->SetComponent("Object3d", ss.str(), std::bind(&Object3d::DebugWindow, this));
-#endif // DEBUG_ENGINE
+#endif // DEBUG_ENGINE && _DEBUG
 
     transform_.scale = Vector3(1.0f, 1.0f, 1.0f);
     transform_.rotate = Vector3(0.0f, 0.0f, 0.0f);
@@ -42,12 +43,14 @@ void Object3d::Initialize(const std::string& _filePath)
     CreateDirectionalLightResource();
 
     /// モデルを読み込む
-    ModelManager::GetInstance()->LoadModel(_filePath);
-    pModel_ = ModelManager::GetInstance()->FindModel(_filePath);
+    modelPath_ = _filePath;
+    //ModelManager::GetInstance()->LoadModel(modelPath_);
+    pModel_ = ModelManager::GetInstance()->FindModel(modelPath_);
 }
 
 void Object3d::Update()
 {
+    if (!pModel_) pModel_ = ModelManager::GetInstance()->FindModel(modelPath_);
     Matrix4x4 wMatrix = Matrix4x4::AffineMatrix(transform_.scale, transform_.rotate, transform_.translate);
     Matrix4x4 cameraMatrix = Matrix4x4::AffineMatrix({1.0f, 1.0f, 1.0f}, cameraTransform_.rotate, cameraTransform_.translate);
     Matrix4x4 vMatrix = cameraMatrix.Inverse();
@@ -55,6 +58,8 @@ void Object3d::Update()
 
     transformationMatrixData_->wvp = wMatrix * (vMatrix * pMatrix);
     transformationMatrixData_->world = wMatrix;
+
+    if (pModel_) pModel_->Update();
 }
 
 void Object3d::Draw()
@@ -72,9 +77,9 @@ void Object3d::Draw()
 
 void Object3d::Finalize()
 {
-#ifdef DEBUG_ENGINE
+#if defined (DEBUG_ENGINE) && (_DEBUG)
     pDebugManager_->DeleteComponent("Object3d");
-#endif // DEBUG_ENGINE
+#endif // DEBUG_ENGINE && _DEBUG
 }
 
 
@@ -103,6 +108,7 @@ void Object3d::CreateDirectionalLightResource()
 void Object3d::DebugWindow()
 {
 #ifdef _DEBUG
+
     ImGui::SeparatorText("Transform");
     ImGui::PushID("TRANSFORM");
     ImGui::DragFloat3("Scale", &transform_.scale.x, 0.01f);
@@ -115,6 +121,14 @@ void Object3d::DebugWindow()
     ImGui::DragFloat3("Rotate", &cameraTransform_.rotate.x, 0.01f);
     ImGui::DragFloat3("Translate", &cameraTransform_.translate.x, 0.01f);
     ImGui::PopID();
+
+    ImGui::SeparatorText("Directional Light");
+    ImGui::PushID("DIRECTIONAL_LIGHT");
+    ImGui::ColorEdit4("Color", &directionalLight_->color.x);
+    ImGui::DragFloat3("Direction", &directionalLight_->direction.x, 0.01f);
+    ImGui::DragFloat("Intensity", &directionalLight_->intensity, 0.01f);
+    ImGui::PopID();
+
 #endif // _DEBUG
 }
 #endif // DEBUG_ENGINE

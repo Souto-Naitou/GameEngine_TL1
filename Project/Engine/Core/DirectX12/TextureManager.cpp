@@ -31,10 +31,14 @@ void TextureManager::LoadTexture(const std::string& _filePath)
     HRESULT hr = DirectX::LoadFromWICFile(filePathW.c_str(), DirectX::WIC_FLAGS_FORCE_SRGB, nullptr, image);
     assert(SUCCEEDED(hr));
 
-    DirectX::ScratchImage mipImages{};
-    hr = DirectX::GenerateMipMaps(image.GetImages(), image.GetImageCount(), image.GetMetadata(), DirectX::TEX_FILTER_SRGB, 0, mipImages);
-    assert(SUCCEEDED(hr));
 
+    DirectX::TexMetadata metadata = image.GetMetadata();
+    if (!metadata.width == 1 || !metadata.height == 1)
+    {
+        hr = DirectX::GenerateMipMaps(image.GetImages(), image.GetImageCount(), image.GetMetadata(), DirectX::TEX_FILTER_SRGB, 0, image);
+        metadata = image.GetMetadata();
+        assert(SUCCEEDED(hr));
+    }
 
     // テクスチャデータを追加
     textureDataContainer_.resize(textureDataContainer_.size() + 1);
@@ -42,9 +46,9 @@ void TextureManager::LoadTexture(const std::string& _filePath)
     TextureData& textureData = textureDataContainer_.back();
 
     textureData.filePath = _filePath;
-    textureData.metadata = mipImages.GetMetadata();
+    textureData.metadata = metadata;
     textureData.resource = DX12Helper::CreateTextureResource(DirectX12::GetInstance()->GetDevice(), textureData.metadata);
-    DX12Helper::UploadTextureData(textureData.resource, mipImages);
+    DX12Helper::UploadTextureData(textureData.resource, image);
 
     uint32_t srvIndex = static_cast<uint32_t>(textureDataContainer_.size() - 1) + kSRVIndexTop;
     ID3D12DescriptorHeap* srvDescriptorHeap = DirectX12::GetInstance()->GetSRVDescriptorHeap();

@@ -54,7 +54,7 @@ int _stdcall WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
     /// ゲーム内オブジェクトの初期化
     modelManager_->LoadAllModel();
-    pObject3d->Initialize("plane.obj");
+    pObject3d->Initialize("suzanne.obj");
     pObject3d->SetScale({ -1.0f, 1.0f, 1.0f });
 
     pImGuiManager->Initialize(pDirectX);

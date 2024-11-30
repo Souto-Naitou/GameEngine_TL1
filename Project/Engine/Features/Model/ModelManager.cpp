@@ -95,7 +95,7 @@ Model* ModelManager::FindModel(const std::string& _filePath)
     if (fullpath.empty()) fullpath = _filePath;
     else fullpath += "/" + _filePath;
 
-    return models_.at(fullpath).get();
+    return models_[fullpath].get();
 }
 
 void ModelManager::Update()

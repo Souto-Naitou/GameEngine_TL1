@@ -6,6 +6,7 @@
 #include <Core/DirectX12/TextureManager.h>
 #include <Features/Model/ModelManager.h>
 #include <DebugTools/DebugManager/DebugManager.h>
+#include <filesystem>
 
 void Model::Initialize(const std::string& _filePath)
 {
@@ -74,15 +75,23 @@ void Model::CreateMaterialResource()
     materialResource_->Map(0, nullptr, reinterpret_cast<void**>(&materialData_));
     /// マテリアルデータを初期化
     materialData_->color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
-    materialData_->enableLighting = false;
+    materialData_->enableLighting = true;
     materialData_->uvTransform = Matrix4x4::Identity();
 }
 
 void Model::LoadModelTexture()
 {
+    std::string filePath = modelData_.materialData.textureFilePath;
+
+    if (!std::filesystem::exists(modelData_.materialData.textureFilePath))
+    {
+        DebugManager::GetInstance()->PushLog("[Warning] The model's texture could not be loaded so white1x1.png is loaded instead.\n\t path: " + modelData_.materialData.textureFilePath + "\n");
+        filePath = "Resources/white1x1.png";
+    }
+
     TextureManager* textureManager = TextureManager::GetInstance();
-    textureManager->LoadTexture(modelData_.materialData.textureFilePath);
-    modelData_.materialData.textureIndex = textureManager->GetTextureIndexByFilePath(modelData_.materialData.textureFilePath);
+    textureManager->LoadTexture(filePath);
+    modelData_.materialData.textureIndex = textureManager->GetTextureIndexByFilePath(filePath);
     textureSrvHandleGPU_ = TextureManager::GetInstance()->GetSrvHandleGPU(modelData_.materialData.textureIndex);
 }
 

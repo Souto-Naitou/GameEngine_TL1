@@ -5,8 +5,9 @@
 #include <wrl.h>
 #include <d3d12.h>
 #include <string>
-#include <Common/structs.h>
+//#include <Common/structs.h>
 #include <Features/Model/Model.h>
+#include <Common/define.h>
 
 /// 前方宣言
 struct DirectionalLight;
@@ -43,6 +44,7 @@ public:
     /// </summary>
     void Finalize();
 
+
 public: /// Getter
     const Vector3& GetScale() const { return transform_.scale; }
     const Vector3& GetRotate() const { return transform_.rotate; }
@@ -55,7 +57,8 @@ public: /// Setter
     void SetTranslate(const Vector3& _translate) { transform_.translate = _translate; }
     void SetModel(Model* _pModel) { pModel_ = _pModel; }
 
-private:
+
+private: /// メンバ変数
     Transform                                   transform_                      = {};
     Transform                                   cameraTransform_                = {};
 
@@ -64,8 +67,11 @@ private:
 
     TransformationMatrix*                       transformationMatrixData_       = nullptr;
     DirectionalLight*                           directionalLight_               = nullptr;
+    Model*                                      pModel_                         = nullptr;
+    std::string                                 modelPath_                      = {};
 
-private:
+
+private: /// 非公開メンバ関数
     void CreateTransformationMatrixResource();
     void CreateDirectionalLightResource();
 
@@ -77,7 +83,6 @@ private:
 private: /// 他クラスが所持するインスタンスへのポインタ
     DirectX12*      pDx12_          = nullptr;
     ID3D12Device*   device_         = nullptr;
-    Model*          pModel_         = nullptr;
 
 #ifdef DEBUG_ENGINE
     DebugManager*   pDebugManager_  = nullptr;
