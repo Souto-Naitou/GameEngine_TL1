@@ -112,6 +112,7 @@ void DebugManager::Window_Log()
 #ifdef _DEBUG
 
     ImGuiWindowFlags flag = {};
+    flag |= ImGuiWindowFlags_HorizontalScrollbar;
     if (enableAutoScroll_)
     {
         flag = ImGuiWindowFlags_NoScrollWithMouse;

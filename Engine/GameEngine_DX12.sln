@@ -9,9 +9,9 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Engine", "Engine.vcxproj", 
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SampleProject", "..\SampleProject\SampleProject.vcxproj", "{90D922CA-A224-4348-A76F-46A4F4A34371}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ImGui", "..\Externals\ImGui\ImGui.vcxproj", "{F83F6C46-AEE0-480C-95FC-2319E6FEB02B}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ImGui", "Externals\ImGui\ImGui.vcxproj", "{F83F6C46-AEE0-480C-95FC-2319E6FEB02B}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VecMat", "..\Externals\VectorMatrix\Project\VecMat.vcxproj", "{A87AD77F-CC08-4788-8630-68470354FCD3}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VecMat", "Externals\VectorMatrix\Project\VecMat.vcxproj", "{A87AD77F-CC08-4788-8630-68470354FCD3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
