@@ -111,9 +111,6 @@
     <ClCompile Include="Core\DirectX12\DirectX12.cpp">
       <Filter>Core\DirectX12</Filter>
     </ClCompile>
-    <ClCompile Include="..\Externals\Timer\Timer.cpp">
-      <Filter>Externals\Timer</Filter>
-    </ClCompile>
     <ClCompile Include="Features\Input\Input.cpp">
       <Filter>Feature\Input</Filter>
     </ClCompile>
@@ -150,6 +147,9 @@
     <ClCompile Include="Core\Win32\Win32Application.cpp">
       <Filter>Core\Win32Application</Filter>
     </ClCompile>
+    <ClCompile Include="Externals\Timer\Timer.cpp">
+      <Filter>Externals\Timer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common\define.h">
@@ -178,9 +178,6 @@
     </ClInclude>
     <ClInclude Include="Core\DirectX12\DirectX12.h">
       <Filter>Core\DirectX12</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Externals\Timer\Timer.h">
-      <Filter>Externals\Timer</Filter>
     </ClInclude>
     <ClInclude Include="Features\Input\Input.h">
       <Filter>Feature\Input</Filter>
@@ -220,6 +217,9 @@
     </ClInclude>
     <ClInclude Include="Core\Win32\Win32Application.h">
       <Filter>Core\Win32Application</Filter>
+    </ClInclude>
+    <ClInclude Include="Externals\Timer\Timer.h">
+      <Filter>Externals\Timer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

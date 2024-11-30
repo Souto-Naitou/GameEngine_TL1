@@ -63,7 +63,7 @@
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalIncludeDirectories>$(ProjectDir)..\Externals\imgui\;%(AdditionalIncludeDirectories);$(ProjectDir)..\Externals\;$(ProjectDir)..\Externals\VectorMatrix\math;$(ProjectDir)Externals;$(ProjectDir)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Externals\imgui\;%(AdditionalIncludeDirectories);$(ProjectDir)Externals\VectorMatrix\math\;$(ProjectDir)Externals\;$(ProjectDir)</AdditionalIncludeDirectories>
       <TreatWarningAsError>false</TreatWarningAsError>
     </ClCompile>
     <Link>
@@ -91,7 +91,7 @@
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(ProjectDir)Externals\;$(ProjectDir)..\Externals\VectorMatrix\math;$(ProjectDir)..\Externals;$(ProjectDir)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(ProjectDir)Externals\;$(ProjectDir)Externals\VectorMatrix\math\;$(ProjectDir)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -110,7 +110,6 @@
     </FxCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\Externals\Timer\Timer.cpp" />
     <ClCompile Include="Core\DirectX12\BlendMode.cpp" />
     <ClCompile Include="Core\DirectX12\DirectX12.cpp" />
     <ClCompile Include="Core\DirectX12\DirectX12_Impl.cpp" />
@@ -122,6 +121,7 @@
     <ClCompile Include="DebugTools\ImGuiManager\ImGuiManager.cpp" />
     <ClCompile Include="DebugTools\ImGuiTemplates\ImGuiTemplates.cpp" />
     <ClCompile Include="DebugTools\Logger\Logger.cpp" />
+    <ClCompile Include="Externals\Timer\Timer.cpp" />
     <ClCompile Include="Features\Input\Input.cpp" />
     <ClCompile Include="Features\Model\Helper\ModelHelper.cpp" />
     <ClCompile Include="Features\Model\Model.cpp" />
@@ -133,7 +133,6 @@
     <ClCompile Include="Utility\ConvertString\ConvertString.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\Externals\Timer\Timer.h" />
     <ClInclude Include="Common\define.h" />
     <ClInclude Include="Common\structs.h" />
     <ClInclude Include="Core\DirectX12\BlendMode.h" />
@@ -147,6 +146,7 @@
     <ClInclude Include="DebugTools\ImGuiTemplates\ImGuiTemplates.h" />
     <ClInclude Include="DebugTools\Logger\Logger.h" />
     <ClInclude Include="DebugTools\ReakChecker.h" />
+    <ClInclude Include="Externals\Timer\Timer.h" />
     <ClInclude Include="Features\Input\Input.h" />
     <ClInclude Include="Features\Model\Helper\ModelHelper.h" />
     <ClInclude Include="Features\Model\Model.h" />
@@ -178,14 +178,14 @@
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Externals\ImGui\ImGui.vcxproj">
-      <Project>{f83f6c46-aee0-480c-95fc-2319e6feb02b}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\Externals\VectorMatrix\Project\VecMat.vcxproj">
-      <Project>{a87ad77f-cc08-4788-8630-68470354fcd3}</Project>
-    </ProjectReference>
     <ProjectReference Include="Externals\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">
       <Project>{371b9fa9-4c90-4ac6-a123-aced756d6c77}</Project>
+    </ProjectReference>
+    <ProjectReference Include="Externals\ImGui\ImGui.vcxproj">
+      <Project>{f83f6c46-aee0-480c-95fc-2319e6feb02b}</Project>
+    </ProjectReference>
+    <ProjectReference Include="Externals\VectorMatrix\Project\VecMat.vcxproj">
+      <Project>{a87ad77f-cc08-4788-8630-68470354fcd3}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
