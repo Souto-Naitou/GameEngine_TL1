@@ -92,6 +92,7 @@ int _stdcall WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
     pImGuiManager->Finalize();
     pWin32App->Finalize();
 
+    /// ゲーム内オブジェクトの解放
     delete planeObj;
     delete pObject3d;
     delete pObject3dSystem;
