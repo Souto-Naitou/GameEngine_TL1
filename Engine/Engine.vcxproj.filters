@@ -1,0 +1,239 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="ソース ファイル">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="ヘッダー ファイル">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="リソース ファイル">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Externals">
+      <UniqueIdentifier>{4a863a72-ff1f-460f-9840-3ea3ebb8c64f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Externals\Timer">
+      <UniqueIdentifier>{eadfca40-62e7-4a72-b41e-3818d23dafb1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Feature">
+      <UniqueIdentifier>{a77adb65-0ab2-4143-a805-264c3fa04373}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Feature\Input">
+      <UniqueIdentifier>{8803f867-4d11-4cec-883f-32df44af6c30}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Feature\Sprite">
+      <UniqueIdentifier>{0bf046c0-33e6-4cba-8c94-fdb514b3af33}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Feature\Object3d">
+      <UniqueIdentifier>{e1b1b091-2477-475f-b508-9b6faaf83efc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Feature\Model">
+      <UniqueIdentifier>{cce5abac-cdc3-482f-9133-860593c9bb69}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Feature\Model\Helper">
+      <UniqueIdentifier>{34f07039-7af5-434d-b971-4084ae536b3f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DebugTools">
+      <UniqueIdentifier>{2d966475-f2b4-417a-b53b-98a2e95ea8a0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DebugTools\DebugManager">
+      <UniqueIdentifier>{67c70dc1-3fc3-4b92-8745-04c264ebcfd5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DebugTools\Templates">
+      <UniqueIdentifier>{b53e2fc5-1d01-4842-8274-a707748c6d7d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common">
+      <UniqueIdentifier>{ebae1fd8-cb01-44bc-adbe-7d51471725ab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utility">
+      <UniqueIdentifier>{c81e2914-fa28-4869-9546-e5505a3be28b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="HLSL">
+      <UniqueIdentifier>{0c17c647-2548-407e-b3bf-708a04226c6c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DebugTools\ImGuiManager">
+      <UniqueIdentifier>{e4815223-2288-4cdb-9168-0d4dca0b53d5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DebugTools\Logger">
+      <UniqueIdentifier>{420cec13-7fb2-48a2-a136-34ac694c006d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utility\ConvertString">
+      <UniqueIdentifier>{84a0e531-6976-4248-92f6-ffbc56083342}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core">
+      <UniqueIdentifier>{34ff13cd-5f52-4198-a749-0d909c9ea792}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Win32Application">
+      <UniqueIdentifier>{5c7e8f14-1bd4-48f2-80b9-2ad2124c12e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\DirectX12">
+      <UniqueIdentifier>{55c061c3-927c-45ed-a4ab-5d06972fc5bb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\DirectX12\BlendMode">
+      <UniqueIdentifier>{fb9d6f31-4fb9-4701-bd6d-64c85dfa071b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\DirectX12\FPS">
+      <UniqueIdentifier>{88cff5bd-cd25-4ccd-9324-62389d1650c2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\DirectX12\TextureManager">
+      <UniqueIdentifier>{b645dc65-bf36-43cb-90e8-e823724f366b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\DirectX12\Helper">
+      <UniqueIdentifier>{f3a365ef-b3a8-406d-bad8-e97f350d9e50}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="DebugTools\DebugManager\DebugManager.cpp">
+      <Filter>DebugTools\DebugManager</Filter>
+    </ClCompile>
+    <ClCompile Include="DebugTools\ImGuiTemplates\ImGuiTemplates.cpp">
+      <Filter>DebugTools\Templates</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\DirectX12\BlendMode.cpp">
+      <Filter>Core\DirectX12\BlendMode</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\DirectX12\Framerate.cpp">
+      <Filter>Core\DirectX12\FPS</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\DirectX12\TextureManager.cpp">
+      <Filter>Core\DirectX12\TextureManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\DirectX12\Helper\DX12Helper.cpp">
+      <Filter>Core\DirectX12\Helper</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\DirectX12\DirectX12_Impl.cpp">
+      <Filter>Core\DirectX12</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\DirectX12\DirectX12.cpp">
+      <Filter>Core\DirectX12</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Externals\Timer\Timer.cpp">
+      <Filter>Externals\Timer</Filter>
+    </ClCompile>
+    <ClCompile Include="Features\Input\Input.cpp">
+      <Filter>Feature\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="Features\Model\Helper\ModelHelper.cpp">
+      <Filter>Feature\Model\Helper</Filter>
+    </ClCompile>
+    <ClCompile Include="Features\Model\Model.cpp">
+      <Filter>Feature\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Features\Model\ModelManager.cpp">
+      <Filter>Feature\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Features\Object3d\Object3d.cpp">
+      <Filter>Feature\Object3d</Filter>
+    </ClCompile>
+    <ClCompile Include="Features\Object3d\Object3dSystem.cpp">
+      <Filter>Feature\Object3d</Filter>
+    </ClCompile>
+    <ClCompile Include="Features\Sprite\Sprite.cpp">
+      <Filter>Feature\Sprite</Filter>
+    </ClCompile>
+    <ClCompile Include="Features\Sprite\SpriteSystem.cpp">
+      <Filter>Feature\Sprite</Filter>
+    </ClCompile>
+    <ClCompile Include="DebugTools\ImGuiManager\ImGuiManager.cpp">
+      <Filter>DebugTools\ImGuiManager</Filter>
+    </ClCompile>
+    <ClCompile Include="DebugTools\Logger\Logger.cpp">
+      <Filter>DebugTools\Logger</Filter>
+    </ClCompile>
+    <ClCompile Include="Utility\ConvertString\ConvertString.cpp">
+      <Filter>Utility\ConvertString</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Win32\Win32Application.cpp">
+      <Filter>Core\Win32Application</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Common\define.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\structs.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugTools\DebugManager\DebugManager.h">
+      <Filter>DebugTools\DebugManager</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugTools\ImGuiTemplates\ImGuiTemplates.h">
+      <Filter>DebugTools\Templates</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\DirectX12\BlendMode.h">
+      <Filter>Core\DirectX12\BlendMode</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\DirectX12\Framerate.h">
+      <Filter>Core\DirectX12\FPS</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\DirectX12\TextureManager.h">
+      <Filter>Core\DirectX12\TextureManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\DirectX12\Helper\DX12Helper.h">
+      <Filter>Core\DirectX12\Helper</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\DirectX12\DirectX12.h">
+      <Filter>Core\DirectX12</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Externals\Timer\Timer.h">
+      <Filter>Externals\Timer</Filter>
+    </ClInclude>
+    <ClInclude Include="Features\Input\Input.h">
+      <Filter>Feature\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Features\Model\Helper\ModelHelper.h">
+      <Filter>Feature\Model\Helper</Filter>
+    </ClInclude>
+    <ClInclude Include="Features\Model\Model.h">
+      <Filter>Feature\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Features\Model\ModelManager.h">
+      <Filter>Feature\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Features\Object3d\Object3d.h">
+      <Filter>Feature\Object3d</Filter>
+    </ClInclude>
+    <ClInclude Include="Features\Object3d\Object3dSystem.h">
+      <Filter>Feature\Object3d</Filter>
+    </ClInclude>
+    <ClInclude Include="Features\Sprite\Sprite.h">
+      <Filter>Feature\Sprite</Filter>
+    </ClInclude>
+    <ClInclude Include="Features\Sprite\SpriteSystem.h">
+      <Filter>Feature\Sprite</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugTools\ImGuiManager\ImGuiManager.h">
+      <Filter>DebugTools\ImGuiManager</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugTools\Logger\Logger.h">
+      <Filter>DebugTools\Logger</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugTools\ReakChecker.h">
+      <Filter>DebugTools</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility\ConvertString\ConvertString.h">
+      <Filter>Utility\ConvertString</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Win32\Win32Application.h">
+      <Filter>Core\Win32Application</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include=".editorconfig" />
+    <None Include="EngineResources\Shaders\Object3d.hlsli">
+      <Filter>HLSL</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="EngineResources\Shaders\Object3d.PS.hlsl">
+      <Filter>HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="EngineResources\Shaders\Object3d.VS.hlsl">
+      <Filter>HLSL</Filter>
+    </FxCompile>
+  </ItemGroup>
+</Project>

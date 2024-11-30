@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>17.0</VCProjectVersion>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectGuid>{9fd2d32d-dab0-40a1-b430-cbc12517b87c}</ProjectGuid>
+    <RootNamespace>Engine</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>Engine</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <IncludePath>$(ProjectDir)Externals\VectorMatrix\Math\;$(ProjectDir)Externals\;$(IncludePath)</IncludePath>
+    <OutDir>$(ProjectDir)Bin\$(Configuration)\</OutDir>
+    <IntDir>$(ProjectDir)Bin\$(Configuration)\Int\$(ProjectName)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <IncludePath>$(ProjectDir)Externals\VectorMatrix\Math\;$(ProjectDir)Externals\;$(IncludePath)</IncludePath>
+    <OutDir>$(ProjectDir)Bin\$(Configuration)\</OutDir>
+    <IntDir>$(ProjectDir)Bin\$(Configuration)\Int\$(ProjectName)\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\Externals\imgui\;%(AdditionalIncludeDirectories);$(ProjectDir)..\Externals\;$(ProjectDir)..\Externals\VectorMatrix\math;$(ProjectDir)Externals;$(ProjectDir)</AdditionalIncludeDirectories>
+      <TreatWarningAsError>false</TreatWarningAsError>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <PostBuildEvent>
+      <Command>
+      </Command>
+    </PostBuildEvent>
+    <FxCompile>
+      <ShaderModel>6.0</ShaderModel>
+      <AdditionalIncludeDirectories>$(ProjectDir)Resources\Shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </FxCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;IMGUI_DISABLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(ProjectDir)Externals\;$(ProjectDir)..\Externals\VectorMatrix\math;$(ProjectDir)..\Externals;$(ProjectDir)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <PostBuildEvent>
+      <Command>
+      </Command>
+    </PostBuildEvent>
+    <FxCompile>
+      <ShaderModel>6.0</ShaderModel>
+      <AdditionalIncludeDirectories>$(ProjectDir)Resources\Shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </FxCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\Externals\Timer\Timer.cpp" />
+    <ClCompile Include="Core\DirectX12\BlendMode.cpp" />
+    <ClCompile Include="Core\DirectX12\DirectX12.cpp" />
+    <ClCompile Include="Core\DirectX12\DirectX12_Impl.cpp" />
+    <ClCompile Include="Core\DirectX12\Framerate.cpp" />
+    <ClCompile Include="Core\DirectX12\Helper\DX12Helper.cpp" />
+    <ClCompile Include="Core\DirectX12\TextureManager.cpp" />
+    <ClCompile Include="Core\Win32\Win32Application.cpp" />
+    <ClCompile Include="DebugTools\DebugManager\DebugManager.cpp" />
+    <ClCompile Include="DebugTools\ImGuiManager\ImGuiManager.cpp" />
+    <ClCompile Include="DebugTools\ImGuiTemplates\ImGuiTemplates.cpp" />
+    <ClCompile Include="DebugTools\Logger\Logger.cpp" />
+    <ClCompile Include="Features\Input\Input.cpp" />
+    <ClCompile Include="Features\Model\Helper\ModelHelper.cpp" />
+    <ClCompile Include="Features\Model\Model.cpp" />
+    <ClCompile Include="Features\Model\ModelManager.cpp" />
+    <ClCompile Include="Features\Object3d\Object3d.cpp" />
+    <ClCompile Include="Features\Object3d\Object3dSystem.cpp" />
+    <ClCompile Include="Features\Sprite\Sprite.cpp" />
+    <ClCompile Include="Features\Sprite\SpriteSystem.cpp" />
+    <ClCompile Include="Utility\ConvertString\ConvertString.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Externals\Timer\Timer.h" />
+    <ClInclude Include="Common\define.h" />
+    <ClInclude Include="Common\structs.h" />
+    <ClInclude Include="Core\DirectX12\BlendMode.h" />
+    <ClInclude Include="Core\DirectX12\DirectX12.h" />
+    <ClInclude Include="Core\DirectX12\Framerate.h" />
+    <ClInclude Include="Core\DirectX12\Helper\DX12Helper.h" />
+    <ClInclude Include="Core\DirectX12\TextureManager.h" />
+    <ClInclude Include="Core\Win32\Win32Application.h" />
+    <ClInclude Include="DebugTools\DebugManager\DebugManager.h" />
+    <ClInclude Include="DebugTools\ImGuiManager\ImGuiManager.h" />
+    <ClInclude Include="DebugTools\ImGuiTemplates\ImGuiTemplates.h" />
+    <ClInclude Include="DebugTools\Logger\Logger.h" />
+    <ClInclude Include="DebugTools\ReakChecker.h" />
+    <ClInclude Include="Features\Input\Input.h" />
+    <ClInclude Include="Features\Model\Helper\ModelHelper.h" />
+    <ClInclude Include="Features\Model\Model.h" />
+    <ClInclude Include="Features\Model\ModelManager.h" />
+    <ClInclude Include="Features\Object3d\Object3d.h" />
+    <ClInclude Include="Features\Object3d\Object3dSystem.h" />
+    <ClInclude Include="Features\Sprite\Sprite.h" />
+    <ClInclude Include="Features\Sprite\SpriteSystem.h" />
+    <ClInclude Include="Utility\ConvertString\ConvertString.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include=".editorconfig">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </None>
+    <None Include="EngineResources\Shaders\Object3d.hlsli">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="EngineResources\Shaders\Object3d.PS.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="EngineResources\Shaders\Object3d.VS.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Externals\ImGui\ImGui.vcxproj">
+      <Project>{f83f6c46-aee0-480c-95fc-2319e6feb02b}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\Externals\VectorMatrix\Project\VecMat.vcxproj">
+      <Project>{a87ad77f-cc08-4788-8630-68470354fcd3}</Project>
+    </ProjectReference>
+    <ProjectReference Include="Externals\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">
+      <Project>{371b9fa9-4c90-4ac6-a123-aced756d6c77}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
