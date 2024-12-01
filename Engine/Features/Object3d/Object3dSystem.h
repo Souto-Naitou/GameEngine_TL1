@@ -3,6 +3,7 @@
 #include <Vector4.h>
 #include <Common/structs.h>
 #include <Core/DirectX12/DirectX12.h>
+#include <Features/GameEye/GameEye.h>
 
 struct Material
 {
@@ -29,7 +30,11 @@ public:
     void PresentDraw();
 
 public: /// Getter
-    DirectX12* GetDx12() { return pDx12_; }
+    DirectX12* GetDx12()                        { return pDx12_; }
+    GameEye* GetDefaultGameEye()                { return pDefaultGameEye_; }
+
+public: /// Setter
+    void SetDefaultGameEye(GameEye* _pGameEye)  { pDefaultGameEye_ = _pGameEye; }
 
 private:
     void CreateRootSignature();
@@ -43,5 +48,6 @@ private: /// メンバ変数
 
 
 private:
-    DirectX12* pDx12_ = nullptr;
+    DirectX12*  pDx12_              = nullptr;
+    GameEye*    pDefaultGameEye_    = nullptr;
 };

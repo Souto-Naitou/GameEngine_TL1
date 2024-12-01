@@ -85,6 +85,9 @@
     <Filter Include="Core\DirectX12\Helper">
       <UniqueIdentifier>{f3a365ef-b3a8-406d-bad8-e97f350d9e50}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Feature\GameEye">
+      <UniqueIdentifier>{ea832b38-aeb0-403c-932b-e147be7b883d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DebugTools\DebugManager\DebugManager.cpp">
@@ -149,6 +152,9 @@
     </ClCompile>
     <ClCompile Include="Externals\Timer\Timer.cpp">
       <Filter>Externals\Timer</Filter>
+    </ClCompile>
+    <ClCompile Include="Features\GameEye\GameEye.cpp">
+      <Filter>Feature\GameEye</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -220,6 +226,9 @@
     </ClInclude>
     <ClInclude Include="Externals\Timer\Timer.h">
       <Filter>Externals\Timer</Filter>
+    </ClInclude>
+    <ClInclude Include="Features\GameEye\GameEye.h">
+      <Filter>Feature\GameEye</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

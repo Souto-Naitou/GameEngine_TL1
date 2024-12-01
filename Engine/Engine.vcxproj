@@ -122,6 +122,7 @@
     <ClCompile Include="DebugTools\ImGuiTemplates\ImGuiTemplates.cpp" />
     <ClCompile Include="DebugTools\Logger\Logger.cpp" />
     <ClCompile Include="Externals\Timer\Timer.cpp" />
+    <ClCompile Include="Features\GameEye\GameEye.cpp" />
     <ClCompile Include="Features\Input\Input.cpp" />
     <ClCompile Include="Features\Model\Helper\ModelHelper.cpp" />
     <ClCompile Include="Features\Model\Model.cpp" />
@@ -147,6 +148,7 @@
     <ClInclude Include="DebugTools\Logger\Logger.h" />
     <ClInclude Include="DebugTools\ReakChecker.h" />
     <ClInclude Include="Externals\Timer\Timer.h" />
+    <ClInclude Include="Features\GameEye\GameEye.h" />
     <ClInclude Include="Features\Input\Input.h" />
     <ClInclude Include="Features\Model\Helper\ModelHelper.h" />
     <ClInclude Include="Features\Model\Model.h" />

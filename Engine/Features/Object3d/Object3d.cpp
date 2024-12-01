@@ -15,11 +15,13 @@
 #endif // DEBUG_ENGINE && _DEBUG
 
 
-void Object3d::Initialize(const std::string& _filePath)
+void Object3d::Initialize(Object3dSystem* _system, const std::string& _filePath)
 {
     /// 必要なインスタンスを取得
-    pDx12_ = DirectX12::GetInstance();
+    pSystem_ = _system;
+    pDx12_ = pSystem_->GetDx12();
     device_ = pDx12_->GetDevice();
+    pGameEye_ = pSystem_->GetDefaultGameEye();
 
 #if defined (DEBUG_ENGINE) && (_DEBUG)
     pDebugManager_ = DebugManager::GetInstance();
@@ -31,10 +33,6 @@ void Object3d::Initialize(const std::string& _filePath)
     transform_.scale = Vector3(1.0f, 1.0f, 1.0f);
     transform_.rotate = Vector3(0.0f, 0.0f, 0.0f);
     transform_.translate = Vector3(0.0f, 0.0f, 0.0f);
-
-    cameraTransform_.scale = Vector3(1.0f, 1.0f, 1.0f);
-    cameraTransform_.rotate = Vector3(0.0f, 0.0f, 0.0f);
-    cameraTransform_.translate = Vector3(0.0f, 0.0f, -10.0f);
 
     /// 座標変換行列リソースを作成
     CreateTransformationMatrixResource();
@@ -50,14 +48,26 @@ void Object3d::Initialize(const std::string& _filePath)
 
 void Object3d::Update()
 {
+    /// モデルが読み込まれていない場合は読み込む
     if (!pModel_) pModel_ = ModelManager::GetInstance()->FindModel(modelPath_);
-    Matrix4x4 wMatrix = Matrix4x4::AffineMatrix(transform_.scale, transform_.rotate, transform_.translate);
-    Matrix4x4 cameraMatrix = Matrix4x4::AffineMatrix({1.0f, 1.0f, 1.0f}, cameraTransform_.rotate, cameraTransform_.translate);
-    Matrix4x4 vMatrix = cameraMatrix.Inverse();
-    Matrix4x4 pMatrix = Matrix4x4::PerspectiveFovMatrix(0.45f, static_cast<float>(Win32Application::kClientWidth) / static_cast<float>(Win32Application::kClientHeight), 0.1f, 100.0f);
 
-    transformationMatrixData_->wvp = wMatrix * (vMatrix * pMatrix);
+    Matrix4x4 wMatrix = Matrix4x4::AffineMatrix(transform_.scale, transform_.rotate, transform_.translate);
+    Matrix4x4 wvpMatrix = {};
+
+    /// カメラの行列計算
+    if (pGameEye_)
+    {
+        auto& vpMatrix = pGameEye_->GetViewProjectionMatrix();
+        wvpMatrix = wMatrix * vpMatrix;
+    }
+    else wvpMatrix = wMatrix;
+
+    /// 座標変換行列データを更新
+    transformationMatrixData_->wvp = wvpMatrix;
     transformationMatrixData_->world = wMatrix;
+
+    /// 平行光源の方向を正規化
+    directionalLight_->direction = directionalLight_->direction.Normalize();
 
     if (pModel_) pModel_->Update();
 }
@@ -114,12 +124,6 @@ void Object3d::DebugWindow()
     ImGui::DragFloat3("Scale", &transform_.scale.x, 0.01f);
     ImGui::DragFloat3("Rotate", &transform_.rotate.x, 0.01f);
     ImGui::DragFloat3("Translate", &transform_.translate.x, 0.01f);
-    ImGui::PopID();
-
-    ImGui::SeparatorText("Camera");
-    ImGui::PushID("CAMERA");
-    ImGui::DragFloat3("Rotate", &cameraTransform_.rotate.x, 0.01f);
-    ImGui::DragFloat3("Translate", &cameraTransform_.translate.x, 0.01f);
     ImGui::PopID();
 
     ImGui::SeparatorText("Directional Light");
