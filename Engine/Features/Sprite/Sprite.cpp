@@ -4,10 +4,14 @@
 #include <Core/DirectX12/Helper/DX12Helper.h>
 #include <Matrix4x4.h>
 #include <Core/DirectX12/TextureManager.h>
+#include <DebugTools/DebugManager/DebugManager.h>
+
+#ifdef _DEBUG
+#include <imgui.h>
+#endif // _DEBUG
 
 Sprite::Sprite()
 {
-
 }
 
 
@@ -22,6 +26,7 @@ void Sprite::Initialize(SpriteSystem* _spriteSystem, std::string _filepath)
     pDx12_ = pSpriteSystem_->GetDx12();
     device_ = pDx12_->GetDevice();
 
+    DebugManager::GetInstance()->SetComponent("Sprite", name_, std::bind(&Sprite::DebugWindow, this));
 
     /// Create BufferResource
     // 頂点リソースを作成する
@@ -59,6 +64,8 @@ void Sprite::Initialize(SpriteSystem* _spriteSystem, std::string _filepath)
 
     TextureManager::GetInstance()->LoadTexture(texturePath);
     textureIndex_ = TextureManager::GetInstance()->GetTextureIndexByFilePath(texturePath);
+
+    textureSrvHandleGPU_ = TextureManager::GetInstance()->GetSrvHandleGPU(textureIndex_);
 
     AdjustSpriteSize();
 }
@@ -154,6 +161,10 @@ void Sprite::Draw()
 
 }
 
+void Sprite::Finalize()
+{
+    DebugManager::GetInstance()->DeleteComponent("Sprite", name_.c_str());
+}
 
 /// 頂点リソースを作成する
 void Sprite::CreateVertexResource()
@@ -247,4 +258,31 @@ void Sprite::AdjustSpriteSize()
     size_ = Vector2(textureWidth, textureHeight);
     textureLeftTop_ = Vector2(0.0f, 0.0f);
     textureSize_ = Vector2(textureWidth, textureHeight);
+
+    aspectRatio_ = size_.x / size_.y;
+}
+
+void Sprite::DebugWindow()
+{
+#ifdef _DEBUG
+
+    thumbnailSize_.x = ImGui::GetContentRegionAvail().x - 16;
+    thumbnailSize_.y = thumbnailSize_.x / aspectRatio_;
+
+    ImGui::BeginChild("Preview", ImVec2(-1, 0), ImGuiChildFlags_AutoResizeY | ImGuiChildFlags_Border);
+    ImGui::SetCursorPos(ImVec2(ImGui::GetCursorPosX() + (ImGui::GetContentRegionAvail().x - thumbnailSize_.x) * 0.5f, ImGui::GetCursorPosY() + (ImGui::GetContentRegionAvail().y - thumbnailSize_.y) * 0.5f));
+    ImGui::Image(static_cast<ImTextureID>(textureSrvHandleGPU_.ptr), ImVec2(thumbnailSize_.x, thumbnailSize_.y));
+    ImGui::EndChild();
+
+    ImGui::SeparatorText("Transform");
+    ImGui::DragFloat2("Size", &size_.x, 0.1f);
+    ImGui::DragFloat("Rotate", &rotate_, 0.1f);
+    ImGui::DragFloat2("Translate", &translate_.x, 0.1f);
+
+    ImGui::SeparatorText("Option");
+    ImGui::DragFloat2("AnchorPoint", &anchorPoint_.x, 0.1f);
+    ImGui::Checkbox("FlipX", &isFlipX);
+    ImGui::Checkbox("FlipY", &isFlipY);
+
+#endif // _DEBUG
 }
