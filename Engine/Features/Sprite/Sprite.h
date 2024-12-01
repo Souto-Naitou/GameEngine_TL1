@@ -31,6 +31,8 @@ public:
 
 public: /// Getter
     const std::string&  GetName()           const               { return name_; }
+    const bool          GetEnableUpdate()   const               { return isUpdate_; }
+    const bool          GetEnableDraw()     const               { return isDraw_; }
     const float         GetRotation()       const               { return rotate_; }
     const Vector2&      GetPosition()       const               { return translate_; }
     const Vector4&      GetColor()          const               { return materialData_->color; }
@@ -43,6 +45,8 @@ public: /// Getter
 
 public: /// Setter
     void                SetName(const std::string& _name)       { name_ = _name; }
+    void                SetEnableUpdate(const bool _isUpdate)   { isUpdate_ = _isUpdate; }
+    void                SetEnableDraw(const bool _isDraw)       { isDraw_ = _isDraw; }
     void                SetRotation(const float _rotation)      { rotate_ = _rotation; }
     void                SetPosition(const Vector2& _position)   { translate_ = _position; }
     void                SetColor(const Vector4& _color)         { materialData_->color = _color; }
