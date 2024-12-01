@@ -27,7 +27,8 @@ void Object3d::Initialize(Object3dSystem* _system, const std::string& _filePath)
     pDebugManager_ = DebugManager::GetInstance();
     std::stringstream ss;
     ss << "instance##0x" << std::hex << this;
-    pDebugManager_->SetComponent("Object3d", ss.str(), std::bind(&Object3d::DebugWindow, this));
+    name_ = ss.str();
+    pDebugManager_->SetComponent("Object3d", name_, std::bind(&Object3d::DebugWindow, this));
 #endif // DEBUG_ENGINE && _DEBUG
 
     transform_.scale = Vector3(1.0f, 1.0f, 1.0f);

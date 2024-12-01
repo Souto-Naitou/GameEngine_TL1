@@ -58,10 +58,12 @@ public: /// Setter
     void SetTranslate(const Vector3& _translate)    { transform_.translate = _translate; }
     void SetModel(Model* _pModel)                   { pModel_ = _pModel; }
     void SetGameEye(GameEye* _pGameEye)             { pGameEye_ = _pGameEye; }
+    void SetName(const std::string& _name)          { name_ = _name; }
 
 
 private: /// メンバ変数
     Transform                                       transform_                      = {};
+    std::string                                     name_                           = {};
 
     Microsoft::WRL::ComPtr<ID3D12Resource>          transformationMatrixResource_   = nullptr;
     Microsoft::WRL::ComPtr<ID3D12Resource>          directionalLightResource_       = nullptr;

@@ -1,7 +1,10 @@
 #include "GameEye.h"
 #include <Core/Win32/Win32Application.h>
 #include <DebugTools/DebugManager/DebugManager.h>
+
+#ifdef _DEBUG
 #include <imgui.h>
+#endif // _DEBUG
 
 GameEye::GameEye()
     : transform_({ Vector3(1.0f, 1.0f, 1.0f), Vector3(0.0f, 0.0f, 0.0f), Vector3(0.0f, 0.0f, 0.0f) })
@@ -32,9 +35,7 @@ void GameEye::Update()
 
 void GameEye::DebugWindow()
 {
-    ImGui::Text("GameEye");
-    ImGui::TextDisabled("Name: %s", name_.c_str());
-    ImGui::Separator();
+#ifdef _DEBUG
 
     ImGui::SeparatorText("Transform");
     ImGui::PushID("TRANSFORM");
@@ -43,11 +44,13 @@ void GameEye::DebugWindow()
     ImGui::DragFloat3("Translate", &transform_.translate.x, 0.01f);
     ImGui::PopID();
 
-    ImGui::SeparatorText("Projection");
-    ImGui::PushID("PROJECTION");
+    ImGui::SeparatorText("Perspective options");
+    ImGui::PushID("PERSPECTIVE");
     ImGui::DragFloat("FovY", &fovY_, 0.01f);
     ImGui::DragFloat("Aspect Ratio", &aspectRatio_, 0.01f);
     ImGui::DragFloat("Near Clip", &nearClip_, 0.01f);
     ImGui::DragFloat("Far Clip", &farClip_, 0.01f);
     ImGui::PopID();
+
+#endif
 }
