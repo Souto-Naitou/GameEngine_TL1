@@ -34,7 +34,8 @@ int _stdcall WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
     /// ゲーム内オブジェクトの宣言
     Object3d* pObject3d = new Object3d();
     GameEye* pGameEye = new GameEye();
-    Sprite* pSprite = new Sprite();
+    Sprite* pSpriteMB = new Sprite();
+    Sprite* pSpriteUVC = new Sprite();
     pGameEye->SetRotate({ 0.0f, 0.0f, 0.0f });
     pGameEye->SetTranslate({ 0.0f, 0.0f, -10.0f });
     pGameEye->SetName("MainCamera");
@@ -63,9 +64,15 @@ int _stdcall WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
     pObject3d->Initialize(pObject3dSystem, "suzanne.obj");
     pObject3d->SetScale({ -1.0f, 1.0f, 1.0f });
     pObject3d->SetName("Suzanne");
-    pSprite->Initialize(pSpriteSystem, "MonsterBall.png");
-    pSprite->SetName("MonsterBall");
-    pSprite->SetSize({ 120,60 });
+
+    pSpriteMB->Initialize(pSpriteSystem, "MonsterBall.png");
+    pSpriteMB->SetName("MonsterBall");
+    pSpriteMB->SetSize({ 120,60 });
+    pSpriteMB->SetPosition({ 40,60 });
+    pSpriteUVC->Initialize(pSpriteSystem, "uvChecker.png");
+    pSpriteUVC->SetName("uvChecker");
+    pSpriteUVC->SetSize({ 120,120 });
+    pSpriteUVC->SetPosition({ 180, 60 });
 
     pImGuiManager->Initialize(pDirectX);
 
@@ -83,12 +90,14 @@ int _stdcall WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
         pInput->Update();
         pGameEye->Update();
         pObject3d->Update();
-        pSprite->Update();
+        pSpriteMB->Update();
+        pSpriteUVC->Update();
 
         /// 描画処理
         pDirectX->PresentDraw();
         pSpriteSystem->PresentDraw();
-        pSprite->Draw();
+        pSpriteMB->Draw();
+        pSpriteUVC->Draw();
 
         pObject3dSystem->PresentDraw();
         pObject3d->Draw();
@@ -99,13 +108,15 @@ int _stdcall WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
     }
 
     /// 終了処理
-    pSprite->Finalize();
+    pSpriteUVC->Finalize();
+    pSpriteMB->Finalize();
     pObject3d->Finalize();
     pImGuiManager->Finalize();
     pWin32App->Finalize();
 
     /// ゲーム内オブジェクトの解放
-    delete pSprite;
+    delete pSpriteUVC;
+    delete pSpriteMB;
     delete pGameEye;
     delete pObject3d;
     delete pObject3dSystem;
