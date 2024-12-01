@@ -5,6 +5,7 @@
 #include <Matrix4x4.h>
 #include <Core/DirectX12/TextureManager.h>
 #include <DebugTools/DebugManager/DebugManager.h>
+#include <Common/define.h>
 
 #ifdef _DEBUG
 #include <imgui.h>
@@ -26,7 +27,9 @@ void Sprite::Initialize(SpriteSystem* _spriteSystem, std::string _filepath)
     pDx12_ = pSpriteSystem_->GetDx12();
     device_ = pDx12_->GetDevice();
 
+#if defined (_DEBUG) && defined (DEBUG_ENGINE)
     DebugManager::GetInstance()->SetComponent("Sprite", name_, std::bind(&Sprite::DebugWindow, this));
+#endif // _DEBUG && DEBUG_ENGINE
 
     /// Create BufferResource
     // 頂点リソースを作成する
@@ -73,6 +76,7 @@ void Sprite::Initialize(SpriteSystem* _spriteSystem, std::string _filepath)
 
 void Sprite::Update()
 {
+    if (!isUpdate_) return;
     uint32_t clientWidth = pDx12_->GetClientWidth();
     uint32_t clientHeight = pDx12_->GetClientHeight();
     const DirectX::TexMetadata& metadata = TextureManager::GetInstance()->GetMetaData(textureIndex_);
@@ -142,6 +146,8 @@ void Sprite::Update()
 
 void Sprite::Draw()
 {
+    if (!isDraw_) return;
+
     ID3D12GraphicsCommandList* commandList = pDx12_->GetCommandList();
     std::vector<D3D12_GPU_DESCRIPTOR_HANDLE> textureSrvHandleGPUs = pDx12_->GetSRVHandlesGPUList();
     // VBVの設定
@@ -163,7 +169,11 @@ void Sprite::Draw()
 
 void Sprite::Finalize()
 {
+#if defined (_DEBUG) && defined (DEBUG_ENGINE)
+
     DebugManager::GetInstance()->DeleteComponent("Sprite", name_.c_str());
+
+#endif
 }
 
 /// 頂点リソースを作成する
@@ -264,7 +274,7 @@ void Sprite::AdjustSpriteSize()
 
 void Sprite::DebugWindow()
 {
-#ifdef _DEBUG
+#if defined (_DEBUG) && defined (DEBUG_ENGINE)
 
     thumbnailSize_.x = ImGui::GetContentRegionAvail().x - 16;
     thumbnailSize_.y = thumbnailSize_.x / aspectRatio_;
@@ -273,6 +283,10 @@ void Sprite::DebugWindow()
     ImGui::SetCursorPos(ImVec2(ImGui::GetCursorPosX() + (ImGui::GetContentRegionAvail().x - thumbnailSize_.x) * 0.5f, ImGui::GetCursorPosY() + (ImGui::GetContentRegionAvail().y - thumbnailSize_.y) * 0.5f));
     ImGui::Image(static_cast<ImTextureID>(textureSrvHandleGPU_.ptr), ImVec2(thumbnailSize_.x, thumbnailSize_.y));
     ImGui::EndChild();
+
+    ImGui::Checkbox("Update", &isUpdate_);
+    ImGui::SameLine();
+    ImGui::Checkbox("Draw", &isDraw_);
 
     ImGui::SeparatorText("Transform");
     ImGui::DragFloat2("Size", &size_.x, 0.1f);
@@ -284,5 +298,5 @@ void Sprite::DebugWindow()
     ImGui::Checkbox("FlipX", &isFlipX);
     ImGui::Checkbox("FlipY", &isFlipY);
 
-#endif // _DEBUG
+#endif // _DEBUG && DEBUG_ENGINE
 }

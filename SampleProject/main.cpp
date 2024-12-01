@@ -65,6 +65,7 @@ int _stdcall WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
     pObject3d->SetName("Suzanne");
     pSprite->Initialize(pSpriteSystem, "MonsterBall.png");
     pSprite->SetName("MonsterBall");
+    pSprite->SetSize({ 120,60 });
 
     pImGuiManager->Initialize(pDirectX);
 

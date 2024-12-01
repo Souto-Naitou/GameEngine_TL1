@@ -62,6 +62,8 @@ private: /// 他クラスが所持するインスタンスへのポインタ
 
 private: /// メンバ変数
     std::string                                 name_                           = "unnamed";            // 名前
+    bool                                        isUpdate_                       = true;                 // 有効かどうか。falseにするとUpdateとDrawをスキップする
+    bool                                        isDraw_                         = true;                 // 描画するかどうか。falseにするとDrawをスキップする
 
     Transform                                   transform_                      = {};                   // 位置、回転、拡大縮小
     Vector2                                     size_                           = {};                   // サイズ
