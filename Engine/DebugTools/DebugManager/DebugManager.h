@@ -80,7 +80,7 @@ private:
     unsigned int    frameCount_ = 0u;
     bool            onDisplay_ = true;
     std::string     textLog_ = "";
-    bool enableAutoScroll_ = true;
+    bool            enableAutoScroll_ = true;
 
 private:
     void DebugWindowOverall() const;

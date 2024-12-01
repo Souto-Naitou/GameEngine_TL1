@@ -12,6 +12,7 @@
 #include <Features/Model/ModelManager.h>
 #include <Features/Model/Model.h>
 #include <Features/Input/Input.h>
+#include <Features/GameEye/GameEye.h>
 
 int _stdcall WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
@@ -33,6 +34,10 @@ int _stdcall WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
     /// ゲーム内オブジェクトの宣言
     Object3d* pObject3d = new Object3d();
     Model* planeObj = new Model();
+    GameEye* pGameEye = new GameEye();
+    pGameEye->SetRotate({ 0.0f, 0.0f, 0.0f });
+    pGameEye->SetTranslate({ 0.0f, 0.0f, -10.0f });
+    pGameEye->SetName("MainCamera");
 
     /// ウィンドウの初期化
     pWin32App->Initialize();
@@ -51,10 +56,11 @@ int _stdcall WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
     /// 3Dオブジェクト基盤の初期化
     pObject3dSystem->Initialize();
+    pObject3dSystem->SetDefaultGameEye(pGameEye);
 
     /// ゲーム内オブジェクトの初期化
     modelManager_->LoadAllModel();
-    pObject3d->Initialize("suzanne.obj");
+    pObject3d->Initialize(pObject3dSystem, "suzanne.obj");
     pObject3d->SetScale({ -1.0f, 1.0f, 1.0f });
 
     pImGuiManager->Initialize(pDirectX);
@@ -66,7 +72,7 @@ int _stdcall WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
         modelManager_->Update();
 
         pInput->Update();
-
+        pGameEye->Update();
 
         pImGuiManager->BeginFrame();
 
