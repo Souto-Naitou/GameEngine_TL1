@@ -62,6 +62,7 @@ int _stdcall WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
     modelManager_->LoadAllModel();
     pObject3d->Initialize(pObject3dSystem, "suzanne.obj");
     pObject3d->SetScale({ -1.0f, 1.0f, 1.0f });
+    pObject3d->SetName("Suzanne");
 
     pImGuiManager->Initialize(pDirectX);
 

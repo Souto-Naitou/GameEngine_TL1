@@ -139,13 +139,13 @@ void DebugManager::Window_Log()
 #endif // _DEBUG
 }
 
-std::list<std::tuple<std::string, std::string, const std::function<void(void)>, bool>>::iterator
+std::list<std::tuple<std::string, const std::string&, const std::function<void(void)>, bool>>::iterator
     DebugManager::GetInsertIterator(std::string _parentName)
 {
     auto resultItr = std::find_if(
         componentList_.begin(),
         componentList_.end(),
-        [_parentName](std::tuple<std::string, std::string, const std::function<void()>, bool> arg) {
+        [_parentName](std::tuple<std::string, const std::string&, const std::function<void(void)>, bool> arg) {
         if (std::get<0>(arg).compare(_parentName) == 0)
         {
             return true;
@@ -235,6 +235,9 @@ void DebugManager::DrawUI()
             }
             else if (enableTab && ImGui::BeginTabItem(tabName.c_str(), &enableTab))
             {
+                ImGui::Text(parentID.c_str());
+                ImGui::TextDisabled("Name: %s", childID.c_str());
+                ImGui::Separator();
                 pFunc();
                 ImGui::EndTabItem();
             }
@@ -282,6 +285,7 @@ void DebugManager::DefaultStyle()
     ImGuiStyle& style = ImGui::GetStyle();
     style.WindowRounding = 6.0f;
     style.TabRounding = 0.0f;
+    style.WindowTitleAlign = ImVec2(0.5f, 0.5f);
     style.Colors[ImGuiCol_WindowBg] = ImVec4(0.05f, 0.05f, 0.05f, 0.75f);
     style.Colors[ImGuiCol_TitleBgActive] = ImVec4(0.8f, 0.1f, 0.1f, 0.75f);
     style.Colors[ImGuiCol_TitleBg] = ImVec4(0.0f, 0.0f, 0.0f, 0.90f);

@@ -108,8 +108,8 @@ void DirectX12::PresentDraw()
     Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> descriptorHeaps[] = { srvDescriptorHeap_.Get() };
     commandList_->SetDescriptorHeaps(1, descriptorHeaps->GetAddressOf());
 
-    commandList_->RSSetViewports(1, &viewport_);                    // Viewportを設定
-    commandList_->RSSetScissorRects(1, &scissorRect_);              // Scissorを設定
+    commandList_->RSSetViewports(1, &viewport_);        // Viewportを設定
+    commandList_->RSSetScissorRects(1, &scissorRect_);        // Scissorを設定
     // RootSignatureを設定。PSOに設定しているけど別途設定が必要
     //commandList_->SetGraphicsRootSignature(rootSignature.Get());
     //commandList_->SetPipelineState(graphicsPipelineState.Get());  // PSOを設定
