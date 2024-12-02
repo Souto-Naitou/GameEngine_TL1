@@ -10,6 +10,8 @@
 #include "Model.h"
 #include <filesystem>
 
+class Particle;
+
 class ModelManager
 {
 public:
@@ -76,6 +78,7 @@ private:
     std::unordered_map<std::filesystem::path, std::unique_ptr<Model>> models_;
 
     std::queue<Model*> uploadQueue_;
+    std::queue<Particle*> uploadQueueParticle_;
 
     ModelManager() = default;
     ~ModelManager() = default;

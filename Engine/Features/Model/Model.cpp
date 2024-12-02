@@ -44,7 +44,6 @@ void Model::Draw()
     commandList->SetGraphicsRootDescriptorTable(2, textureSrvHandleGPU_);
     // 描画！（DrawCall/ドローコール）。頂点
     commandList->DrawInstanced(static_cast<uint32_t>(modelData_.vertices.size()), 1, 0, 0);
-
 }
 
 Model::~Model()

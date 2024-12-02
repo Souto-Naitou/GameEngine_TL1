@@ -77,8 +77,14 @@ int _stdcall WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
     pImGuiManager->Initialize(pDirectX);
 
 
-    while (pWin32App->GetMsg() != WM_QUIT)
+    while (true)
     {
+        UINT msg = pWin32App->GetMsg();
+        if (msg == WM_QUIT)
+        {
+            break;
+        }
+
         /// マネージャ更新
         modelManager_->Update();
 

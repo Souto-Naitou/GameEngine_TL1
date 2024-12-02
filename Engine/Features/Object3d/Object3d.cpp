@@ -43,7 +43,7 @@ void Object3d::Initialize(Object3dSystem* _system, const std::string& _filePath)
 
     /// モデルを読み込む
     modelPath_ = _filePath;
-    //ModelManager::GetInstance()->LoadModel(modelPath_);
+    ModelManager::GetInstance()->LoadModel(modelPath_);
     pModel_ = ModelManager::GetInstance()->FindModel(modelPath_);
 }
 

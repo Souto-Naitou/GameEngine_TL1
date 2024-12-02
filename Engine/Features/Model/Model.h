@@ -21,6 +21,9 @@ public: /// 公開メンバ関数
     ~Model();
 
 
+public: /// Getter
+    ModelData* GetModelData() { return &modelData_; }
+
 private: /// メンバ変数
     static const std::string kDefaultDirectoryPath;
 

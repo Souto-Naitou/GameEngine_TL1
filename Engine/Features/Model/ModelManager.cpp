@@ -1,6 +1,7 @@
 #include "ModelManager.h"
 #include <Features/Model/Helper/ModelHelper.h>
 #include <filesystem>
+#include <Features/Particle/Particle.h>
 
 void ModelManager::Initialize()
 {
@@ -100,10 +101,14 @@ Model* ModelManager::FindModel(const std::string& _filePath)
 
 void ModelManager::Update()
 {
-    if (uploadQueue_.empty())
+    if (!uploadQueue_.empty())
     {
-        return;
+        uploadQueue_.front()->Upload();
+        uploadQueue_.pop();
     }
-    uploadQueue_.front()->Upload();
-    uploadQueue_.pop();
+    if (!uploadQueueParticle_.empty())
+    {
+        uploadQueueParticle_.front()->Upload();
+        uploadQueueParticle_.pop();
+    }
 }
