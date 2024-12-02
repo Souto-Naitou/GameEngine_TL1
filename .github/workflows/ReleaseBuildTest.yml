@@ -2,7 +2,7 @@ name: ReleaseBuild
 on:
   push:
     branches:
-      - customized03
+      - main
 env:
   SOLUTION_FILE_PATH: Engine/GameEngine_DX12.sln
   CONFIGURATION: Release
