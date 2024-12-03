@@ -5,6 +5,8 @@
 #include <wrl.h>
 #include <d3d12.h>
 #include <vector>
+#include <Core/DirectX12/SRVManager.h>
+#include <unordered_map>
 
 class TextureManager
 {
@@ -16,7 +18,7 @@ public:
 
     static TextureManager* GetInstance() { static TextureManager instance; return &instance;}
 
-    void Initialize();
+    void Initialize(SRVManager* _srvManager);
 
     /// <summary>
     /// テクスチャファイルの読み込み
@@ -25,23 +27,24 @@ public:
     void LoadTexture(const std::string& _filePath);
 
 public: /// Getter
-    uint32_t GetTextureIndexByFilePath(const std::string& _filePath);
-    D3D12_GPU_DESCRIPTOR_HANDLE GetSrvHandleGPU(uint32_t _textureIndex);
-    const DirectX::TexMetadata& GetMetaData(uint32_t _textureIndex);
+    const DirectX::TexMetadata& GetMetaData(const std::string& _filePath);
+    uint32_t GetSrvIndex(const std::string& _filePath);
+    D3D12_GPU_DESCRIPTOR_HANDLE GetSrvHandleGPU(const std::string& _filePath);
 
 private:
     struct TextureData
     {
-        std::string filePath;
         DirectX::TexMetadata metadata;
         Microsoft::WRL::ComPtr<ID3D12Resource> resource;
+        uint32_t srvIndex;
         D3D12_CPU_DESCRIPTOR_HANDLE srvHandleCPU;
         D3D12_GPU_DESCRIPTOR_HANDLE srvHandleGPU;
     };
 
-    static uint32_t kSRVIndexTop;
+    std::unordered_map<std::string, TextureData> textureDataMap_;
 
-    std::vector<TextureData> textureDataContainer_;
+private:
+    SRVManager* srvManager_ = nullptr;
 
 private:
     TextureManager() = default;

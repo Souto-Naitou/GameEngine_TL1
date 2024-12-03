@@ -17,6 +17,16 @@ void ParticleSystem::Initialize()
 
 void ParticleSystem::PresentDraw()
 {
+    ID3D12GraphicsCommandList* commandList = pDx12_->GetCommandList();
+
+    /// ルートシグネチャをセットする
+    commandList->SetGraphicsRootSignature(rootSignature_.Get());
+
+    /// グラフィックスパイプラインステートをセットする
+    commandList->SetPipelineState(graphicsPipelineState_.Get());
+
+    /// プリミティブトポロジーをセットする
+    commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 }
 
@@ -42,20 +52,19 @@ void ParticleSystem::CreateRootSignature()
         D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
 
     // RootParameter作成。複数設定できるので配列
-    D3D12_ROOT_PARAMETER rootParameters[3] = {};
-    rootParameters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;                    // CBVを使う
-    rootParameters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;                 // PixelShaderで使う
-    rootParameters[0].Descriptor.ShaderRegister = 0;                                    // レジスタ番号０とバインド
+    D3D12_ROOT_PARAMETER rootParameters[2] = {};
+    //rootParameters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;                    // CBVを使う
+    //rootParameters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;                 // PixelShaderで使う
+    //rootParameters[0].Descriptor.ShaderRegister = 0;                                    // レジスタ番号０とバインド
+    rootParameters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;       // Tableを使う
+    rootParameters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;                // VertexShaderで使う
+    rootParameters[0].DescriptorTable.pDescriptorRanges = descriptorRange;              // レジスタ番号０とバインド
+    rootParameters[0].DescriptorTable.NumDescriptorRanges = _countof(descriptorRange);  // レジスタ番号０とバインド
 
     rootParameters[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;       // Tableを使う
-    rootParameters[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;                // VertexShaderで使う
-    rootParameters[1].DescriptorTable.pDescriptorRanges = descriptorRange;              // レジスタ番号０とバインド
-    rootParameters[1].DescriptorTable.NumDescriptorRanges = _countof(descriptorRange);  // レジスタ番号０とバインド
-
-    rootParameters[2].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;       // Tableを使う
-    rootParameters[2].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;                 // VertexShaderで使う
-    rootParameters[2].DescriptorTable.pDescriptorRanges = &descRangeTexture;            // DescRangeを指定
-    rootParameters[2].DescriptorTable.NumDescriptorRanges = 1;                          // サイズ
+    rootParameters[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;                 // VertexShaderで使う
+    rootParameters[1].DescriptorTable.pDescriptorRanges = &descRangeTexture;            // DescRangeを指定
+    rootParameters[1].DescriptorTable.NumDescriptorRanges = 1;                          // サイズ
 
     rootSignatureDesc.pParameters = rootParameters;                                     // ルートパラメータ配列へのポインタ
     rootSignatureDesc.NumParameters = _countof(rootParameters);                         // 配列の長さ

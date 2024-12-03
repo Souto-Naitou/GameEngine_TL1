@@ -1,6 +1,7 @@
 #pragma once
 
 #include <d3d12.h>
+#include <cstdint>
 
 #ifdef _DEBUG
 #include <imgui.h>
@@ -18,6 +19,7 @@ public:
     void Finalize();
 
 private:
-    ID3D12DescriptorHeap* srvDescHeap_ = nullptr;
     bool isChangedFont_ = false;
+    ID3D12DescriptorHeap* srvDescHeap_ = nullptr;
+    uint32_t srvIndex_ = 0u;
 };

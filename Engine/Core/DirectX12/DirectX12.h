@@ -48,7 +48,6 @@ public: /// Getter
 
     int32_t                                     GetNumUploadedTexture()             const   { return numUploadedTexture; }
 
-    ID3D12DescriptorHeap*                       GetSRVDescriptorHeap()              const   { return srvDescriptorHeap_.Get(); }
     const DXGI_SWAP_CHAIN_DESC1&                GetSwapChainDesc()                  const   { return swapChainDesc_; }
 
     std::vector<D3D12_GPU_DESCRIPTOR_HANDLE>&   GetSRVHandlesGPUList()                      { return srvHandlesGPUList_; }
@@ -79,7 +78,6 @@ private:
     Microsoft::WRL::ComPtr<ID3D12Resource>              swapChainResources_[2]          = {};           // スワップチェーンリソース
     Microsoft::WRL::ComPtr<ID3D12Fence>                 fence_                          = nullptr;      // フェンス
     Microsoft::WRL::ComPtr<ID3D12DescriptorHeap>        rtvDescriptorHeap_              = nullptr;
-    Microsoft::WRL::ComPtr<ID3D12DescriptorHeap>        srvDescriptorHeap_              = nullptr;
     Microsoft::WRL::ComPtr<ID3D12DescriptorHeap>        dsvDescriptorHeap_              = nullptr;
     Microsoft::WRL::ComPtr<ID3D12DescriptorHeap>        descriptorHeaps_                = nullptr;
     Microsoft::WRL::ComPtr<ID3D12Resource>              depthStencilResource_           = nullptr;      // 深度ステンシルリソース

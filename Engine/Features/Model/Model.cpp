@@ -21,7 +21,7 @@ void Model::Initialize(const std::string& _filePath)
 
         directoryPath_ = ModelManager::GetInstance()->GetDirectoryPath(filePath_);
         modelData_ = ModelHelper::LoadObjFile(directoryPath_, filePath_);
-        ModelManager::GetInstance()->InqueueUpload( this);
+        ModelManager::GetInstance()->InqueueUpload(this);
         DebugManager::GetInstance()->PushLog("[ロード完了] path: " + filePath_ + "\n");
     });
 }
@@ -34,7 +34,6 @@ void Model::Draw()
 {
     if (th_LoadObjectFile_.joinable()) return;
     ID3D12GraphicsCommandList* commandList = pDx12_->GetCommandList();
-    std::vector<D3D12_GPU_DESCRIPTOR_HANDLE> textureSrvHandleGPUs = pDx12_->GetSRVHandlesGPUList();
 
     // 頂点バッファを設定
     commandList->IASetVertexBuffers(0, 1, &vertexBufferView_);
@@ -90,8 +89,7 @@ void Model::LoadModelTexture()
 
     TextureManager* textureManager = TextureManager::GetInstance();
     textureManager->LoadTexture(filePath);
-    modelData_.materialData.textureIndex = textureManager->GetTextureIndexByFilePath(filePath);
-    textureSrvHandleGPU_ = TextureManager::GetInstance()->GetSrvHandleGPU(modelData_.materialData.textureIndex);
+    textureSrvHandleGPU_ = TextureManager::GetInstance()->GetSrvHandleGPU(filePath);
 }
 
 void Model::Upload()
@@ -106,4 +104,6 @@ void Model::Upload()
 
     /// テクスチャを読み込む
     LoadModelTexture();
+
+    isUploaded_ = true;
 }

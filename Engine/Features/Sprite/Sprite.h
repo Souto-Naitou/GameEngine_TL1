@@ -82,7 +82,7 @@ private: /// メンバ変数
     Transform                                   uvTransform_                    = {};                   // UV変換
     Matrix4x4                                   uvTransformMatrix_              = {};                   // UV変換行列
 
-    uint32_t                                    textureIndex_                   = 0;                    // テクスチャハンドル
+    std::string                                 texturePath_                    = {};                   // テクスチャファイルパス
 
     /// バッファリソース
     Microsoft::WRL::ComPtr<ID3D12Resource>      vertexResource_                 = nullptr;              // 頂点リソース

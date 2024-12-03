@@ -23,6 +23,10 @@ public: /// 公開メンバ関数
 
 public: /// Getter
     ModelData* GetModelData() { return &modelData_; }
+    D3D12_VERTEX_BUFFER_VIEW GetVertexBufferView() const { return vertexBufferView_; }
+    bool IsUploaded() const { return isUploaded_; }
+    ID3D12Resource* GetMaterialResource() const { return materialResource_.Get(); }
+    D3D12_GPU_DESCRIPTOR_HANDLE GetTextureSrvHandleGPU() const { return textureSrvHandleGPU_; }
 
 private: /// メンバ変数
     static const std::string kDefaultDirectoryPath;
@@ -34,6 +38,8 @@ private: /// メンバ変数
     Microsoft::WRL::ComPtr<ID3D12Resource>  materialResource_           = nullptr;
     Material*                               materialData_               = nullptr;
     D3D12_GPU_DESCRIPTOR_HANDLE             textureSrvHandleGPU_        = {};
+
+    bool                                    isUploaded_                 = false;
 
 
 private: /// 非公開メンバ関数

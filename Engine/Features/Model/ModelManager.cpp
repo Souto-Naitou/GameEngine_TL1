@@ -108,7 +108,7 @@ void ModelManager::Update()
     }
     if (!uploadQueueParticle_.empty())
     {
-        uploadQueueParticle_.front()->Upload();
+        uploadQueueParticle_.front()->Update();
         uploadQueueParticle_.pop();
     }
 }
