@@ -44,7 +44,7 @@ void Particle::Draw()
     commandList->IASetVertexBuffers(0, 1, &vertexBufferView_);
     commandList->SetGraphicsRootDescriptorTable(0, srvGpuHandle_);
     commandList->SetGraphicsRootDescriptorTable(1, textureSRVHandleGPU_);
-    commandList->DrawInstanced(static_cast<UINT>(pModelData_->vertices.size()), container_.size(), 0, 0);
+    commandList->DrawInstanced(static_cast<UINT>(pModelData_->vertices.size()), static_cast<UINT>(container_.size()), 0, 0);
 }
 
 void Particle::Update()
@@ -94,7 +94,7 @@ void Particle::CreateSRV()
     srvCpuHandle_ = srvManager->GetCPUDescriptorHandle(srvIndex_);
     srvGpuHandle_ = srvManager->GetGPUDescriptorHandle(srvIndex_);
 
-    srvManager->CreateForStructuredBuffer(srvIndex_, instancingResource_.Get(), container_.capacity(), sizeof(ParticleForGPU));
+    srvManager->CreateForStructuredBuffer(srvIndex_, instancingResource_.Get(), static_cast<UINT>(container_.capacity()), sizeof(ParticleForGPU));
     return;
 }
 
