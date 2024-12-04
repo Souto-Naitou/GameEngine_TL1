@@ -11,7 +11,7 @@ public:
     VectorContainer(VectorContainer&& _container) = default;
 
 
-public:
+public: /// container operation
     void push_back(const T& _val) { container_.push_back(_val); }
     void emplace_back(const T& _val) { container_.emplace_back(_val); }
     uint32_t size() const { return container_.size(); }

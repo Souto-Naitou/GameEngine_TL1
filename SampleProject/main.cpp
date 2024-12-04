@@ -64,6 +64,9 @@ int _stdcall WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
     /// スプライト基盤の初期化
     pSpriteSystem->Initialize();
 
+    /// ImGui基盤の初期化
+    pImGuiManager->Initialize(pDirectX);
+
     /// 3Dオブジェクト基盤の初期化
     pObject3dSystem->Initialize();
     pObject3dSystem->SetDefaultGameEye(pGameEye);
@@ -95,9 +98,6 @@ int _stdcall WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
         (*pParticle)[i].translate = { 0.0f, 0.0f, static_cast<float>(i) };
     }
 
-    pImGuiManager->Initialize(pDirectX);
-
-
     while (true)
     {
         UINT msg = pWin32App->GetMsg();
@@ -125,11 +125,11 @@ int _stdcall WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
         pDirectX->PresentDraw();
         pSRVManager->PresentDraw();
         pSpriteSystem->PresentDraw();
-        //pSpriteMB->Draw();
-        //pSpriteUVC->Draw();
+        pSpriteMB->Draw();
+        pSpriteUVC->Draw();
 
         pObject3dSystem->PresentDraw();
-        //pObject3d->Draw();
+        pObject3d->Draw();
 
         pParticleSystem->PresentDraw();
         pParticle->Draw();
@@ -137,7 +137,6 @@ int _stdcall WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
         pImGuiManager->EndFrame();
         pDirectX->PostDraw();
-
     }
 
     /// 終了処理

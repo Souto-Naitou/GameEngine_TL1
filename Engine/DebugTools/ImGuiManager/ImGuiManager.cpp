@@ -13,6 +13,7 @@
 void ImGuiManager::Initialize(DirectX12* _pDx12)
 {
 #ifdef _DEBUG
+
     SRVManager* srvManager = SRVManager::GetInstance();
     srvIndex_ = srvManager->Allocate();
 
@@ -35,6 +36,7 @@ void ImGuiManager::Initialize(DirectX12* _pDx12)
         srvDescHeap_->GetCPUDescriptorHandleForHeapStart(),
         srvDescHeap_->GetGPUDescriptorHandleForHeapStart()
     );
+
 #endif // _DEBUG
 }
 
