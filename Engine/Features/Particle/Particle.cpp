@@ -50,7 +50,7 @@ void Particle::Update()
     {
         transforms_[index].scale = Vector3(-1.0f, 1.0f, 1.0f);
         transforms_[index].rotate = Vector3(0.0f, 0.0f, 0.0f);
-        transforms_[index].translate = Vector3(0.0f, 0.0f, index);
+        transforms_[index].translate = Vector3(0.0f, 0.0f, static_cast<float>(index));
         Matrix4x4 wMatrix = Matrix4x4::AffineMatrix(transforms_[index].scale, transforms_[index].rotate, transforms_[index].translate);
         instancingData_[index].world = wMatrix;
         instancingData_[index].wvp = wMatrix * pGameEye_->GetViewProjectionMatrix();

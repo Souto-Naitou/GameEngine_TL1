@@ -7,7 +7,6 @@
 #include <wrl.h>
 #include <d3d12.h>
 #include <Features/Model/Model.h>
-#include <thread>
 #include "ParticleSystem.h"
 
 class Particle

@@ -42,8 +42,8 @@ int _stdcall WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
     Sprite* pSpriteMB = new Sprite();
     Sprite* pSpriteUVC = new Sprite();
     Particle* pParticle = new Particle();
-    pGameEye->SetRotate({ 0.0f, 0.0f, 0.0f });
-    pGameEye->SetTranslate({ 0.0f, 0.0f, -10.0f });
+    pGameEye->SetRotate({ 0.0f, -0.4f, 0.0f });
+    pGameEye->SetTranslate({ 5.0f, 0.0f, -10.0f });
     pGameEye->SetName("MainCamera");
 
     /// ウィンドウの初期化
