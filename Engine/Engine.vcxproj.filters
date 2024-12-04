@@ -94,6 +94,9 @@
     <Filter Include="Core\DirectX12\SRVManager">
       <UniqueIdentifier>{b8daf23f-873b-43df-af52-7b1171eeb29f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Feature\IContainer">
+      <UniqueIdentifier>{2a1d6553-6c96-46a4-96dd-9f2f112ef441}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DebugTools\DebugManager\DebugManager.cpp">
@@ -253,6 +256,12 @@
     </ClInclude>
     <ClInclude Include="Core\DirectX12\SRVManager.h">
       <Filter>Core\DirectX12\SRVManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Features\IContainer\ListContainer.h">
+      <Filter>Feature\IContainer</Filter>
+    </ClInclude>
+    <ClInclude Include="Features\IContainer\VectorContainer.h">
+      <Filter>Feature\IContainer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

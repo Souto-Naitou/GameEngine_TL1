@@ -8,27 +8,25 @@
 #include <d3d12.h>
 #include <Features/Model/Model.h>
 #include "ParticleSystem.h"
+#include <Features/IContainer/VectorContainer.h>
 
-class Particle
+class Particle : public VectorContainer<Transform>
 {
 public:
     void Initialize(ParticleSystem* _system, std::string _filepath);
     void Draw();
     void Update();
 
+public: /// Override
+    void reserve(uint32_t _size) override;
+
 private:
-    static constexpr uint32_t               kInstanceCount_ = 10u;
-
-    /// Transform
-    Transform                               transforms_[kInstanceCount_]        = {};
-
     /// GameEye
     GameEye*                                pGameEye_                           = nullptr;
 
     /// Instancing
     Microsoft::WRL::ComPtr<ID3D12Resource>  instancingResource_                 = nullptr;
     ParticleForGPU*                         instancingData_                     = nullptr;
-    uint32_t                                instanceCount_                      = 10u;
 
     /// Model
     std::string                             modelPath_                          = {};
@@ -51,7 +49,7 @@ private: /// 他クラスのインスタンス
 
 private:
     void CreateParticleForGPUResource();
-    void CreateVertexBuffer();
     void CreateSRV();
     void GetModelData();
+    void InitializeTransform();
 };

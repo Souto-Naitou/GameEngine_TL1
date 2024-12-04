@@ -16,64 +16,75 @@ void Particle::Initialize(ParticleSystem* _system, std::string _filepath)
     /// デフォルトのGameEyeを取得
     pGameEye_ = pSystem_->GetDefaultGameEye();
 
-    /// 座標変換行列リソースを作成
+    if (!container_.capacity()) reserve(1);
+
+    /// パーティクルリソースを作成
     CreateParticleForGPUResource();
 
     /// SRVを作成
     CreateSRV();
 
-    modelPath_ = _filepath;
+    /// 変形情報を初期化
+    InitializeTransform();
 
+    /// モデルを読み込む
+    modelPath_ = _filepath;
     ModelManager::GetInstance()->LoadModel(_filepath);
     pModel_ = ModelManager::GetInstance()->FindModel(_filepath);
-
     if (pModel_->IsUploaded()) GetModelData();
 }
 
 void Particle::Draw()
 {
+    /// モデルのテクスチャがアップロードされていない場合は描画しない
     if (!pModel_->IsUploaded()) return;
     auto commandList = pDx12_->GetCommandList();
 
+    /// 描画設定と実行
     commandList->IASetVertexBuffers(0, 1, &vertexBufferView_);
     commandList->SetGraphicsRootDescriptorTable(0, srvGpuHandle_);
     commandList->SetGraphicsRootDescriptorTable(1, textureSRVHandleGPU_);
-    commandList->DrawInstanced(static_cast<UINT>(pModelData_->vertices.size()), instanceCount_, 0, 0);
+    commandList->DrawInstanced(static_cast<UINT>(pModelData_->vertices.size()), container_.size(), 0, 0);
 }
 
 void Particle::Update()
 {
+    /// モデル情報の取得
     if (!pModel_) pModel_ = ModelManager::GetInstance()->FindModel(modelPath_);
     else if (pModel_->IsUploaded()) GetModelData();
 
-    for (uint32_t index = 0; index < kInstanceCount_; ++index)
+    /// パーティクルの更新
+    for (uint32_t index = 0; index < container_.size(); ++index)
     {
-        transforms_[index].scale = Vector3(-1.0f, 1.0f, 1.0f);
-        transforms_[index].rotate = Vector3(0.0f, 0.0f, 0.0f);
-        transforms_[index].translate = Vector3(0.0f, 0.0f, static_cast<float>(index));
-        Matrix4x4 wMatrix = Matrix4x4::AffineMatrix(transforms_[index].scale, transforms_[index].rotate, transforms_[index].translate);
+        Matrix4x4 wMatrix = Matrix4x4::AffineMatrix(container_[index].scale, container_[index].rotate, container_[index].translate);
         instancingData_[index].world = wMatrix;
         instancingData_[index].wvp = wMatrix * pGameEye_->GetViewProjectionMatrix();
         instancingData_[index].color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
     }
 }
 
+void Particle::reserve(uint32_t _size)
+{
+    container_.reserve(_size);
+    CreateParticleForGPUResource();
+    CreateSRV();
+    InitializeTransform();
+    return;
+}
+
 void Particle::CreateParticleForGPUResource()
 {
     /// 座標変換行列リソースを作成
-    instancingResource_ = DX12Helper::CreateBufferResource(pDevice_, sizeof(ParticleForGPU) * kInstanceCount_);
+    instancingResource_.Reset();
+    instancingResource_ = DX12Helper::CreateBufferResource(pDevice_, sizeof(ParticleForGPU) * container_.capacity());
     instancingResource_->Map(0, nullptr, reinterpret_cast<void**>(&instancingData_));
     /// 座標変換行列データを初期化
-    for (uint32_t index = 0; index < kInstanceCount_; ++index)
+    for (uint32_t index = 0; index < container_.capacity(); ++index)
     {
         instancingData_[index].wvp = Matrix4x4::Identity();
         instancingData_[index].world = Matrix4x4::Identity();
         instancingData_[index].color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
     }
-}
-
-void Particle::CreateVertexBuffer()
-{
 }
 
 void Particle::CreateSRV()
@@ -83,7 +94,7 @@ void Particle::CreateSRV()
     srvCpuHandle_ = srvManager->GetCPUDescriptorHandle(srvIndex_);
     srvGpuHandle_ = srvManager->GetGPUDescriptorHandle(srvIndex_);
 
-    srvManager->CreateForStructuredBuffer(srvIndex_, instancingResource_.Get(), kInstanceCount_, sizeof(ParticleForGPU));
+    srvManager->CreateForStructuredBuffer(srvIndex_, instancingResource_.Get(), container_.capacity(), sizeof(ParticleForGPU));
     return;
 }
 
@@ -92,4 +103,15 @@ void Particle::GetModelData()
     pModelData_ = pModel_->GetModelData();
     vertexBufferView_ = pModel_->GetVertexBufferView();
     textureSRVHandleGPU_ = pModel_->GetTextureSrvHandleGPU();
+}
+
+void Particle::InitializeTransform()
+{
+    for (auto& transform : container_)
+    {
+        transform.scale = Vector3(1.0f, 1.0f, 1.0f);
+        transform.rotate = Vector3(0.0f, 0.0f, 0.0f);
+        transform.translate = Vector3(0.0f, 0.0f, 0.0f);
+    }
+    return;
 }

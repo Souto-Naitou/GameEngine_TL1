@@ -153,6 +153,8 @@
     <ClInclude Include="DebugTools\ReakChecker.h" />
     <ClInclude Include="Externals\Timer\Timer.h" />
     <ClInclude Include="Features\GameEye\GameEye.h" />
+    <ClInclude Include="Features\IContainer\ListContainer.h" />
+    <ClInclude Include="Features\IContainer\VectorContainer.h" />
     <ClInclude Include="Features\Input\Input.h" />
     <ClInclude Include="Features\Model\Helper\ModelHelper.h" />
     <ClInclude Include="Features\Model\Model.h" />

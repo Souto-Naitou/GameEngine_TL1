@@ -86,6 +86,14 @@ int _stdcall WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
     pSpriteUVC->SetPosition({ 180, 60 });
 
     pParticle->Initialize(pParticleSystem, "plane.obj");
+    pParticle->reserve(32);
+    pParticle->resize(15);
+    for (uint32_t i = 0; i < pParticle->size(); ++i)
+    {
+        (*pParticle)[i].scale = { 1.0f, 1.0f, 1.0f };
+        (*pParticle)[i].rotate = { 0.0f, 0.0f, 0.0f };
+        (*pParticle)[i].translate = { 0.0f, 0.0f, static_cast<float>(i) };
+    }
 
     pImGuiManager->Initialize(pDirectX);
 
