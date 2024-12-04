@@ -42,7 +42,6 @@ struct VertexData
 struct MaterialData
 {
     std::string textureFilePath;
-    uint32_t textureIndex;
     Vector4 diffuse;
 };
 
@@ -56,4 +55,11 @@ struct TransformationMatrix
 {
     Matrix4x4 wvp;
     Matrix4x4 world;
+};
+
+struct ParticleForGPU
+{
+    Matrix4x4 wvp;
+    Matrix4x4 world;
+    Vector4 color;
 };

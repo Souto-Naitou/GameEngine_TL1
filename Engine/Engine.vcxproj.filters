@@ -88,6 +88,15 @@
     <Filter Include="Feature\GameEye">
       <UniqueIdentifier>{ea832b38-aeb0-403c-932b-e147be7b883d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Feature\Particle">
+      <UniqueIdentifier>{8e2b2b59-3920-4ac0-a9d2-0d0039b75fdb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\DirectX12\SRVManager">
+      <UniqueIdentifier>{b8daf23f-873b-43df-af52-7b1171eeb29f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Feature\IContainer">
+      <UniqueIdentifier>{2a1d6553-6c96-46a4-96dd-9f2f112ef441}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DebugTools\DebugManager\DebugManager.cpp">
@@ -155,6 +164,15 @@
     </ClCompile>
     <ClCompile Include="Features\GameEye\GameEye.cpp">
       <Filter>Feature\GameEye</Filter>
+    </ClCompile>
+    <ClCompile Include="Features\Particle\ParticleSystem.cpp">
+      <Filter>Feature\Particle</Filter>
+    </ClCompile>
+    <ClCompile Include="Features\Particle\Particle.cpp">
+      <Filter>Feature\Particle</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\DirectX12\SRVManager.cpp">
+      <Filter>Core\DirectX12\SRVManager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -230,10 +248,31 @@
     <ClInclude Include="Features\GameEye\GameEye.h">
       <Filter>Feature\GameEye</Filter>
     </ClInclude>
+    <ClInclude Include="Features\Particle\ParticleSystem.h">
+      <Filter>Feature\Particle</Filter>
+    </ClInclude>
+    <ClInclude Include="Features\Particle\Particle.h">
+      <Filter>Feature\Particle</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\DirectX12\SRVManager.h">
+      <Filter>Core\DirectX12\SRVManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Features\IContainer\ListContainer.h">
+      <Filter>Feature\IContainer</Filter>
+    </ClInclude>
+    <ClInclude Include="Features\IContainer\VectorContainer.h">
+      <Filter>Feature\IContainer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
     <None Include="EngineResources\Shaders\Object3d.hlsli">
+      <Filter>HLSL</Filter>
+    </None>
+    <None Include="..\SampleProject\EngineResources\Shaders\Sprite.hlsli">
+      <Filter>HLSL</Filter>
+    </None>
+    <None Include="..\SampleProject\EngineResources\Shaders\Particle.hlsli">
       <Filter>HLSL</Filter>
     </None>
   </ItemGroup>
@@ -242,6 +281,18 @@
       <Filter>HLSL</Filter>
     </FxCompile>
     <FxCompile Include="EngineResources\Shaders\Object3d.VS.hlsl">
+      <Filter>HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="..\SampleProject\EngineResources\Shaders\Sprite.VS.hlsl">
+      <Filter>HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="..\SampleProject\EngineResources\Shaders\Sprite.PS.hlsl">
+      <Filter>HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="..\SampleProject\EngineResources\Shaders\Particle.VS.hlsl">
+      <Filter>HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="..\SampleProject\EngineResources\Shaders\Particle.PS.hlsl">
       <Filter>HLSL</Filter>
     </FxCompile>
   </ItemGroup>

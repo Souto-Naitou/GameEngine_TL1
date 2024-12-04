@@ -1,0 +1,53 @@
+#pragma once
+
+#include <d3d12.h>
+#include <cstdint>
+#include <Core/DirectX12/DirectX12.h>
+#include <wrl.h>
+
+class SRVManager
+{
+public:
+    SRVManager(const SRVManager&) = delete;
+    SRVManager(const SRVManager&&) = delete;
+    SRVManager& operator=(const SRVManager&) = delete;
+    SRVManager& operator=(const SRVManager&&) = delete;
+    static SRVManager* GetInstance()
+    {
+        static SRVManager instance;
+        return &instance;
+    }
+    void Initialize(DirectX12* _pDx12);
+    void PresentDraw();
+
+    uint32_t Allocate();
+    D3D12_CPU_DESCRIPTOR_HANDLE GetCPUDescriptorHandle(uint32_t _index);
+    D3D12_GPU_DESCRIPTOR_HANDLE GetGPUDescriptorHandle(uint32_t _index);
+
+    bool IsFull() const { return currentIndex_ >= kMaxSRVCount_; }
+
+    void SetGraphicsRootDescriptorTable(UINT _rootParameterIndex, uint32_t _srvIndex);
+
+    void CreateForTexture2D(uint32_t _index, ID3D12Resource* _pTexture, DXGI_FORMAT _format, UINT _mipLevels);
+    void CreateForStructuredBuffer(uint32_t _index, ID3D12Resource* _pBuffer, UINT _numElements, UINT _stride);
+
+public: /// Getter
+    ID3D12DescriptorHeap* GetDescriptorHeap() const { return pDescHeap_.Get(); }
+
+public: /// 公開定数
+    static const uint32_t kMaxSRVCount_;
+
+
+private:
+    SRVManager() = default;
+    ~SRVManager() = default;
+
+private:
+    uint32_t descriptorSize_ = 0u;
+    Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> pDescHeap_ = nullptr;
+    uint32_t currentIndex_ = 0u;
+
+
+private:
+    DirectX12* pDx12_ = nullptr;
+};

@@ -2,6 +2,7 @@
 
 #include <Core/Win32/Win32Application.h>
 #include <Core/DirectX12/DirectX12.h>
+#include <Core/DirectX12/SRVManager.h>
 #include <DebugTools/DebugManager/DebugManager.h>
 
 #ifdef _DEBUG
@@ -12,10 +13,15 @@
 void ImGuiManager::Initialize(DirectX12* _pDx12)
 {
 #ifdef _DEBUG
+    SRVManager* srvManager = SRVManager::GetInstance();
+    srvIndex_ = srvManager->Allocate();
+
     Win32Application* pWin32App = Win32Application::GetInstance();
     ID3D12Device* device = _pDx12->GetDevice();
     const DXGI_SWAP_CHAIN_DESC1& swapChainDesc = _pDx12->GetSwapChainDesc();
-    srvDescHeap_ = _pDx12->GetSRVDescriptorHeap();
+    srvDescHeap_ = srvManager->GetDescriptorHeap();
+    D3D12_CPU_DESCRIPTOR_HANDLE cpuHandle = srvManager->GetCPUDescriptorHandle(srvIndex_);
+    D3D12_GPU_DESCRIPTOR_HANDLE gpuHandle = srvManager->GetGPUDescriptorHandle(srvIndex_);
 
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
@@ -70,8 +76,9 @@ void ImGuiManager::EndFrame()
 #ifdef _DEBUG
     ID3D12GraphicsCommandList* commandList = DirectX12::GetInstance()->GetCommandList();
 
-    ID3D12DescriptorHeap* descriptorHeaps[] = { srvDescHeap_ };
-    commandList->SetDescriptorHeaps(1, descriptorHeaps);
+    //ID3D12DescriptorHeap* descriptorHeaps[] = { srvDescHeap_ };
+    //commandList->SetDescriptorHeaps(1, descriptorHeaps);
+
     ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), commandList);
 #endif
 }

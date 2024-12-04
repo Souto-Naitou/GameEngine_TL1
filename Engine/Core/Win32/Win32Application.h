@@ -32,4 +32,5 @@ private:
     WNDCLASS    wc_         = {};
     HWND        hwnd_       = {};
     MSG         msg_        = {};
+    static bool isMoving_;
 };
