@@ -128,9 +128,8 @@ void ParticleSystem::CreatePipelineState()
 
     /// BlendStateの設定
     D3D12_BLEND_DESC blendDesc{};
-    // すべての色要素を書き込む
-    blendDesc.RenderTarget[0].RenderTargetWriteMask =
-        D3D12_COLOR_WRITE_ENABLE_ALL;
+    blendDesc.RenderTarget[0].RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL; // すべての色要素を書き込む
+    blendDesc.RenderTarget[0].BlendEnable = FALSE; // ブレンドを有効にする
 
     // RasterizerStateの設定
     D3D12_RASTERIZER_DESC rasterizerDesc{};

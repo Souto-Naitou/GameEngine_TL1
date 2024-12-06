@@ -97,6 +97,15 @@
     <Filter Include="Feature\IContainer">
       <UniqueIdentifier>{2a1d6553-6c96-46a4-96dd-9f2f112ef441}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Feature\Audio">
+      <UniqueIdentifier>{664da578-2164-4745-a914-0d9323b4648b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common\HRESULT_ASSERT">
+      <UniqueIdentifier>{d4fcf4a9-6708-44c3-924d-0a3d5f061199}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Framework">
+      <UniqueIdentifier>{ac264289-b142-4670-8528-be08910cd5a6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DebugTools\DebugManager\DebugManager.cpp">
@@ -173,6 +182,21 @@
     </ClCompile>
     <ClCompile Include="Core\DirectX12\SRVManager.cpp">
       <Filter>Core\DirectX12\SRVManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Features\Particle\ParticleManager.cpp">
+      <Filter>Feature\Particle</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\HRESULT_ASSERT.cpp">
+      <Filter>Common\HRESULT_ASSERT</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\stdafx.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Features\Audio\Audio.cpp">
+      <Filter>Feature\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="Framework\NimaFramework.cpp">
+      <Filter>Framework</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -263,6 +287,21 @@
     <ClInclude Include="Features\IContainer\VectorContainer.h">
       <Filter>Feature\IContainer</Filter>
     </ClInclude>
+    <ClInclude Include="Features\Particle\ParticleManager.h">
+      <Filter>Feature\Particle</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\HRESULT_ASSERT.h">
+      <Filter>Common\HRESULT_ASSERT</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\stdafx.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Features\Audio\Audio.h">
+      <Filter>Feature\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="Framework\NimaFramework.h">
+      <Filter>Framework</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
@@ -275,6 +314,7 @@
     <None Include="..\SampleProject\EngineResources\Shaders\Particle.hlsli">
       <Filter>HLSL</Filter>
     </None>
+    <None Include="..\ClassDiagram.md" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="EngineResources\Shaders\Object3d.PS.hlsl">

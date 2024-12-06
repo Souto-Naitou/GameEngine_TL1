@@ -14,9 +14,9 @@ public:
 public: /// container operation
     void push_back(const T& _val) { container_.push_back(_val); }
     void emplace_back(const T& _val) { container_.emplace_back(_val); }
-    uint32_t size() const { return container_.size(); }
-    virtual void reserve(uint32_t _size) { container_.reserve(_size); }
-    void resize(uint32_t _size) { container_.resize(_size); }
+    size_t size() const { return container_.size(); }
+    virtual void reserve(size_t _size) { container_.reserve(_size); }
+    void resize(size_t _size) { container_.resize(_size); }
     void clear() { container_.clear(); }
 
 

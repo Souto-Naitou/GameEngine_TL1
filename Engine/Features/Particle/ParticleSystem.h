@@ -9,7 +9,6 @@ class ParticleSystem
 public:
     void Initialize();
     void PresentDraw();
-    void Finalize();
 
 
 public: /// Setter

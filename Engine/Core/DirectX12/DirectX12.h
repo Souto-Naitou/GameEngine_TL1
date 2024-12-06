@@ -1,7 +1,4 @@
 #pragma once
-#include <d3d12.h>
-#include <dxgi1_6.h>
-#include <dxcapi.h>
 
 #include <wrl.h>
 #include <Windows.h>
@@ -9,8 +6,6 @@
 #include <string>
 #include <memory>
 #include "Framerate.h"
-
-#include <DebugTools/ReakChecker.h>
 
 class DirectX12
 {
