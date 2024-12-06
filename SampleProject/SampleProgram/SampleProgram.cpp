@@ -3,12 +3,16 @@
 #include <Common/define.h>
 #include <Windows.h>
 #include <Features/SceneManager/SceneManager.h>
-#include <Scene/GameScene.h>
+#include <Scene/Factory/SceneFactory.h>
 
 void SampleProgram::Initialize()
 {
     /// 基底クラスの初期化処理
     NimaFramework::Initialize();
+
+    /// シーンファクトリの設定
+    pSceneFactory_ = new SceneFactory();
+    pSceneManager_->SetSceneFactory(pSceneFactory_);
 
     /// 自動ロードパスの追加
     pModelManager_->AddAutoLoadPath("resources/models");
@@ -16,8 +20,8 @@ void SampleProgram::Initialize()
     /// モデルを全てロード
     pModelManager_->LoadAllModel();
 
-    /// 初期シーンの設定
-    pSceneManager_->ChangeScene(std::make_unique<GameScene>());
+    /// シーンの生成
+    pSceneManager_->ReserveScene("GameScene");
 }
 
 void SampleProgram::Finalize()
@@ -26,6 +30,9 @@ void SampleProgram::Finalize()
     NimaFramework::Finalize();
 
     pSceneManager_->Finalize();
+
+    /// シーンファクトリの解放
+    delete pSceneFactory_;
 }
 
 void SampleProgram::Update()
@@ -34,7 +41,7 @@ void SampleProgram::Update()
     NimaFramework::Update();
 
     /// シーン更新
-    pSceneManager_->SceneUpdate();
+    pSceneManager_->Update();
 }
 
 void SampleProgram::Draw()

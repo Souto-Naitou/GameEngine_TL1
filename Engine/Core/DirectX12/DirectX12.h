@@ -6,6 +6,11 @@
 #include <string>
 #include <memory>
 #include "Framerate.h"
+#include <d3d12.h>
+#include <dxgi1_6.h>
+#include <dxcapi.h>
+#include <vector>
+#include <DebugTools/ReakChecker.h>
 
 class DirectX12
 {
