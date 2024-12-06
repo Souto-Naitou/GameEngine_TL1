@@ -13,13 +13,14 @@
 #include <Core/Win32/Win32Application.h>
 #include <Core/DirectX12/SRVManager.h>
 #include <Features/SceneManager/SceneManager.h>
-
+#include <Interfaces/ISceneFactory.h>
 
 // ゲーム共有
 class NimaFramework
 {
 public:
     void Run();
+
 
 public:
     virtual ~NimaFramework() {}
@@ -33,12 +34,14 @@ public:
 
 
 protected: /// システムクラスのインスタンス
+    ISceneFactory* pSceneFactory_ = nullptr;
     ImGuiManager* pImGuiManager_;
     SpriteSystem* pSpriteSystem_;
     Object3dSystem* pObject3dSystem_;
     ParticleSystem* pParticleSystem_;
     Audio* pAudio_;
     Input* pInput_;
+
 
 protected: /// 他クラスのインスタンス
     DirectX12* pDirectX_;

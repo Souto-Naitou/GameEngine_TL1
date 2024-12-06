@@ -106,11 +106,20 @@
     <Filter Include="Framework">
       <UniqueIdentifier>{ac264289-b142-4670-8528-be08910cd5a6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Framework\SceneManager">
-      <UniqueIdentifier>{58dab0a0-59c5-4cf9-95ba-19f2b051c76b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Interface">
       <UniqueIdentifier>{698a144f-8678-45a3-8e71-2fb257d08434}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Feature\Particle\Emitter">
+      <UniqueIdentifier>{556acd2e-a30a-4489-86c4-bcf0c25fadd0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Feature\Particle\Manager">
+      <UniqueIdentifier>{82f7154a-fe86-4eeb-a603-29554c7a2cb2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Feature\Particle\System">
+      <UniqueIdentifier>{3dd920c7-60bf-4a2c-a888-4dac7750a26f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Feature\SceneManager">
+      <UniqueIdentifier>{58dab0a0-59c5-4cf9-95ba-19f2b051c76b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -180,17 +189,11 @@
     <ClCompile Include="Features\GameEye\GameEye.cpp">
       <Filter>Feature\GameEye</Filter>
     </ClCompile>
-    <ClCompile Include="Features\Particle\ParticleSystem.cpp">
-      <Filter>Feature\Particle</Filter>
-    </ClCompile>
     <ClCompile Include="Features\Particle\Particle.cpp">
       <Filter>Feature\Particle</Filter>
     </ClCompile>
     <ClCompile Include="Core\DirectX12\SRVManager.cpp">
       <Filter>Core\DirectX12\SRVManager</Filter>
-    </ClCompile>
-    <ClCompile Include="Features\Particle\ParticleManager.cpp">
-      <Filter>Feature\Particle</Filter>
     </ClCompile>
     <ClCompile Include="Common\HRESULT_ASSERT.cpp">
       <Filter>Common\HRESULT_ASSERT</Filter>
@@ -205,7 +208,16 @@
       <Filter>Framework</Filter>
     </ClCompile>
     <ClCompile Include="Features\SceneManager\SceneManager.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>Feature\SceneManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Features\Particle\ParticleSystem.cpp">
+      <Filter>Feature\Particle\System</Filter>
+    </ClCompile>
+    <ClCompile Include="Features\Particle\ParticleManager.cpp">
+      <Filter>Feature\Particle\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="Features\Particle\Emitter\ParticleEmitter.cpp">
+      <Filter>Feature\Particle\Emitter</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -281,9 +293,6 @@
     <ClInclude Include="Features\GameEye\GameEye.h">
       <Filter>Feature\GameEye</Filter>
     </ClInclude>
-    <ClInclude Include="Features\Particle\ParticleSystem.h">
-      <Filter>Feature\Particle</Filter>
-    </ClInclude>
     <ClInclude Include="Features\Particle\Particle.h">
       <Filter>Feature\Particle</Filter>
     </ClInclude>
@@ -295,9 +304,6 @@
     </ClInclude>
     <ClInclude Include="Features\IContainer\VectorContainer.h">
       <Filter>Feature\IContainer</Filter>
-    </ClInclude>
-    <ClInclude Include="Features\Particle\ParticleManager.h">
-      <Filter>Feature\Particle</Filter>
     </ClInclude>
     <ClInclude Include="Common\HRESULT_ASSERT.h">
       <Filter>Common\HRESULT_ASSERT</Filter>
@@ -312,9 +318,24 @@
       <Filter>Framework</Filter>
     </ClInclude>
     <ClInclude Include="Features\SceneManager\SceneManager.h">
-      <Filter>Framework\SceneManager</Filter>
+      <Filter>Feature\SceneManager</Filter>
     </ClInclude>
     <ClInclude Include="Interfaces\IScene.h">
+      <Filter>Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="Features\Particle\ParticleSystem.h">
+      <Filter>Feature\Particle\System</Filter>
+    </ClInclude>
+    <ClInclude Include="Features\Particle\ParticleManager.h">
+      <Filter>Feature\Particle\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Features\Particle\Emitter\BaseParticleEmitter.h">
+      <Filter>Feature\Particle\Emitter</Filter>
+    </ClInclude>
+    <ClInclude Include="Features\Particle\Emitter\ParticleEmitter.h">
+      <Filter>Feature\Particle\Emitter</Filter>
+    </ClInclude>
+    <ClInclude Include="Interfaces\ISceneFactory.h">
       <Filter>Interface</Filter>
     </ClInclude>
   </ItemGroup>

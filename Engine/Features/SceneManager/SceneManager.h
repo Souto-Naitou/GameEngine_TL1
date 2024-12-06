@@ -2,6 +2,7 @@
 
 #include <Interfaces/IScene.h>
 #include <memory>
+#include <Interfaces/ISceneFactory.h>
 
 class SceneManager
 {
@@ -18,12 +19,15 @@ public:
     }
 
 
-public:
-    void ChangeScene(std::unique_ptr<IScene> _scene);
+public: /// Setter
+    void SetSceneFactory(ISceneFactory* _pSceneFactory) { pSceneFactory_ = _pSceneFactory; }
 
+
+public:
+    void ReserveScene(const std::string& _sceneName);
 
 public: /// シーン動作
-    void SceneUpdate();
+    void Update();
     void SceneDraw2dBackGround();
     void SceneDraw3d();
     void SceneDraw2dForeground();
@@ -32,6 +36,13 @@ public: /// シーン動作
 
 private:
     SceneManager() = default;
+    void ChangeScene();
 
-    std::unique_ptr<IScene> pCurrentScene_ = nullptr;
+    bool isReserveScene_ = false;
+
+    std::string nextSceneName_;
+    IScene* pCurrentScene_ = nullptr;
+
+private: /// 他クラスのインスタンス
+    ISceneFactory* pSceneFactory_ = nullptr;
 };

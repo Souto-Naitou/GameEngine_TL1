@@ -11,6 +11,13 @@ public:
     ParticleManager(ParticleManager const&&) = delete;
     void operator=(ParticleManager const&&) = delete;
 
+    static ParticleManager& GetInstance()
+    {
+        static ParticleManager instance;
+        return instance;
+    }
+
+public:
     void CreateParticles();
 
 private:

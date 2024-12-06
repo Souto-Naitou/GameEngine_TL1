@@ -1,20 +1,22 @@
-#include "D:\VSProject\CG\GameEngine_DX12\Engine\Common\stdafx.h"
 #include "SceneManager.h"
+#include <cassert>
 
-void SceneManager::ChangeScene(std::unique_ptr<IScene> _scene)
+void SceneManager::ReserveScene(const std::string& _name)
 {
-    if (pCurrentScene_ != nullptr)
-    {
-        pCurrentScene_->Finalize();
-    }
-    pCurrentScene_ = std::move(_scene);
-    pCurrentScene_->Initialize();
+    isReserveScene_ = true;
+    nextSceneName_ = _name;
 
     return;
 }
 
-void SceneManager::SceneUpdate()
+void SceneManager::Update()
 {
+    if (isReserveScene_)
+    {
+        ChangeScene();
+        isReserveScene_ = false;
+    }
+
     if (pCurrentScene_ != nullptr)
     {
         pCurrentScene_->Update();
@@ -51,4 +53,18 @@ void SceneManager::Finalize()
     {
         pCurrentScene_->Finalize();
     }
+}
+
+void SceneManager::ChangeScene()
+{
+    assert(pSceneFactory_);
+
+    if (pCurrentScene_ != nullptr)
+    {
+        pCurrentScene_->Finalize();
+        delete pCurrentScene_;
+    }
+
+    pCurrentScene_ = pSceneFactory_->CreateScene(nextSceneName_);
+    pCurrentScene_->Initialize();
 }

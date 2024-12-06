@@ -2,7 +2,6 @@
 
 #include <Framework/NimaFramework.h>
 
-
 class SampleProgram : public NimaFramework
 {
 public:

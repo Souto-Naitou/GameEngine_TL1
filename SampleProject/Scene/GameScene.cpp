@@ -76,7 +76,6 @@ void GameScene::Draw3d()
 
     pParticleSystem_->PresentDraw();
     pParticle_->Draw();
-
 }
 
 void GameScene::Draw2dForeground()
