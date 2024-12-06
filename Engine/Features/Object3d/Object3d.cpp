@@ -15,10 +15,10 @@
 #endif // DEBUG_ENGINE && _DEBUG
 
 
-void Object3d::Initialize(Object3dSystem* _system, const std::string& _filePath)
+void Object3d::Initialize(const std::string& _filePath)
 {
     /// 必要なインスタンスを取得
-    pSystem_ = _system;
+    pSystem_ = Object3dSystem::GetInstance();
     pDx12_ = pSystem_->GetDx12();
     device_ = pDx12_->GetDevice();
     pGameEye_ = pSystem_->GetDefaultGameEye();

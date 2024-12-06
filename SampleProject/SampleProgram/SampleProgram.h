@@ -2,12 +2,6 @@
 
 #include <Framework/NimaFramework.h>
 
-#include <Features/Sprite/Sprite.h>
-#include <Features/Object3d/Object3d.h>
-#include <Features/Model/Model.h>
-#include <Features/GameEye/GameEye.h>
-#include <Features/Particle/Particle.h>
-
 
 class SampleProgram : public NimaFramework
 {
@@ -36,9 +30,5 @@ public:
 
 
 private: /// ゲーム内オブジェクト
-    Object3d* pObject3d_;
-    GameEye* pGameEye_;
-    Sprite* pSpriteMB_;
-    Sprite* pSpriteUVC_;
-    Particle* pParticle_;
+
 };

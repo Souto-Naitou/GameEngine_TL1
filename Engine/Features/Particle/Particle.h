@@ -14,7 +14,7 @@
 class Particle : public VectorContainer<Transform>
 {
 public:
-    void Initialize(ParticleSystem* _system, std::string _filepath);
+    void Initialize(std::string _filepath);
     void Draw();
     void Update();
     void Finalize();

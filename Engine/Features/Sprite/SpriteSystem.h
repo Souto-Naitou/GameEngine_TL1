@@ -6,8 +6,18 @@
 class SpriteSystem
 {
 public:
-    SpriteSystem();
     ~SpriteSystem();
+
+    SpriteSystem(const SpriteSystem&) = delete;
+    SpriteSystem& operator=(const SpriteSystem&) = delete;
+    SpriteSystem(const SpriteSystem&&) = delete;
+    SpriteSystem& operator=(const SpriteSystem&&) = delete;
+
+    static SpriteSystem* GetInstance()
+    {
+        static SpriteSystem instance;
+        return &instance;
+    }
 
     void Initialize();
     void Update();
@@ -21,6 +31,7 @@ private:
     Microsoft::WRL::ComPtr<ID3D12PipelineState> graphicsPipelineState_;
 
 private:
+    SpriteSystem();
     void CreateRootSignature();
     void CreatePipelineState();
     static constexpr wchar_t kVertexShaderPath[] = L"EngineResources/Shaders/Sprite.VS.hlsl";

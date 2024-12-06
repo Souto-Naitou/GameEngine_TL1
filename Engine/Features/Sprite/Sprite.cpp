@@ -21,9 +21,9 @@ Sprite::~Sprite()
 }
 
 
-void Sprite::Initialize(SpriteSystem* _spriteSystem, std::string _filepath)
+void Sprite::Initialize(std::string _filepath)
 {
-    pSpriteSystem_ = _spriteSystem;
+    pSpriteSystem_ = SpriteSystem::GetInstance();
     pDx12_ = pSpriteSystem_->GetDx12();
     device_ = pDx12_->GetDevice();
 

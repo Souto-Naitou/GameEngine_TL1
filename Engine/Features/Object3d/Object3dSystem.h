@@ -20,7 +20,16 @@ struct Material
 class Object3dSystem
 {
 public:
-    Object3dSystem();
+    Object3dSystem(const Object3dSystem&) = delete;
+    Object3dSystem& operator=(const Object3dSystem&) = delete;
+    Object3dSystem(Object3dSystem&&) = delete;
+    Object3dSystem& operator=(Object3dSystem&&) = delete;
+
+    static Object3dSystem* GetInstance()
+    {
+        static Object3dSystem instance;
+        return &instance;
+    }
 
     /// <summary>
     /// 初期化
@@ -37,6 +46,8 @@ public: /// Setter
     void SetDefaultGameEye(GameEye* _pGameEye)  { pDefaultGameEye_ = _pGameEye; }
 
 private:
+    Object3dSystem();
+
     void CreateRootSignature();
     void CreatePipelineState();
 

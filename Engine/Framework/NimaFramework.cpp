@@ -32,16 +32,17 @@ void NimaFramework::Initialize()
     pDebugManager_ = DebugManager::GetInstance();
     pWin32App_ = Win32Application::GetInstance();
     pModelManager_ = ModelManager::GetInstance();
+    pSpriteSystem_ = SpriteSystem::GetInstance();
+    pObject3dSystem_ = Object3dSystem::GetInstance();
+    pParticleSystem_ = ParticleSystem::GetInstance();
     pTextureManager_ = TextureManager::GetInstance();
     pSRVManager_ = SRVManager::GetInstance();
+    pSceneManager_ = &SceneManager::GetInstance();
 
     pAudio_ = new Audio();
     pInput_ = new Input();
 
     pImGuiManager_ = new ImGuiManager();
-    pSpriteSystem_ = new SpriteSystem();
-    pObject3dSystem_ = new Object3dSystem();
-    pParticleSystem_ = new ParticleSystem();
 
     /// ウィンドウの初期化
     pWin32App_->Initialize();
@@ -68,6 +69,9 @@ void NimaFramework::Initialize()
     /// 3Dオブジェクト基盤の初期化
     pObject3dSystem_->Initialize();
 
+    /// パーティクル基盤の初期化
+    pParticleSystem_->Initialize();
+
     /// オーディオの初期化
     pAudio_->Initialize();
 
@@ -77,9 +81,9 @@ void NimaFramework::Initialize()
 
 void NimaFramework::Finalize()
 {
-    delete pParticleSystem_;
-    delete pObject3dSystem_;
-    delete pSpriteSystem_;
+    pImGuiManager_->Finalize();
+    pWin32App_->Finalize();
+
     delete pImGuiManager_;
 }
 
@@ -97,4 +101,5 @@ void NimaFramework::Update()
     pImGuiManager_->BeginFrame();
     pDebugManager_->DrawUI();
     pImGuiManager_->Render();
+    pInput_->Update();
 }

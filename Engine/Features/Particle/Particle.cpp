@@ -12,7 +12,7 @@
 #endif
 
 
-void Particle::Initialize(ParticleSystem* _system, std::string _filepath)
+void Particle::Initialize(std::string _filepath)
 {
 #if defined(_DEBUG) && defined(DEBUG_ENGINE)
     std::stringstream ss;
@@ -24,7 +24,7 @@ void Particle::Initialize(ParticleSystem* _system, std::string _filepath)
     /// 必要なインスタンスを取得
     pDx12_ = DirectX12::GetInstance();
     pDevice_ = pDx12_->GetDevice();
-    pSystem_ = _system;
+    pSystem_ = ParticleSystem::GetInstance();
 
     /// デフォルトのGameEyeを取得
     pGameEye_ = pSystem_->GetDefaultGameEye();

@@ -16,6 +16,9 @@
     <Filter Include="Game">
       <UniqueIdentifier>{dcda6a37-b233-4695-a8d7-3aab8035063c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game\Scene">
+      <UniqueIdentifier>{a47a2190-d9bf-4cb4-90cb-fd63ca9857f3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -24,10 +27,16 @@
     <ClCompile Include="SampleProgram\SampleProgram.cpp">
       <Filter>Game</Filter>
     </ClCompile>
+    <ClCompile Include="Scene\GameScene.cpp">
+      <Filter>Game\Scene</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SampleProgram\SampleProgram.h">
       <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\GameScene.h">
+      <Filter>Game\Scene</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

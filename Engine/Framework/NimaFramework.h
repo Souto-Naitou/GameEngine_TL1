@@ -12,6 +12,7 @@
 #include <Core/DirectX12/DirectX12.h>
 #include <Core/Win32/Win32Application.h>
 #include <Core/DirectX12/SRVManager.h>
+#include <Features/SceneManager/SceneManager.h>
 
 
 // ゲーム共有
@@ -46,6 +47,7 @@ protected: /// 他クラスのインスタンス
     ModelManager* pModelManager_;
     SRVManager* pSRVManager_;
     TextureManager* pTextureManager_;
+    SceneManager* pSceneManager_;
 
 
 protected:
