@@ -9,18 +9,35 @@
 #include <Features/Model/Model.h>
 #include "ParticleSystem.h"
 #include <Features/IContainer/VectorContainer.h>
+#include <Matrix4x4.h>
 
 class Particle : public VectorContainer<Transform>
 {
 public:
-    void Initialize(ParticleSystem* _system, std::string _filepath);
+    void Initialize(std::string _filepath);
     void Draw();
     void Update();
+    void Finalize();
+
+
+public: /// Setter
+    void SetName(const std::string& _name) { name_ = _name; }
+    void SetEnableBillboard(bool _enable) { enableBillboard_ = _enable; }
+
+
+public: /// Getter
+    const std::string& GetName() const { return name_; }
+    bool GetEnableBillboard() const { return enableBillboard_; }
+
 
 public: /// Override
-    void reserve(uint32_t _size) override;
+    void reserve(size_t _size) override;
+
 
 private:
+    /// Common
+    std::string                             name_                               = {};
+
     /// GameEye
     GameEye*                                pGameEye_                           = nullptr;
 
@@ -40,6 +57,11 @@ private:
     D3D12_GPU_DESCRIPTOR_HANDLE             srvGpuHandle_                       = {};
     D3D12_GPU_DESCRIPTOR_HANDLE             textureSRVHandleGPU_                = {};
 
+    /// Billboard
+    Matrix4x4                               backToFrontMatrix_                  = {};
+    Matrix4x4                               billboardMatrix_                    = {};
+    bool                                    enableBillboard_                    = false;
+
 
 private: /// 他クラスのインスタンス
     DirectX12* pDx12_ = nullptr;
@@ -52,4 +74,5 @@ private:
     void CreateSRV();
     void GetModelData();
     void InitializeTransform();
+    void DebugWindow();
 };

@@ -7,9 +7,19 @@
 class ParticleSystem
 {
 public:
+    ParticleSystem(const ParticleSystem&) = delete;
+    ParticleSystem& operator=(const ParticleSystem&) = delete;
+    ParticleSystem(const ParticleSystem&&) = delete;
+    ParticleSystem& operator=(const ParticleSystem&&) = delete;
+
+    static ParticleSystem* GetInstance()
+    {
+        static ParticleSystem instance;
+        return &instance;
+    }
+
     void Initialize();
     void PresentDraw();
-    void Finalize();
 
 
 public: /// Setter
@@ -33,6 +43,7 @@ private: /// メンバ変数
 
 
 private: /// 非公開関数
+    ParticleSystem() = default;
     void CreateRootSignature();
     void CreatePipelineState();
 

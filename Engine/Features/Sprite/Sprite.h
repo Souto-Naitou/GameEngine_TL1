@@ -23,7 +23,7 @@ public:
     Sprite();
     ~Sprite();
 
-    void                Initialize(SpriteSystem* _spriteSystem, std::string _filepath);
+    void                Initialize(std::string _filepath);
     void                Update();
     void                Draw();
     void                Finalize();

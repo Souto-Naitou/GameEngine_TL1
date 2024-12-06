@@ -2,16 +2,29 @@
 #include <Core/DirectX12/Helper/DX12Helper.h>
 #include <Features/Model/ModelManager.h>
 #include <Features/Model/Helper/ModelHelper.h>
-#include <DebugTools/DebugManager/DebugManager.h>
 #include <Core/DirectX12/SRVManager.h>
+#include <numbers>
+#include <Common/define.h>
+
+#if defined(_DEBUG) && defined(DEBUG_ENGINE)
+#include <imgui.h>
+#include <DebugTools/DebugManager/DebugManager.h>
+#endif
 
 
-void Particle::Initialize(ParticleSystem* _system, std::string _filepath)
+void Particle::Initialize(std::string _filepath)
 {
+#if defined(_DEBUG) && defined(DEBUG_ENGINE)
+    std::stringstream ss;
+    ss << "instance##0x" << std::hex << this;
+    name_ = ss.str();
+    DebugManager::GetInstance()->SetComponent("Particle", name_, std::bind(&Particle::DebugWindow, this));
+#endif
+
     /// 必要なインスタンスを取得
     pDx12_ = DirectX12::GetInstance();
     pDevice_ = pDx12_->GetDevice();
-    pSystem_ = _system;
+    pSystem_ = ParticleSystem::GetInstance();
 
     /// デフォルトのGameEyeを取得
     pGameEye_ = pSystem_->GetDefaultGameEye();
@@ -32,6 +45,52 @@ void Particle::Initialize(ParticleSystem* _system, std::string _filepath)
     ModelManager::GetInstance()->LoadModel(_filepath);
     pModel_ = ModelManager::GetInstance()->FindModel(_filepath);
     if (pModel_->IsUploaded()) GetModelData();
+
+    /// 正面を向く行列を作成
+    backToFrontMatrix_ = Matrix4x4::RotateYMatrix(std::numbers::pi_v<float>);
+}
+
+void Particle::Update()
+{
+    /// モデル情報の取得
+    if (!pModel_) pModel_ = ModelManager::GetInstance()->FindModel(modelPath_);
+    else if (pModel_->IsUploaded()) GetModelData();
+
+    /// パーティクルの更新
+    for (uint32_t index = 0; index < container_.size(); ++index)
+    {
+        Matrix4x4 wMatrix = {};
+        Matrix4x4 scaleMatrix = Matrix4x4::ScaleMatrix(container_[index].scale);
+        Matrix4x4 translateMatrix = Matrix4x4::TranslateMatrix(container_[index].translate);
+
+        if (enableBillboard_) wMatrix = scaleMatrix * billboardMatrix_ * translateMatrix;
+        else wMatrix = Matrix4x4::AffineMatrix(container_[index].scale, container_[index].rotate, container_[index].translate);
+
+        instancingData_[index].world = wMatrix;
+        instancingData_[index].wvp = wMatrix * pGameEye_->GetViewProjectionMatrix();
+        instancingData_[index].color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
+    }
+
+    /// ビルボード
+    if (enableBillboard_)
+    {
+        billboardMatrix_ = backToFrontMatrix_ * pGameEye_->GetWorldMatrix();
+        /// 平行移動成分を除去
+        for (uint32_t index = 0; index < 3; index++) billboardMatrix_.m[3][index] = 0.0f;
+    }
+    else
+    {
+        billboardMatrix_ = Matrix4x4::Identity();
+    }
+}
+
+void Particle::Finalize()
+{
+#if defined(_DEBUG) && defined(DEBUG_ENGINE)
+
+    DebugManager::GetInstance()->DeleteComponent("Particle", name_.c_str());
+
+#endif
 }
 
 void Particle::Draw()
@@ -47,23 +106,7 @@ void Particle::Draw()
     commandList->DrawInstanced(static_cast<UINT>(pModelData_->vertices.size()), static_cast<UINT>(container_.size()), 0, 0);
 }
 
-void Particle::Update()
-{
-    /// モデル情報の取得
-    if (!pModel_) pModel_ = ModelManager::GetInstance()->FindModel(modelPath_);
-    else if (pModel_->IsUploaded()) GetModelData();
-
-    /// パーティクルの更新
-    for (uint32_t index = 0; index < container_.size(); ++index)
-    {
-        Matrix4x4 wMatrix = Matrix4x4::AffineMatrix(container_[index].scale, container_[index].rotate, container_[index].translate);
-        instancingData_[index].world = wMatrix;
-        instancingData_[index].wvp = wMatrix * pGameEye_->GetViewProjectionMatrix();
-        instancingData_[index].color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
-    }
-}
-
-void Particle::reserve(uint32_t _size)
+void Particle::reserve(size_t _size)
 {
     container_.reserve(_size);
     CreateParticleForGPUResource();
@@ -114,4 +157,13 @@ void Particle::InitializeTransform()
         transform.translate = Vector3(0.0f, 0.0f, 0.0f);
     }
     return;
+}
+
+void Particle::DebugWindow()
+{
+#if defined(_DEBUG) && defined(DEBUG_ENGINE)
+
+    ImGui::Checkbox("Enable Billboard", &enableBillboard_);
+
+#endif
 }
