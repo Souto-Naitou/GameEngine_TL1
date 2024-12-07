@@ -1,13 +1,20 @@
 #pragma once
 
 #include <Features/Particle/Emitter/BaseParticleEmitter.h>
+#include <Features/Particle/Particle.h>
 
 class ParticleEmitter : public BaseParticleEmitter
 {
 public:
-    void Initialize() override;
+    ParticleEmitter() = default;
+    ~ParticleEmitter() = default;
+
+    void Initialize(const std::string& _filePath) override;
     void Update() override;
 
 private:
     void EmitParticle();
+
+private:
+    Particle* particle_ = nullptr;
 };

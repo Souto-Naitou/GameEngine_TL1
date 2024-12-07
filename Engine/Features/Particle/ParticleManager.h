@@ -11,14 +11,21 @@ public:
     ParticleManager(ParticleManager const&&) = delete;
     void operator=(ParticleManager const&&) = delete;
 
-    static ParticleManager& GetInstance()
+    static ParticleManager* GetInstance()
     {
         static ParticleManager instance;
-        return instance;
+        return &instance;
     }
 
+
 public:
-    void CreateParticles();
+    void Update();
+    void Draw();
+
+
+public:
+    Particle& CreateParticles();
+
 
 private:
     ParticleManager() = default;

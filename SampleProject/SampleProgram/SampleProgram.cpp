@@ -42,6 +42,9 @@ void SampleProgram::Update()
 
     /// シーン更新
     pSceneManager_->Update();
+
+    /// パーティクル更新
+    pParticleManager_->Update();
 }
 
 void SampleProgram::Draw()
@@ -61,9 +64,10 @@ void SampleProgram::Draw()
 
     /// 前景スプライトの描画
     // pSpriteSystem_->PresentDraw();
+    // pSceneManager_->SceneDraw2dForeground();
 
-    //pParticleSystem_->PresentDraw();
-
+    pParticleSystem_->PresentDraw();
+    pParticleManager_->Draw();
 
     pImGuiManager_->EndFrame();
     pDirectX_->PostDraw();

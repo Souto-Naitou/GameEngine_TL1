@@ -8,13 +8,34 @@
 #include <d3d12.h>
 #include <Features/Model/Model.h>
 #include "ParticleSystem.h"
-#include <Features/IContainer/VectorContainer.h>
 #include <Matrix4x4.h>
+#include <Timer/Timer.h>
 
-class Particle : public VectorContainer<Transform>
+enum class ParticleDeleteCondition
+{
+    LifeTime,
+    ZeroAlpha,
+};
+
+struct ParticleData
+{
+    Transform                               transform_      = {};
+    Vector4                                 color_          = {};
+    float                                   alphaDeltaValue_ = 0.0f;
+    float                                   lifeTime_       = 0.0f;
+    Vector3                                 acceleration_   = {};
+    Vector3                                 accResistance_  = {};
+    Vector3                                 accGravity_     = {};
+    Vector3                                 velocity_       = {};
+    ParticleDeleteCondition                 deleteCondition_ = ParticleDeleteCondition::LifeTime;
+};
+
+class Particle
 {
 public:
-    void Initialize(std::string _filepath);
+    Particle() = default;
+
+    void Initialize(const std::string& _filepath);
     void Draw();
     void Update();
     void Finalize();
@@ -28,10 +49,12 @@ public: /// Setter
 public: /// Getter
     const std::string& GetName() const { return name_; }
     bool GetEnableBillboard() const { return enableBillboard_; }
+    auto& GetParticleData() { return particleData_; }
 
 
-public: /// Override
-    void reserve(size_t _size) override;
+public: /// container operator
+    void reserve(size_t _size);
+    void emplace_back(const ParticleData& _data) { particleData_.emplace_back(_data); }
 
 
 private:
@@ -62,6 +85,10 @@ private:
     Matrix4x4                               billboardMatrix_                    = {};
     bool                                    enableBillboard_                    = false;
 
+    /// Parameter
+    Timer                                   timer_                              = {};
+    std::vector<ParticleData>               particleData_                       = {};
+
 
 private: /// 他クラスのインスタンス
     DirectX12* pDx12_ = nullptr;
@@ -74,5 +101,12 @@ private:
     void CreateSRV();
     void GetModelData();
     void InitializeTransform();
+    void ParticleDataUpdate(std::vector<ParticleData>::iterator& _itr);
     void DebugWindow();
+
+private: /// delete condition
+    bool ParticleDeleteByCondition(std::vector<ParticleData>::iterator& _itr);
+    bool DeleteByLifeTime(std::vector<ParticleData>::iterator& _itr);
+    bool DeleteByZeroAlpha(std::vector<ParticleData>::iterator& _itr);
+
 };

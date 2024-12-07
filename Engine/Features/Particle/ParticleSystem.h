@@ -49,5 +49,5 @@ private: /// 非公開関数
 
 
 private:
-    DirectX12* pDx12_;
+    DirectX12* pDx12_ = nullptr;
 };

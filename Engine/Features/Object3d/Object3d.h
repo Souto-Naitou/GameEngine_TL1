@@ -65,6 +65,9 @@ private: /// メンバ変数
     Transform                                       transform_                      = {};
     std::string                                     name_                           = {};
 
+    bool                                            isUpdate_                       = true;
+    bool                                            isDraw_                         = true;
+
     Microsoft::WRL::ComPtr<ID3D12Resource>          transformationMatrixResource_   = nullptr;
     Microsoft::WRL::ComPtr<ID3D12Resource>          directionalLightResource_       = nullptr;
 

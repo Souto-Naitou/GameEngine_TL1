@@ -14,6 +14,7 @@
 #include <Core/DirectX12/SRVManager.h>
 #include <Features/SceneManager/SceneManager.h>
 #include <Interfaces/ISceneFactory.h>
+#include <Features/Particle/ParticleManager.h>
 
 // ゲーム共有
 class NimaFramework
@@ -51,6 +52,7 @@ protected: /// 他クラスのインスタンス
     SRVManager* pSRVManager_;
     TextureManager* pTextureManager_;
     SceneManager* pSceneManager_;
+    ParticleManager* pParticleManager_;
 
 
 protected:

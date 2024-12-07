@@ -7,13 +7,10 @@ class VectorContainer
 {
 public:
     VectorContainer() = default;
-    VectorContainer(const VectorContainer& _container) = default;
-    VectorContainer(VectorContainer&& _container) = default;
-
 
 public: /// container operation
-    void push_back(const T& _val) { container_.push_back(_val); }
-    void emplace_back(const T& _val) { container_.emplace_back(_val); }
+    virtual void push_back(const T& _val) { container_.push_back(_val); }
+    virtual void emplace_back(const T& _val) { container_.emplace_back(_val); }
     size_t size() const { return container_.size(); }
     virtual void reserve(size_t _size) { container_.reserve(_size); }
     void resize(size_t _size) { container_.resize(_size); }

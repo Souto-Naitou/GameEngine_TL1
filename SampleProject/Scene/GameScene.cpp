@@ -8,7 +8,7 @@ void GameScene::Initialize()
     pGameEye_ = new GameEye();
     pSpriteMB_ = new Sprite();
     pSpriteUVC_ = new Sprite();
-    pParticle_ = new Particle();
+    pParticleEmitter_ = new ParticleEmitter();
 
     pGameEye_->SetRotate({ 0.0f, -0.4f, 0.0f });
     pGameEye_->SetTranslate({ 5.0f, 0.0f, -10.0f });
@@ -30,17 +30,8 @@ void GameScene::Initialize()
     pSpriteUVC_->SetSize({ 120,120 });
     pSpriteUVC_->SetPosition({ 180, 60 });
 
-    pParticle_->Initialize("plane.obj");
-    pParticle_->SetName("Test");
-    pParticle_->reserve(32);
-    pParticle_->resize(15);
-    for (uint32_t i = 0; i < pParticle_->size(); ++i)
-    {
-        (*pParticle_)[i].scale = { 1.0f, 1.0f, 1.0f };
-        (*pParticle_)[i].rotate = { 0.0f, 0.0f, 0.0f };
-        (*pParticle_)[i].translate = { 0.0f, 0.0f, static_cast<float>(i) };
-    }
-
+    /// エミッタの初期化
+    pParticleEmitter_->Initialize("suzanne.obj");
 }
 
 void GameScene::Finalize()
@@ -49,7 +40,6 @@ void GameScene::Finalize()
     pSpriteMB_->Finalize();
     pObject3d_->Finalize();
 
-    delete pParticle_;
     delete pSpriteUVC_;
     delete pSpriteMB_;
     delete pGameEye_;
@@ -63,7 +53,7 @@ void GameScene::Update()
     pObject3d_->Update();
     pSpriteMB_->Update();
     pSpriteUVC_->Update();
-    pParticle_->Update();
+    pParticleEmitter_->Update();
 }
 
 void GameScene::Draw2dBackGround()
@@ -75,7 +65,6 @@ void GameScene::Draw3d()
     pObject3d_->Draw();
 
     pParticleSystem_->PresentDraw();
-    pParticle_->Draw();
 }
 
 void GameScene::Draw2dForeground()

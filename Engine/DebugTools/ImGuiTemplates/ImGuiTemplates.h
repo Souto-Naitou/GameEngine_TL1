@@ -25,7 +25,11 @@ namespace ImGuiTemplate
         ImGui::Text(_varName.c_str());
         ImGui::TableNextColumn();
 
-        if constexpr (std::is_same<T, uint32_t>::value)
+        if constexpr (std::is_same<T, bool>::value)
+        {
+            ImGui::Text("%s", _var ? "true" : "false");
+        }
+        else if constexpr (std::is_same<T, uint32_t>::value)
         {
             ImGui::Text("%u", _var);
         }
@@ -44,6 +48,14 @@ namespace ImGuiTemplate
         else if constexpr (std::is_same<T, Vector2>::value)
         {
             ImGui::Text("{ %f, %f }", _var.x, _var.y);
+        }
+        else if constexpr (std::is_same<T, Vector3>::value)
+        {
+            ImGui::Text("{ %f, %f, %f }", _var.x, _var.y, _var.z);
+        }
+        else if constexpr (std::is_same<T, Vector4>::value)
+        {
+            ImGui::Text("{ %f, %f, %f, %f }", _var.x, _var.y, _var.z, _var.w);
         }
         else
         {
