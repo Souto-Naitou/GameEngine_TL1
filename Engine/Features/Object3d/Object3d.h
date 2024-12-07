@@ -47,18 +47,19 @@ public:
 
 
 public: /// Getter
-    const Vector3& GetScale() const                 { return transform_.scale; }
-    const Vector3& GetRotate() const                { return transform_.rotate; }
-    const Vector3& GetTranslate() const             { return transform_.translate; }
+    const Vector3& GetScale() const                             { return transform_.scale; }
+    const Vector3& GetRotate() const                            { return transform_.rotate; }
+    const Vector3& GetTranslate() const                         { return transform_.translate; }
 
 
 public: /// Setter
-    void SetScale(const Vector3& _scale)            { transform_.scale = _scale; }
-    void SetRotate(const Vector3& _rotate)          { transform_.rotate = _rotate; }
-    void SetTranslate(const Vector3& _translate)    { transform_.translate = _translate; }
-    void SetModel(Model* _pModel)                   { pModel_ = _pModel; }
-    void SetGameEye(GameEye* _pGameEye)             { pGameEye_ = _pGameEye; }
-    void SetName(const std::string& _name)          { name_ = _name; }
+    void SetScale(const Vector3& _scale)                        { transform_.scale = _scale; }
+    void SetRotate(const Vector3& _rotate)                      { transform_.rotate = _rotate; }
+    void SetTranslate(const Vector3& _translate)                { transform_.translate = _translate; }
+    void SetModel(Model* _pModel)                               { pModel_ = _pModel; }
+    void SetGameEye(GameEye* _pGameEye)                         { pGameEye_ = _pGameEye; }
+    void SetName(const std::string& _name)                      { name_ = _name; }
+    void SetTilingMultiply(const Vector2& _tilingMultiply)      { tilingData_->tilingMultiply = _tilingMultiply; }
 
 
 private: /// メンバ変数
@@ -70,9 +71,11 @@ private: /// メンバ変数
 
     Microsoft::WRL::ComPtr<ID3D12Resource>          transformationMatrixResource_   = nullptr;
     Microsoft::WRL::ComPtr<ID3D12Resource>          directionalLightResource_       = nullptr;
+    Microsoft::WRL::ComPtr<ID3D12Resource>          tilingResource_                 = nullptr;
 
     TransformationMatrix*                           transformationMatrixData_       = nullptr;
     DirectionalLight*                               directionalLight_               = nullptr;
+    TilingData*                                     tilingData_                     = nullptr;
     Model*                                          pModel_                         = nullptr;
     std::string                                     modelPath_                      = {};
     GameEye*                                        pGameEye_                       = nullptr;
@@ -80,6 +83,7 @@ private: /// メンバ変数
 private: /// 非公開メンバ関数
     void CreateTransformationMatrixResource();
     void CreateDirectionalLightResource();
+    void CreateTilingResource();
 
 #ifdef DEBUG_ENGINE
     void DebugWindow();

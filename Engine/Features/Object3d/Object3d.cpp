@@ -41,6 +41,9 @@ void Object3d::Initialize(const std::string& _filePath)
     /// 平行光源リソースを作成
     CreateDirectionalLightResource();
 
+    /// テクスチャのタイリングリソースを作成
+    CreateTilingResource();
+
     /// モデルを読み込む
     modelPath_ = _filePath;
     ModelManager::GetInstance()->LoadModel(modelPath_);
@@ -86,6 +89,8 @@ void Object3d::Draw()
     commandList->SetGraphicsRootConstantBufferView(1, transformationMatrixResource_->GetGPUVirtualAddress());
     // 平行光源CBufferの場所を設定
     commandList->SetGraphicsRootConstantBufferView(3, directionalLightResource_->GetGPUVirtualAddress());
+    // TilingCBufferの場所を設定
+    commandList->SetGraphicsRootConstantBufferView(4, tilingResource_->GetGPUVirtualAddress());
 
     if (pModel_) pModel_->Draw();
 }
@@ -119,6 +124,15 @@ void Object3d::CreateDirectionalLightResource()
     directionalLight_->intensity = 1.0f;
 }
 
+void Object3d::CreateTilingResource()
+{
+    /// テクスチャのタイリングリソースを作成
+    tilingResource_ = DX12Helper::CreateBufferResource(device_, sizeof(TilingData));
+    tilingResource_->Map(0, nullptr, reinterpret_cast<void**>(&tilingData_));
+    /// タイリングデータを初期化
+    tilingData_->tilingMultiply = Vector2(1.0f, 1.0f);
+}
+
 #ifdef DEBUG_ENGINE
 void Object3d::DebugWindow()
 {
@@ -140,6 +154,11 @@ void Object3d::DebugWindow()
     ImGui::ColorEdit4("Color", &directionalLight_->color.x);
     ImGui::DragFloat3("Direction", &directionalLight_->direction.x, 0.01f);
     ImGui::DragFloat("Intensity", &directionalLight_->intensity, 0.01f);
+    ImGui::PopID();
+
+    ImGui::SeparatorText("Tiling");
+    ImGui::PushID("TILING");
+    ImGui::DragFloat2("Tiling Multiply", &tilingData_->tilingMultiply.x, 0.01f);
     ImGui::PopID();
 
 #endif // _DEBUG

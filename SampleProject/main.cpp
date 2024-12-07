@@ -4,11 +4,11 @@
 
 int _stdcall WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
-    NimaFramework* pGame = new SampleProgram();
+    NimaFramework* pSampleProgram = new SampleProgram();
 
-    pGame->Run();
+    pSampleProgram->Run();
 
-    delete pGame;
+    delete pSampleProgram;
 
     return 0;
 }

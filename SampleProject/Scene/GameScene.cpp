@@ -1,5 +1,7 @@
 #include "GameScene.h"
 
+#include <Features/Model/ModelManager.h>
+
 void GameScene::Initialize()
 {
     pParticleSystem_ = ParticleSystem::GetInstance();
@@ -9,14 +11,27 @@ void GameScene::Initialize()
     pSpriteMB_ = new Sprite();
     pSpriteUVC_ = new Sprite();
     pParticleEmitter_ = new ParticleEmitter();
+    pSkydome_ = new Object3d();
+    pGrid_ = new Object3d();
 
-    pGameEye_->SetRotate({ 0.0f, -0.4f, 0.0f });
-    pGameEye_->SetTranslate({ 5.0f, 0.0f, -10.0f });
+    pGameEye_->SetRotate({ 0.1f, 0.0f, 0.0f });
+    pGameEye_->SetTranslate({ 0.0f, 0.2f, -20.0f });
     pGameEye_->SetName("MainCamera");
 
     /// システムにデフォルトのゲームカメラを設定
     Object3dSystem::GetInstance()->SetDefaultGameEye(pGameEye_);
     pParticleSystem_->SetDefaultGameEye(pGameEye_);
+
+    ModelManager::GetInstance()->SetLightingFlag("Skydome.obj", false);
+
+    pSkydome_->Initialize("Skydome.obj");
+    pSkydome_->SetScale({ 1.0f, 1.0f, 1.0f });
+    pSkydome_->SetName("Skydome");
+
+    pGrid_->Initialize("Grid.obj");
+    pGrid_->SetScale({ 1.0f, 1.0f, 1.0f });
+    pGrid_->SetName("Grid");
+    pGrid_->SetTilingMultiply({ 90.0f, 90.0f });
 
     pObject3d_->Initialize("suzanne.obj");
     pObject3d_->SetScale({ -1.0f, 1.0f, 1.0f });
@@ -33,7 +48,7 @@ void GameScene::Initialize()
     pSpriteUVC_->SetPosition({ 180, 60 });
 
     /// エミッタの初期化
-    pParticleEmitter_->Initialize("suzanne.obj");
+    pParticleEmitter_->Initialize("plane.obj");
 }
 
 void GameScene::Finalize()
@@ -41,7 +56,11 @@ void GameScene::Finalize()
     pSpriteUVC_->Finalize();
     pSpriteMB_->Finalize();
     pObject3d_->Finalize();
+    pSkydome_->Finalize();
+    pGrid_->Finalize();
 
+    delete pGrid_;
+    delete pSkydome_;
     delete pSpriteUVC_;
     delete pSpriteMB_;
     delete pGameEye_;
@@ -56,6 +75,8 @@ void GameScene::Update()
     pSpriteMB_->Update();
     pSpriteUVC_->Update();
     pParticleEmitter_->Update();
+    pSkydome_->Update();
+    pGrid_->Update();
 }
 
 void GameScene::Draw2dBackGround()
@@ -64,7 +85,9 @@ void GameScene::Draw2dBackGround()
 
 void GameScene::Draw3d()
 {
-    pObject3d_->Draw();
+    pSkydome_->Draw();
+    pGrid_->Draw();
+    //pObject3d_->Draw();
 }
 
 void GameScene::Draw2dForeground()

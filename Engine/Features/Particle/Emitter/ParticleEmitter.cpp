@@ -36,7 +36,7 @@ void ParticleEmitter::EmitParticle()
 
     // 初期トランスフォーム
     datum.transform_.translate = emitterData_.emitPositionFixed_;
-    datum.transform_.scale = Vector3(1.0f, 1.0f, 1.0f);
+    datum.transform_.scale = Vector3(0.3f, 0.3f, 0.3f);
 
     // ライフタイム
     datum.lifeTime_ = emitterData_.emitterLifeTime_;

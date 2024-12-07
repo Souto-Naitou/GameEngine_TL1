@@ -66,6 +66,13 @@ public:
     Model* FindModel(const std::string& _filePath);
 
     /// <summary>
+    /// ライトの有効無効を設定 ロードが完了してから実行される。
+    /// </summary>
+    /// <param name="_filePath">ファイルパス</param>
+    /// <param name="_flag">ライトを有効にするか</param>
+    void SetLightingFlag(const std::string& _filePath, bool _flag);
+
+    /// <summary>
     /// アップロードキューに登録
     /// </summary>
     /// <param name="_pFunc">関数ポインタ</param>
@@ -79,6 +86,8 @@ private:
 
     std::queue<Model*> uploadQueue_;
     std::queue<Particle*> uploadQueueParticle_;
+
+    std::queue<std::pair<std::filesystem::path, bool>> lightingFlagQueue_;
 
     ModelManager() = default;
     ~ModelManager() = default;

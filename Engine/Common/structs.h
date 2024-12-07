@@ -63,3 +63,9 @@ struct ParticleForGPU
     Matrix4x4 world;
     Vector4 color;
 };
+
+struct TilingData
+{
+    Vector2 tilingMultiply;
+    int padding[2];
+};
