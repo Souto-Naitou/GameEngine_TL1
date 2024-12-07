@@ -38,6 +38,7 @@ void NimaFramework::Initialize()
     pTextureManager_ = TextureManager::GetInstance();
     pSRVManager_ = SRVManager::GetInstance();
     pSceneManager_ = &SceneManager::GetInstance();
+    pParticleManager_ = ParticleManager::GetInstance();
 
     pAudio_ = new Audio();
     pInput_ = new Input();

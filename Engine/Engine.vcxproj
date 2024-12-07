@@ -142,10 +142,12 @@
     <ClCompile Include="Features\Model\ModelManager.cpp" />
     <ClCompile Include="Features\Object3d\Object3d.cpp" />
     <ClCompile Include="Features\Object3d\Object3dSystem.cpp" />
+    <ClCompile Include="Features\Particle\Emitter\BaseParticleEmitter.cpp" />
     <ClCompile Include="Features\Particle\Emitter\ParticleEmitter.cpp" />
     <ClCompile Include="Features\Particle\Particle.cpp" />
     <ClCompile Include="Features\Particle\ParticleManager.cpp" />
     <ClCompile Include="Features\Particle\ParticleSystem.cpp" />
+    <ClCompile Include="Features\RandomGenerator\RandomGenerator.cpp" />
     <ClCompile Include="Features\SceneManager\SceneManager.cpp" />
     <ClCompile Include="Features\Sprite\Sprite.cpp" />
     <ClCompile Include="Features\Sprite\SpriteSystem.cpp" />
@@ -185,6 +187,7 @@
     <ClInclude Include="Features\Particle\Particle.h" />
     <ClInclude Include="Features\Particle\ParticleManager.h" />
     <ClInclude Include="Features\Particle\ParticleSystem.h" />
+    <ClInclude Include="Features\RandomGenerator\RandomGenerator.h" />
     <ClInclude Include="Features\SceneManager\SceneManager.h" />
     <ClInclude Include="Features\Sprite\Sprite.h" />
     <ClInclude Include="Features\Sprite\SpriteSystem.h" />

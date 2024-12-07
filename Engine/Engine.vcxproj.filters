@@ -121,6 +121,9 @@
     <Filter Include="Feature\SceneManager">
       <UniqueIdentifier>{58dab0a0-59c5-4cf9-95ba-19f2b051c76b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Feature\RandomGenerator">
+      <UniqueIdentifier>{261dc65f-18f6-4c56-b64d-5c907c9c5259}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DebugTools\DebugManager\DebugManager.cpp">
@@ -217,6 +220,12 @@
       <Filter>Feature\Particle\Manager</Filter>
     </ClCompile>
     <ClCompile Include="Features\Particle\Emitter\ParticleEmitter.cpp">
+      <Filter>Feature\Particle\Emitter</Filter>
+    </ClCompile>
+    <ClCompile Include="Features\RandomGenerator\RandomGenerator.cpp">
+      <Filter>Feature\RandomGenerator</Filter>
+    </ClCompile>
+    <ClCompile Include="Features\Particle\Emitter\BaseParticleEmitter.cpp">
       <Filter>Feature\Particle\Emitter</Filter>
     </ClCompile>
   </ItemGroup>
@@ -337,6 +346,9 @@
     </ClInclude>
     <ClInclude Include="Interfaces\ISceneFactory.h">
       <Filter>Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="Features\RandomGenerator\RandomGenerator.h">
+      <Filter>Feature\RandomGenerator</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

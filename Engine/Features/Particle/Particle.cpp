@@ -9,10 +9,11 @@
 #if defined(_DEBUG) && defined(DEBUG_ENGINE)
 #include <imgui.h>
 #include <DebugTools/DebugManager/DebugManager.h>
+#include <DebugTools/ImGuiTemplates/ImGuiTemplates.h>
 #endif
 
 
-void Particle::Initialize(std::string _filepath)
+void Particle::Initialize(const std::string& _filepath)
 {
 #if defined(_DEBUG) && defined(DEBUG_ENGINE)
     std::stringstream ss;
@@ -29,7 +30,7 @@ void Particle::Initialize(std::string _filepath)
     /// デフォルトのGameEyeを取得
     pGameEye_ = pSystem_->GetDefaultGameEye();
 
-    if (!container_.capacity()) reserve(1);
+    if (!particleData_.capacity()) reserve(1);
 
     /// パーティクルリソースを作成
     CreateParticleForGPUResource();
@@ -48,6 +49,9 @@ void Particle::Initialize(std::string _filepath)
 
     /// 正面を向く行列を作成
     backToFrontMatrix_ = Matrix4x4::RotateYMatrix(std::numbers::pi_v<float>);
+
+    /// タイマーを開始
+    timer_.Start();
 }
 
 void Particle::Update()
@@ -57,18 +61,40 @@ void Particle::Update()
     else if (pModel_->IsUploaded()) GetModelData();
 
     /// パーティクルの更新
-    for (uint32_t index = 0; index < container_.size(); ++index)
+    if (particleData_.empty()) return;
+    uint32_t index = 0;
+    auto itr = particleData_.begin();
+    while (true)
     {
+        if (itr == particleData_.end()) break;
+
+        Transform& transform = itr->transform_;
+        Vector4& color = itr->color_;
+
+        /// パーティクルデータの更新
+        ParticleDataUpdate(itr);
+
+        /// パーティクルの条件付き削除
+        if (ParticleDeleteByCondition(itr))
+        {
+            /// 削除されたら
+            if (itr == particleData_.end()) break;
+            else continue;
+        }
+
         Matrix4x4 wMatrix = {};
-        Matrix4x4 scaleMatrix = Matrix4x4::ScaleMatrix(container_[index].scale);
-        Matrix4x4 translateMatrix = Matrix4x4::TranslateMatrix(container_[index].translate);
+        Matrix4x4 scaleMatrix = Matrix4x4::ScaleMatrix(transform.scale);
+        Matrix4x4 translateMatrix = Matrix4x4::TranslateMatrix(transform.translate);
 
         if (enableBillboard_) wMatrix = scaleMatrix * billboardMatrix_ * translateMatrix;
-        else wMatrix = Matrix4x4::AffineMatrix(container_[index].scale, container_[index].rotate, container_[index].translate);
+        else wMatrix = Matrix4x4::AffineMatrix(transform.scale, transform.rotate, transform.translate);
 
         instancingData_[index].world = wMatrix;
         instancingData_[index].wvp = wMatrix * pGameEye_->GetViewProjectionMatrix();
-        instancingData_[index].color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
+        instancingData_[index].color = color;
+
+        ++itr;
+        ++index;
     }
 
     /// ビルボード
@@ -103,12 +129,12 @@ void Particle::Draw()
     commandList->IASetVertexBuffers(0, 1, &vertexBufferView_);
     commandList->SetGraphicsRootDescriptorTable(0, srvGpuHandle_);
     commandList->SetGraphicsRootDescriptorTable(1, textureSRVHandleGPU_);
-    commandList->DrawInstanced(static_cast<UINT>(pModelData_->vertices.size()), static_cast<UINT>(container_.size()), 0, 0);
+    commandList->DrawInstanced(static_cast<UINT>(pModelData_->vertices.size()), static_cast<UINT>(particleData_.size()), 0, 0);
 }
 
 void Particle::reserve(size_t _size)
 {
-    container_.reserve(_size);
+    particleData_.reserve(_size);
     CreateParticleForGPUResource();
     CreateSRV();
     InitializeTransform();
@@ -119,10 +145,10 @@ void Particle::CreateParticleForGPUResource()
 {
     /// 座標変換行列リソースを作成
     instancingResource_.Reset();
-    instancingResource_ = DX12Helper::CreateBufferResource(pDevice_, sizeof(ParticleForGPU) * container_.capacity());
+    instancingResource_ = DX12Helper::CreateBufferResource(pDevice_, sizeof(ParticleForGPU) * particleData_.capacity());
     instancingResource_->Map(0, nullptr, reinterpret_cast<void**>(&instancingData_));
     /// 座標変換行列データを初期化
-    for (uint32_t index = 0; index < container_.capacity(); ++index)
+    for (uint32_t index = 0; index < particleData_.capacity(); ++index)
     {
         instancingData_[index].wvp = Matrix4x4::Identity();
         instancingData_[index].world = Matrix4x4::Identity();
@@ -137,7 +163,7 @@ void Particle::CreateSRV()
     srvCpuHandle_ = srvManager->GetCPUDescriptorHandle(srvIndex_);
     srvGpuHandle_ = srvManager->GetGPUDescriptorHandle(srvIndex_);
 
-    srvManager->CreateForStructuredBuffer(srvIndex_, instancingResource_.Get(), static_cast<UINT>(container_.capacity()), sizeof(ParticleForGPU));
+    srvManager->CreateForStructuredBuffer(srvIndex_, instancingResource_.Get(), static_cast<UINT>(particleData_.capacity()), sizeof(ParticleForGPU));
     return;
 }
 
@@ -150,12 +176,32 @@ void Particle::GetModelData()
 
 void Particle::InitializeTransform()
 {
-    for (auto& transform : container_)
+    for (auto& datum : particleData_)
     {
+        Transform& transform = datum.transform_;
         transform.scale = Vector3(1.0f, 1.0f, 1.0f);
         transform.rotate = Vector3(0.0f, 0.0f, 0.0f);
         transform.translate = Vector3(0.0f, 0.0f, 0.0f);
     }
+    return;
+}
+
+void Particle::ParticleDataUpdate(std::vector<ParticleData>::iterator& _itr)
+{
+    float deltaTime = 1.0f / 60.0f;
+
+    Transform& transform = _itr->transform_;
+    Vector3& velocity = _itr->velocity_;
+    Vector3& acceleration = _itr->acceleration_;
+    Vector4& color = _itr->color_;
+
+    velocity += acceleration * deltaTime;
+    transform.translate += velocity * deltaTime;
+    color.w += _itr->alphaDeltaValue_;
+
+    /// 加速度のリセット
+    acceleration = {};
+
     return;
 }
 
@@ -165,5 +211,59 @@ void Particle::DebugWindow()
 
     ImGui::Checkbox("Enable Billboard", &enableBillboard_);
 
+    auto pFunc = [&]()
+    {
+        ImGuiTemplate::VariableTableRow("最大許容数", particleData_.capacity());
+        ImGuiTemplate::VariableTableRow("現在召喚されている数", particleData_.size());
+    };
+
+    ImGuiTemplate::VariableTable("Particle", pFunc);
+
 #endif
 }
+
+bool Particle::ParticleDeleteByCondition(std::vector<ParticleData>::iterator& _itr)
+{
+    bool isDelete = false;
+
+    switch (_itr->deleteCondition_)
+    {
+    case ParticleDeleteCondition::LifeTime:
+        isDelete = DeleteByLifeTime(_itr);
+        break;
+    case ParticleDeleteCondition::ZeroAlpha:
+        isDelete = DeleteByZeroAlpha(_itr);
+        break;
+    default:
+        break;
+    }
+
+    return isDelete;
+}
+
+bool Particle::DeleteByLifeTime(std::vector<ParticleData>::iterator& _itr)
+{
+    bool isDelete = false;
+
+    if (_itr->lifeTime_ <= 0.0f)
+    {
+        _itr = particleData_.erase(_itr);
+        isDelete = true;
+    }
+
+    return isDelete;
+}
+
+bool Particle::DeleteByZeroAlpha(std::vector<ParticleData>::iterator& _itr)
+{
+    bool isDelete = false;
+
+    if (_itr->color_.w <= 0.0f)
+    {
+        _itr = particleData_.erase(_itr);
+        isDelete = true;
+    }
+
+    return isDelete;
+}
+

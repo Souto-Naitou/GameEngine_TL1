@@ -9,6 +9,7 @@
 #include <Features/Sprite/SpriteSystem.h>
 #include <Features/Object3d/Object3dSystem.h>
 #include <Features/Particle/ParticleSystem.h>
+#include <Features/Particle/Emitter/ParticleEmitter.h>
 
 class GameScene : public IScene
 {
@@ -30,7 +31,7 @@ private:
     GameEye* pGameEye_;
     Sprite* pSpriteMB_;
     Sprite* pSpriteUVC_;
-    Particle* pParticle_;
+    ParticleEmitter* pParticleEmitter_;
 
 private:
     ParticleSystem* pParticleSystem_ = nullptr;

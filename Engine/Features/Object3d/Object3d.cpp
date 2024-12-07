@@ -49,6 +49,8 @@ void Object3d::Initialize(const std::string& _filePath)
 
 void Object3d::Update()
 {
+    if (!isUpdate_) return;
+
     /// モデルが読み込まれていない場合は読み込む
     if (!pModel_) pModel_ = ModelManager::GetInstance()->FindModel(modelPath_);
 
@@ -75,6 +77,8 @@ void Object3d::Update()
 
 void Object3d::Draw()
 {
+    if (!isDraw_) return;
+
     ID3D12GraphicsCommandList* commandList = pDx12_->GetCommandList();
     std::vector<D3D12_GPU_DESCRIPTOR_HANDLE> textureSrvHandleGPUs = pDx12_->GetSRVHandlesGPUList();
 
@@ -119,6 +123,10 @@ void Object3d::CreateDirectionalLightResource()
 void Object3d::DebugWindow()
 {
 #ifdef _DEBUG
+
+    ImGui::Checkbox("Update", &isUpdate_);
+    ImGui::SameLine();
+    ImGui::Checkbox("Draw", &isDraw_);
 
     ImGui::SeparatorText("Transform");
     ImGui::PushID("TRANSFORM");
