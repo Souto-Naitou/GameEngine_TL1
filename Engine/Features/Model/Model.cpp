@@ -50,6 +50,14 @@ Model::~Model()
     OutputDebugStringA("Model Destructor\n");
 }
 
+void Model::SetEnableLighting(bool _flag)
+{
+    if (materialData_)
+        materialData_->enableLighting = _flag;
+    else
+        isEnableLighting_ = _flag;
+}
+
 void Model::CreateVertexResource()
 {
     /// 頂点リソースを作成
@@ -73,7 +81,7 @@ void Model::CreateMaterialResource()
     materialResource_->Map(0, nullptr, reinterpret_cast<void**>(&materialData_));
     /// マテリアルデータを初期化
     materialData_->color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
-    materialData_->enableLighting = true;
+    materialData_->enableLighting = isEnableLighting_;
     materialData_->uvTransform = Matrix4x4::Identity();
 }
 

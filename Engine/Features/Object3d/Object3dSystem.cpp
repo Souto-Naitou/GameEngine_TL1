@@ -44,7 +44,7 @@ void Object3dSystem::CreateRootSignature()
         D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
 
     // RootParameter作成。複数設定できるので配列
-    D3D12_ROOT_PARAMETER rootParameters[4] = {};
+    D3D12_ROOT_PARAMETER rootParameters[5] = {};
     rootParameters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;                    // CBVを使う
     rootParameters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;                 // PixelShaderで使う
     rootParameters[0].Descriptor.ShaderRegister = 0;                                    // レジスタ番号０とバインド
@@ -62,18 +62,29 @@ void Object3dSystem::CreateRootSignature()
     rootParameters[3].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;                 // PixelShaderで使用する
     rootParameters[3].Descriptor.ShaderRegister = 1;                                    // レジスタ番号1を使用する
 
+    rootParameters[4].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;                    // CBVを使用する
+    rootParameters[4].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;                 // PixelShaderで使用する
+    rootParameters[4].Descriptor.ShaderRegister = 2;                                    // レジスタ番号2を使用する
+
+
     descriptionRootSignature.pParameters = rootParameters;                              // ルートパラメータ配列へのポインタ
     descriptionRootSignature.NumParameters = _countof(rootParameters);                  // 配列の長さ
 
     D3D12_STATIC_SAMPLER_DESC staticSamplers[1] = {};
-    staticSamplers[0].Filter = D3D12_FILTER_MIN_MAG_MIP_LINEAR;                         // BilinearFilter
-    staticSamplers[0].AddressU = D3D12_TEXTURE_ADDRESS_MODE_WRAP;                       // 0 ~ 1の範囲外をリピート
+    staticSamplers[0].Filter = D3D12_FILTER_ANISOTROPIC;                    // 異方性フィルタリング
+    staticSamplers[0].AddressU = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
     staticSamplers[0].AddressV = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
     staticSamplers[0].AddressW = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
-    staticSamplers[0].ComparisonFunc = D3D12_COMPARISON_FUNC_NEVER;                     // 比較しない
-    staticSamplers[0].MaxLOD = D3D12_FLOAT32_MAX;                                       // ありったけのーを使う
-    staticSamplers[0].ShaderRegister = 0;                                               // レジスタ番号0を使用する
-    staticSamplers[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL; // PixelShaderを使う
+    staticSamplers[0].MipLODBias = 0.0f;                                    // ミップマップのオフセット
+    staticSamplers[0].MaxAnisotropy = 16;                                   // 最大異方性
+    staticSamplers[0].ComparisonFunc = D3D12_COMPARISON_FUNC_NEVER;         // 比較なし
+    staticSamplers[0].BorderColor = D3D12_STATIC_BORDER_COLOR_OPAQUE_WHITE; // ボーダーカラー
+    staticSamplers[0].MinLOD = 0.0f;                                        // 最小ミップレベル
+    staticSamplers[0].MaxLOD = D3D12_FLOAT32_MAX;                           // 最大ミップレベル
+    staticSamplers[0].ShaderRegister = 0;                                   // サンプラーのレジスタ番号
+    staticSamplers[0].RegisterSpace = 0;                                    // レジスタスペース
+    staticSamplers[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;     // ピクセルシェーダーで使用
+
     descriptionRootSignature.pStaticSamplers = staticSamplers;
     descriptionRootSignature.NumStaticSamplers = _countof(staticSamplers);
 

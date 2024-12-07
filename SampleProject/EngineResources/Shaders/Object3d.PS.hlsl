@@ -16,8 +16,14 @@ struct DirectionalLight
     float intensity; //!< 輝度
 };
 
+struct UVTiling
+{
+    float2 tilingMultiply; //!< UVのタイリング係数
+};
+
 ConstantBuffer<Material> gMaterial : register(b0);
 ConstantBuffer<DirectionalLight> gDirectionalLight : register(b1);
+ConstantBuffer<UVTiling> gUVTiling : register(b2);
 
 struct PixelShaderOutput
 {
@@ -32,6 +38,9 @@ PixelShaderOutput main(VertexShaderOutput input)
     PixelShaderOutput output;
 
     float4 transformedUV = mul(float4(input.texcoord, 0.0f, 1.0f), gMaterial.uvTransform);
+
+    transformedUV.xy *= gUVTiling.tilingMultiply;
+
     float4 textureColor = gTexture.Sample(gSampler, transformedUV.xy);
 
 
@@ -55,6 +64,11 @@ PixelShaderOutput main(VertexShaderOutput input)
     else
     {
         output.color = gMaterial.color * textureColor;
+    }
+
+    if (textureColor.a <= 0.f || output.color.a <= 0.f)
+    {
+        discard;
     }
 
     return output;

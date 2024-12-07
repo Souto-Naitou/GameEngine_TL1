@@ -32,6 +32,8 @@ private:
     Sprite* pSpriteMB_;
     Sprite* pSpriteUVC_;
     ParticleEmitter* pParticleEmitter_;
+    Object3d* pSkydome_;
+    Object3d* pGrid_;
 
 private:
     ParticleSystem* pParticleSystem_ = nullptr;
