@@ -14,6 +14,7 @@ void GameScene::Initialize()
     pGameEye_->SetTranslate({ 5.0f, 0.0f, -10.0f });
     pGameEye_->SetName("MainCamera");
 
+    /// システムにデフォルトのゲームカメラを設定
     Object3dSystem::GetInstance()->SetDefaultGameEye(pGameEye_);
     pParticleSystem_->SetDefaultGameEye(pGameEye_);
 
@@ -25,6 +26,7 @@ void GameScene::Initialize()
     pSpriteMB_->SetName("MonsterBall");
     pSpriteMB_->SetSize({ 120,60 });
     pSpriteMB_->SetPosition({ 40,60 });
+
     pSpriteUVC_->Initialize("uvChecker.png");
     pSpriteUVC_->SetName("uvChecker");
     pSpriteUVC_->SetSize({ 120,120 });
@@ -63,8 +65,6 @@ void GameScene::Draw2dBackGround()
 void GameScene::Draw3d()
 {
     pObject3d_->Draw();
-
-    pParticleSystem_->PresentDraw();
 }
 
 void GameScene::Draw2dForeground()

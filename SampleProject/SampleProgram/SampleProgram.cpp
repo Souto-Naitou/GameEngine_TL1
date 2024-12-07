@@ -61,13 +61,13 @@ void SampleProgram::Draw()
     pObject3dSystem_->PresentDraw();
     pSceneManager_->SceneDraw3d();
 
-
-    /// 前景スプライトの描画
-    // pSpriteSystem_->PresentDraw();
-    // pSceneManager_->SceneDraw2dForeground();
-
+    /// パーティクル描画
     pParticleSystem_->PresentDraw();
     pParticleManager_->Draw();
+
+    /// 前景スプライトの描画
+    pSpriteSystem_->PresentDraw();
+    pSceneManager_->SceneDraw2dForeground();
 
     pImGuiManager_->EndFrame();
     pDirectX_->PostDraw();
