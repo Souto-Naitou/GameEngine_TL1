@@ -15,6 +15,7 @@
 #include <Features/SceneManager/SceneManager.h>
 #include <Interfaces/ISceneFactory.h>
 #include <Features/Particle/ParticleManager.h>
+#include <Features/Line/LineSystem.h>
 
 // ゲーム共有
 class NimaFramework
@@ -37,9 +38,6 @@ public:
 protected: /// システムクラスのインスタンス
     ISceneFactory* pSceneFactory_ = nullptr;
     ImGuiManager* pImGuiManager_;
-    SpriteSystem* pSpriteSystem_;
-    Object3dSystem* pObject3dSystem_;
-    ParticleSystem* pParticleSystem_;
     Audio* pAudio_;
     Input* pInput_;
 
@@ -52,7 +50,11 @@ protected: /// 他クラスのインスタンス
     SRVManager* pSRVManager_;
     TextureManager* pTextureManager_;
     SceneManager* pSceneManager_;
+    SpriteSystem* pSpriteSystem_;
+    Object3dSystem* pObject3dSystem_;
+    ParticleSystem* pParticleSystem_;
     ParticleManager* pParticleManager_;
+    LineSystem* pLineSystem_;
 
 
 protected:

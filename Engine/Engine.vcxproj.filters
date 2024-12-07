@@ -124,6 +124,9 @@
     <Filter Include="Feature\RandomGenerator">
       <UniqueIdentifier>{261dc65f-18f6-4c56-b64d-5c907c9c5259}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Feature\Line">
+      <UniqueIdentifier>{3574a4ba-6b04-4d65-b739-29ec50ddd79d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DebugTools\DebugManager\DebugManager.cpp">
@@ -227,6 +230,12 @@
     </ClCompile>
     <ClCompile Include="Features\Particle\Emitter\BaseParticleEmitter.cpp">
       <Filter>Feature\Particle\Emitter</Filter>
+    </ClCompile>
+    <ClCompile Include="Features\Line\LineSystem.cpp">
+      <Filter>Feature\Line</Filter>
+    </ClCompile>
+    <ClCompile Include="Features\Line\Line.cpp">
+      <Filter>Feature\Line</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -350,6 +359,12 @@
     <ClInclude Include="Features\RandomGenerator\RandomGenerator.h">
       <Filter>Feature\RandomGenerator</Filter>
     </ClInclude>
+    <ClInclude Include="Features\Line\LineSystem.h">
+      <Filter>Feature\Line</Filter>
+    </ClInclude>
+    <ClInclude Include="Features\Line\Line.h">
+      <Filter>Feature\Line</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
@@ -363,6 +378,9 @@
       <Filter>HLSL</Filter>
     </None>
     <None Include="..\ClassDiagram.md" />
+    <None Include="EngineResources\Shaders\Line.hlsli">
+      <Filter>HLSL</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="EngineResources\Shaders\Object3d.PS.hlsl">
@@ -381,6 +399,12 @@
       <Filter>HLSL</Filter>
     </FxCompile>
     <FxCompile Include="..\SampleProject\EngineResources\Shaders\Particle.PS.hlsl">
+      <Filter>HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="EngineResources\Shaders\Line.VS.hlsl">
+      <Filter>HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="EngineResources\Shaders\Line.PS.hlsl">
       <Filter>HLSL</Filter>
     </FxCompile>
   </ItemGroup>

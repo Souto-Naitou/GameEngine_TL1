@@ -39,6 +39,7 @@ void NimaFramework::Initialize()
     pSRVManager_ = SRVManager::GetInstance();
     pSceneManager_ = &SceneManager::GetInstance();
     pParticleManager_ = ParticleManager::GetInstance();
+    pLineSystem_ = LineSystem::GetInstance();
 
     pAudio_ = new Audio();
     pInput_ = new Input();
@@ -72,6 +73,9 @@ void NimaFramework::Initialize()
 
     /// パーティクル基盤の初期化
     pParticleSystem_->Initialize();
+
+    /// ライン基盤の初期化
+    pLineSystem_->Initialize();
 
     /// オーディオの初期化
     pAudio_->Initialize();

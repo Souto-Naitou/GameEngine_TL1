@@ -10,6 +10,8 @@
 #include <Features/Object3d/Object3dSystem.h>
 #include <Features/Particle/ParticleSystem.h>
 #include <Features/Particle/Emitter/ParticleEmitter.h>
+#include <Features/Line/LineSystem.h>
+#include <Features/Line/Line.h>
 
 class GameScene : public IScene
 {
@@ -34,7 +36,9 @@ private:
     ParticleEmitter* pParticleEmitter_;
     Object3d* pSkydome_;
     Object3d* pGrid_;
+    Line* pLine_;
 
 private:
     ParticleSystem* pParticleSystem_ = nullptr;
+    LineSystem* pLineSystem_ = nullptr;
 };
