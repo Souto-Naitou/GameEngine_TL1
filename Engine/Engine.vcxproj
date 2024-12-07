@@ -137,6 +137,8 @@
     <ClCompile Include="Features\Audio\Audio.cpp" />
     <ClCompile Include="Features\GameEye\GameEye.cpp" />
     <ClCompile Include="Features\Input\Input.cpp" />
+    <ClCompile Include="Features\Line\Line.cpp" />
+    <ClCompile Include="Features\Line\LineSystem.cpp" />
     <ClCompile Include="Features\Model\Helper\ModelHelper.cpp" />
     <ClCompile Include="Features\Model\Model.cpp" />
     <ClCompile Include="Features\Model\ModelManager.cpp" />
@@ -177,6 +179,8 @@
     <ClInclude Include="Features\IContainer\ListContainer.h" />
     <ClInclude Include="Features\IContainer\VectorContainer.h" />
     <ClInclude Include="Features\Input\Input.h" />
+    <ClInclude Include="Features\Line\Line.h" />
+    <ClInclude Include="Features\Line\LineSystem.h" />
     <ClInclude Include="Features\Model\Helper\ModelHelper.h" />
     <ClInclude Include="Features\Model\Model.h" />
     <ClInclude Include="Features\Model\ModelManager.h" />
@@ -210,6 +214,10 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </None>
+    <None Include="EngineResources\Shaders\Line.hlsli">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </None>
     <None Include="EngineResources\Shaders\Object3d.hlsli">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
@@ -229,6 +237,14 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="..\SampleProject\EngineResources\Shaders\Sprite.VS.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="EngineResources\Shaders\Line.PS.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="EngineResources\Shaders\Line.VS.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </FxCompile>

@@ -5,6 +5,7 @@
 void GameScene::Initialize()
 {
     pParticleSystem_ = ParticleSystem::GetInstance();
+    pLineSystem_ = LineSystem::GetInstance();
 
     pObject3d_ = new Object3d();
     pGameEye_ = new GameEye();
@@ -13,6 +14,7 @@ void GameScene::Initialize()
     pParticleEmitter_ = new ParticleEmitter();
     pSkydome_ = new Object3d();
     pGrid_ = new Object3d();
+    pLine_ = new Line();
 
     pGameEye_->SetRotate({ 0.1f, 0.0f, 0.0f });
     pGameEye_->SetTranslate({ 0.0f, 0.2f, -20.0f });
@@ -21,6 +23,7 @@ void GameScene::Initialize()
     /// システムにデフォルトのゲームカメラを設定
     Object3dSystem::GetInstance()->SetDefaultGameEye(pGameEye_);
     pParticleSystem_->SetDefaultGameEye(pGameEye_);
+    pLineSystem_->SetDefaultGameEye(pGameEye_);
 
     ModelManager::GetInstance()->SetLightingFlag("Skydome.obj", false);
 
@@ -46,6 +49,10 @@ void GameScene::Initialize()
     pSpriteUVC_->SetName("uvChecker");
     pSpriteUVC_->SetSize({ 120,120 });
     pSpriteUVC_->SetPosition({ 180, 60 });
+
+    pLine_->Initialize();
+    pLine_->GetVertices()[0] = Vector3(0.0f, 0.0f, 0.0f);
+    pLine_->GetVertices()[1] = Vector3(1.0f, 1.0f, 0.0f);
 
     /// エミッタの初期化
     pParticleEmitter_->Initialize("plane.obj");
@@ -77,6 +84,7 @@ void GameScene::Update()
     pParticleEmitter_->Update();
     pSkydome_->Update();
     pGrid_->Update();
+    pLine_->Update();
 }
 
 void GameScene::Draw2dBackGround()
@@ -88,6 +96,10 @@ void GameScene::Draw3d()
     pSkydome_->Draw();
     pGrid_->Draw();
     //pObject3d_->Draw();
+
+    pLineSystem_->PresentDraw();
+    pLine_->Draw();
+
 }
 
 void GameScene::Draw2dForeground()
