@@ -37,7 +37,11 @@ void BaseParticleEmitter::DebugWindow()
         ImGuiTemplate::VariableTableRow("ランダム範囲生成の有無", emitterData_.enableRandomEmit_);
     };
 
-    ImGui::DragFloat("発生間隔", &emitterData_.emitInterval_, 0.01f);
+    ImGui::DragFloat("発生間隔", &emitterData_.emitInterval_, 0.1f, 0.001f);
+    if (emitterData_.emitInterval_ < 0.0f)
+    {
+        emitterData_.emitInterval_ = 0.1f;
+    }
     ImGui::InputInt("発生数", (int*)&emitterData_.emitNum_);
     ImGui::Checkbox("ランダム範囲生成", &emitterData_.enableRandomEmit_);
     if (emitterData_.enableRandomEmit_)
@@ -49,6 +53,8 @@ void BaseParticleEmitter::DebugWindow()
     {
         ImGui::DragFloat3("発生位置", &emitterData_.emitPositionFixed_.x, 0.01f);
     }
+
+    ImGui::ColorEdit4("色", &emitterData_.color_.x);
 
     ImGuiTemplate::VariableTable("EmitterData", pFunc);
 

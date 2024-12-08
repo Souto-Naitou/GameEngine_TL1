@@ -10,17 +10,26 @@ void RequiredScene::Initialize()
     pGameEye_->SetName("RequiredScene_Camera");
     pGameEye_->SetTranslate(Vector3(0.0f, 0.0f, -10.0f));
 
+    pGuideSprite_ = new Sprite();
+    pGuideSprite_->Initialize("Text/Guide.png");
+    pGuideSprite_->SetName("GuideText");
+    pGuideSprite_->SetPosition(Vector2(10.0f, 10.0f));
+    pGuideSprite_->SetAnchorPoint({ 0,0 });
+
     particle_ = &ParticleManager::GetInstance()->CreateParticle();
     particle_->Initialize("plane.obj");
     particle_->SetGameEye(pGameEye_);
     particle_->reserve(10);
     InitializeParticle();
-
 }
 
 void RequiredScene::Finalize()
 {
+    pGuideSprite_->Finalize();
+
     delete pGameEye_;
+    delete pGuideSprite_;
+
     particle_->Finalize();
     ParticleManager::GetInstance()->ReleaseParticle(particle_);
     particle_ = nullptr;
@@ -29,8 +38,9 @@ void RequiredScene::Finalize()
 void RequiredScene::Update()
 {
     pGameEye_->Update();
+    pGuideSprite_->Update();
 
-    if (pInput_->TriggerKey(DIK_0))
+    if (pInput_->TriggerKey(DIK_2))
     {
         SceneManager::GetInstance()->ReserveScene("GameScene");
     }
@@ -50,7 +60,7 @@ void RequiredScene::Draw3d()
 
 void RequiredScene::Draw2dForeground()
 {
-
+    pGuideSprite_->Draw();
 }
 
 void RequiredScene::InitializeParticle()

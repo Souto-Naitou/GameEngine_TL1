@@ -10,7 +10,7 @@
 #include <Features/Particle/ParticleSystem.h>
 #include <Features/Model/ModelManager.h>
 #include <Core/DirectX12/DirectX12.h>
-#include <Core/Win32/Win32Application.h>
+#include <Core/Win32/WinSystem.h>
 #include <Core/DirectX12/SRVManager.h>
 #include <Features/SceneManager/SceneManager.h>
 #include <Interfaces/ISceneFactory.h>
@@ -44,7 +44,7 @@ protected: /// システムクラスのインスタンス
 protected: /// 他クラスのインスタンス
     DirectX12* pDirectX_;
     DebugManager* pDebugManager_;
-    Win32Application* pWin32App_;
+    WinSystem* pWin32App_;
     ModelManager* pModelManager_;
     SRVManager* pSRVManager_;
     TextureManager* pTextureManager_;

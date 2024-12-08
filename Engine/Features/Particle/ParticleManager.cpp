@@ -1,4 +1,5 @@
 #include "ParticleManager.h"
+#include <cassert>
 
 void ParticleManager::Update()
 {

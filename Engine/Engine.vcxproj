@@ -128,7 +128,7 @@
     <ClCompile Include="Core\DirectX12\Helper\DX12Helper.cpp" />
     <ClCompile Include="Core\DirectX12\SRVManager.cpp" />
     <ClCompile Include="Core\DirectX12\TextureManager.cpp" />
-    <ClCompile Include="Core\Win32\Win32Application.cpp" />
+    <ClCompile Include="Core\Win32\WinSystem.cpp" />
     <ClCompile Include="DebugTools\DebugManager\DebugManager.cpp" />
     <ClCompile Include="DebugTools\ImGuiManager\ImGuiManager.cpp" />
     <ClCompile Include="DebugTools\ImGuiTemplates\ImGuiTemplates.cpp" />
@@ -167,7 +167,7 @@
     <ClInclude Include="Core\DirectX12\Helper\DX12Helper.h" />
     <ClInclude Include="Core\DirectX12\SRVManager.h" />
     <ClInclude Include="Core\DirectX12\TextureManager.h" />
-    <ClInclude Include="Core\Win32\Win32Application.h" />
+    <ClInclude Include="Core\Win32\WinSystem.h" />
     <ClInclude Include="DebugTools\DebugManager\DebugManager.h" />
     <ClInclude Include="DebugTools\ImGuiManager\ImGuiManager.h" />
     <ClInclude Include="DebugTools\ImGuiTemplates\ImGuiTemplates.h" />

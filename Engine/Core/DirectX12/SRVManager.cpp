@@ -1,10 +1,21 @@
 #include "SRVManager.h"
 #include <Core/DirectX12/Helper/DX12Helper.h>
 
+#ifdef _DEBUG
+#include <DebugTools/DebugManager/DebugManager.h>
+#include <DebugTools/ImGuiTemplates/ImGuiTemplates.h>
+#endif // _DEBUG
+
 const uint32_t SRVManager::kMaxSRVCount_ = 512u;
 
 void SRVManager::Initialize(DirectX12* _pDx12)
 {
+#ifdef _DEBUG
+    DebugManager::GetInstance()->SetComponent("#Window", name_, std::bind(&SRVManager::DebugWindow, this));
+#endif // _DEBUG
+
+    name_ = "SRVManager";
+
     pDx12_ = _pDx12;
     pDescHeap_ = DX12Helper::CreateDescriptorHeap(
         pDx12_->GetDevice(),
@@ -72,4 +83,17 @@ void SRVManager::CreateForStructuredBuffer(uint32_t _index, ID3D12Resource* _pBu
     srvDesc.Buffer.StructureByteStride = _stride;
 
     pDx12_->GetDevice()->CreateShaderResourceView(_pBuffer, &srvDesc, GetCPUDescriptorHandle(_index));
+}
+
+void SRVManager::DebugWindow()
+{
+#ifdef _DEBUG
+    auto pFunc = [&]()
+    {
+        ImGuiTemplate::VariableTableRow("SRV許容数", kMaxSRVCount_);
+        ImGuiTemplate::VariableTableRow("現在のSRV数", currentIndex_);
+    };
+    ImGuiTemplate::VariableTable("SRVManager", pFunc);
+
+#endif // _DEBUG
 }

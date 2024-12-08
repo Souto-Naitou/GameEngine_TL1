@@ -1,20 +1,26 @@
 #include "GameScene.h"
 
 #include <Features/Model/ModelManager.h>
+#include <Features/Sprite/SpriteSystem.h>
+#include <Features/Object3d/Object3dSystem.h>
+#include <Features/Particle/ParticleSystem.h>
+#include <Features/SceneManager/SceneManager.h>
+
 
 void GameScene::Initialize()
 {
-    pParticleSystem_ = ParticleSystem::GetInstance();
-    pLineSystem_ = LineSystem::GetInstance();
+    pInput_ = Input::GetInstance();
 
-    pObject3d_ = new Object3d();
     pGameEye_ = new GameEye();
-    pSpriteMB_ = new Sprite();
-    pSpriteUVC_ = new Sprite();
     pParticleEmitter_ = new ParticleEmitter();
     pSkydome_ = new Object3d();
     pGrid_ = new Object3d();
-    pLine_ = new Line();
+
+    pGuideSprite_ = new Sprite();
+    pGuideSprite_->Initialize("Text/Guide.png");
+    pGuideSprite_->SetName("GuideText");
+    pGuideSprite_->SetPosition(Vector2(10.0f, 10.0f));
+    pGuideSprite_->SetAnchorPoint({ 0,0 });
 
     pGameEye_->SetRotate({ 0.1f, 0.0f, 0.0f });
     pGameEye_->SetTranslate({ 0.0f, 0.2f, -20.0f });
@@ -22,8 +28,7 @@ void GameScene::Initialize()
 
     /// システムにデフォルトのゲームカメラを設定
     Object3dSystem::GetInstance()->SetDefaultGameEye(pGameEye_);
-    pParticleSystem_->SetDefaultGameEye(pGameEye_);
-    pLineSystem_->SetDefaultGameEye(pGameEye_);
+    ParticleSystem::GetInstance()->SetDefaultGameEye(pGameEye_);
 
     ModelManager::GetInstance()->SetLightingFlag("Skydome.obj", false);
 
@@ -36,55 +41,39 @@ void GameScene::Initialize()
     pGrid_->SetName("Grid");
     pGrid_->SetTilingMultiply({ 90.0f, 90.0f });
 
-    pObject3d_->Initialize("suzanne.obj");
-    pObject3d_->SetScale({ -1.0f, 1.0f, 1.0f });
-    pObject3d_->SetName("Suzanne");
-
-    pSpriteMB_->Initialize("MonsterBall.png");
-    pSpriteMB_->SetName("MonsterBall");
-    pSpriteMB_->SetSize({ 120,60 });
-    pSpriteMB_->SetPosition({ 40,60 });
-
-    pSpriteUVC_->Initialize("uvChecker.png");
-    pSpriteUVC_->SetName("uvChecker");
-    pSpriteUVC_->SetSize({ 120,120 });
-    pSpriteUVC_->SetPosition({ 180, 60 });
-
-    pLine_->Initialize();
-    pLine_->GetVertices()[0] = Vector3(0.0f, 0.0f, 0.0f);
-    pLine_->GetVertices()[1] = Vector3(1.0f, 1.0f, 0.0f);
-
     /// エミッタの初期化
-    pParticleEmitter_->Initialize("plane.obj");
+    pParticleEmitter_->Initialize("Particle/ParticleSpark.obj");
+
+    EmitterSetting();
 }
 
 void GameScene::Finalize()
 {
-    pSpriteUVC_->Finalize();
-    pSpriteMB_->Finalize();
-    pObject3d_->Finalize();
     pSkydome_->Finalize();
     pGrid_->Finalize();
+    pParticleEmitter_->Finalize();
+    pGuideSprite_->Finalize();
 
+    delete pGuideSprite_;
     delete pGrid_;
     delete pSkydome_;
-    delete pSpriteUVC_;
-    delete pSpriteMB_;
+    delete pParticleEmitter_;
     delete pGameEye_;
-    delete pObject3d_;
 }
 
 void GameScene::Update()
 {
+    if (pInput_->TriggerKey(DIK_1))
+    {
+        SceneManager::GetInstance()->ReserveScene("RequiredScene");
+    }
+
     /// 更新処理
     pGameEye_->Update();
-    pObject3d_->Update();
-    pSpriteMB_->Update();
-    pSpriteUVC_->Update();
     pParticleEmitter_->Update();
+    pGuideSprite_->Update();
     pSkydome_->Update();
     pGrid_->Update();
-    pLine_->Update();
 }
 
 void GameScene::Draw2dBackGround()
@@ -95,15 +84,27 @@ void GameScene::Draw3d()
 {
     pSkydome_->Draw();
     pGrid_->Draw();
-    //pObject3d_->Draw();
-
-    pLineSystem_->PresentDraw();
-    pLine_->Draw();
-
 }
 
 void GameScene::Draw2dForeground()
 {
-    pSpriteMB_->Draw();
-    pSpriteUVC_->Draw();
+    pGuideSprite_->Draw();
+}
+
+void GameScene::EmitterSetting()
+{
+    auto& emitterData = pParticleEmitter_->GetEmitterData();
+    emitterData.scale_ = Vector3(0.1f, 0.1f, 0.1f);
+    emitterData.emitInterval_ = 0.2f;
+    emitterData.emitNum_ = 3;
+    emitterData.emitterLifeTime_ = 0.0f;
+    emitterData.enableRandomEmit_ = false;
+    emitterData.emitPositionFixed_ = Vector3(0.0f, 0.0f, 0.0f);
+    emitterData.color_ = Vector4(0.8f, 0.35f, 0.15f, 1.0f);
+    emitterData.emitterLifeTime_ = 0.0f;
+    emitterData.enableRandomVelocity_ = true;
+    emitterData.velocityRandomRangeBegin_ = Vector3(-2.0f, -0.0f, -0.0f);
+    emitterData.velocityRandomRangeEnd_ = Vector3(0.0f, 0.0f, 0.0f);
+    emitterData.gravity_ = Vector3(0.0f, -0.9f, 0.0f);
+    emitterData.resistance_ = Vector3(0.0f, 0.0f, 0.0f);
 }

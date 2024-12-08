@@ -67,9 +67,6 @@
     <Filter Include="Core">
       <UniqueIdentifier>{34ff13cd-5f52-4198-a749-0d909c9ea792}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Core\Win32Application">
-      <UniqueIdentifier>{5c7e8f14-1bd4-48f2-80b9-2ad2124c12e5}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Core\DirectX12">
       <UniqueIdentifier>{55c061c3-927c-45ed-a4ab-5d06972fc5bb}</UniqueIdentifier>
     </Filter>
@@ -133,6 +130,9 @@
     <Filter Include="Feature\Line\System">
       <UniqueIdentifier>{46dc6625-2a9f-43d7-a23d-6a80c95fefe0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Core\WinSystem">
+      <UniqueIdentifier>{5c7e8f14-1bd4-48f2-80b9-2ad2124c12e5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DebugTools\DebugManager\DebugManager.cpp">
@@ -192,8 +192,8 @@
     <ClCompile Include="Utility\ConvertString\ConvertString.cpp">
       <Filter>Utility\ConvertString</Filter>
     </ClCompile>
-    <ClCompile Include="Core\Win32\Win32Application.cpp">
-      <Filter>Core\Win32Application</Filter>
+    <ClCompile Include="Core\Win32\WinSystem.cpp">
+      <Filter>Core\WinSystem</Filter>
     </ClCompile>
     <ClCompile Include="Externals\Timer\Timer.cpp">
       <Filter>Externals\Timer</Filter>
@@ -308,8 +308,8 @@
     <ClInclude Include="Utility\ConvertString\ConvertString.h">
       <Filter>Utility\ConvertString</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Win32\Win32Application.h">
-      <Filter>Core\Win32Application</Filter>
+    <ClInclude Include="Core\Win32\WinSystem.h">
+      <Filter>Core\WinSystem</Filter>
     </ClInclude>
     <ClInclude Include="Externals\Timer\Timer.h">
       <Filter>Externals\Timer</Filter>

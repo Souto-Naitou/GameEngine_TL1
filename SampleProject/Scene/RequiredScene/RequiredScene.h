@@ -4,6 +4,7 @@
 #include <Features/Particle/Particle.h>
 #include <Features/GameEye/GameEye.h>
 #include <Features/Input/Input.h>
+#include <Features/Sprite/Sprite.h>
 
 class RequiredScene : public IScene
 {
@@ -24,6 +25,7 @@ public:
 private:
     Particle* particle_ = nullptr;
     GameEye* pGameEye_ = nullptr;
+    Sprite* pGuideSprite_ = nullptr;
 
 
 private: /// 他クラスのインスタンス
