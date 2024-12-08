@@ -24,8 +24,8 @@ public:
 
 
 public:
-    Particle& CreateParticles();
-
+    Particle& CreateParticle();
+    void ReleaseParticle(Particle* _particle);
 
 private:
     ParticleManager() = default;

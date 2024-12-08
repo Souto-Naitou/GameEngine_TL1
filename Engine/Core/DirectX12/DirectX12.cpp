@@ -2,7 +2,7 @@
 
 #include <DebugTools/Logger/Logger.h>                     // ログ出力ラッパークラス
 #include <Utility/ConvertString/ConvertString.h>              // wideとの互換
-#include <Core/Win32/Win32Application.h>        // Window関連
+#include <Core/Win32/WinSystem.h>        // Window関連
 #include <Core/DirectX12/Helper/DX12Helper.h>   // ヘルパー
 
 #include <cassert>
@@ -35,7 +35,7 @@ void DirectX12::Initialize()
     pFramerate_->Initialize();
 
     // ウィンドウハンドルを取得
-    hwnd_ = Win32Application::GetInstance()->GetHwnd();
+    hwnd_ = WinSystem::GetInstance()->GetHwnd();
 
     hr_ = CreateDXGIFactory(IID_PPV_ARGS(&dxgiFactory_));
     assert(SUCCEEDED(hr_) && "DXGIファクトリの生成に失敗");

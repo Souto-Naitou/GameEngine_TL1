@@ -1,6 +1,6 @@
 #include "ImGuiManager.h"
 
-#include <Core/Win32/Win32Application.h>
+#include <Core/Win32/WinSystem.h>
 #include <Core/DirectX12/DirectX12.h>
 #include <Core/DirectX12/SRVManager.h>
 #include <DebugTools/DebugManager/DebugManager.h>
@@ -17,7 +17,7 @@ void ImGuiManager::Initialize(DirectX12* _pDx12)
     SRVManager* srvManager = SRVManager::GetInstance();
     srvIndex_ = srvManager->Allocate();
 
-    Win32Application* pWin32App = Win32Application::GetInstance();
+    WinSystem* pWin32App = WinSystem::GetInstance();
     ID3D12Device* device = _pDx12->GetDevice();
     const DXGI_SWAP_CHAIN_DESC1& swapChainDesc = _pDx12->GetSwapChainDesc();
     srvDescHeap_ = srvManager->GetDescriptorHeap();

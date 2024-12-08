@@ -10,7 +10,7 @@
 #include <Features/Particle/ParticleSystem.h>
 #include <Features/Model/ModelManager.h>
 #include <Core/DirectX12/DirectX12.h>
-#include <Core/Win32/Win32Application.h>
+#include <Core/Win32/WinSystem.h>
 #include <Core/DirectX12/SRVManager.h>
 #include <Features/SceneManager/SceneManager.h>
 #include <Interfaces/ISceneFactory.h>
@@ -39,13 +39,12 @@ protected: /// システムクラスのインスタンス
     ISceneFactory* pSceneFactory_ = nullptr;
     ImGuiManager* pImGuiManager_;
     Audio* pAudio_;
-    Input* pInput_;
 
 
 protected: /// 他クラスのインスタンス
     DirectX12* pDirectX_;
     DebugManager* pDebugManager_;
-    Win32Application* pWin32App_;
+    WinSystem* pWin32App_;
     ModelManager* pModelManager_;
     SRVManager* pSRVManager_;
     TextureManager* pTextureManager_;
@@ -55,6 +54,7 @@ protected: /// 他クラスのインスタンス
     ParticleSystem* pParticleSystem_;
     ParticleManager* pParticleManager_;
     LineSystem* pLineSystem_;
+    Input* pInput_;
 
 
 protected:

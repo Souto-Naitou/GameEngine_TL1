@@ -4,6 +4,7 @@
 #include <cstdint>
 #include <Core/DirectX12/DirectX12.h>
 #include <wrl.h>
+#include <string>
 
 class SRVManager
 {
@@ -31,8 +32,10 @@ public:
     void CreateForTexture2D(uint32_t _index, ID3D12Resource* _pTexture, DXGI_FORMAT _format, UINT _mipLevels);
     void CreateForStructuredBuffer(uint32_t _index, ID3D12Resource* _pBuffer, UINT _numElements, UINT _stride);
 
+
 public: /// Getter
     ID3D12DescriptorHeap* GetDescriptorHeap() const { return pDescHeap_.Get(); }
+
 
 public: /// 公開定数
     static const uint32_t kMaxSRVCount_;
@@ -42,7 +45,10 @@ private:
     SRVManager() = default;
     ~SRVManager() = default;
 
+
 private:
+    std::string name_ = {};
+
     uint32_t descriptorSize_ = 0u;
     Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> pDescHeap_ = nullptr;
     uint32_t currentIndex_ = 0u;
@@ -50,4 +56,8 @@ private:
 
 private:
     DirectX12* pDx12_ = nullptr;
+
+
+private:
+    void DebugWindow();
 };

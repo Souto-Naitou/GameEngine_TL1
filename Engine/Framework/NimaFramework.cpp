@@ -30,19 +30,19 @@ void NimaFramework::Initialize()
     /// システムクラスの初期化
     pDirectX_ = DirectX12::GetInstance();
     pDebugManager_ = DebugManager::GetInstance();
-    pWin32App_ = Win32Application::GetInstance();
+    pWin32App_ = WinSystem::GetInstance();
     pModelManager_ = ModelManager::GetInstance();
     pSpriteSystem_ = SpriteSystem::GetInstance();
     pObject3dSystem_ = Object3dSystem::GetInstance();
     pParticleSystem_ = ParticleSystem::GetInstance();
     pTextureManager_ = TextureManager::GetInstance();
     pSRVManager_ = SRVManager::GetInstance();
-    pSceneManager_ = &SceneManager::GetInstance();
+    pSceneManager_ = SceneManager::GetInstance();
     pParticleManager_ = ParticleManager::GetInstance();
     pLineSystem_ = LineSystem::GetInstance();
+    pInput_ = Input::GetInstance();
 
     pAudio_ = new Audio();
-    pInput_ = new Input();
 
     pImGuiManager_ = new ImGuiManager();
 

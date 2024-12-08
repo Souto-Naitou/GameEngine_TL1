@@ -193,9 +193,13 @@ void Particle::ParticleDataUpdate(std::vector<ParticleData>::iterator& _itr)
     Transform& transform = _itr->transform_;
     Vector3& velocity = _itr->velocity_;
     Vector3& acceleration = _itr->acceleration_;
+    Vector3& gravity = _itr->accGravity_;
+    Vector3& resistance = _itr->accResistance_;
     Vector4& color = _itr->color_;
 
     velocity += acceleration * deltaTime;
+    velocity += gravity * deltaTime;
+    velocity -= resistance * deltaTime;
     transform.translate += velocity * deltaTime;
     color.w += _itr->alphaDeltaValue_;
 

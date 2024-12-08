@@ -2,18 +2,18 @@
 #include <Windows.h>
 #include <stdint.h>
 
-class Win32Application
+class WinSystem
 {
 public:
     static const uint32_t kClientWidth = 1280u;
     static const uint32_t kClientHeight = 720u;
 
-    Win32Application(const Win32Application&) = delete;
-    Win32Application(const Win32Application&&) = delete;
-    Win32Application& operator=(const Win32Application&) = delete;
-    Win32Application& operator=(const Win32Application&&) = delete;
+    WinSystem(const WinSystem&) = delete;
+    WinSystem(const WinSystem&&) = delete;
+    WinSystem& operator=(const WinSystem&) = delete;
+    WinSystem& operator=(const WinSystem&&) = delete;
 
-    static Win32Application* GetInstance() { static Win32Application instance;return &instance; };
+    static WinSystem* GetInstance() { static WinSystem instance;return &instance; };
 
     HWND GetHwnd() const { return hwnd_; }
     HINSTANCE GetHinstance() const { return wc_.hInstance; }
@@ -24,8 +24,8 @@ public:
     UINT GetMsg();
 
 private:
-    Win32Application() = default;
-    ~Win32Application() = default;
+    WinSystem() = default;
+    ~WinSystem() = default;
 
     static LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
 
