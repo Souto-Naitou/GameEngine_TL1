@@ -22,6 +22,7 @@ struct EmitterData
     Vector3         resistance_;                    // 抵抗
 };
 
+
 class BaseParticleEmitter
 {
 public:

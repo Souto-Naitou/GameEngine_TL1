@@ -68,6 +68,7 @@ private:
     /// Instancing
     Microsoft::WRL::ComPtr<ID3D12Resource>  instancingResource_                 = nullptr;
     ParticleForGPU*                         instancingData_                     = nullptr;
+    uint32_t                                currentInstancingSize_              = 0u;
 
     /// Model
     std::string                             modelPath_                          = {};
