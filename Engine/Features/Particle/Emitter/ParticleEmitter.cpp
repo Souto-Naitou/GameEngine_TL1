@@ -20,7 +20,10 @@ void ParticleEmitter::Update()
 {
     if (timer_.GetNow() > emitterData_.emitInterval_)
     {
-        EmitParticle();
+        for (uint32_t i = 0; i < emitterData_.emitNum_; ++i)
+        {
+            EmitParticle();
+        }
         timer_.Reset();
         timer_.Start();
     }
@@ -35,7 +38,17 @@ void ParticleEmitter::EmitParticle()
     auto& datum = parameter.back();
 
     // 初期トランスフォーム
-    datum.transform_.translate = emitterData_.emitPositionFixed_;
+    if (emitterData_.enableRandomEmit_)
+    {
+        datum.transform_.translate = Vector3(
+            random->Generate(emitterData_.beginPosition_.x, emitterData_.endPosition_.x),
+            random->Generate(emitterData_.beginPosition_.y, emitterData_.endPosition_.y),
+            random->Generate(emitterData_.beginPosition_.z, emitterData_.endPosition_.z));
+    }
+    else
+    {
+        datum.transform_.translate = emitterData_.emitPositionFixed_;
+    }
     datum.transform_.scale = Vector3(0.3f, 0.3f, 0.3f);
 
     // ライフタイム

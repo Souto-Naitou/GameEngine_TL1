@@ -181,6 +181,7 @@
     <ClInclude Include="Features\Input\Input.h" />
     <ClInclude Include="Features\Line\Line.h" />
     <ClInclude Include="Features\Line\LineSystem.h" />
+    <ClInclude Include="Features\Line\Manager\LineManager.h" />
     <ClInclude Include="Features\Model\Helper\ModelHelper.h" />
     <ClInclude Include="Features\Model\Model.h" />
     <ClInclude Include="Features\Model\ModelManager.h" />

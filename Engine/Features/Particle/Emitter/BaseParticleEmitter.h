@@ -6,6 +6,7 @@
 struct EmitterData
 {
     float           emitInterval_;                  // 発生間隔
+    uint32_t        emitNum_;                       // 発生数
     float           emitterLifeTime_;               // エミッタ寿命
     Vector3         beginPosition_;                 // 発生開始位置
     Vector3         endPosition_;                   // 発生終了位置

@@ -127,6 +127,12 @@
     <Filter Include="Feature\Line">
       <UniqueIdentifier>{3574a4ba-6b04-4d65-b739-29ec50ddd79d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Feature\Line\Manager">
+      <UniqueIdentifier>{02fadf2c-6621-48b5-854c-a71dc4e4a9fc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Feature\Line\System">
+      <UniqueIdentifier>{46dc6625-2a9f-43d7-a23d-6a80c95fefe0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DebugTools\DebugManager\DebugManager.cpp">
@@ -231,11 +237,11 @@
     <ClCompile Include="Features\Particle\Emitter\BaseParticleEmitter.cpp">
       <Filter>Feature\Particle\Emitter</Filter>
     </ClCompile>
-    <ClCompile Include="Features\Line\LineSystem.cpp">
-      <Filter>Feature\Line</Filter>
-    </ClCompile>
     <ClCompile Include="Features\Line\Line.cpp">
       <Filter>Feature\Line</Filter>
+    </ClCompile>
+    <ClCompile Include="Features\Line\LineSystem.cpp">
+      <Filter>Feature\Line\System</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -359,11 +365,14 @@
     <ClInclude Include="Features\RandomGenerator\RandomGenerator.h">
       <Filter>Feature\RandomGenerator</Filter>
     </ClInclude>
-    <ClInclude Include="Features\Line\LineSystem.h">
-      <Filter>Feature\Line</Filter>
-    </ClInclude>
     <ClInclude Include="Features\Line\Line.h">
       <Filter>Feature\Line</Filter>
+    </ClInclude>
+    <ClInclude Include="Features\Line\LineSystem.h">
+      <Filter>Feature\Line\System</Filter>
+    </ClInclude>
+    <ClInclude Include="Features\Line\Manager\LineManager.h">
+      <Filter>Feature\Line\Manager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

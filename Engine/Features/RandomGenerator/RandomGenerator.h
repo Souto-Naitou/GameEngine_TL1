@@ -22,7 +22,9 @@ public:
     template <class T>
     T Generate(T _min, T _max)
     {
-        std::uniform_real_distribution<T> dist(_min, _max);
+        T trueMin = _min < _max ? _min : _max;
+        T trueMax = _min < _max ? _max : _min;
+        std::uniform_real_distribution<T> dist(trueMin, trueMax);
         return dist(engine_);
     }
 

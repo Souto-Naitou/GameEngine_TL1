@@ -23,6 +23,7 @@ void BaseParticleEmitter::DebugWindow()
     auto pFunc = [&]()
     {
         ImGuiTemplate::VariableTableRow("発生間隔", emitterData_.emitInterval_);
+        ImGuiTemplate::VariableTableRow("発生数", emitterData_.emitNum_);
         ImGuiTemplate::VariableTableRow("エミッター生存時間", emitterData_.emitterLifeTime_);
         if (emitterData_.enableRandomEmit_)
         {
@@ -37,6 +38,8 @@ void BaseParticleEmitter::DebugWindow()
     };
 
     ImGui::DragFloat("発生間隔", &emitterData_.emitInterval_, 0.01f);
+    ImGui::InputInt("発生数", (int*)&emitterData_.emitNum_);
+    ImGui::Checkbox("ランダム範囲生成", &emitterData_.enableRandomEmit_);
     if (emitterData_.enableRandomEmit_)
     {
         ImGui::DragFloat3("発生開始地点", &emitterData_.beginPosition_.x, 0.01f);
