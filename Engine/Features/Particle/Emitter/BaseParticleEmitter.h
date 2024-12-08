@@ -21,14 +21,18 @@ public:
 
     virtual void Initialize(const std::string& _filePath);
     virtual void Update() = 0;
+    virtual void Finalize() = 0;
+
 
 public: /// Getter
     EmitterData& GetEmitterData() { return emitterData_; }
+
 
 protected:
     std::string     name_;              // 名前
     Timer           timer_;             // 計測用タイマー
     EmitterData     emitterData_;       // エミッタデータ
+
 
 protected:
     virtual void DebugWindow();

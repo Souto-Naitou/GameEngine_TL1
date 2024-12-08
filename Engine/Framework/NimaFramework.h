@@ -39,7 +39,6 @@ protected: /// システムクラスのインスタンス
     ISceneFactory* pSceneFactory_ = nullptr;
     ImGuiManager* pImGuiManager_;
     Audio* pAudio_;
-    Input* pInput_;
 
 
 protected: /// 他クラスのインスタンス
@@ -55,6 +54,7 @@ protected: /// 他クラスのインスタンス
     ParticleSystem* pParticleSystem_;
     ParticleManager* pParticleManager_;
     LineSystem* pLineSystem_;
+    Input* pInput_;
 
 
 protected:

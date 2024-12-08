@@ -21,7 +21,7 @@ void SampleProgram::Initialize()
     pModelManager_->LoadAllModel();
 
     /// シーンの生成
-    pSceneManager_->ReserveScene("GameScene");
+    pSceneManager_->ReserveScene("RequiredScene");
 }
 
 void SampleProgram::Finalize()

@@ -16,8 +16,24 @@ void ParticleManager::Draw()
     }
 }
 
-Particle& ParticleManager::CreateParticles()
+Particle& ParticleManager::CreateParticle()
 {
     particles_.emplace_back();
     return particles_.back();
+}
+
+void ParticleManager::ReleaseParticle(Particle* _particle)
+{
+    for (auto itr = particles_.begin(); itr != particles_.end(); ++itr)
+    {
+        if (&(*itr) == _particle)
+        {
+            particles_.erase(itr);
+            return;
+        }
+    }
+
+    assert(false);
+
+    return;
 }

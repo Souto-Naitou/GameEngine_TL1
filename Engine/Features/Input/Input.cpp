@@ -51,9 +51,12 @@ bool Input::PushKey(BYTE _keyNumber) const
 
 bool Input::TriggerKey(BYTE _keyNumber) const
 {
-    if (key_[_keyNumber] && !keyPre_[_keyNumber])
+    if (key_[_keyNumber])
     {
-        return true;
+        if (key_[_keyNumber] && !keyPre_[_keyNumber])
+        {
+            return true;
+        }
     }
     else return false;
 }

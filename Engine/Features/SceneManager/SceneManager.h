@@ -12,10 +12,10 @@ public:
     SceneManager(SceneManager&&) = delete;
     void operator=(SceneManager&&) = delete;
 
-    static SceneManager& GetInstance()
+    static SceneManager* GetInstance()
     {
         static SceneManager instance;
-        return instance;
+        return &instance;
     }
 
 
@@ -25,6 +25,7 @@ public: /// Setter
 
 public:
     void ReserveScene(const std::string& _sceneName);
+
 
 public: /// シーン動作
     void Update();
@@ -42,6 +43,7 @@ private:
 
     std::string nextSceneName_;
     IScene* pCurrentScene_ = nullptr;
+
 
 private: /// 他クラスのインスタンス
     ISceneFactory* pSceneFactory_ = nullptr;

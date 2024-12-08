@@ -22,6 +22,12 @@
     <Filter Include="Game\Scene\Factory">
       <UniqueIdentifier>{15b0a614-ebcb-4f55-b50f-18fbabed195d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game\Scene\GameScene">
+      <UniqueIdentifier>{57ecc88f-e9ba-458b-8dfb-b7c3788bfd84}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Scene\RequiredScene">
+      <UniqueIdentifier>{1f28f099-fa3b-4d3d-95c0-110310ced570}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -30,22 +36,28 @@
     <ClCompile Include="SampleProgram\SampleProgram.cpp">
       <Filter>Game</Filter>
     </ClCompile>
-    <ClCompile Include="Scene\GameScene.cpp">
-      <Filter>Game\Scene</Filter>
-    </ClCompile>
     <ClCompile Include="Scene\Factory\SceneFactory.cpp">
       <Filter>Game\Scene\Factory</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\RequiredScene\RequiredScene.cpp">
+      <Filter>Game\Scene\RequiredScene</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\GameScene\GameScene.cpp">
+      <Filter>Game\Scene\GameScene</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SampleProgram\SampleProgram.h">
       <Filter>Game</Filter>
     </ClInclude>
-    <ClInclude Include="Scene\GameScene.h">
-      <Filter>Game\Scene</Filter>
-    </ClInclude>
     <ClInclude Include="Scene\Factory\SceneFactory.h">
       <Filter>Game\Scene\Factory</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\RequiredScene\RequiredScene.h">
+      <Filter>Game\Scene\RequiredScene</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\GameScene\GameScene.h">
+      <Filter>Game\Scene\GameScene</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

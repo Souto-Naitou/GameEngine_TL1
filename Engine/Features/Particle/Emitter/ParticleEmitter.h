@@ -11,9 +11,12 @@ public:
 
     void Initialize(const std::string& _filePath) override;
     void Update() override;
+    void Finalize() override;
+
 
 private:
     void EmitParticle();
+
 
 private:
     Particle* particle_ = nullptr;

@@ -8,7 +8,7 @@ void ParticleEmitter::Initialize(const std::string& _filePath)
     BaseParticleEmitter::Initialize(_filePath);
 
     timer_.Start();
-    particle_ = &ParticleManager::GetInstance()->CreateParticles();
+    particle_ = &ParticleManager::GetInstance()->CreateParticle();
     particle_->Initialize(_filePath);
     particle_->reserve(100);
     emitterData_.emitPositionFixed_ = Vector3(0.0f, 0.0f, 0.0f);
@@ -27,6 +27,13 @@ void ParticleEmitter::Update()
         timer_.Reset();
         timer_.Start();
     }
+}
+
+void ParticleEmitter::Finalize()
+{
+    particle_->Finalize();
+    ParticleManager::GetInstance()->ReleaseParticle(particle_);
+    particle_ = nullptr;
 }
 
 void ParticleEmitter::EmitParticle()
