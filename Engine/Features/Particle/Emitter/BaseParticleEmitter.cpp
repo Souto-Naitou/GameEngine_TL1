@@ -20,28 +20,8 @@ void BaseParticleEmitter::DebugWindow()
 {
 #ifdef _DEBUG
 
-    auto pFunc = [&]()
-    {
-        ImGuiTemplate::VariableTableRow("発生間隔", emitterData_.emitInterval_);
-        ImGuiTemplate::VariableTableRow("発生数", emitterData_.emitNum_);
-        ImGuiTemplate::VariableTableRow("エミッター生存時間", emitterData_.emitterLifeTime_);
-        if (emitterData_.enableRandomEmit_)
-        {
-            ImGuiTemplate::VariableTableRow("発生開始地点", emitterData_.beginPosition_);
-            ImGuiTemplate::VariableTableRow("発生終了地点", emitterData_.endPosition_);
-        }
-        else
-        {
-            ImGuiTemplate::VariableTableRow("発生位置", emitterData_.emitPositionFixed_);
-        }
-        ImGuiTemplate::VariableTableRow("ランダム範囲生成の有無", emitterData_.enableRandomEmit_);
-    };
+    ImGui::DragFloat("発生間隔", &emitterData_.emitInterval_, 0.02f, 0.1f, FLT_MAX);
 
-    ImGui::DragFloat("発生間隔", &emitterData_.emitInterval_, 0.1f, 0.001f);
-    if (emitterData_.emitInterval_ < 0.0f)
-    {
-        emitterData_.emitInterval_ = 0.1f;
-    }
     ImGui::InputInt("発生数", (int*)&emitterData_.emitNum_);
     ImGui::Checkbox("ランダム範囲生成", &emitterData_.enableRandomEmit_);
     if (emitterData_.enableRandomEmit_)
@@ -55,8 +35,19 @@ void BaseParticleEmitter::DebugWindow()
     }
 
     ImGui::ColorEdit4("色", &emitterData_.color_.x);
+    ImGui::Checkbox("ランダム速度", &emitterData_.enableRandomVelocity_);
+    if (emitterData_.enableRandomVelocity_)
+    {
+        ImGui::DragFloat3("速度ランダム範囲開始", &emitterData_.velocityRandomRangeBegin_.x, 0.01f);
+        ImGui::DragFloat3("速度ランダム範囲終了", &emitterData_.velocityRandomRangeEnd_.x, 0.01f);
+    }
+    else
+    {
+        ImGui::DragFloat3("速度固定", &emitterData_.velocityFixed_.x, 0.01f);
+    }
 
-    ImGuiTemplate::VariableTable("EmitterData", pFunc);
+    ImGui::DragFloat3("重力", &emitterData_.gravity_.x, 0.01f);
+    ImGui::DragFloat3("抵抗", &emitterData_.resistance_.x, 0.01f);
 
 #endif // _DEBUG
 }
