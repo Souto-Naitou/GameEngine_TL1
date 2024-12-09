@@ -79,7 +79,7 @@ void ParticleEmitter::EmitParticle()
     // 初期の色
     datum.color_ = emitterData_.color_;
     // アルファ値の変化量
-    datum.alphaDeltaValue_ = -0.01f;
+    datum.alphaDeltaValue_ = emitterData_.alphaDeltaValue_;
     // 消去条件
     datum.deleteCondition_ = ParticleDeleteCondition::ZeroAlpha;
     datum.accGravity_ = emitterData_.gravity_;

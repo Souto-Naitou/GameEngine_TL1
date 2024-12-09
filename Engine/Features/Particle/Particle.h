@@ -55,7 +55,7 @@ public: /// Getter
 
 public: /// container operator
     void reserve(size_t _size);
-    void emplace_back(const ParticleData& _data) { particleData_.emplace_back(_data); }
+    void emplace_back(const ParticleData& _data);
 
 
 private:

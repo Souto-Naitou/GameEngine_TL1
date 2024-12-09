@@ -63,7 +63,7 @@ void GameScene::Finalize()
 
 void GameScene::Update()
 {
-    if (pInput_->TriggerKey(DIK_1))
+    if (pInput_->PushKey(DIK_LCONTROL) && pInput_->PushKey(DIK_1))
     {
         SceneManager::GetInstance()->ReserveScene("RequiredScene");
     }
@@ -101,6 +101,7 @@ void GameScene::EmitterSetting()
     emitterData.enableRandomEmit_ = false;
     emitterData.emitPositionFixed_ = Vector3(0.0f, 0.0f, 0.0f);
     emitterData.color_ = Vector4(0.8f, 0.35f, 0.15f, 1.0f);
+    emitterData.alphaDeltaValue_ = -0.01f;
     emitterData.emitterLifeTime_ = 0.0f;
     emitterData.enableRandomVelocity_ = true;
     emitterData.velocityRandomRangeBegin_ = Vector3(-2.0f, -0.0f, -0.0f);
