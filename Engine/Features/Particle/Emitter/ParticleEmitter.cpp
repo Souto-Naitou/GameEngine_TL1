@@ -10,7 +10,7 @@ void ParticleEmitter::Initialize(const std::string& _filePath)
     timer_.Start();
     particle_ = &ParticleManager::GetInstance()->CreateParticle();
     particle_->Initialize(_filePath);
-    particle_->reserve(100);
+    particle_->reserve(6000);
     emitterData_.emitPositionFixed_ = Vector3(0.0f, 0.0f, 0.0f);
     emitterData_.emitInterval_ = 0.2f;
     emitterData_.emitterLifeTime_ = 0.0f;
@@ -21,7 +21,11 @@ void ParticleEmitter::Update()
 {
     if (timer_.GetNow() > emitterData_.emitInterval_)
     {
-        for (uint32_t i = 0; i < emitterData_.emitNum_; ++i)
+        if (emitterData_.emitNum_ < 0)
+        {
+            emitterData_.emitNum_ = 0;
+        }
+        for (int32_t i = 0; i < emitterData_.emitNum_; ++i)
         {
             EmitParticle();
         }
@@ -32,6 +36,8 @@ void ParticleEmitter::Update()
 
 void ParticleEmitter::Finalize()
 {
+    BaseParticleEmitter::Finalize();
+
     particle_->Finalize();
     ParticleManager::GetInstance()->ReleaseParticle(particle_);
     particle_ = nullptr;
@@ -57,10 +63,15 @@ void ParticleEmitter::EmitParticle()
     {
         datum.transform_.translate = emitterData_.emitPositionFixed_;
     }
-    datum.transform_.scale = emitterData_.scale_;
+
+    /// スケール
+    datum.transform_.scale = emitterData_.startScale_;
+    datum.startScale_ = emitterData_.startScale_;
+    datum.endScale_ = emitterData_.endScale_;
+    datum.scaleDelayTime_ = emitterData_.scaleDelayTime_;
 
     /// ライフタイム
-    datum.lifeTime_ = emitterData_.emitterLifeTime_;
+    datum.lifeTime_ = emitterData_.particleLifeTime_;
 
     /// 速度
     if (emitterData_.enableRandomVelocity_)
@@ -81,7 +92,7 @@ void ParticleEmitter::EmitParticle()
     // アルファ値の変化量
     datum.alphaDeltaValue_ = emitterData_.alphaDeltaValue_;
     // 消去条件
-    datum.deleteCondition_ = ParticleDeleteCondition::ZeroAlpha;
+    datum.deleteCondition_ = ParticleDeleteCondition::LifeTime;
     datum.accGravity_ = emitterData_.gravity_;
     datum.accResistance_ = emitterData_.resistance_;
 }

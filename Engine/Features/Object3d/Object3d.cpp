@@ -98,7 +98,7 @@ void Object3d::Draw()
 void Object3d::Finalize()
 {
 #if defined (DEBUG_ENGINE) && (_DEBUG)
-    pDebugManager_->DeleteComponent("Object3d");
+    pDebugManager_->DeleteComponent("Object3d", name_.c_str());
 #endif // DEBUG_ENGINE && _DEBUG
 }
 

@@ -22,12 +22,19 @@ void BaseParticleEmitter::DebugWindow()
 
     if (ImGui::CollapsingHeader("変形"))
     {
-        ImGui::DragFloat3("スケール", &emitterData_.scale_.x, 0.01f);
+        ImGui::DragFloat3("開始スケール", &emitterData_.startScale_.x, 0.01f);
+        ImGui::DragFloat3("終了スケール", &emitterData_.endScale_.x, 0.01f); ImGui::SameLine();
+        if (ImGui::SmallButton("同期##Scale"))
+        {
+            emitterData_.endScale_ = emitterData_.startScale_;
+        }
+        ImGui::DragFloat("スケール遅延時間", &emitterData_.scaleDelayTime_, 0.01f);
     }
 
     if (ImGui::CollapsingHeader("一般"))
     {
-        ImGui::DragFloat("発生間隔", &emitterData_.emitInterval_, 0.02f, 0.1f, FLT_MAX);
+        ImGui::DragFloat("パーティクル寿命", &emitterData_.particleLifeTime_, 0.1f, 0.0f, FLT_MAX);
+        ImGui::DragFloat("発生間隔", &emitterData_.emitInterval_, 0.02f, 0.02f, FLT_MAX);
         ImGui::InputInt("発生数", (int*)&emitterData_.emitNum_);
         ImGui::ColorEdit4("色", &emitterData_.color_.x);
         ImGui::SliderFloat("透明度の変化量", &emitterData_.alphaDeltaValue_, -0.2f, 0.0f);
@@ -68,4 +75,11 @@ void BaseParticleEmitter::DebugWindow()
     }
 
 #endif // _DEBUG
+}
+
+void BaseParticleEmitter::Finalize()
+{
+#ifdef _DEBUG
+    DebugManager::GetInstance()->DeleteComponent("ParticleEmitter", name_.c_str());
+#endif
 }

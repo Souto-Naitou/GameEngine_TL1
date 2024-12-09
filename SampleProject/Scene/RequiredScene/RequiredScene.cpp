@@ -11,10 +11,10 @@ void RequiredScene::Initialize()
     pGameEye_->SetTranslate(Vector3(0.0f, 0.0f, -10.0f));
 
     pGuideSprite_ = new Sprite();
-    pGuideSprite_->Initialize("Text/Guide.png");
+    pGuideSprite_->Initialize("Text/SceneChangeGuide.png");
     pGuideSprite_->SetName("GuideText");
-    pGuideSprite_->SetPosition(Vector2(10.0f, 10.0f));
-    pGuideSprite_->SetAnchorPoint({ 0,0 });
+    pGuideSprite_->SetPosition(Vector2(1280.0f - 40.0f, 720.0f - 40.0f));
+    pGuideSprite_->SetAnchorPoint({ 1,1 });
 
     particle_ = &ParticleManager::GetInstance()->CreateParticle();
     particle_->Initialize("plane.obj");
@@ -70,6 +70,7 @@ void RequiredScene::InitializeParticle()
         ParticleData data;
         data.transform_.translate = Vector3(i * 0.1f, i * 0.1f, i * 0.1f);
         data.transform_.scale = Vector3(1.0f, 1.0f, 1.0f);
+        data.startScale_ = Vector3(1.0f, 1.0f, 1.0f);
         data.transform_.rotate = Vector3(0.0f, 0.0f, 0.0f);
         data.color_ = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
         data.velocity_ = Vector3(0.0f, 0.0f, 0.0f);
