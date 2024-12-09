@@ -36,6 +36,8 @@ void ParticleEmitter::Update()
 
 void ParticleEmitter::Finalize()
 {
+    BaseParticleEmitter::Finalize();
+
     particle_->Finalize();
     ParticleManager::GetInstance()->ReleaseParticle(particle_);
     particle_ = nullptr;

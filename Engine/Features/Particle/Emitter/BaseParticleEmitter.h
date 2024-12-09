@@ -36,7 +36,7 @@ public:
 
     virtual void Initialize(const std::string& _filePath);
     virtual void Update() = 0;
-    virtual void Finalize() = 0;
+    virtual void Finalize();
 
 
 public: /// Getter

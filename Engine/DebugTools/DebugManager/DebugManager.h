@@ -37,7 +37,7 @@ public:
     {
         for (auto& comp : componentList_)
         {
-            if (std::get<1>(comp) == _childID)
+            if (std::get<0>(comp) == _parentID && std::get<1>(comp) == _childID)
             {
                 return;
             }

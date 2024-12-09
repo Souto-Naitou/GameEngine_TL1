@@ -17,10 +17,10 @@ void GameScene::Initialize()
     pGrid_ = new Object3d();
 
     pGuideSprite_ = new Sprite();
-    pGuideSprite_->Initialize("Text/Guide.png");
+    pGuideSprite_->Initialize("Text/SceneChangeGuide.png");
     pGuideSprite_->SetName("GuideText");
-    pGuideSprite_->SetPosition(Vector2(10.0f, 10.0f));
-    pGuideSprite_->SetAnchorPoint({ 0,0 });
+    pGuideSprite_->SetPosition(Vector2(1280.0f - 40.0f, 720.0f - 40.0f));
+    pGuideSprite_->SetAnchorPoint({ 1,1 });
 
     pGameEye_->SetRotate({ 0.1f, 0.0f, 0.0f });
     pGameEye_->SetTranslate({ 0.0f, 0.2f, -20.0f });

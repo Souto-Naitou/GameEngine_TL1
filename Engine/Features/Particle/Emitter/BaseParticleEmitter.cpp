@@ -76,3 +76,10 @@ void BaseParticleEmitter::DebugWindow()
 
 #endif // _DEBUG
 }
+
+void BaseParticleEmitter::Finalize()
+{
+#ifdef _DEBUG
+    DebugManager::GetInstance()->DeleteComponent("ParticleEmitter", name_.c_str());
+#endif
+}
