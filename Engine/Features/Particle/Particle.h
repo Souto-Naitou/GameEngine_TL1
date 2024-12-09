@@ -19,15 +19,20 @@ enum class ParticleDeleteCondition
 
 struct ParticleData
 {
-    Transform                               transform_      = {};
-    Vector4                                 color_          = {};
-    float                                   alphaDeltaValue_ = 0.0f;
-    float                                   lifeTime_       = 0.0f;
-    Vector3                                 acceleration_   = {};
-    Vector3                                 accResistance_  = {};
-    Vector3                                 accGravity_     = {};
-    Vector3                                 velocity_       = {};
-    ParticleDeleteCondition                 deleteCondition_ = ParticleDeleteCondition::LifeTime;
+    Timer                                   timer_              = {};
+    Transform                               transform_          = {};
+    Vector3                                 startScale_         = {};
+    Vector3                                 endScale_           = {};
+    Vector4                                 color_              = {};
+    float                                   scaleDelayTime_     = 0.0f;
+    float                                   alphaDeltaValue_    = 0.0f;
+    float                                   lifeTime_           = 0.0f;
+    float                                   currentLifeTime_    = 0.0f;
+    Vector3                                 acceleration_       = {};
+    Vector3                                 accResistance_      = {};
+    Vector3                                 accGravity_         = {};
+    Vector3                                 velocity_           = {};
+    ParticleDeleteCondition                 deleteCondition_    = ParticleDeleteCondition::LifeTime;
 };
 
 class Particle
@@ -88,7 +93,6 @@ private:
     bool                                    enableBillboard_                    = false;
 
     /// Parameter
-    Timer                                   timer_                              = {};
     std::vector<ParticleData>               particleData_                       = {};
 
 

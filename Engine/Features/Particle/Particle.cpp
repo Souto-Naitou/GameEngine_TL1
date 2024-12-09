@@ -49,9 +49,6 @@ void Particle::Initialize(const std::string& _filepath)
 
     /// 正面を向く行列を作成
     backToFrontMatrix_ = Matrix4x4::RotateYMatrix(std::numbers::pi_v<float>);
-
-    /// タイマーを開始
-    timer_.Start();
 }
 
 void Particle::Update()
@@ -202,18 +199,56 @@ void Particle::ParticleDataUpdate(std::vector<ParticleData>::iterator& _itr)
 {
     float deltaTime = 1.0f / 60.0f;
 
-    Transform& transform = _itr->transform_;
-    Vector3& velocity = _itr->velocity_;
-    Vector3& acceleration = _itr->acceleration_;
-    Vector3& gravity = _itr->accGravity_;
-    Vector3& resistance = _itr->accResistance_;
-    Vector4& color = _itr->color_;
+    Timer&              timer = _itr->timer_;
 
+    Transform&          transform = _itr->transform_;
+    Vector3&            velocity = _itr->velocity_;
+    Vector3&            acceleration = _itr->acceleration_;
+    Vector3&            gravity = _itr->accGravity_;
+    Vector3&            resistance = _itr->accResistance_;
+    Vector4&            color = _itr->color_;
+
+    const Vector3&      startScale = _itr->startScale_;
+    const Vector3&      endScale = _itr->endScale_;
+    const float         lifeTime = _itr->lifeTime_;
+    const float         scaleDelayTime = _itr->scaleDelayTime_;
+    float&              currentLifeTime = _itr->currentLifeTime_;
+
+    /// タイマーの更新
+    if (!timer.GetIsStart()) timer.Start();
+
+    /// 経過時間の取得
+    currentLifeTime = lifeTime - static_cast<float>(timer.GetNow());
+    if (currentLifeTime < 0.0f) currentLifeTime = 0.0f;
+
+    /// 位置の更新
     velocity += acceleration * deltaTime;
     velocity += gravity * deltaTime;
     velocity -= resistance * deltaTime;
     transform.translate += velocity * deltaTime;
+
+    /// 色の更新
     color.w += _itr->alphaDeltaValue_;
+
+    /// スケールの更新
+    /// lifetime = 10.0
+    /// current = 9.0
+    /// delay = 3.0
+    if (lifeTime - scaleDelayTime != 0.0f)
+    {
+        if (currentLifeTime > lifeTime - scaleDelayTime)
+        {
+            transform.scale = startScale;
+        }
+        else
+        {
+            transform.scale.Lerp(startScale, endScale, 1.0f - currentLifeTime / (lifeTime - scaleDelayTime));
+        }
+    }
+    else
+    {
+        transform.scale = startScale;
+    }
 
     /// 加速度のリセット
     acceleration = {};
@@ -261,7 +296,7 @@ bool Particle::DeleteByLifeTime(std::vector<ParticleData>::iterator& _itr)
 {
     bool isDelete = false;
 
-    if (_itr->lifeTime_ <= 0.0f)
+    if (_itr->currentLifeTime_ <= 0.0f)
     {
         _itr = particleData_.erase(_itr);
         isDelete = true;

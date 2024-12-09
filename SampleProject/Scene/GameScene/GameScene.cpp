@@ -94,18 +94,23 @@ void GameScene::Draw2dForeground()
 void GameScene::EmitterSetting()
 {
     auto& emitterData = pParticleEmitter_->GetEmitterData();
-    emitterData.scale_ = Vector3(0.1f, 0.1f, 0.1f);
-    emitterData.emitInterval_ = 0.2f;
-    emitterData.emitNum_ = 3;
+
+    emitterData.particleLifeTime_ = 5.0f;
+
+    emitterData.startScale_ = Vector3(0.1f, 0.1f, 0.1f);
+    emitterData.endScale_ = Vector3(0.0f, 0.0f, 0.0f);
+    emitterData.scaleDelayTime_ = 0.0f;
+
+    emitterData.emitInterval_ = 0.1f;
+    emitterData.emitNum_ = 100;
     emitterData.emitterLifeTime_ = 0.0f;
     emitterData.enableRandomEmit_ = false;
     emitterData.emitPositionFixed_ = Vector3(0.0f, 0.0f, 0.0f);
-    emitterData.color_ = Vector4(0.8f, 0.35f, 0.15f, 1.0f);
-    emitterData.alphaDeltaValue_ = -0.01f;
-    emitterData.emitterLifeTime_ = 0.0f;
+    emitterData.color_ = Vector4(0.73f, 0.98f, 1.0f, 1.0f);
+    emitterData.alphaDeltaValue_ = -0.003f;
     emitterData.enableRandomVelocity_ = true;
-    emitterData.velocityRandomRangeBegin_ = Vector3(-2.0f, -0.0f, -0.0f);
-    emitterData.velocityRandomRangeEnd_ = Vector3(0.0f, 0.0f, 0.0f);
-    emitterData.gravity_ = Vector3(0.0f, -0.9f, 0.0f);
+    emitterData.velocityRandomRangeBegin_ = Vector3(-1.5f, -2.2f, -3.0f);
+    emitterData.velocityRandomRangeEnd_ = Vector3(1.5f, 2.2f, 3.0f);
+    emitterData.gravity_ = Vector3(0.0f, -0.2f, 0.0f);
     emitterData.resistance_ = Vector3(0.0f, 0.0f, 0.0f);
 }
