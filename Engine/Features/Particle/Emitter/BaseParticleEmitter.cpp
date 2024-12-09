@@ -20,34 +20,52 @@ void BaseParticleEmitter::DebugWindow()
 {
 #ifdef _DEBUG
 
-    ImGui::DragFloat("発生間隔", &emitterData_.emitInterval_, 0.02f, 0.1f, FLT_MAX);
-
-    ImGui::InputInt("発生数", (int*)&emitterData_.emitNum_);
-    ImGui::Checkbox("ランダム範囲生成", &emitterData_.enableRandomEmit_);
-    if (emitterData_.enableRandomEmit_)
+    if (ImGui::CollapsingHeader("変形"))
     {
-        ImGui::DragFloat3("発生開始地点", &emitterData_.beginPosition_.x, 0.01f);
-        ImGui::DragFloat3("発生終了地点", &emitterData_.endPosition_.x, 0.01f);
-    }
-    else
-    {
-        ImGui::DragFloat3("発生位置", &emitterData_.emitPositionFixed_.x, 0.01f);
+        ImGui::DragFloat3("スケール", &emitterData_.scale_.x, 0.01f);
     }
 
-    ImGui::ColorEdit4("色", &emitterData_.color_.x);
-    ImGui::Checkbox("ランダム速度", &emitterData_.enableRandomVelocity_);
-    if (emitterData_.enableRandomVelocity_)
+    if (ImGui::CollapsingHeader("一般"))
     {
-        ImGui::DragFloat3("速度ランダム範囲開始", &emitterData_.velocityRandomRangeBegin_.x, 0.01f);
-        ImGui::DragFloat3("速度ランダム範囲終了", &emitterData_.velocityRandomRangeEnd_.x, 0.01f);
-    }
-    else
-    {
-        ImGui::DragFloat3("速度固定", &emitterData_.velocityFixed_.x, 0.01f);
+        ImGui::DragFloat("発生間隔", &emitterData_.emitInterval_, 0.02f, 0.1f, FLT_MAX);
+        ImGui::InputInt("発生数", (int*)&emitterData_.emitNum_);
+        ImGui::ColorEdit4("色", &emitterData_.color_.x);
+        ImGui::SliderFloat("透明度の変化量", &emitterData_.alphaDeltaValue_, -0.2f, 0.0f);
     }
 
-    ImGui::DragFloat3("重力", &emitterData_.gravity_.x, 0.01f);
-    ImGui::DragFloat3("抵抗", &emitterData_.resistance_.x, 0.01f);
+    if (ImGui::CollapsingHeader("生成場所"))
+    {
+        ImGui::Checkbox("ランダム範囲生成", &emitterData_.enableRandomEmit_);
+        if (emitterData_.enableRandomEmit_)
+        {
+            ImGui::DragFloat3("発生開始地点", &emitterData_.beginPosition_.x, 0.01f);
+            ImGui::DragFloat3("発生終了地点", &emitterData_.endPosition_.x, 0.01f);
+        }
+        else
+        {
+            ImGui::DragFloat3("発生位置", &emitterData_.emitPositionFixed_.x, 0.01f);
+        }
+    }
+
+    if (ImGui::CollapsingHeader("速度"))
+    {
+        ImGui::Checkbox("速度のランダマイズ", &emitterData_.enableRandomVelocity_);
+        if (emitterData_.enableRandomVelocity_)
+        {
+            ImGui::DragFloat3("速度ランダム範囲-開始", &emitterData_.velocityRandomRangeBegin_.x, 0.01f);
+            ImGui::DragFloat3("速度ランダム範囲-終了", &emitterData_.velocityRandomRangeEnd_.x, 0.01f);
+        }
+        else
+        {
+            ImGui::DragFloat3("速度", &emitterData_.velocityFixed_.x, 0.01f);
+        }
+    }
+
+    if (ImGui::CollapsingHeader("物理"))
+    {
+        ImGui::DragFloat3("重力", &emitterData_.gravity_.x, 0.01f);
+        ImGui::DragFloat3("抵抗", &emitterData_.resistance_.x, 0.01f);
+    }
 
 #endif // _DEBUG
 }

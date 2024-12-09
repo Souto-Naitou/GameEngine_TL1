@@ -14,6 +14,7 @@ struct EmitterData
     Vector3         emitPositionFixed_;             // ランダム発生しない場合の発生位置
     bool            enableRandomEmit_;              // ランダム発生
     Vector4         color_;                         // 色
+    float           alphaDeltaValue_;               // 透明度の変化量
     bool            enableRandomVelocity_;          // ランダム速度
     Vector3         velocityRandomRangeBegin_;      // 速度ランダム範囲
     Vector3         velocityRandomRangeEnd_;        // 速度ランダム範囲

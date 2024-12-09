@@ -40,7 +40,7 @@ void RequiredScene::Update()
     pGameEye_->Update();
     pGuideSprite_->Update();
 
-    if (pInput_->TriggerKey(DIK_2))
+    if (pInput_->PushKey(DIK_LCONTROL) && pInput_->TriggerKey(DIK_2))
     {
         SceneManager::GetInstance()->ReserveScene("GameScene");
     }

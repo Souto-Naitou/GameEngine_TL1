@@ -67,6 +67,7 @@ void Particle::Update()
     while (true)
     {
         if (itr == particleData_.end()) break;
+        if (index >= currentInstancingSize_) break;
 
         Transform& transform = itr->transform_;
         Vector4& color = itr->color_;
@@ -141,6 +142,16 @@ void Particle::reserve(size_t _size)
     return;
 }
 
+void Particle::emplace_back(const ParticleData& _data)
+{
+    particleData_.emplace_back(_data);
+    if (particleData_.capacity() > currentInstancingSize_)
+    {
+        CreateParticleForGPUResource();
+        CreateSRV();
+    }
+}
+
 void Particle::CreateParticleForGPUResource()
 {
     /// 座標変換行列リソースを作成
@@ -154,6 +165,7 @@ void Particle::CreateParticleForGPUResource()
         instancingData_[index].world = Matrix4x4::Identity();
         instancingData_[index].color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
     }
+    currentInstancingSize_ = static_cast<uint32_t>(particleData_.capacity());
 }
 
 void Particle::CreateSRV()
