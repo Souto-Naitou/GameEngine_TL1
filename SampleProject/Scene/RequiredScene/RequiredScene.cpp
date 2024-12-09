@@ -70,6 +70,7 @@ void RequiredScene::InitializeParticle()
         ParticleData data;
         data.transform_.translate = Vector3(i * 0.1f, i * 0.1f, i * 0.1f);
         data.transform_.scale = Vector3(1.0f, 1.0f, 1.0f);
+        data.startScale_ = Vector3(1.0f, 1.0f, 1.0f);
         data.transform_.rotate = Vector3(0.0f, 0.0f, 0.0f);
         data.color_ = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
         data.velocity_ = Vector3(0.0f, 0.0f, 0.0f);
