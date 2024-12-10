@@ -16,7 +16,8 @@ struct EmitterData
     Vector3         beginPosition_;                 // 発生開始位置
     Vector3         endPosition_;                   // 発生終了位置
     Vector3         emitPositionFixed_;             // ランダム発生しない場合の発生位置
-    Vector4         color_;                         // 色
+    Vector4         beginColor_;                    // 開始色
+    Vector4         endColor_;                      // 開始色
     float           alphaDeltaValue_;               // 透明度の変化量
     Vector3         velocityRandomRangeBegin_;      // 速度ランダム範囲
     Vector3         velocityRandomRangeEnd_;        // 速度ランダム範囲

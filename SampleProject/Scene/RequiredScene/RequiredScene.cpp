@@ -72,7 +72,8 @@ void RequiredScene::InitializeParticle()
         data.transform_.scale = Vector3(1.0f, 1.0f, 1.0f);
         data.startScale_ = Vector3(1.0f, 1.0f, 1.0f);
         data.transform_.rotate = Vector3(0.0f, 0.0f, 0.0f);
-        data.color_ = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
+        data.beginColor_ = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
+        data.endColor_ = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
         data.velocity_ = Vector3(0.0f, 0.0f, 0.0f);
         data.acceleration_ = Vector3(0.0f, 0.0f, 0.0f);
         data.alphaDeltaValue_ = 0.0f;

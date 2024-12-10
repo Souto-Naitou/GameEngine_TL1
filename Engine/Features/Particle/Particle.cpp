@@ -67,7 +67,7 @@ void Particle::Update()
         if (index >= currentInstancingSize_) break;
 
         Transform& transform = itr->transform_;
-        Vector4& color = itr->color_;
+        Vector4& currentColor = itr->currentColor_;
 
         /// パーティクルデータの更新
         ParticleDataUpdate(itr);
@@ -89,7 +89,7 @@ void Particle::Update()
 
         instancingData_[index].world = wMatrix;
         instancingData_[index].wvp = wMatrix * pGameEye_->GetViewProjectionMatrix();
-        instancingData_[index].color = color;
+        instancingData_[index].color = currentColor;
 
         ++itr;
         ++index;
@@ -206,20 +206,31 @@ void Particle::ParticleDataUpdate(std::vector<ParticleData>::iterator& _itr)
     Vector3&            acceleration = _itr->acceleration_;
     Vector3&            gravity = _itr->accGravity_;
     Vector3&            resistance = _itr->accResistance_;
-    Vector4&            color = _itr->color_;
+
+    Vector4&            currentColor = _itr->currentColor_;
+    const Vector4&      beginColor = _itr->beginColor_;
+    const Vector4&      endColor = _itr->endColor_;
 
     const Vector3&      startScale = _itr->startScale_;
     const Vector3&      endScale = _itr->endScale_;
     const float         lifeTime = _itr->lifeTime_;
     const float         scaleDelayTime = _itr->scaleDelayTime_;
     float&              currentLifeTime = _itr->currentLifeTime_;
+    float&              alphaDeltaValue = _itr->alphaDeltaValue_;
 
     /// タイマーの更新
-    if (!timer.GetIsStart()) timer.Start();
+    if (!timer.GetIsStart())
+    {
+        timer.Start();
+        currentColor = beginColor;
+    }
 
     /// 経過時間の取得
     currentLifeTime = lifeTime - static_cast<float>(timer.GetNow());
     if (currentLifeTime < 0.0f) currentLifeTime = 0.0f;
+
+    float t = 0.0f;
+    if (lifeTime != 0.0f) t = 1.0f - currentLifeTime / lifeTime;
 
     /// 位置の更新
     velocity += acceleration * deltaTime;
@@ -228,7 +239,20 @@ void Particle::ParticleDataUpdate(std::vector<ParticleData>::iterator& _itr)
     transform.translate += velocity * deltaTime;
 
     /// 色の更新
-    color.w += _itr->alphaDeltaValue_;
+    {
+        if (alphaDeltaValue == 0)
+        {
+            currentColor.Lerp(beginColor, endColor, EaseOutCubic(t));
+        }
+        else
+        {
+            Vector3 rgb = currentColor.xyz();
+            rgb.Lerp(beginColor.xyz(), endColor.xyz(), EaseOutCubic(t));
+            currentColor.w += alphaDeltaValue;
+            currentColor = { rgb.x, rgb.y, rgb.z, currentColor.w };
+        }
+    }
+
 
     /// スケールの更新
     /// lifetime = 10.0
@@ -273,6 +297,16 @@ void Particle::DebugWindow()
 #endif
 }
 
+float Particle::EaseOutCubic(float t)
+{
+    return 1.0f - std::powf(1.0f - t, 3.0f);
+}
+
+float Particle::EaseOutQuad(float t)
+{
+    return 1.0f - std::powf(1.0f - t, 2.0f);
+}
+
 bool Particle::ParticleDeleteByCondition(std::vector<ParticleData>::iterator& _itr)
 {
     bool isDelete = false;
@@ -309,7 +343,7 @@ bool Particle::DeleteByZeroAlpha(std::vector<ParticleData>::iterator& _itr)
 {
     bool isDelete = false;
 
-    if (_itr->color_.w <= 0.0f)
+    if (_itr->currentColor_.w <= 0.0f)
     {
         _itr = particleData_.erase(_itr);
         isDelete = true;
