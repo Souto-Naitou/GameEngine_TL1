@@ -2,7 +2,7 @@
 
 #include <Features/Particle/Emitter/BaseParticleEmitter.h>
 #include <Features/Particle/Particle.h>
-#include <AABB.h>
+#include <Features/Primitive/AABB.h>
 #include <memory>
 
 class ParticleEmitter : public BaseParticleEmitter
