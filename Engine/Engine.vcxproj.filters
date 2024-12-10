@@ -133,6 +133,12 @@
     <Filter Include="Core\WinSystem">
       <UniqueIdentifier>{5c7e8f14-1bd4-48f2-80b9-2ad2124c12e5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="DebugTools\PrimitiveDrawer">
+      <UniqueIdentifier>{676fa4eb-91d9-4e1f-af5e-23aa2575b1f6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Feature\AABB">
+      <UniqueIdentifier>{f7dbd80f-e81d-4548-9ce0-f4c751fd5c3d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DebugTools\DebugManager\DebugManager.cpp">
@@ -242,6 +248,9 @@
     </ClCompile>
     <ClCompile Include="Features\Line\LineSystem.cpp">
       <Filter>Feature\Line\System</Filter>
+    </ClCompile>
+    <ClCompile Include="AABB.cpp">
+      <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -373,6 +382,9 @@
     </ClInclude>
     <ClInclude Include="Features\Line\Manager\LineManager.h">
       <Filter>Feature\Line\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="AABB.h">
+      <Filter>Feature\AABB</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -15,6 +15,8 @@ void ParticleEmitter::Initialize(const std::string& _filePath)
     emitterData_.emitInterval_ = 0.2f;
     emitterData_.emitterLifeTime_ = 0.0f;
     emitterData_.emitNum_ = 1;
+    aabb_ = std::make_unique<AABB>();
+    aabb_->Initialize();
 }
 
 void ParticleEmitter::Update()
@@ -32,6 +34,11 @@ void ParticleEmitter::Update()
         timer_.Reset();
         timer_.Start();
     }
+}
+
+void ParticleEmitter::Draw()
+{
+    aabb_->Draw();
 }
 
 void ParticleEmitter::Finalize()
@@ -88,11 +95,16 @@ void ParticleEmitter::EmitParticle()
     }
 
     // 初期の色
-    datum.color_ = emitterData_.color_;
+    datum.beginColor_ = emitterData_.beginColor_;
+    // 終了の色
+    datum.endColor_ = emitterData_.endColor_;
+
     // アルファ値の変化量
     datum.alphaDeltaValue_ = emitterData_.alphaDeltaValue_;
     // 消去条件
     datum.deleteCondition_ = ParticleDeleteCondition::LifeTime;
     datum.accGravity_ = emitterData_.gravity_;
     datum.accResistance_ = emitterData_.resistance_;
+
+    aabb_->SetMinMax(emitterData_.beginPosition_, emitterData_.endPosition_);
 }

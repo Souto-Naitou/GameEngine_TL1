@@ -23,8 +23,9 @@ void BaseParticleEmitter::DebugWindow()
     if (ImGui::CollapsingHeader("変形"))
     {
         ImGui::DragFloat3("開始スケール", &emitterData_.startScale_.x, 0.01f);
-        ImGui::DragFloat3("終了スケール", &emitterData_.endScale_.x, 0.01f); ImGui::SameLine();
-        if (ImGui::SmallButton("同期##Scale"))
+        ImGui::DragFloat3("終了スケール", &emitterData_.endScale_.x, 0.01f);
+        ImGui::SameLine();
+        if (ImGui::Button("同期##Scale"))
         {
             emitterData_.endScale_ = emitterData_.startScale_;
         }
@@ -36,7 +37,15 @@ void BaseParticleEmitter::DebugWindow()
         ImGui::DragFloat("パーティクル寿命", &emitterData_.particleLifeTime_, 0.1f, 0.0f, FLT_MAX);
         ImGui::DragFloat("発生間隔", &emitterData_.emitInterval_, 0.02f, 0.02f, FLT_MAX);
         ImGui::InputInt("発生数", (int*)&emitterData_.emitNum_);
-        ImGui::ColorEdit4("色", &emitterData_.color_.x);
+
+        ImGui::ColorEdit4("開始色", &emitterData_.beginColor_.x);
+        ImGui::ColorEdit4("終了色", &emitterData_.endColor_.x);
+        ImGui::SameLine();
+        if (ImGui::Button("同期##Color"))
+        {
+            emitterData_.endColor_ = emitterData_.beginColor_;
+        }
+
         ImGui::SliderFloat("透明度の変化量", &emitterData_.alphaDeltaValue_, -0.2f, 0.0f);
     }
 

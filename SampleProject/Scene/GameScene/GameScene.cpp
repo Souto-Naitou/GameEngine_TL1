@@ -5,6 +5,7 @@
 #include <Features/Object3d/Object3dSystem.h>
 #include <Features/Particle/ParticleSystem.h>
 #include <Features/SceneManager/SceneManager.h>
+#include <Features/Line/LineSystem.h>
 
 
 void GameScene::Initialize()
@@ -29,6 +30,7 @@ void GameScene::Initialize()
     /// システムにデフォルトのゲームカメラを設定
     Object3dSystem::GetInstance()->SetDefaultGameEye(pGameEye_);
     ParticleSystem::GetInstance()->SetDefaultGameEye(pGameEye_);
+    LineSystem::GetInstance()->SetDefaultGameEye(pGameEye_);
 
     ModelManager::GetInstance()->SetLightingFlag("Skydome.obj", false);
 
@@ -84,6 +86,7 @@ void GameScene::Draw3d()
 {
     pSkydome_->Draw();
     pGrid_->Draw();
+    pParticleEmitter_->Draw();
 }
 
 void GameScene::Draw2dForeground()
@@ -97,20 +100,21 @@ void GameScene::EmitterSetting()
 
     emitterData.particleLifeTime_ = 5.0f;
 
-    emitterData.startScale_ = Vector3(0.1f, 0.1f, 0.1f);
+    emitterData.startScale_ = Vector3(0.3f, 0.3f, 0.1f);
     emitterData.endScale_ = Vector3(0.0f, 0.0f, 0.0f);
     emitterData.scaleDelayTime_ = 0.0f;
 
-    emitterData.emitInterval_ = 0.1f;
-    emitterData.emitNum_ = 100;
+    emitterData.emitInterval_ = 0.02f;
+    emitterData.emitNum_ = 30;
     emitterData.emitterLifeTime_ = 0.0f;
     emitterData.enableRandomEmit_ = false;
-    emitterData.emitPositionFixed_ = Vector3(0.0f, 0.0f, 0.0f);
-    emitterData.color_ = Vector4(0.73f, 0.98f, 1.0f, 1.0f);
-    emitterData.alphaDeltaValue_ = -0.003f;
+    emitterData.emitPositionFixed_ = Vector3(7.0f, 0.0f, 0.0f);
+    emitterData.beginColor_ = Vector4(0.0f, 0.8f, 0.5f, 0.0f);
+    emitterData.endColor_ = Vector4(0.7f, 0.85f, 1.0f, 1.0f);
+    emitterData.alphaDeltaValue_ = -0.0f;
     emitterData.enableRandomVelocity_ = true;
-    emitterData.velocityRandomRangeBegin_ = Vector3(-1.5f, -2.2f, -3.0f);
-    emitterData.velocityRandomRangeEnd_ = Vector3(1.5f, 2.2f, 3.0f);
-    emitterData.gravity_ = Vector3(0.0f, -0.2f, 0.0f);
-    emitterData.resistance_ = Vector3(0.0f, 0.0f, 0.0f);
+    emitterData.velocityRandomRangeBegin_ = Vector3(-10.0f, 3.5f, -5.0f);
+    emitterData.velocityRandomRangeEnd_ = Vector3(-5.0f, 0.0f, 5.0f);
+    emitterData.gravity_ = Vector3(0.0f, -3.75f, 0.0f);
+    emitterData.resistance_ = Vector3(-2.75f, 0.0f, 0.0f);
 }

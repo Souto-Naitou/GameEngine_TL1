@@ -23,7 +23,9 @@ struct ParticleData
     Transform                               transform_          = {};
     Vector3                                 startScale_         = {};
     Vector3                                 endScale_           = {};
-    Vector4                                 color_              = {};
+    Vector4                                 currentColor_       = {};
+    Vector4                                 beginColor_         = {};
+    Vector4                                 endColor_           = {};
     float                                   scaleDelayTime_     = 0.0f;
     float                                   alphaDeltaValue_    = 0.0f;
     float                                   lifeTime_           = 0.0f;
@@ -109,6 +111,8 @@ private:
     void InitializeTransform();
     void ParticleDataUpdate(std::vector<ParticleData>::iterator& _itr);
     void DebugWindow();
+    float EaseOutCubic(float t);
+    float EaseOutQuad(float t);
 
 private: /// delete condition
     bool ParticleDeleteByCondition(std::vector<ParticleData>::iterator& _itr);
