@@ -249,8 +249,8 @@
     <ClCompile Include="Features\Line\LineSystem.cpp">
       <Filter>Feature\Line\System</Filter>
     </ClCompile>
-    <ClCompile Include="AABB.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="Features\Primitive\AABB.cpp">
+      <Filter>Feature\AABB</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -383,7 +383,7 @@
     <ClInclude Include="Features\Line\Manager\LineManager.h">
       <Filter>Feature\Line\Manager</Filter>
     </ClInclude>
-    <ClInclude Include="AABB.h">
+    <ClInclude Include="Features\Primitive\AABB.h">
       <Filter>Feature\AABB</Filter>
     </ClInclude>
   </ItemGroup>
