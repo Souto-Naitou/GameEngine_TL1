@@ -30,6 +30,7 @@ public: /// Getter
     D3D12_VERTEX_BUFFER_VIEW GetVertexBufferView() const { return vertexBufferView_; }
     bool IsUploaded() const { return isUploaded_; }
     D3D12_GPU_DESCRIPTOR_HANDLE GetTextureSrvHandleGPU() const { return textureSrvHandleGPU_; }
+    Material* GetMaterialData() { return materialData_; }
 
 private: /// メンバ変数
     static const std::string kDefaultDirectoryPath;
