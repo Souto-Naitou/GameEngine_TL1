@@ -1,0 +1,28 @@
+{
+    "startScale": {"x": 0.0, "y": 0.0, "z": 0.0},
+    "endScale": {"x": 0.17, "y": 0.17, "z": 0.1},
+
+    "emitInterval": 0.02,
+    "emitNum": 50,
+    "emitterLifeTime": 0.0,
+    "particleLifeTime": 2.0,
+    "scaleDelayTime": 0.0,
+
+    "beginPosition": {"x": 0.0, "y": 0.0, "z": 0.0},
+    "endPosition": {"x": 10.0, "y": 3.0, "z": 0.0},
+    "emitPositionFixed": {"x": 0.0, "y": -0.7, "z": 0.0},
+
+    "beginColor": {"r": 0.9, "g": 0.9, "b": 0.9, "a": 1.0},
+    "endColor": {"r": 0.375, "g": 0.375, "b": 0.375, "a": 0.0},
+    "alphaDeltaValue": 0.0,
+
+    "velocityRandomRangeBegin": {"x": 0.33, "y": 0.8, "z": -0.3},
+    "velocityRandomRangeEnd": {"x": 0.02, "y": 0.6, "z": 0.3},
+    "velocityFixed": {"x": 0.0, "y": 1.0, "z": 0.0},
+
+    "gravity": {"x": 0.0, "y": 0.0, "z": 0.0},
+    "resistance": {"x": 0.75, "y": 0.0, "z": 0.0},
+
+    "enableRandomVelocity": true,
+    "enableRandomEmit": false
+}

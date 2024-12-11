@@ -82,6 +82,9 @@
       <ShaderModel>6.0</ShaderModel>
       <AdditionalIncludeDirectories>$(ProjectDir)Resources\Shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </FxCompile>
+    <Lib>
+      <AdditionalDependencies>$(ProjectDir)Externals\JsonParser\$(Configuration)\JsonParser.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -114,6 +117,9 @@
       <ShaderModel>6.0</ShaderModel>
       <AdditionalIncludeDirectories>$(ProjectDir)Resources\Shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </FxCompile>
+    <Lib>
+      <AdditionalDependencies>$(ProjectDir)Externals\JsonParser\$(Configuration)\JsonParser.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Common\HRESULT_ASSERT.cpp" />
@@ -144,8 +150,8 @@
     <ClCompile Include="Features\Model\ModelManager.cpp" />
     <ClCompile Include="Features\Object3d\Object3d.cpp" />
     <ClCompile Include="Features\Object3d\Object3dSystem.cpp" />
-    <ClCompile Include="Features\Particle\Emitter\BaseParticleEmitter.cpp" />
     <ClCompile Include="Features\Particle\Emitter\ParticleEmitter.cpp" />
+    <ClCompile Include="Features\Particle\Manager\EmitterManager.cpp" />
     <ClCompile Include="Features\Particle\Particle.cpp" />
     <ClCompile Include="Features\Particle\ParticleManager.cpp" />
     <ClCompile Include="Features\Particle\ParticleSystem.cpp" />
@@ -188,8 +194,8 @@
     <ClInclude Include="Features\Model\ModelManager.h" />
     <ClInclude Include="Features\Object3d\Object3d.h" />
     <ClInclude Include="Features\Object3d\Object3dSystem.h" />
-    <ClInclude Include="Features\Particle\Emitter\BaseParticleEmitter.h" />
     <ClInclude Include="Features\Particle\Emitter\ParticleEmitter.h" />
+    <ClInclude Include="Features\Particle\Manager\EmitterManager.h" />
     <ClInclude Include="Features\Particle\Particle.h" />
     <ClInclude Include="Features\Particle\ParticleManager.h" />
     <ClInclude Include="Features\Particle\ParticleSystem.h" />

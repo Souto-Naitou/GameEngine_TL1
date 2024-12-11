@@ -30,7 +30,7 @@ void NimaFramework::Initialize()
     /// システムクラスの初期化
     pDirectX_ = DirectX12::GetInstance();
     pDebugManager_ = DebugManager::GetInstance();
-    pWin32App_ = WinSystem::GetInstance();
+    pWinSystem_ = WinSystem::GetInstance();
     pModelManager_ = ModelManager::GetInstance();
     pSpriteSystem_ = SpriteSystem::GetInstance();
     pObject3dSystem_ = Object3dSystem::GetInstance();
@@ -47,8 +47,8 @@ void NimaFramework::Initialize()
     pImGuiManager_ = new ImGuiManager();
 
     /// ウィンドウの初期化
-    pWin32App_->Initialize();
-    pWin32App_->ShowWnd();
+    pWinSystem_->Initialize();
+    pWinSystem_->ShowWnd();
 
     /// DirectX12の初期化
     pDirectX_->Initialize();
@@ -81,20 +81,20 @@ void NimaFramework::Initialize()
     pAudio_->Initialize();
 
     /// 入力の初期化
-    pInput_->Initialize(GetModuleHandleA(nullptr), pWin32App_->GetHwnd());
+    pInput_->Initialize(GetModuleHandleA(nullptr), pWinSystem_->GetHwnd());
 }
 
 void NimaFramework::Finalize()
 {
     pImGuiManager_->Finalize();
-    pWin32App_->Finalize();
+    pWinSystem_->Finalize();
 
     delete pImGuiManager_;
 }
 
 void NimaFramework::Update()
 {
-    UINT msg = pWin32App_->GetMsg();
+    UINT msg = pWinSystem_->GetMsg();
     if (msg == WM_QUIT)
     {
         isExitProgram_ = true;

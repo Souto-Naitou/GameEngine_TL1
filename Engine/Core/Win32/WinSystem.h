@@ -5,8 +5,8 @@
 class WinSystem
 {
 public:
-    static const uint32_t kClientWidth = 1280u;
-    static const uint32_t kClientHeight = 720u;
+    static const uint32_t kClientWidth = 1600u;
+    static const uint32_t kClientHeight = 900u;
 
     WinSystem(const WinSystem&) = delete;
     WinSystem(const WinSystem&&) = delete;
