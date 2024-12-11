@@ -37,6 +37,10 @@ void DirectX12::Initialize()
     // ウィンドウハンドルを取得
     hwnd_ = WinSystem::GetInstance()->GetHwnd();
 
+    // ウィンドウのクライアントサイズを取得
+    clientWidth_ = WinSystem::kClientWidth;
+    clientHeight_ = WinSystem::kClientHeight;
+
     hr_ = CreateDXGIFactory(IID_PPV_ARGS(&dxgiFactory_));
     assert(SUCCEEDED(hr_) && "DXGIファクトリの生成に失敗");
 

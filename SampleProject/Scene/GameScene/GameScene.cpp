@@ -24,7 +24,7 @@ void GameScene::Initialize()
     pGuideSprite_->SetAnchorPoint({ 1,1 });
 
     pGameEye_->SetRotate({ 0.1f, 0.0f, 0.0f });
-    pGameEye_->SetTranslate({ 0.0f, 0.2f, -20.0f });
+    pGameEye_->SetTranslate({ 0.0f, 0.2f, -5.0f });
     pGameEye_->SetName("MainCamera");
 
     /// システムにデフォルトのゲームカメラを設定
@@ -44,9 +44,7 @@ void GameScene::Initialize()
     pGrid_->SetTilingMultiply({ 90.0f, 90.0f });
 
     /// エミッタの初期化
-    pParticleEmitter_->Initialize("Particle/ParticleSpark.obj");
-
-    EmitterSetting();
+    pParticleEmitter_->Initialize("Particle/ParticleSpark.obj", "Resources/Json/Smoke.json");
 }
 
 void GameScene::Finalize()

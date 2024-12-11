@@ -44,7 +44,7 @@ protected: /// システムクラスのインスタンス
 protected: /// 他クラスのインスタンス
     DirectX12* pDirectX_;
     DebugManager* pDebugManager_;
-    WinSystem* pWin32App_;
+    WinSystem* pWinSystem_;
     ModelManager* pModelManager_;
     SRVManager* pSRVManager_;
     TextureManager* pTextureManager_;
