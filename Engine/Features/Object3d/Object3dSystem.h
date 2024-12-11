@@ -12,6 +12,12 @@ struct Material
     int32_t enableLighting;
     float padding[2];
     Matrix4x4 uvTransform;
+    float shininess;
+};
+
+struct CameraForGPU
+{
+    Vector3 worldPosition;
 };
 
 /// <summary>

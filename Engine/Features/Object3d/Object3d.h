@@ -72,10 +72,15 @@ private: /// メンバ変数
     Microsoft::WRL::ComPtr<ID3D12Resource>          transformationMatrixResource_   = nullptr;
     Microsoft::WRL::ComPtr<ID3D12Resource>          directionalLightResource_       = nullptr;
     Microsoft::WRL::ComPtr<ID3D12Resource>          tilingResource_                 = nullptr;
+    Microsoft::WRL::ComPtr<ID3D12Resource>          cameraForGPUResource_           = nullptr;
 
     TransformationMatrix*                           transformationMatrixData_       = nullptr;
     DirectionalLight*                               directionalLight_               = nullptr;
     TilingData*                                     tilingData_                     = nullptr;
+    CameraForGPU*                                   cameraForGPU_                   = nullptr;
+
+    bool                                            isEnableLighting_               = true;
+
     Model*                                          pModel_                         = nullptr;
     std::string                                     modelPath_                      = {};
     GameEye*                                        pGameEye_                       = nullptr;
@@ -84,6 +89,7 @@ private: /// 非公開メンバ関数
     void CreateTransformationMatrixResource();
     void CreateDirectionalLightResource();
     void CreateTilingResource();
+    void CreateCameraForGPUResource();
 
 #ifdef DEBUG_ENGINE
     void DebugWindow();

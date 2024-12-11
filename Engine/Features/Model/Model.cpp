@@ -83,6 +83,7 @@ void Model::CreateMaterialResource()
     materialData_->color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
     materialData_->enableLighting = isEnableLighting_;
     materialData_->uvTransform = Matrix4x4::Identity();
+    materialData_->shininess = 1.0f;
 }
 
 void Model::LoadModelTexture()

@@ -44,6 +44,9 @@ void Object3d::Initialize(const std::string& _filePath)
     /// テクスチャのタイリングリソースを作成
     CreateTilingResource();
 
+    /// カメラのワールド座標リソースを作成
+    CreateCameraForGPUResource();
+
     /// モデルを読み込む
     modelPath_ = _filePath;
     ModelManager::GetInstance()->LoadModel(modelPath_);
@@ -55,7 +58,10 @@ void Object3d::Update()
     if (!isUpdate_) return;
 
     /// モデルが読み込まれていない場合は読み込む
-    if (!pModel_) pModel_ = ModelManager::GetInstance()->FindModel(modelPath_);
+    if (!pModel_)
+    {
+        pModel_ = ModelManager::GetInstance()->FindModel(modelPath_);
+    }
 
     Matrix4x4 wMatrix = Matrix4x4::AffineMatrix(transform_.scale, transform_.rotate, transform_.translate);
     Matrix4x4 wvpMatrix = {};
@@ -75,6 +81,9 @@ void Object3d::Update()
     /// 平行光源の方向を正規化
     directionalLight_->direction = directionalLight_->direction.Normalize();
 
+    /// カメラのワールド座標を更新
+    cameraForGPU_->worldPosition = pGameEye_->GetTransform().translate;
+
     if (pModel_) pModel_->Update();
 }
 
@@ -91,6 +100,8 @@ void Object3d::Draw()
     commandList->SetGraphicsRootConstantBufferView(3, directionalLightResource_->GetGPUVirtualAddress());
     // TilingCBufferの場所を設定
     commandList->SetGraphicsRootConstantBufferView(4, tilingResource_->GetGPUVirtualAddress());
+    // CameraForGPUCBufferの場所を設定
+    commandList->SetGraphicsRootConstantBufferView(5, cameraForGPUResource_->GetGPUVirtualAddress());
 
     if (pModel_) pModel_->Draw();
 }
@@ -133,6 +144,13 @@ void Object3d::CreateTilingResource()
     tilingData_->tilingMultiply = Vector2(1.0f, 1.0f);
 }
 
+void Object3d::CreateCameraForGPUResource()
+{
+    cameraForGPUResource_ = DX12Helper::CreateBufferResource(device_, sizeof(CameraForGPU));
+    cameraForGPUResource_->Map(0, nullptr, reinterpret_cast<void**>(&cameraForGPU_));
+    cameraForGPU_->worldPosition = Vector3();
+}
+
 #ifdef DEBUG_ENGINE
 void Object3d::DebugWindow()
 {
@@ -151,6 +169,14 @@ void Object3d::DebugWindow()
 
     ImGui::SeparatorText("Directional Light");
     ImGui::PushID("DIRECTIONAL_LIGHT");
+
+    if (ImGui::Checkbox("Enable Lighting", &isEnableLighting_))
+    {
+        if (pModel_)
+        {
+            pModel_->SetEnableLighting(isEnableLighting_);
+        }
+    }
     ImGui::ColorEdit4("Color", &directionalLight_->color.x);
     ImGui::DragFloat3("Direction", &directionalLight_->direction.x, 0.01f);
     ImGui::DragFloat("Intensity", &directionalLight_->intensity, 0.01f);
