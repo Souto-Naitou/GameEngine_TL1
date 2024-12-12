@@ -26,7 +26,9 @@ public:
 
 private:
     GameEye* pGameEye_;
-    ParticleEmitter* pParticleEmitter_;
+    ParticleEmitter* pSmoke_;
+    ParticleEmitter* pFirework_;
+    ParticleEmitter* pSpark_;
     Object3d* pSkydome_;
     Object3d* pGrid_;
     Sprite* pGuideSprite_;

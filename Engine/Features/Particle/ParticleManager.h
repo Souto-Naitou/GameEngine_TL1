@@ -1,6 +1,6 @@
 #pragma once
 
-#include <vector>
+#include <list>
 #include <Features/Particle/Particle.h>
 
 class ParticleManager
@@ -33,6 +33,6 @@ private:
 
 
 public:
-    std::vector<Particle> particles_;
+    std::list<Particle> particles_;
 
 };

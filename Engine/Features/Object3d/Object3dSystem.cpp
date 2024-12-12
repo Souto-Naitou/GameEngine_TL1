@@ -75,7 +75,7 @@ void Object3dSystem::CreateRootSignature()
     descriptionRootSignature.NumParameters = _countof(rootParameters);                  // 配列の長さ
 
     D3D12_STATIC_SAMPLER_DESC staticSamplers[1] = {};
-    staticSamplers[0].Filter = D3D12_FILTER_ANISOTROPIC;                    // 異方性フィルタリング
+    staticSamplers[0].Filter = D3D12_FILTER_MIN_MAG_MIP_POINT;              // 異方性フィルタリング
     staticSamplers[0].AddressU = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
     staticSamplers[0].AddressV = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
     staticSamplers[0].AddressW = D3D12_TEXTURE_ADDRESS_MODE_WRAP;

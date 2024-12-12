@@ -33,7 +33,7 @@ void TextureManager::LoadTexture(const std::string& _filePath)
 
 
     DirectX::TexMetadata metadata = image.GetMetadata();
-    if (!metadata.width == 1 || !metadata.height == 1)
+    if (metadata.width > 32 && metadata.height > 32 && false)
     {
         hr = DirectX::GenerateMipMaps(image.GetImages(), image.GetImageCount(), image.GetMetadata(), DirectX::TEX_FILTER_SRGB, 0, image);
         metadata = image.GetMetadata();

@@ -6,21 +6,26 @@
 #include <Features/Particle/ParticleSystem.h>
 #include <Features/SceneManager/SceneManager.h>
 #include <Features/Line/LineSystem.h>
+#include <Core/Win32/WinSystem.h>
 
 
 void GameScene::Initialize()
 {
     pInput_ = Input::GetInstance();
 
+    pFirework_ = new ParticleEmitter();
+    pSmoke_ = new ParticleEmitter();
+    pSpark_ = new ParticleEmitter();
+
+
     pGameEye_ = new GameEye();
-    pParticleEmitter_ = new ParticleEmitter();
     pSkydome_ = new Object3d();
     pGrid_ = new Object3d();
 
     pGuideSprite_ = new Sprite();
     pGuideSprite_->Initialize("Text/SceneChangeGuide.png");
     pGuideSprite_->SetName("GuideText");
-    pGuideSprite_->SetPosition(Vector2(1280.0f - 40.0f, 720.0f - 40.0f));
+    pGuideSprite_->SetPosition(Vector2(WinSystem::kClientWidth - 40.0f, WinSystem::kClientHeight - 40.0f));
     pGuideSprite_->SetAnchorPoint({ 1,1 });
 
     pGameEye_->SetRotate({ 0.1f, 0.0f, 0.0f });
@@ -33,31 +38,38 @@ void GameScene::Initialize()
     LineSystem::GetInstance()->SetDefaultGameEye(pGameEye_);
 
     ModelManager::GetInstance()->SetLightingFlag("Skydome.obj", false);
+    ModelManager::GetInstance()->SetLightingFlag("Grid_v3.obj", false);
 
     pSkydome_->Initialize("Skydome.obj");
     pSkydome_->SetScale({ 1.0f, 1.0f, 1.0f });
     pSkydome_->SetName("Skydome");
 
-    pGrid_->Initialize("Grid.obj");
+    pGrid_->Initialize("Grid_v3.obj");
     pGrid_->SetScale({ 1.0f, 1.0f, 1.0f });
     pGrid_->SetName("Grid");
-    pGrid_->SetTilingMultiply({ 90.0f, 90.0f });
+    pGrid_->SetTilingMultiply({ 100.0f, 100.0f });
 
     /// エミッタの初期化
-    pParticleEmitter_->Initialize("Particle/ParticleSpark.obj", "Resources/Json/Smoke.json");
+    pFirework_->Initialize("Particle/ParticleSpark.obj", "Resources/Json/Firework.json");
+    pSmoke_->Initialize("Particle/ParticleSpark.obj", "Resources/Json/Smoke.json");
+    pSpark_->Initialize("Particle/ParticleSpark.obj", "Resources/Json/Spark.json");
 }
 
 void GameScene::Finalize()
 {
     pSkydome_->Finalize();
     pGrid_->Finalize();
-    pParticleEmitter_->Finalize();
     pGuideSprite_->Finalize();
+    pFirework_->Finalize();
+    pSmoke_->Finalize();
+    pSpark_->Finalize();
 
+    delete pFirework_;
+    delete pSmoke_;
+    delete pSpark_;
     delete pGuideSprite_;
     delete pGrid_;
     delete pSkydome_;
-    delete pParticleEmitter_;
     delete pGameEye_;
 }
 
@@ -70,10 +82,12 @@ void GameScene::Update()
 
     /// 更新処理
     pGameEye_->Update();
-    pParticleEmitter_->Update();
     pGuideSprite_->Update();
     pSkydome_->Update();
     pGrid_->Update();
+    pFirework_->Update();
+    pSmoke_->Update();
+    pSpark_->Update();
 }
 
 void GameScene::Draw2dBackGround()
@@ -84,35 +98,12 @@ void GameScene::Draw3d()
 {
     pSkydome_->Draw();
     pGrid_->Draw();
-    pParticleEmitter_->Draw();
+    pFirework_->Draw();
+    pSmoke_->Draw();
+    pSpark_->Draw();
 }
 
 void GameScene::Draw2dForeground()
 {
     pGuideSprite_->Draw();
-}
-
-void GameScene::EmitterSetting()
-{
-    auto& emitterData = pParticleEmitter_->GetEmitterData();
-
-    emitterData.particleLifeTime_ = 5.0f;
-
-    emitterData.startScale_ = Vector3(0.3f, 0.3f, 0.1f);
-    emitterData.endScale_ = Vector3(0.0f, 0.0f, 0.0f);
-    emitterData.scaleDelayTime_ = 0.0f;
-
-    emitterData.emitInterval_ = 0.02f;
-    emitterData.emitNum_ = 30;
-    emitterData.emitterLifeTime_ = 0.0f;
-    emitterData.enableRandomEmit_ = false;
-    emitterData.emitPositionFixed_ = Vector3(7.0f, 0.0f, 0.0f);
-    emitterData.beginColor_ = Vector4(0.0f, 0.8f, 0.5f, 0.0f);
-    emitterData.endColor_ = Vector4(0.7f, 0.85f, 1.0f, 1.0f);
-    emitterData.alphaDeltaValue_ = -0.0f;
-    emitterData.enableRandomVelocity_ = true;
-    emitterData.velocityRandomRangeBegin_ = Vector3(-10.0f, 3.5f, -5.0f);
-    emitterData.velocityRandomRangeEnd_ = Vector3(-5.0f, 0.0f, 5.0f);
-    emitterData.gravity_ = Vector3(0.0f, -3.75f, 0.0f);
-    emitterData.resistance_ = Vector3(-2.75f, 0.0f, 0.0f);
 }

@@ -50,6 +50,13 @@ void ParticleEmitter::Update()
         timer_.Reset();
         timer_.Start();
     }
+
+    //if (reloadTimer_.GetNow() > reloadInterval_)
+    //{
+    //    emitterData_ = EmitterManager::GetInstance()->ReloadFile(jsonPath_);
+    //    reloadTimer_.Reset();
+    //    reloadTimer_.Start();
+    //}
 }
 
 void ParticleEmitter::Draw()
