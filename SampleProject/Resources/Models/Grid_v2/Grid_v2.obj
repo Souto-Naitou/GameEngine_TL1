@@ -1,6 +1,6 @@
 # Blender 3.3.17
 # www.blender.org
-mtllib Grid.mtl
+mtllib Grid_v2.mtl
 o 平面
 v -50.000000 0.000000 50.000000
 v 50.000000 0.000000 50.000000
