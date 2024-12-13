@@ -30,6 +30,8 @@ void ModelManager::AddAutoLoadPath(const std::string& _path)
         }
     }
 
+
+
     AddSearchPath(_path);
 
     autoLoadPaths_.push_back(_path);
@@ -39,14 +41,15 @@ void ModelManager::LoadAllModel()
 {
     for (const auto& path : autoLoadPaths_)
     {
-        for (auto itr = std::filesystem::directory_iterator(path, std::filesystem::directory_options::skip_permission_denied);
-            itr != std::filesystem::directory_iterator();
+        for (auto itr = std::filesystem::recursive_directory_iterator(path, std::filesystem::directory_options::skip_permission_denied);
+            itr != std::filesystem::recursive_directory_iterator();
             ++itr){
             std::filesystem::path objPath = itr->path();
             if (objPath.extension() != ".obj")
             {
                 continue;
             }
+            AddAutoLoadPath(objPath.parent_path().string());
             LoadModel(objPath.string());
         }
     }
