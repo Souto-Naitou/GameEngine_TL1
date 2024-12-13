@@ -133,28 +133,23 @@ void ParticleEmitter::DebugWindow()
 {
 #ifdef _DEBUG
 
-    if (ImGui::CollapsingHeader("変形"))
-    {
-        ImGui::DragFloat3("開始スケール", &emitterData_.startScale_.x, 0.01f);
-        ImGui::SameLine();
-        if (ImGui::Button("入れ替え##Scale"))
-        {
-            Vector3 temp = emitterData_.startScale_;
-            emitterData_.startScale_ = emitterData_.endScale_;
-            emitterData_.endScale_ = temp;
-        }
-
-        ImGui::DragFloat3("終了スケール", &emitterData_.endScale_.x, 0.01f);
-        ImGui::SameLine();
-        if (ImGui::Button("同期##Scale"))
-        {
-            emitterData_.endScale_ = emitterData_.startScale_;
-        }
-        ImGui::DragFloat("スケール遅延時間", &emitterData_.scaleDelayTime_, 0.01f);
-    }
+    char path[256];
+    strcpy_s(path, jsonPath_.c_str());
 
     if (ImGui::CollapsingHeader("一般"))
     {
+        ImGui::InputText("ファイルパス", path, sizeof(path));
+        ImGui::SameLine();
+        if (ImGui::Button("保存"))
+        {
+            EmitterManager::GetInstance()->SaveFile(path, emitterData_);
+        }
+        ImGui::SameLine();
+        if (ImGui::Button("リロード"))
+        {
+            emitterData_ = EmitterManager::GetInstance()->LoadFile(path);
+        }
+
         ImGui::DragFloat("パーティクル寿命", &emitterData_.particleLifeTime_, 0.1f, 0.0f, FLT_MAX);
         ImGui::DragFloat("発生間隔", &emitterData_.emitInterval_, 0.02f, 0.02f, FLT_MAX);
         ImGui::InputInt("発生数", (int*)&emitterData_.emitNum_);
@@ -175,6 +170,26 @@ void ParticleEmitter::DebugWindow()
         }
 
         ImGui::SliderFloat("透明度の変化量", &emitterData_.alphaDeltaValue_, -0.2f, 0.0f);
+    }
+
+    if (ImGui::CollapsingHeader("変形"))
+    {
+        ImGui::DragFloat3("開始スケール", &emitterData_.startScale_.x, 0.01f);
+        ImGui::SameLine();
+        if (ImGui::Button("入れ替え##Scale"))
+        {
+            Vector3 temp = emitterData_.startScale_;
+            emitterData_.startScale_ = emitterData_.endScale_;
+            emitterData_.endScale_ = temp;
+        }
+
+        ImGui::DragFloat3("終了スケール", &emitterData_.endScale_.x, 0.01f);
+        ImGui::SameLine();
+        if (ImGui::Button("同期##Scale"))
+        {
+            emitterData_.endScale_ = emitterData_.startScale_;
+        }
+        ImGui::DragFloat("スケール遅延時間", &emitterData_.scaleDelayTime_, 0.01f);
     }
 
     if (ImGui::CollapsingHeader("生成場所"))
@@ -210,6 +225,8 @@ void ParticleEmitter::DebugWindow()
         ImGui::DragFloat3("重力", &emitterData_.gravity_.x, 0.01f);
         ImGui::DragFloat3("抵抗", &emitterData_.resistance_.x, 0.01f);
     }
+
+    jsonPath_ = path;
 
 #endif // _DEBUG
 }

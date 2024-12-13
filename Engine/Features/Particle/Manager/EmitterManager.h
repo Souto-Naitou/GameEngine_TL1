@@ -21,19 +21,24 @@ public:
 
     const EmitterData& LoadFile(std::string _path);
     const EmitterData& ReloadFile(std::string _path);
+    void SaveFile(const std::string& _path, const EmitterData& _data);
 
 
 private:
     EmitterManager() = default;
     ~EmitterManager() = default;
 
-    void ParseEmitterData(JsonValue& _loader, EmitterData& _data);
+    void ParseJsonValue(JsonValue& _loader, EmitterData& _data);
+    JsonValue ParseEmitterData(const EmitterData& _data);
 
     Vector3 ParseVector3(JsonObject& _obj);
     Vector4 ParseVector4(JsonObject& _obj);
     Color ParseColor(JsonObject& _obj);
 
+    std::shared_ptr<JsonValue> ParseVector3(const Vector3& _vec);
+    std::shared_ptr<JsonValue> ParseVector4(const Vector4& _vec);
+    std::shared_ptr<JsonValue> ParseColor(const Color& _color);
+
 private:
     std::unordered_map<std::filesystem::path, EmitterData> emitterMap_;
-
 };

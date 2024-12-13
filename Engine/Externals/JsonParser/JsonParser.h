@@ -25,7 +25,7 @@ private:
 
     JsonArray ParseArray();
 
-    void ParseNumber(JsonValueType& _value);
+    void ParseNumber(JsonValue& _value);
 
     bool IsDouble(const std::string& _str);
 };

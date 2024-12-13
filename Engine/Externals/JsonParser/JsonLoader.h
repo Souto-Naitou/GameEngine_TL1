@@ -9,6 +9,7 @@
 
 #include "jsontypes.h"
 #include "JsonParser.h"
+#include "JsonSaver.h"
 
 class JsonLoader
 {
@@ -41,6 +42,13 @@ public:
         LoadFile(filename);
     }
 
+    /// <summary>
+    /// JSONファイルを保存する
+    /// </summary>
+    /// <param name="filename">保存先ファイル名</param>
+    /// <param name="value">JSONデータ</param>
+    void SaveFile(const std::string& filename, const JsonValue& value);
+
 
 public: /// 演算子オーバーロード
     const JsonValue& operator[](const std::string& _filename) const
@@ -54,7 +62,7 @@ public: /// Getter
 
 
 private: /// コンストラクタ ・ デストラクタ
-    JsonLoader() = default;
+    JsonLoader();
     ~JsonLoader() = default;
 
 
@@ -62,4 +70,5 @@ private: /// メンバ変数
     // JSONデータ <ファイル名, JSONオブジェクト>
     std::map<std::filesystem::path, JsonValue> data_;
     JsonParser* parser_ = nullptr;
+    JsonSaver* saver_ = nullptr;
 };

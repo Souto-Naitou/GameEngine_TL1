@@ -24,9 +24,24 @@ using JsonValueType = std::variant<
     JsonObject
 >;
 
+enum class JsonValueTypes
+{
+    Null,
+    Int,
+    Float,
+    String,
+    Bool,
+    Array,
+    Object
+};
+
 class JsonValue
 {
 public:
+    JsonValue() = default;
+    JsonValue(JsonValueTypes _type, JsonValueType _value) : type(_type), value(_value) {};
+
+    JsonValueTypes type;
     JsonValueType value;
 
     JsonValue operator[](const char* _key) const;
@@ -38,6 +53,7 @@ public:
     operator bool() const;
     operator JsonArray() const;
     operator JsonObject() const;
+
 
 private:
     JsonValue recursive_search(const std::string& _key, const JsonObject& _obj) const;

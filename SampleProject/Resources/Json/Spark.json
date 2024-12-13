@@ -1,22 +1,72 @@
 {
-    "startScale": {"x": 0.05, "y": 0.05, "z": 0.05},
-    "endScale": {"x": 0.2, "y": 0.2, "z": 0.2},
-    "emitInterval": 0.05,
-    "emitNum": 20,
-    "emitterLifeTime": 2.0,
-    "particleLifeTime": 2.5,
-    "scaleDelayTime": 0.0,
-    "beginPosition": {"x": 0.0, "y": 0.0, "z": 0.0},
-    "endPosition": {"x": 0.0, "y": 0.0, "z": 0.0},
-    "emitPositionFixed": {"x": 1.0, "y": -0.7, "z": 0.0},
-    "beginColor": {"r": 0.98, "g": 0.98, "b": 0.75, "a": 1.0},
-    "endColor": {"r": 0.98, "g": 0.48, "b": 0.15, "a": 0.0},
-    "alphaDeltaValue": 0.0,
-    "velocityRandomRangeBegin": {"x": -0.5, "y": -0.5, "z": -0.5},
-    "velocityRandomRangeEnd": {"x": 0.5, "y": 0.5, "z": 0.5},
-    "velocityFixed": {"x": 0.0, "y": 1.0, "z": 0.0},
-    "gravity": {"x": 0.0, "y": 0.0, "z": 0.0},
-    "resistance": {"x": 0.75, "y": 0.0, "z": 0.0},
-    "enableRandomVelocity": true,
-    "enableRandomEmit": false
+    "alphaDeltaValue" : 0.000000,
+    "beginColor" : {
+        "a" : 1.000000,
+        "b" : 0.749020,
+        "g" : 0.976471,
+        "r" : 0.976471
+    },
+    "beginPosition" : {
+        "x" : 0.000000,
+        "y" : 0.000000,
+        "z" : 0.000000
+    },
+    "emitInterval" : 0.050000,
+    "emitNum" : 7,
+    "emitPositionFixed" : {
+        "x" : 1.000000,
+        "y" : 0.000000,
+        "z" : 0.000000
+    },
+    "emitterLifeTime" : 2.000000,
+    "enableRandomEmit" : false,
+    "enableRandomVelocity" : true,
+    "endColor" : {
+        "a" : 0.000000,
+        "b" : 0.149020,
+        "g" : 0.478431,
+        "r" : 0.976471
+    },
+    "endPosition" : {
+        "x" : 0.000000,
+        "y" : 0.000000,
+        "z" : 0.000000
+    },
+    "endScale" : {
+        "x" : 0.200000,
+        "y" : 0.200000,
+        "z" : 0.200000
+    },
+    "gravity" : {
+        "x" : 0.000000,
+        "y" : 0.000000,
+        "z" : 0.000000
+    },
+    "particleLifeTime" : 2.500000,
+    "resistance" : {
+        "x" : 0.000000,
+        "y" : 0.000000,
+        "z" : 0.000000
+    },
+    "scaleDelayTime" : 0.000000,
+    "startScale" : {
+        "x" : 0.050000,
+        "y" : 0.050000,
+        "z" : 0.050000
+    },
+    "velocityFixed" : {
+        "x" : 0.000000,
+        "y" : 1.000000,
+        "z" : 0.000000
+    },
+    "velocityRandomRangeBegin" : {
+        "x" : -0.500000,
+        "y" : -0.500000,
+        "z" : -0.500000
+    },
+    "velocityRandomRangeEnd" : {
+        "x" : 0.500000,
+        "y" : 0.500000,
+        "z" : 0.500000
+    }
 }
