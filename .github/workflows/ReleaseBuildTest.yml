@@ -23,9 +23,9 @@ jobs:
           msbuild-architecture: x64
           vs-version: 'latest'
 
-      - name: Verify MSVC version
+      - name: Verify CL version
         run: |
-          msbuild /version
+          cl /?
 
       - name: Build
         run: |
