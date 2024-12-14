@@ -133,8 +133,8 @@ void ParticleEmitter::DebugWindow()
 {
 #ifdef _DEBUG
 
-    char path[256];
-    strcpy_s(path, jsonPath_.c_str());
+    char path[512] = "";
+    std::memcpy(path, jsonPath_.c_str(), jsonPath_.size());
 
     if (ImGui::CollapsingHeader("一般"))
     {
@@ -142,6 +142,7 @@ void ParticleEmitter::DebugWindow()
         {
             jsonFileExist_ = std::filesystem::directory_entry(path).exists();
         }
+
         if (ImGui::Button("保存"))
         {
             EmitterManager::GetInstance()->SaveFile(path, emitterData_);
@@ -163,14 +164,27 @@ void ParticleEmitter::DebugWindow()
                 }
             }
         }
+        ImGui::SameLine();
+        if (ImGui::Button("参照"))
+        {
+            std::string temp = winTools_.OpenFileDialog();
+            if (!temp.empty() && std::filesystem::path(temp).extension() == ".json")
+            {
+                std::memcpy(path, temp.c_str(), temp.size());
+                jsonFileExist_ = true;
+            }
+            else jsonFileExist_ = false;
+        }
         if (!jsonFileExist_)
         {
             ImGui::SameLine();
-            ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), "ファイルが存在しません");
+            ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), "ファイルが存在しないか、拡張子がjsonではありません。");
         }
 
         ImGui::DragFloat("パーティクル寿命", &emitterData_.particleLifeTime_, 0.1f, 0.0f, FLT_MAX);
+
         ImGui::DragFloat("発生間隔", &emitterData_.emitInterval_, 0.02f, 0.02f, FLT_MAX);
+
         ImGui::InputInt("発生数", (int*)&emitterData_.emitNum_);
 
         ImGui::ColorEdit4("開始色", &emitterData_.beginColor_.x);
@@ -181,6 +195,7 @@ void ParticleEmitter::DebugWindow()
             emitterData_.beginColor_ = emitterData_.endColor_;
             emitterData_.endColor_ = temp;
         }
+
         ImGui::ColorEdit4("終了色", &emitterData_.endColor_.x);
         ImGui::SameLine();
         if (ImGui::Button("同期##Color"))

@@ -5,6 +5,7 @@
 #include <Features/Particle/Particle.h>
 #include <Features/Primitive/AABB.h>
 #include <memory>
+#include <WinTools/WinTools.h>
 
 struct EmitterData
 {
@@ -59,6 +60,7 @@ private:
     Particle* particle_ = nullptr;
     std::unique_ptr<AABB> aabb_;
     bool jsonFileExist_ = true;
+    WinTools        winTools_;
 
 
 private:
