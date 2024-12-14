@@ -23,10 +23,6 @@ jobs:
           msbuild-architecture: x64
           vs-version: 'latest'
 
-      - name: Verify CL version
-        run: |
-          cl /?
-
       - name: Build
         run: |
           msbuild ${{env.SOLUTION_FILE_PATH}} /p:Platform=x64,Configuration=${{env.CONFIGURATION}}
