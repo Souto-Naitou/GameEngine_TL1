@@ -21,6 +21,12 @@ jobs:
         uses: microsoft/setup-msbuild@v2
         with:
           msbuild-architecture: x64
+          vs-version: 'latest'
+
+      - name: Verify MSVC version
+        run: |
+          cl
+          msbuild /version
 
       - name: Build
         run: |
