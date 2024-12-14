@@ -6,8 +6,6 @@
 #include <DebugTools/ImGuiTemplates/ImGuiTemplates.h>
 #endif // _DEBUG
 
-const uint32_t SRVManager::kMaxSRVCount_ = 512u;
-
 void SRVManager::Initialize(DirectX12* _pDx12)
 {
 #ifdef _DEBUG
@@ -36,9 +34,31 @@ uint32_t SRVManager::Allocate()
 {
     assert(currentIndex_ < kMaxSRVCount_ && "インデックスが最大値を超えています");
 
-    uint32_t index = currentIndex_;
-    currentIndex_++;
-    return index;
+    currentSize_++;
+
+    for (uint32_t i = 0; i < kMaxSRVCount_; ++i)
+    {
+        uint32_t idx = (currentIndex_ + i) % kMaxSRVCount_;
+        if (!isAllocated_[idx])
+        {
+            isAllocated_[idx] = true;
+            currentIndex_ = (idx + 1) % kMaxSRVCount_;
+            return idx;
+        }
+    }
+
+    assert(false && "SRVの割り当てに失敗しました");
+
+    return -1;
+}
+
+void SRVManager::Deallocate(uint32_t _index)
+{
+    // assert(isAllocated_[_index] && "すでに開放されています。");
+    isAllocated_[_index] = false;
+    currentSize_--;
+
+    return;
 }
 
 D3D12_CPU_DESCRIPTOR_HANDLE SRVManager::GetCPUDescriptorHandle(uint32_t _index)
@@ -91,7 +111,7 @@ void SRVManager::DebugWindow()
     auto pFunc = [&]()
     {
         ImGuiTemplate::VariableTableRow("SRV許容数", kMaxSRVCount_);
-        ImGuiTemplate::VariableTableRow("現在のSRV数", currentIndex_);
+        ImGuiTemplate::VariableTableRow("現在のSRV数", currentSize_);
     };
     ImGuiTemplate::VariableTable("SRVManager", pFunc);
 

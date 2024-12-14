@@ -49,6 +49,11 @@ public:
     /// <param name="value">JSONデータ</param>
     void SaveFile(const std::string& filename, const JsonValue& value);
 
+    /// <summary>
+    /// JSONファイルが存在するか確認する
+    /// </summary>
+    /// <param name="_filename">ファイル名</param>
+    bool IsExist(const std::string& _filename);
 
 public: /// 演算子オーバーロード
     const JsonValue& operator[](const std::string& _filename) const

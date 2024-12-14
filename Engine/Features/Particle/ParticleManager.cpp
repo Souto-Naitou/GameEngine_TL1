@@ -29,6 +29,7 @@ void ParticleManager::ReleaseParticle(Particle* _particle)
     {
         if (&(*itr) == _particle)
         {
+            itr->Finalize();
             particles_.erase(itr);
             return;
         }

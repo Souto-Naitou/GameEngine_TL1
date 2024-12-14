@@ -115,6 +115,12 @@ void Particle::Finalize()
     DebugManager::GetInstance()->DeleteComponent("Particle", name_.c_str());
 
 #endif
+
+    /// リソースの解放
+    instancingResource_.Reset();
+    SRVManager::GetInstance()->Deallocate(srvIndex_);
+    return;
+
 }
 
 void Particle::Draw()
@@ -134,6 +140,7 @@ void Particle::reserve(size_t _size)
 {
     particleData_.reserve(_size);
     CreateParticleForGPUResource();
+    SRVManager::GetInstance()->Deallocate(srvIndex_);
     CreateSRV();
     InitializeTransform();
     return;
@@ -145,6 +152,7 @@ void Particle::emplace_back(const ParticleData& _data)
     if (particleData_.capacity() > currentInstancingSize_)
     {
         CreateParticleForGPUResource();
+        SRVManager::GetInstance()->Deallocate(srvIndex_);
         CreateSRV();
     }
 }

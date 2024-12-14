@@ -138,16 +138,35 @@ void ParticleEmitter::DebugWindow()
 
     if (ImGui::CollapsingHeader("一般"))
     {
-        ImGui::InputText("ファイルパス", path, sizeof(path));
-        ImGui::SameLine();
+        if (ImGui::InputText("ファイルパス", path, sizeof(path)))
+        {
+            jsonFileExist_ = std::filesystem::directory_entry(path).exists();
+        }
         if (ImGui::Button("保存"))
         {
             EmitterManager::GetInstance()->SaveFile(path, emitterData_);
         }
         ImGui::SameLine();
-        if (ImGui::Button("リロード"))
+        if (ImGui::Button("読み込み"))
         {
-            emitterData_ = EmitterManager::GetInstance()->LoadFile(path);
+            if (!JsonLoader::GetInstance().IsExist(path))
+            {
+                if (std::filesystem::directory_entry(path).exists())
+                {
+                    emitterData_ = EmitterManager::GetInstance()->ReloadFile(path);
+                    jsonFileExist_ = true;
+                }
+                else
+                {
+                    DebugManager::GetInstance()->PushLog("ファイルが存在しません");
+                    jsonFileExist_ = false;
+                }
+            }
+        }
+        if (!jsonFileExist_)
+        {
+            ImGui::SameLine();
+            ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), "ファイルが存在しません");
         }
 
         ImGui::DragFloat("パーティクル寿命", &emitterData_.particleLifeTime_, 0.1f, 0.0f, FLT_MAX);
@@ -227,7 +246,6 @@ void ParticleEmitter::DebugWindow()
     }
 
     jsonPath_ = path;
-
 #endif // _DEBUG
 }
 
@@ -237,7 +255,6 @@ void ParticleEmitter::Finalize()
     DebugManager::GetInstance()->DeleteComponent("ParticleEmitter", name_.c_str());
 #endif
 
-    particle_->Finalize();
     ParticleManager::GetInstance()->ReleaseParticle(particle_);
     particle_ = nullptr;
 }

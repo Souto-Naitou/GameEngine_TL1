@@ -58,6 +58,7 @@ private:
     EmitterData     emitterData_;       // エミッタデータ
     Particle* particle_ = nullptr;
     std::unique_ptr<AABB> aabb_;
+    bool jsonFileExist_ = true;
 
 
 private:

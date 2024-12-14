@@ -30,7 +30,6 @@ void RequiredScene::Finalize()
     delete pGameEye_;
     delete pGuideSprite_;
 
-    particle_->Finalize();
     ParticleManager::GetInstance()->ReleaseParticle(particle_);
     particle_ = nullptr;
 }
