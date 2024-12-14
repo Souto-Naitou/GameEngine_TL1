@@ -25,7 +25,6 @@ jobs:
 
       - name: Verify MSVC version
         run: |
-          cl
           msbuild /version
 
       - name: Build
