@@ -83,7 +83,7 @@
       <AdditionalIncludeDirectories>$(ProjectDir)Resources\Shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </FxCompile>
     <Lib>
-      <AdditionalDependencies>$(ProjectDir)Externals\JsonParser\$(Configuration)\JsonParser.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(ProjectDir)Externals\JsonParser\$(Configuration)\JsonParser.lib;$(ProjectDir)Externals\WinTools\$(Configuration)\WinTools.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -118,7 +118,7 @@
       <AdditionalIncludeDirectories>$(ProjectDir)Resources\Shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </FxCompile>
     <Lib>
-      <AdditionalDependencies>$(ProjectDir)Externals\JsonParser\$(Configuration)\JsonParser.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(ProjectDir)Externals\JsonParser\$(Configuration)\JsonParser.lib;$(ProjectDir)Externals\WinTools\$(Configuration)\WinTools.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>

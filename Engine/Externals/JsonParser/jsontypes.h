@@ -38,9 +38,6 @@ enum class JsonValueTypes
 class JsonValue
 {
 public:
-    JsonValue() = default;
-    JsonValue(JsonValueTypes _type, JsonValueType _value) : type(_type), value(_value) {};
-
     JsonValueTypes type;
     JsonValueType value;
 

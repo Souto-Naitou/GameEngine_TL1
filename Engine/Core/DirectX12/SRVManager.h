@@ -5,6 +5,7 @@
 #include <Core/DirectX12/DirectX12.h>
 #include <wrl.h>
 #include <string>
+#include <array>
 
 class SRVManager
 {
@@ -22,6 +23,7 @@ public:
     void PresentDraw();
 
     uint32_t Allocate();
+    void Deallocate(uint32_t _index);
     D3D12_CPU_DESCRIPTOR_HANDLE GetCPUDescriptorHandle(uint32_t _index);
     D3D12_GPU_DESCRIPTOR_HANDLE GetGPUDescriptorHandle(uint32_t _index);
 
@@ -38,7 +40,7 @@ public: /// Getter
 
 
 public: /// 公開定数
-    static const uint32_t kMaxSRVCount_;
+    static const uint32_t kMaxSRVCount_ = 512u;
 
 
 private:
@@ -52,7 +54,8 @@ private:
     uint32_t descriptorSize_ = 0u;
     Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> pDescHeap_ = nullptr;
     uint32_t currentIndex_ = 0u;
-
+    std::array<bool, kMaxSRVCount_> isAllocated_ = {};
+    uint32_t currentSize_ = 0u;
 
 private:
     DirectX12* pDx12_ = nullptr;

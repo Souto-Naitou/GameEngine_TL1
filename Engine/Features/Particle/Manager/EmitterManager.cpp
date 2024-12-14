@@ -19,11 +19,13 @@ const EmitterData& EmitterManager::ReloadFile(std::string _path)
 {
     JsonLoader& loader = JsonLoader::GetInstance();
 
-    EmitterData data = {};
+    if (!loader.IsExist(_path)) return LoadFile(_path);
+
     loader.ReloadFile(_path);
 
     JsonValue root = loader[_path];
 
+    EmitterData data = {};
     ParseJsonValue(root, data);
 
     emitterMap_[_path] = data;
