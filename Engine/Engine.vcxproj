@@ -103,7 +103,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>$(ProjectDir)Common\stdafx.h</PrecompiledHeaderFile>
       <ForcedIncludeFiles>$(ProjectDir)Common\stdafx.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <Optimization>MinSpace</Optimization>
+      <Optimization>MaxSpeed</Optimization>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
