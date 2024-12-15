@@ -213,9 +213,6 @@
     <ClCompile Include="Common\HRESULT_ASSERT.cpp">
       <Filter>Common\HRESULT_ASSERT</Filter>
     </ClCompile>
-    <ClCompile Include="Common\stdafx.cpp">
-      <Filter>Common</Filter>
-    </ClCompile>
     <ClCompile Include="Features\Audio\Audio.cpp">
       <Filter>Feature\Audio</Filter>
     </ClCompile>
@@ -337,9 +334,6 @@
     </ClInclude>
     <ClInclude Include="Common\HRESULT_ASSERT.h">
       <Filter>Common\HRESULT_ASSERT</Filter>
-    </ClInclude>
-    <ClInclude Include="Common\stdafx.h">
-      <Filter>Common</Filter>
     </ClInclude>
     <ClInclude Include="Features\Audio\Audio.h">
       <Filter>Feature\Audio</Filter>
