@@ -1,5 +1,6 @@
 #include "LineSystem.h"
 
+#include <DebugTools/Logger/Logger.h>
 #include <Core/DirectX12/Helper/DX12Helper.h>
 
 void LineSystem::Initialize()
