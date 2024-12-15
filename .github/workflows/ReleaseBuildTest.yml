@@ -21,7 +21,7 @@ jobs:
         uses: microsoft/setup-msbuild@v2
         with:
           msbuild-architecture: x64
-          vs-version: 'latest'
+          vs-version: '[17.12,17.13)'
 
       - name: Build
         run: |
