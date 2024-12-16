@@ -150,18 +150,15 @@ void ParticleEmitter::DebugWindow()
         ImGui::SameLine();
         if (ImGui::Button("読み込み"))
         {
-            if (!JsonLoader::GetInstance().IsExist(path))
+            if (std::filesystem::directory_entry(path).exists())
             {
-                if (std::filesystem::directory_entry(path).exists())
-                {
-                    emitterData_ = EmitterManager::GetInstance()->ReloadFile(path);
-                    jsonFileExist_ = true;
-                }
-                else
-                {
-                    DebugManager::GetInstance()->PushLog("ファイルが存在しません");
-                    jsonFileExist_ = false;
-                }
+                emitterData_ = EmitterManager::GetInstance()->ReloadFile(path);
+                jsonFileExist_ = true;
+            }
+            else
+            {
+                DebugManager::GetInstance()->PushLog("ファイルが存在しません");
+                jsonFileExist_ = false;
             }
         }
         ImGui::SameLine();
@@ -204,6 +201,8 @@ void ParticleEmitter::DebugWindow()
         }
 
         ImGui::SliderFloat("透明度の変化量", &emitterData_.alphaDeltaValue_, -0.2f, 0.0f);
+
+        ImGui::Spacing();
     }
 
     if (ImGui::CollapsingHeader("変形"))
@@ -224,6 +223,8 @@ void ParticleEmitter::DebugWindow()
             emitterData_.endScale_ = emitterData_.startScale_;
         }
         ImGui::DragFloat("スケール遅延時間", &emitterData_.scaleDelayTime_, 0.01f);
+
+        ImGui::Spacing();
     }
 
     if (ImGui::CollapsingHeader("生成場所"))
@@ -238,6 +239,8 @@ void ParticleEmitter::DebugWindow()
         {
             ImGui::DragFloat3("発生位置", &emitterData_.emitPositionFixed_.x, 0.01f);
         }
+
+        ImGui::Spacing();
     }
 
     if (ImGui::CollapsingHeader("速度"))
@@ -252,12 +255,15 @@ void ParticleEmitter::DebugWindow()
         {
             ImGui::DragFloat3("速度", &emitterData_.velocityFixed_.x, 0.01f);
         }
+
+        ImGui::Spacing();
     }
 
     if (ImGui::CollapsingHeader("物理"))
     {
         ImGui::DragFloat3("重力", &emitterData_.gravity_.x, 0.01f);
         ImGui::DragFloat3("抵抗", &emitterData_.resistance_.x, 0.01f);
+
     }
 
     jsonPath_ = path;

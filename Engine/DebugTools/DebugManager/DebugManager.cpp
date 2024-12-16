@@ -286,7 +286,7 @@ void DebugManager::DefaultStyle()
     style.WindowRounding = 6.0f;
     style.TabRounding = 0.0f;
     style.WindowTitleAlign = ImVec2(0.5f, 0.5f);
-    style.Colors[ImGuiCol_WindowBg] = ImVec4(0.05f, 0.05f, 0.05f, 0.75f);
+    style.Colors[ImGuiCol_WindowBg] = ImVec4(0.00f, 0.00f, 0.03f, 0.75f);
     style.Colors[ImGuiCol_TitleBgActive] = ImVec4(0.8f, 0.1f, 0.1f, 0.75f);
     style.Colors[ImGuiCol_TitleBg] = ImVec4(0.0f, 0.0f, 0.0f, 0.90f);
 #endif // _DEBUG

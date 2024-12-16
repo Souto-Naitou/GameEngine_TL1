@@ -6,7 +6,7 @@ const EmitterData& EmitterManager::LoadFile(std::string _path)
 
     EmitterData data = {};
     loader.LoadFile(_path);
-    JsonValue root = loader[_path];
+    Json::Value root = loader[_path];
 
     ParseJsonValue(root, data);
 
@@ -23,7 +23,7 @@ const EmitterData& EmitterManager::ReloadFile(std::string _path)
 
     loader.ReloadFile(_path);
 
-    JsonValue root = loader[_path];
+    Json::Value root = loader[_path];
 
     EmitterData data = {};
     ParseJsonValue(root, data);
@@ -36,13 +36,13 @@ const EmitterData& EmitterManager::ReloadFile(std::string _path)
 void EmitterManager::SaveFile(const std::string& _path, const EmitterData& _data)
 {
     JsonLoader& loader = JsonLoader::GetInstance();
-    JsonValue data = ParseEmitterData(_data);
+    Json::Value data = ParseEmitterData(_data);
     loader.SaveFile(_path, data);
 }
 
-void EmitterManager::ParseJsonValue(JsonValue& _loader, EmitterData& _data)
+void EmitterManager::ParseJsonValue(Json::Value& _loader, EmitterData& _data)
 {
-    JsonObject obj = {};
+    Json::Object obj = {};
 
     /// [Transform]
 
@@ -117,30 +117,30 @@ void EmitterManager::ParseJsonValue(JsonValue& _loader, EmitterData& _data)
     return;
 }
 
-JsonValue EmitterManager::ParseEmitterData(const EmitterData& _data)
+Json::Value EmitterManager::ParseEmitterData(const EmitterData& _data)
 {
-    JsonValue value = {};
-    JsonObject root = {};
+    Json::Value value = {};
+    Json::Object root = {};
 
     /// [Transform]
 
     root["startScale"] = ParseVector3(_data.startScale_);
     root["endScale"] = ParseVector3(_data.endScale_);
-    root["scaleDelayTime"] = std::make_shared<JsonValue>(JsonValueTypes::Float, _data.scaleDelayTime_);
+    root["scaleDelayTime"] = std::make_shared<Json::Value>(Json::Value::Type::Float, _data.scaleDelayTime_);
 
 
     /// [Common]
 
-    root["particleLifeTime"] = std::make_shared<JsonValue>(JsonValueTypes::Float, _data.particleLifeTime_);
-    root["emitInterval"] = std::make_shared<JsonValue>(JsonValueTypes::Float, _data.emitInterval_);
-    root["emitNum"] = std::make_shared<JsonValue>(JsonValueTypes::Int, _data.emitNum_);
-    root["emitterLifeTime"] = std::make_shared<JsonValue>(JsonValueTypes::Float, _data.emitterLifeTime_);
+    root["particleLifeTime"] = std::make_shared<Json::Value>(Json::Value::Type::Float, _data.particleLifeTime_);
+    root["emitInterval"] = std::make_shared<Json::Value>(Json::Value::Type::Float, _data.emitInterval_);
+    root["emitNum"] = std::make_shared<Json::Value>(Json::Value::Type::Int, _data.emitNum_);
+    root["emitterLifeTime"] = std::make_shared<Json::Value>(Json::Value::Type::Float, _data.emitterLifeTime_);
 
 
     /// [Generate]
 
 
-    root["enableRandomEmit"] = std::make_shared<JsonValue>(JsonValueTypes::Bool, _data.enableRandomEmit_);
+    root["enableRandomEmit"] = std::make_shared<Json::Value>(Json::Value::Type::Bool, _data.enableRandomEmit_);
     root["beginPosition"] = ParseVector3(_data.beginPosition_);
     root["endPosition"] = ParseVector3(_data.endPosition_);
     root["emitPositionFixed"] = ParseVector3(_data.emitPositionFixed_);
@@ -148,7 +148,7 @@ JsonValue EmitterManager::ParseEmitterData(const EmitterData& _data)
 
     /// [Velocity]
 
-    root["enableRandomVelocity"] = std::make_shared<JsonValue>(JsonValueTypes::Bool, _data.enableRandomVelocity_);
+    root["enableRandomVelocity"] = std::make_shared<Json::Value>(Json::Value::Type::Bool, _data.enableRandomVelocity_);
     root["velocityRandomRangeBegin"] = ParseVector3(_data.velocityRandomRangeBegin_);
     root["velocityRandomRangeEnd"] = ParseVector3(_data.velocityRandomRangeEnd_);
     root["velocityFixed"] = ParseVector3(_data.velocityFixed_);
@@ -158,7 +158,7 @@ JsonValue EmitterManager::ParseEmitterData(const EmitterData& _data)
 
     root["beginColor"] = ParseColor(_data.beginColor_);
     root["endColor"] = ParseColor(_data.endColor_);
-    root["alphaDeltaValue"] = std::make_shared<JsonValue>(JsonValueTypes::Float, _data.alphaDeltaValue_);
+    root["alphaDeltaValue"] = std::make_shared<Json::Value>(Json::Value::Type::Float, _data.alphaDeltaValue_);
 
 
     /// [Physics]
@@ -167,43 +167,43 @@ JsonValue EmitterManager::ParseEmitterData(const EmitterData& _data)
     root["resistance"] = ParseVector3(_data.resistance_);
 
 
-    value.type = JsonValueTypes::Object;
+    value.type = Json::Value::Type::Object;
     value.value = root;
 
     return value;
 }
 
-Vector3 EmitterManager::ParseVector3(JsonObject& _obj)
+Vector3 EmitterManager::ParseVector3(Json::Object& _obj)
 {
     float x, y, z;
     x = *_obj["x"]; y = *_obj["y"]; z = *_obj["z"];
     return Vector3(x,y,z);
 }
 
-Vector4 EmitterManager::ParseVector4(JsonObject& _obj)
+Vector4 EmitterManager::ParseVector4(Json::Object& _obj)
 {
     float x, y, z, w;
     x = *_obj["x"]; y = *_obj["y"]; z = *_obj["z"]; w = *_obj["w"];
     return Vector4(x, y, z, w);
 }
 
-Color EmitterManager::ParseColor(JsonObject& _obj)
+Color EmitterManager::ParseColor(Json::Object& _obj)
 {
     float r, g, b, a;
     r = *_obj["r"]; g = *_obj["g"]; b = *_obj["b"]; a = *_obj["a"];
     return Color(r, g, b, a);
 }
 
-std::shared_ptr<JsonValue> EmitterManager::ParseVector3(const Vector3& _vec)
+std::shared_ptr<Json::Value> EmitterManager::ParseVector3(const Vector3& _vec)
 {
-    auto result = std::make_shared<JsonValue>();
-    JsonObject obj = {};
-    auto x = std::make_shared<JsonValue>();
-    auto y = std::make_shared<JsonValue>();
-    auto z = std::make_shared<JsonValue>();
-    x->type = JsonValueTypes::Float;
-    y->type = JsonValueTypes::Float;
-    z->type = JsonValueTypes::Float;
+    auto result = std::make_shared<Json::Value>();
+    Json::Object obj = {};
+    auto x = std::make_shared<Json::Value>();
+    auto y = std::make_shared<Json::Value>();
+    auto z = std::make_shared<Json::Value>();
+    x->type = Json::Value::Type::Float;
+    y->type = Json::Value::Type::Float;
+    z->type = Json::Value::Type::Float;
     x->value = _vec.x;
     y->value = _vec.y;
     z->value = _vec.z;
@@ -211,25 +211,25 @@ std::shared_ptr<JsonValue> EmitterManager::ParseVector3(const Vector3& _vec)
     obj["y"] = y;
     obj["z"] = z;
 
-    result->type = JsonValueTypes::Object;
+    result->type = Json::Value::Type::Object;
     result->value = obj;
 
     return result;
 }
 
-std::shared_ptr<JsonValue> EmitterManager::ParseVector4(const Vector4& _vec)
+std::shared_ptr<Json::Value> EmitterManager::ParseVector4(const Vector4& _vec)
 {
-    auto result = std::make_shared<JsonValue>();
-    JsonObject obj = {};
-    auto x = std::make_shared<JsonValue>();
-    auto y = std::make_shared<JsonValue>();
-    auto z = std::make_shared<JsonValue>();
-    auto w = std::make_shared<JsonValue>();
+    auto result = std::make_shared<Json::Value>();
+    Json::Object obj = {};
+    auto x = std::make_shared<Json::Value>();
+    auto y = std::make_shared<Json::Value>();
+    auto z = std::make_shared<Json::Value>();
+    auto w = std::make_shared<Json::Value>();
 
-    x->type = JsonValueTypes::Float;
-    y->type = JsonValueTypes::Float;
-    z->type = JsonValueTypes::Float;
-    w->type = JsonValueTypes::Float;
+    x->type = Json::Value::Type::Float;
+    y->type = Json::Value::Type::Float;
+    z->type = Json::Value::Type::Float;
+    w->type = Json::Value::Type::Float;
 
     x->value = _vec.x;
     y->value = _vec.y;
@@ -241,25 +241,25 @@ std::shared_ptr<JsonValue> EmitterManager::ParseVector4(const Vector4& _vec)
     obj["z"] = z;
     obj["w"] = w;
 
-    result->type = JsonValueTypes::Object;
+    result->type = Json::Value::Type::Object;
     result->value = obj;
 
     return result;
 }
 
-std::shared_ptr<JsonValue> EmitterManager::ParseColor(const Color& _color)
+std::shared_ptr<Json::Value> EmitterManager::ParseColor(const Color& _color)
 {
-    auto result = std::make_shared<JsonValue>();
-    JsonObject obj = {};
-    auto r = std::make_shared<JsonValue>();
-    auto g = std::make_shared<JsonValue>();
-    auto b = std::make_shared<JsonValue>();
-    auto a = std::make_shared<JsonValue>();
+    auto result = std::make_shared<Json::Value>();
+    Json::Object obj = {};
+    auto r = std::make_shared<Json::Value>();
+    auto g = std::make_shared<Json::Value>();
+    auto b = std::make_shared<Json::Value>();
+    auto a = std::make_shared<Json::Value>();
 
-    r->type = JsonValueTypes::Float;
-    g->type = JsonValueTypes::Float;
-    b->type = JsonValueTypes::Float;
-    a->type = JsonValueTypes::Float;
+    r->type = Json::Value::Type::Float;
+    g->type = Json::Value::Type::Float;
+    b->type = Json::Value::Type::Float;
+    a->type = Json::Value::Type::Float;
 
     r->value = static_cast<float>(_color.rgba.r) / 255.0f;
     g->value = static_cast<float>(_color.rgba.g) / 255.0f;
@@ -270,7 +270,7 @@ std::shared_ptr<JsonValue> EmitterManager::ParseColor(const Color& _color)
     obj["b"] = b;
     obj["a"] = a;
 
-    result->type = JsonValueTypes::Object;
+    result->type = Json::Value::Type::Object;
     result->value = obj;
 
     return result;
