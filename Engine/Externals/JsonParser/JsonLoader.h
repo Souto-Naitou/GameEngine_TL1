@@ -7,9 +7,7 @@
 #include <memory>
 #include <filesystem>
 
-#include "jsontypes.h"
-#include "JsonParser.h"
-#include "JsonSaver.h"
+#include "json.h"
 
 class JsonLoader
 {
@@ -47,7 +45,7 @@ public:
     /// </summary>
     /// <param name="filename">保存先ファイル名</param>
     /// <param name="value">JSONデータ</param>
-    void SaveFile(const std::string& filename, const JsonValue& value);
+    void SaveFile(const std::string& filename, const Json::Value& value);
 
     /// <summary>
     /// JSONファイルが存在するか確認する
@@ -56,14 +54,14 @@ public:
     bool IsExist(const std::string& _filename);
 
 public: /// 演算子オーバーロード
-    const JsonValue& operator[](const std::string& _filename) const
+    const Json::Value& operator[](const std::string& _filename) const
     {
         return data_.at(_filename);
     }
 
 
 public: /// Getter
-    const JsonValue& GetObject(const std::string& _filename);
+    const Json::Value& GetObject(const std::string& _filename);
 
 
 private: /// コンストラクタ ・ デストラクタ
@@ -73,7 +71,7 @@ private: /// コンストラクタ ・ デストラクタ
 
 private: /// メンバ変数
     // JSONデータ <ファイル名, JSONオブジェクト>
-    std::map<std::filesystem::path, JsonValue> data_;
-    JsonParser* parser_ = nullptr;
-    JsonSaver* saver_ = nullptr;
+    std::map<std::filesystem::path, Json::Value> data_;
+    Json::Parser* parser_ = nullptr;
+    Json::Saver* saver_ = nullptr;
 };

@@ -28,16 +28,16 @@ private:
     EmitterManager() = default;
     ~EmitterManager() = default;
 
-    void ParseJsonValue(JsonValue& _loader, EmitterData& _data);
-    JsonValue ParseEmitterData(const EmitterData& _data);
+    void ParseJsonValue(Json::Value& _loader, EmitterData& _data);
+    Json::Value ParseEmitterData(const EmitterData& _data);
 
-    Vector3 ParseVector3(JsonObject& _obj);
-    Vector4 ParseVector4(JsonObject& _obj);
-    Color ParseColor(JsonObject& _obj);
+    Vector3 ParseVector3(Json::Object& _obj);
+    Vector4 ParseVector4(Json::Object& _obj);
+    Color ParseColor(Json::Object& _obj);
 
-    std::shared_ptr<JsonValue> ParseVector3(const Vector3& _vec);
-    std::shared_ptr<JsonValue> ParseVector4(const Vector4& _vec);
-    std::shared_ptr<JsonValue> ParseColor(const Color& _color);
+    std::shared_ptr<Json::Value> ParseVector3(const Vector3& _vec);
+    std::shared_ptr<Json::Value> ParseVector4(const Vector4& _vec);
+    std::shared_ptr<Json::Value> ParseColor(const Color& _color);
 
 private:
     std::unordered_map<std::filesystem::path, EmitterData> emitterMap_;
