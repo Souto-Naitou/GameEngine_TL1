@@ -31,6 +31,12 @@ void ParticleEmitter::Initialize(const std::string& _modelPath, const std::strin
 
     emitterData_ = EmitterManager::GetInstance()->LoadFile(jsonPath_);
 
+    if (!emitterData_.name_.empty())
+    {
+        name_ = emitterData_.name_;
+    }
+
+
     aabb_ = std::make_unique<AABB>();
     aabb_->Initialize();
 }
@@ -50,13 +56,6 @@ void ParticleEmitter::Update()
         timer_.Reset();
         timer_.Start();
     }
-
-    //if (reloadTimer_.GetNow() > reloadInterval_)
-    //{
-    //    emitterData_ = EmitterManager::GetInstance()->ReloadFile(jsonPath_);
-    //    reloadTimer_.Reset();
-    //    reloadTimer_.Start();
-    //}
 }
 
 void ParticleEmitter::Draw()
@@ -153,6 +152,11 @@ void ParticleEmitter::DebugWindow()
             if (std::filesystem::directory_entry(path).exists())
             {
                 emitterData_ = EmitterManager::GetInstance()->ReloadFile(path);
+                /// 名前が空でないなら
+                if (!emitterData_.name_.empty())
+                {
+                    name_ = emitterData_.name_;
+                }
                 jsonFileExist_ = true;
             }
             else
