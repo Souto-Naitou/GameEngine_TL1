@@ -79,7 +79,7 @@ void DebugManager::Window_ObjectList()
             else // null-nameじゃないとき
             {
                 std::string parentName = std::get<0>(*itr).c_str();
-                if (ImGui::TreeNode(parentName.c_str()))
+                if (ImGui::TreeNodeEx(parentName.c_str(), ImGuiTreeNodeFlags_Framed))
                 {
                     do
                     {
