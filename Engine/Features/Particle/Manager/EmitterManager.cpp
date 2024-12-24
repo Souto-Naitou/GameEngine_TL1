@@ -44,6 +44,9 @@ void EmitterManager::ParseJsonValue(Json::Value& _loader, EmitterData& _data)
 {
     Json::Object obj = {};
 
+    /// [Name]
+    _data.name_ = _loader["emitterName"];
+
     /// [Transform]
 
     obj = _loader["startScale"];
@@ -121,6 +124,9 @@ Json::Value EmitterManager::ParseEmitterData(const EmitterData& _data)
 {
     Json::Value value = {};
     Json::Object root = {};
+
+    /// [Name]
+    root["emitterName"] = std::make_shared<Json::Value>(Json::Value::Type::String, _data.name_);
 
     /// [Transform]
 
