@@ -33,7 +33,7 @@ void WinSystem::ShowWnd()
     AdjustWindowRect(&wrc, WS_OVERLAPPEDWINDOW, false);
     hwnd_ = CreateWindow(
         wc_.lpszClassName,          // 利用するクラス名
-        L"LE2B_17_ナイトウ_ソウト",    // タイトルバーの文字
+        L"WinterTitle",             // タイトルバーの文字
         WS_OVERLAPPEDWINDOW,        // よく見るウィンドウスタイル
         CW_USEDEFAULT,              // 表示X座標(ウィンドウ出現位置？)
         CW_USEDEFAULT,              // 表示Y座標
