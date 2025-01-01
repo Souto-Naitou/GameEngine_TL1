@@ -57,6 +57,7 @@ void Object3d::Update()
 {
     if (!isUpdate_) return;
 
+
     /// モデルが読み込まれていない場合は読み込む
     if (!pModel_)
     {
@@ -66,6 +67,7 @@ void Object3d::Update()
     Matrix4x4 wMatrix = Matrix4x4::AffineMatrix(transform_.scale, transform_.rotate, transform_.translate);
     Matrix4x4 wvpMatrix = {};
 
+
     /// カメラの行列計算
     if (pGameEye_)
     {
@@ -74,12 +76,25 @@ void Object3d::Update()
     }
     else wvpMatrix = wMatrix;
 
+
     /// 座標変換行列データを更新
     transformationMatrixData_->wvp = wvpMatrix;
     transformationMatrixData_->world = wMatrix;
 
+
     /// 平行光源の方向を正規化
-    directionalLight_->direction = directionalLight_->direction.Normalize();
+    if (directionalLight_)
+        directionalLight_->direction = directionalLight_->direction.Normalize();
+
+
+    /// 平行光源データを更新
+    if (directionalLight_)
+    {
+        directionalLightData_->color = directionalLight_->color;
+        directionalLightData_->direction = directionalLight_->direction;
+        directionalLightData_->intensity = directionalLight_->intensity;
+    }
+
 
     /// カメラのワールド座標を更新
     cameraForGPU_->worldPosition = pGameEye_->GetTransform().translate;
@@ -128,11 +143,11 @@ void Object3d::CreateDirectionalLightResource()
 {
     /// 平行光源リソースを作成
     directionalLightResource_ = DX12Helper::CreateBufferResource(device_, sizeof(DirectionalLight));
-    directionalLightResource_->Map(0, nullptr, reinterpret_cast<void**>(&directionalLight_));
+    directionalLightResource_->Map(0, nullptr, reinterpret_cast<void**>(&directionalLightData_));
     /// 平行光源データを初期化
-    directionalLight_->color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
-    directionalLight_->direction = Vector3(0.0f, -1.0f, 0.0f);
-    directionalLight_->intensity = 1.0f;
+    directionalLightData_->color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
+    directionalLightData_->direction = Vector3(0.0f, -1.0f, 0.0f);
+    directionalLightData_->intensity = 1.0f;
 }
 
 void Object3d::CreateTilingResource()
@@ -177,9 +192,14 @@ void Object3d::DebugWindow()
             pModel_->SetEnableLighting(isEnableLighting_);
         }
     }
-    ImGui::ColorEdit4("Color", &directionalLight_->color.x);
-    ImGui::DragFloat3("Direction", &directionalLight_->direction.x, 0.01f);
-    ImGui::DragFloat("Intensity", &directionalLight_->intensity, 0.01f);
+
+    if (directionalLight_)
+    {
+        ImGui::ColorEdit4("Color", &directionalLight_->color.x);
+        ImGui::DragFloat3("Direction", &directionalLight_->direction.x, 0.01f);
+        ImGui::DragFloat("Intensity", &directionalLight_->intensity, 0.01f);
+    }
+
     ImGui::PopID();
 
     ImGui::SeparatorText("Tiling");

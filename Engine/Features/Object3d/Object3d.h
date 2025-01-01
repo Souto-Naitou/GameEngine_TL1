@@ -60,6 +60,7 @@ public: /// Setter
     void SetGameEye(GameEye* _pGameEye)                         { pGameEye_ = _pGameEye; }
     void SetName(const std::string& _name)                      { name_ = _name; }
     void SetTilingMultiply(const Vector2& _tilingMultiply)      { tilingData_->tilingMultiply = _tilingMultiply; }
+    void SetDirectionalLight(DirectionalLight* _light)          { directionalLight_ = _light; }
 
 
 private: /// メンバ変数
@@ -76,6 +77,7 @@ private: /// メンバ変数
 
     TransformationMatrix*                           transformationMatrixData_       = nullptr;
     DirectionalLight*                               directionalLight_               = nullptr;
+    DirectionalLight*                               directionalLightData_           = nullptr;
     TilingData*                                     tilingData_                     = nullptr;
     CameraForGPU*                                   cameraForGPU_                   = nullptr;
 

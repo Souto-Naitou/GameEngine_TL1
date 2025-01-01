@@ -48,6 +48,7 @@ void Model::Draw()
 Model::~Model()
 {
     OutputDebugStringA("Model Destructor\n");
+    if (th_LoadObjectFile_.joinable()) th_LoadObjectFile_.join();
 }
 
 void Model::SetEnableLighting(bool _flag)
