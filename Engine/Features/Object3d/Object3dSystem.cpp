@@ -159,6 +159,8 @@ void Object3dSystem::CreatePipelineState()
     rasterizerDesc.CullMode = D3D12_CULL_MODE_NONE;
     // 三角形の中を塗りつぶす
     rasterizerDesc.FillMode = D3D12_FILL_MODE_SOLID;
+    rasterizerDesc.MultisampleEnable = TRUE;  // アンチエイリアス有効化
+    rasterizerDesc.AntialiasedLineEnable = TRUE;  // ラインのアンチエイリアス有効化
 
     /// ShaderをCompileする
     Microsoft::WRL::ComPtr<IDxcBlob> vertexShaderBlob = DX12Helper::CompileShader(kVertexShaderPath,

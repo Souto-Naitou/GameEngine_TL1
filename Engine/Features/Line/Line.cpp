@@ -1,4 +1,5 @@
 #include "Line.h"
+#include "Line.h"
 
 #include <Core/DirectX12/Helper/DX12Helper.h>
 
@@ -14,6 +15,11 @@ void Line::Initialize()
     CreateVertexResource();
     CreateWVPMatrixResource();
     CreateColorResource();
+}
+
+void Line::Finalize()
+{
+    OutputDebugStringA("Line::Finalize\n");
 }
 
 void Line::Update()

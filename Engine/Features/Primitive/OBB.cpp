@@ -13,15 +13,6 @@ void OBB::Initialize()
 
 void OBB::Draw()
 {
-    //Matrix4x4 rotateMatrix{};
-    //for (int i = 0; i < 3; i++)
-    //    rotateMatrix.m[0][i] = _obb.orientations[i].x;
-    //for (int i = 0; i < 3; i++)
-    //    rotateMatrix.m[1][i] = _obb.orientations[i].y;
-    //for (int i = 0; i < 3; i++)
-    //    rotateMatrix.m[2][i] = _obb.orientations[i].z;
-    //rotateMatrix.m[3][3] = 1.0f;
-
     Vector3 vertices[8]
     {
         {-this->size_.x, -this->size_.y, -this->size_.z}, // 0
