@@ -1,4 +1,5 @@
 #include "SceneManager.h"
+#include "SceneManager.h"
 #include <cassert>
 
 void SceneManager::ReserveScene(const std::string& _name)
@@ -36,6 +37,14 @@ void SceneManager::SceneDraw3d()
     if (pCurrentScene_ != nullptr)
     {
         pCurrentScene_->Draw3d();
+    }
+}
+
+void SceneManager::SceneDrawLine()
+{
+    if (pCurrentScene_ != nullptr)
+    {
+        pCurrentScene_->DrawLine();
     }
 }
 

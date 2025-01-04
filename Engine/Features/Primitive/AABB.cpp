@@ -59,7 +59,6 @@ void AABB::Draw()
     lines[11].GetVertices()[0] = vertices[3];
     lines[11].GetVertices()[1] = vertices[7];
 
-    pLineSystem->PresentDraw();
     for (auto& line : lines)
     {
         line.Update();

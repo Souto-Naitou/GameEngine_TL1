@@ -31,6 +31,7 @@ public: /// シーン動作
     void Update();
     void SceneDraw2dBackGround();
     void SceneDraw3d();
+    void SceneDrawLine();
     void SceneDraw2dForeground();
     void Finalize();
 

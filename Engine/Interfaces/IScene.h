@@ -32,6 +32,11 @@ public:
     virtual void Draw3d() = 0;
 
     /// <summary>
+    /// ライン描画
+    /// </summary>
+    virtual void DrawLine() = 0;
+
+    /// <summary>
     /// 前景描画
     /// </summary>
     virtual void Draw2dForeground() = 0;
