@@ -1,27 +1,44 @@
-#include "AABB.h"
+#include "OBB.h"
+#include "OBB.h"
 
-void AABB::Initialize()
+void OBB::Initialize()
 {
     pLineSystem = LineSystem::GetInstance();
     for (auto& line : lines)
     {
         line.Initialize();
+        line.SetColor(Vector4(0.0f, 1.0f, 0.0f, 1.0f));
     }
 }
 
-void AABB::Draw()
+void OBB::Draw()
 {
+    //Matrix4x4 rotateMatrix{};
+    //for (int i = 0; i < 3; i++)
+    //    rotateMatrix.m[0][i] = _obb.orientations[i].x;
+    //for (int i = 0; i < 3; i++)
+    //    rotateMatrix.m[1][i] = _obb.orientations[i].y;
+    //for (int i = 0; i < 3; i++)
+    //    rotateMatrix.m[2][i] = _obb.orientations[i].z;
+    //rotateMatrix.m[3][3] = 1.0f;
+
     Vector3 vertices[8]
     {
-        {min_.x, min_.y, min_.z}, // 0
-        {min_.x, max_.y, min_.z}, // 1
-        {max_.x, max_.y, min_.z}, // 2
-        {max_.x, min_.y, min_.z}, // 3
-        {min_.x, min_.y, max_.z}, // 4
-        {min_.x, max_.y, max_.z}, // 5
-        {max_.x, max_.y, max_.z}, // 6
-        {max_.x, min_.y, max_.z}, // 7
+        {-this->size_.x, -this->size_.y, -this->size_.z}, // 0
+        {-this->size_.x, this->size_.y, -this->size_.z},  // 1
+        {this->size_.x, this->size_.y, -this->size_.z},   // 2
+        {this->size_.x, -this->size_.y, -this->size_.z},  // 3
+        {-this->size_.x, -this->size_.y, this->size_.z},  // 4
+        {-this->size_.x, this->size_.y, this->size_.z},   // 5
+        {this->size_.x, this->size_.y, this->size_.z},    // 6
+        {this->size_.x, -this->size_.y, this->size_.z},   // 7
     };
+
+    for (int i = 0; i < 8; i++)
+    {
+        vertices[i] = FMath::Transform(vertices[i], this->rotateMatrix_);
+        vertices[i] = vertices[i] + this->center_;
+    }
 
     lines[0].GetVertices()[0] = vertices[0];
     lines[0].GetVertices()[1] = vertices[1];
@@ -67,9 +84,10 @@ void AABB::Draw()
     }
 
     return;
+
 }
 
-void AABB::ModifyGameEye(GameEye* _eye)
+void OBB::ModifyGameEye(GameEye* _eye)
 {
     for (auto& line : lines)
     {

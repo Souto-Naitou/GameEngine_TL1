@@ -41,6 +41,7 @@ void NimaFramework::Initialize()
     pParticleManager_ = ParticleManager::GetInstance();
     pLineSystem_ = LineSystem::GetInstance();
     pInput_ = Input::GetInstance();
+    pRandomGenerator_ = RandomGenerator::GetInstance();
 
     pAudio_ = new Audio();
 
@@ -82,6 +83,9 @@ void NimaFramework::Initialize()
 
     /// 入力の初期化
     pInput_->Initialize(GetModuleHandleA(nullptr), pWinSystem_->GetHwnd());
+
+    /// 乱数生成器の初期化
+    pRandomGenerator_->Initialize();
 }
 
 void NimaFramework::Finalize()

@@ -1,4 +1,5 @@
 #include "Object3d.h"
+#include "Object3d.h"
 
 #include <Matrix4x4.h>
 #include <Common/structs.h>
@@ -35,6 +36,7 @@ void Object3d::Initialize(const std::string& _filePath)
     transform_.rotate = Vector3(0.0f, 0.0f, 0.0f);
     transform_.translate = Vector3(0.0f, 0.0f, 0.0f);
 
+
     /// 座標変換行列リソースを作成
     CreateTransformationMatrixResource();
 
@@ -46,6 +48,13 @@ void Object3d::Initialize(const std::string& _filePath)
 
     /// カメラのワールド座標リソースを作成
     CreateCameraForGPUResource();
+
+    /// ライティングリソースを作成
+    CreateLightingResource();
+
+    /// ポイントライトリソースを作成
+    CreatePointLightResource();
+
 
     /// モデルを読み込む
     modelPath_ = _filePath;
@@ -64,6 +73,7 @@ void Object3d::Update()
         pModel_ = ModelManager::GetInstance()->FindModel(modelPath_);
     }
 
+    rotateMatrix_ = Matrix4x4::RotateXMatrix(transform_.rotate.x) * (Matrix4x4::RotateYMatrix(transform_.rotate.y) * Matrix4x4::RotateZMatrix(transform_.rotate.z));
     Matrix4x4 wMatrix = Matrix4x4::AffineMatrix(transform_.scale, transform_.rotate, transform_.translate);
     Matrix4x4 wvpMatrix = {};
 
@@ -96,6 +106,16 @@ void Object3d::Update()
     }
 
 
+    /// ポイントライトデータを更新
+    if (pointLight_)
+    {
+        pointLightData_->enablePointLight = pointLight_->enablePointLight;
+        pointLightData_->color = pointLight_->color;
+        pointLightData_->position = pointLight_->position;
+        pointLightData_->intensity = pointLight_->intensity;
+    }
+
+
     /// カメラのワールド座標を更新
     cameraForGPU_->worldPosition = pGameEye_->GetTransform().translate;
 
@@ -117,6 +137,10 @@ void Object3d::Draw()
     commandList->SetGraphicsRootConstantBufferView(4, tilingResource_->GetGPUVirtualAddress());
     // CameraForGPUCBufferの場所を設定
     commandList->SetGraphicsRootConstantBufferView(5, cameraForGPUResource_->GetGPUVirtualAddress());
+    // LightingCBufferの場所を設定
+    commandList->SetGraphicsRootConstantBufferView(6, lightingResource_->GetGPUVirtualAddress());
+    // PointLightCBufferの場所を設定
+    commandList->SetGraphicsRootConstantBufferView(7, pointLightResource_->GetGPUVirtualAddress());
 
     if (pModel_) pModel_->Draw();
 }
@@ -166,6 +190,24 @@ void Object3d::CreateCameraForGPUResource()
     cameraForGPU_->worldPosition = Vector3();
 }
 
+void Object3d::CreateLightingResource()
+{
+    lightingResource_ = DX12Helper::CreateBufferResource(device_, sizeof(Lighting));
+    lightingResource_->Map(0, nullptr, reinterpret_cast<void**>(&lightingData_));
+    lightingData_->enableLighting = 1;
+    lightingData_->lightingType = LightingType::HarfLambert;
+}
+
+void Object3d::CreatePointLightResource()
+{
+    pointLightResource_ = DX12Helper::CreateBufferResource(device_, sizeof(PointLight));
+    pointLightResource_->Map(0, nullptr, reinterpret_cast<void**>(&pointLightData_));
+    pointLightData_->enablePointLight = 0;
+    pointLightData_->color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
+    pointLightData_->position = Vector3(0.0f, 0.0f, 0.0f);
+    pointLightData_->intensity = 1.0f;
+}
+
 #ifdef DEBUG_ENGINE
 void Object3d::DebugWindow()
 {
@@ -175,37 +217,68 @@ void Object3d::DebugWindow()
     ImGui::SameLine();
     ImGui::Checkbox("Draw", &isDraw_);
 
+    /// 変形
     ImGui::SeparatorText("Transform");
-    ImGui::PushID("TRANSFORM");
-    ImGui::DragFloat3("Scale", &transform_.scale.x, 0.01f);
-    ImGui::DragFloat3("Rotate", &transform_.rotate.x, 0.01f);
-    ImGui::DragFloat3("Translate", &transform_.translate.x, 0.01f);
-    ImGui::PopID();
+    {
+        ImGui::PushID("TRANSFORM");
+        ImGui::DragFloat3("Scale", &transform_.scale.x, 0.01f);
+        ImGui::DragFloat3("Rotate", &transform_.rotate.x, 0.01f);
+        ImGui::DragFloat3("Translate", &transform_.translate.x, 0.01f);
+        ImGui::PopID();
+    }
 
+
+    /// 平行光源
     ImGui::SeparatorText("Directional Light");
-    ImGui::PushID("DIRECTIONAL_LIGHT");
-
-    if (ImGui::Checkbox("Enable Lighting", &isEnableLighting_))
     {
-        if (pModel_)
+        ImGui::PushID("DIRECTIONAL_LIGHT");
+        if (ImGui::Checkbox("Enable Lighting", &isEnableLighting_))
         {
-            pModel_->SetEnableLighting(isEnableLighting_);
+            lightingData_->enableLighting = isEnableLighting_;
         }
+
+        ImGui::SameLine();
+
+        const char* items[] = { "Lambertian Reflectance", "Harf Lambert" };
+        ImGui::Combo("##Lighting Type", reinterpret_cast<int*>(&lightingData_->lightingType), items, 2);
+
+        if (directionalLight_)
+        {
+            ImGui::ColorEdit4("Color", &directionalLight_->color.x);
+            ImGui::DragFloat3("Direction", &directionalLight_->direction.x, 0.01f);
+            ImGui::DragFloat("Intensity", &directionalLight_->intensity, 0.01f);
+        }
+        ImGui::PopID();
     }
 
-    if (directionalLight_)
+
+    /// ポイントライト
+    ImGui::SeparatorText("Point Light");
     {
-        ImGui::ColorEdit4("Color", &directionalLight_->color.x);
-        ImGui::DragFloat3("Direction", &directionalLight_->direction.x, 0.01f);
-        ImGui::DragFloat("Intensity", &directionalLight_->intensity, 0.01f);
+        ImGui::PushID("POINT_LIGHT");
+        if (pointLight_)
+        {
+            bool enablePointLight = pointLight_->enablePointLight;
+            if (ImGui::Checkbox("Enable PointLight", &enablePointLight))
+            {
+                pointLight_->enablePointLight = enablePointLight;
+            }
+            ImGui::ColorEdit4("Color", &pointLight_->color.x);
+            ImGui::DragFloat3("Position", &pointLight_->position.x, 0.01f);
+            ImGui::DragFloat("Intensity", &pointLight_->intensity, 0.01f);
+        }
+        ImGui::PopID();
     }
 
-    ImGui::PopID();
 
+    /// タイリング
     ImGui::SeparatorText("Tiling");
-    ImGui::PushID("TILING");
-    ImGui::DragFloat2("Tiling Multiply", &tilingData_->tilingMultiply.x, 0.01f);
-    ImGui::PopID();
+    {
+        ImGui::PushID("TILING");
+        ImGui::DragFloat2("Tiling Multiply", &tilingData_->tilingMultiply.x, 0.01f);
+        ImGui::PopID();
+    }
+
 
 #endif // _DEBUG
 }

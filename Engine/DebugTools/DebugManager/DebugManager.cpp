@@ -209,12 +209,12 @@ void DebugManager::DrawUI()
     // デバッグウィンドウ描画
     ImGui::Begin("デバッグ");
 
-    ImGuiTabBarFlags flag = {};
-    flag |= ImGuiTabBarFlags_Reorderable;
-    flag |= ImGuiTabBarFlags_FittingPolicyResizeDown;
-    flag |= ImGuiTabBarFlags_TabListPopupButton;
+    ImGuiTabBarFlags tabFlag = {};
+    tabFlag |= ImGuiTabBarFlags_Reorderable;
+    tabFlag |= ImGuiTabBarFlags_FittingPolicyResizeDown;
+    tabFlag |= ImGuiTabBarFlags_TabListPopupButton;
 
-    ImGui::BeginTabBar("## TABBAR", flag);
+    ImGui::BeginTabBar("## TABBAR", tabFlag);
     for (auto& component : componentList_)
     {
         // componentを展開 (参照)
@@ -282,6 +282,7 @@ void DebugManager::ChangeFont()
 void DebugManager::DefaultStyle()
 {
 #ifdef _DEBUG
+    ImGui::GetIO().ConfigWindowsMoveFromTitleBarOnly = true;
     ImGuiStyle& style = ImGui::GetStyle();
     style.WindowRounding = 6.0f;
     style.TabRounding = 0.0f;

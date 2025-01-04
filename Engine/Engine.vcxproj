@@ -143,6 +143,7 @@
     <ClCompile Include="Features\Audio\Audio.cpp" />
     <ClCompile Include="Features\GameEye\GameEye.cpp" />
     <ClCompile Include="Features\Input\Input.cpp" />
+    <ClCompile Include="Features\Lighting\Manager\LightingManager.cpp" />
     <ClCompile Include="Features\Line\Line.cpp" />
     <ClCompile Include="Features\Line\LineSystem.cpp" />
     <ClCompile Include="Features\Model\Helper\ModelHelper.cpp" />
@@ -156,6 +157,7 @@
     <ClCompile Include="Features\Particle\ParticleManager.cpp" />
     <ClCompile Include="Features\Particle\ParticleSystem.cpp" />
     <ClCompile Include="Features\Primitive\AABB.cpp" />
+    <ClCompile Include="Features\Primitive\OBB.cpp" />
     <ClCompile Include="Features\RandomGenerator\RandomGenerator.cpp" />
     <ClCompile Include="Features\SceneManager\SceneManager.cpp" />
     <ClCompile Include="Features\Sprite\Sprite.cpp" />
@@ -184,6 +186,8 @@
     <ClInclude Include="Features\IContainer\ListContainer.h" />
     <ClInclude Include="Features\IContainer\VectorContainer.h" />
     <ClInclude Include="Features\Input\Input.h" />
+    <ClInclude Include="Features\Lighting\Manager\LightingManager.h" />
+    <ClInclude Include="Features\Lighting\PointLight\PointLight.h" />
     <ClInclude Include="Features\Line\Line.h" />
     <ClInclude Include="Features\Line\LineSystem.h" />
     <ClInclude Include="Features\Line\Manager\LineManager.h" />
@@ -198,6 +202,7 @@
     <ClInclude Include="Features\Particle\ParticleManager.h" />
     <ClInclude Include="Features\Particle\ParticleSystem.h" />
     <ClInclude Include="Features\Primitive\AABB.h" />
+    <ClInclude Include="Features\Primitive\OBB.h" />
     <ClInclude Include="Features\RandomGenerator\RandomGenerator.h" />
     <ClInclude Include="Features\SceneManager\SceneManager.h" />
     <ClInclude Include="Features\Sprite\Sprite.h" />

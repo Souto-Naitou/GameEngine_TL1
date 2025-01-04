@@ -21,10 +21,6 @@ public: /// 公開メンバ関数
     ~Model();
 
 
-public: /// Setter
-    void SetEnableLighting(bool _flag);
-
-
 public: /// Getter
     ModelData* GetModelData() { return &modelData_; }
     D3D12_VERTEX_BUFFER_VIEW GetVertexBufferView() const { return vertexBufferView_; }
@@ -42,8 +38,6 @@ private: /// メンバ変数
     Microsoft::WRL::ComPtr<ID3D12Resource>  materialResource_           = nullptr;
     Material*                               materialData_               = nullptr;
     D3D12_GPU_DESCRIPTOR_HANDLE             textureSrvHandleGPU_        = {};
-
-    bool                                    isEnableLighting_           = true;
 
     bool                                    isUploaded_                 = false;
 

@@ -17,6 +17,10 @@ public:
     void Update();
     void Draw();
 
+public:
+    void SetColor(const Vector4& _color) { color_ = _color; }
+    void SetGameEye(GameEye* _eye) { pGameEye_ = _eye; }
+
 
 public: /// Getter
     Vector3* GetVertices() { return vertices_; }
