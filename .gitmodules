@@ -1,3 +1,6 @@
 [submodule "Engine/Externals/VectorMatrix"]
 	path = Engine/Externals/VectorMatrix
 	url = https://github.com/Souto-Naitou/VectorMatrix.git
+[submodule "Engine/Externals/Easing_ImGui"]
+	path = Engine/Externals/Easing_ImGui
+	url = https://github.com/Souto-Naitou/Easing_ImGui.git
