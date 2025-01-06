@@ -3,6 +3,13 @@
 
 #include <Core/DirectX12/Helper/DX12Helper.h>
 
+Line::~Line()
+{
+    vertexResource_.Reset();
+    wvpMatrixResource_.Reset();
+    colorResource_.Reset();
+}
+
 void Line::Initialize()
 {
     /// 必要なインスタンスを取得
@@ -11,6 +18,11 @@ void Line::Initialize()
     device_ = pDx12_->GetDevice();
 
     pGameEye_ = pLineSystem_->GetDefaultGameEye();
+
+    if (vertices_.size() == 0)
+    {
+        vertices_.resize(2);
+    }
 
     CreateVertexResource();
     CreateWVPMatrixResource();
@@ -29,8 +41,10 @@ void Line::Update()
 
     pWVPMatrixData_[0] = wMatrix * vpMatrix;
 
-    pVertexData_[0] = vertices_[0];
-    pVertexData_[1] = vertices_[1];
+    for (size_t i = 0; i < vertices_.size(); ++i)
+    {
+        pVertexData_[i] = vertices_[i];
+    }
 
     pColorData_[0] = color_;
 }
@@ -41,24 +55,35 @@ void Line::Draw()
 
     commandList->SetGraphicsRootConstantBufferView(0, colorResource_->GetGPUVirtualAddress());
     commandList->SetGraphicsRootConstantBufferView(1, wvpMatrixResource_->GetGPUVirtualAddress());
+
     /// 頂点バッファをセットする
     commandList->IASetVertexBuffers(0, 1, &vertexBufferView_);
+
     /// 描画
-    commandList->DrawInstanced(2, 1, 0, 0);
+    commandList->DrawInstanced(static_cast<UINT>(vertices_.size()), static_cast<UINT>(vertices_.size() / 2), 0, 0);
+}
+
+void Line::Resize(size_t _size)
+{
+    vertices_.resize(_size);
+    vertexResource_.Reset();
+    CreateVertexResource();
 }
 
 void Line::CreateVertexResource()
 {
     /// 頂点バッファリソースを作成
-    vertexResource_ = DX12Helper::CreateBufferResource(device_, sizeof(Vector3) * 2);
+    vertexResource_ = DX12Helper::CreateBufferResource(device_, sizeof(Vector3) * vertices_.size());
     vertexResource_->Map(0, nullptr, reinterpret_cast<void**>(&pVertexData_));
     /// 頂点データを初期化
-    pVertexData_[0] = Vector3(0.0f, 0.0f, 0.0f);
-    pVertexData_[1] = Vector3(1.0f, 1.0f, 0.0f);
+    for (size_t i = 0; i < vertices_.size(); ++i)
+    {
+        pVertexData_[i] = vertices_[i];
+    }
 
     /// 頂点バッファービューを初期化
     vertexBufferView_.BufferLocation = vertexResource_->GetGPUVirtualAddress();
-    vertexBufferView_.SizeInBytes = static_cast<uint32_t>(sizeof(Vector3) * 2);
+    vertexBufferView_.SizeInBytes = static_cast<uint32_t>(sizeof(Vector3) * vertices_.size());
     vertexBufferView_.StrideInBytes = sizeof(Vector3);
 }
 

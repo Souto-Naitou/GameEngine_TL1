@@ -13,6 +13,7 @@ class OBB
 {
 public:
     OBB() = default;
+    ~OBB();
 
     void Initialize();
     void Draw();
@@ -52,7 +53,7 @@ private:
 
     Matrix4x4 rotateMatrix_ = {};
 
-    std::array<Line, 12> lines;
+    Line* lines = nullptr;
 
 
 private:

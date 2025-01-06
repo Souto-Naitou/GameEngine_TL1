@@ -1,8 +1,9 @@
 #pragma once
 
 #include <Interfaces/IScene.h>
-#include <memory>
 #include <Interfaces/ISceneFactory.h>
+#include <Features/SceneTransition/SceneTransitionManager.h>
+#include <memory>
 
 class SceneManager
 {
@@ -48,4 +49,5 @@ private:
 
 private: /// 他クラスのインスタンス
     ISceneFactory* pSceneFactory_ = nullptr;
+    SceneTransitionManager* pSceneTransitionManager_ = nullptr;
 };

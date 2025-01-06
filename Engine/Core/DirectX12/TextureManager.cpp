@@ -13,8 +13,10 @@ void TextureManager::Initialize(SRVManager* _srvManager)
 
 void TextureManager::LoadTexture(const std::string& _filePath)
 {
+    std::string fullPath = filePathSearcher_.GetFilePath(_filePath);
+
     /// すでに読み込まれている場合は読み込まない
-    if (textureDataMap_.contains(_filePath))
+    if (textureDataMap_.contains(fullPath))
     {
         return;
     }
@@ -24,10 +26,10 @@ void TextureManager::LoadTexture(const std::string& _filePath)
     DirectX12* pDx12 = DirectX12::GetInstance();
     ID3D12Device* device = pDx12->GetDevice();
 
-    TextureData& textureData = textureDataMap_[_filePath];
+    TextureData& textureData = textureDataMap_[fullPath];
 
     DirectX::ScratchImage image{};
-    std::wstring filePathW = ConvertString(_filePath);
+    std::wstring filePathW = ConvertString(fullPath);
     HRESULT hr = DirectX::LoadFromWICFile(filePathW.c_str(), DirectX::WIC_FLAGS_FORCE_SRGB, nullptr, image);
     assert(SUCCEEDED(hr));
 
@@ -54,18 +56,21 @@ void TextureManager::LoadTexture(const std::string& _filePath)
 
 D3D12_GPU_DESCRIPTOR_HANDLE TextureManager::GetSrvHandleGPU(const std::string& _filePath)
 {
-    TextureData& textureData = textureDataMap_[_filePath];
+    std::string fullPath = filePathSearcher_.GetFilePath(_filePath);
+    TextureData& textureData = textureDataMap_[fullPath];
     return textureData.srvHandleGPU;
 }
 
 const DirectX::TexMetadata& TextureManager::GetMetaData(const std::string& _filePath)
 {
-    TextureData& textureData = textureDataMap_[_filePath];
+    std::string fullPath = filePathSearcher_.GetFilePath(_filePath);
+    TextureData& textureData = textureDataMap_[fullPath];
     return textureData.metadata;
 }
 
 uint32_t TextureManager::GetSrvIndex(const std::string& _filePath)
 {
-    TextureData& textureData = textureDataMap_[_filePath];
+    std::string fullPath = filePathSearcher_.GetFilePath(_filePath);
+    TextureData& textureData = textureDataMap_[fullPath];
     return textureData.srvIndex;
 }

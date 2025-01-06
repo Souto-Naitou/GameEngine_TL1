@@ -215,7 +215,7 @@ void Object3d::DebugWindow()
 
     ImGui::Checkbox("Update", &isUpdate_);
     ImGui::SameLine();
-    ImGui::Checkbox("Draw", &isDraw_);
+    ImGui::Checkbox("Draw2D", &isDraw_);
 
     /// 変形
     ImGui::SeparatorText("Transform");

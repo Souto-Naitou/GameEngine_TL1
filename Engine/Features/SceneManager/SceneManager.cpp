@@ -1,5 +1,4 @@
 #include "SceneManager.h"
-#include "SceneManager.h"
 #include <cassert>
 
 void SceneManager::ReserveScene(const std::string& _name)
@@ -12,6 +11,8 @@ void SceneManager::ReserveScene(const std::string& _name)
 
 void SceneManager::Update()
 {
+    if (!pSceneTransitionManager_) pSceneTransitionManager_ = SceneTransitionManager::GetInstance();
+
     if (isReserveScene_)
     {
         ChangeScene();
@@ -22,6 +23,8 @@ void SceneManager::Update()
     {
         pCurrentScene_->Update();
     }
+
+    pSceneTransitionManager_->Update();
 }
 
 void SceneManager::SceneDraw2dBackGround()
@@ -50,6 +53,8 @@ void SceneManager::SceneDrawLine()
 
 void SceneManager::SceneDraw2dForeground()
 {
+    pSceneTransitionManager_->Draw();
+
     if (pCurrentScene_ != nullptr)
     {
         pCurrentScene_->Draw2dForeground();

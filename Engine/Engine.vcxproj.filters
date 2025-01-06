@@ -154,6 +154,18 @@
     <Filter Include="Feature\Shape\OBB">
       <UniqueIdentifier>{4490bcaf-3130-4655-9eca-14949ee03dde}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Utility\FilePathSearcher">
+      <UniqueIdentifier>{30e80ed6-8006-4ad8-b828-27e9a6a6cfc1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Feature\SceneTransition">
+      <UniqueIdentifier>{18b88b04-4484-4566-97ff-989e4dca9e4c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Feature\SceneTransition\FadeInOut">
+      <UniqueIdentifier>{e60ca308-66bf-4877-bedd-8da0a9c1c1dc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Feature\SceneTransition\Manager">
+      <UniqueIdentifier>{a8bd3d85-68b2-4d21-9e41-d119dee47a7a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DebugTools\DebugManager\DebugManager.cpp">
@@ -266,6 +278,15 @@
     </ClCompile>
     <ClCompile Include="Features\Primitive\OBB.cpp">
       <Filter>Feature\Shape\OBB</Filter>
+    </ClCompile>
+    <ClCompile Include="Utility\FilePathSearcher\FilePathSearcher.cpp">
+      <Filter>Utility\FilePathSearcher</Filter>
+    </ClCompile>
+    <ClCompile Include="Features\SceneTransition\TransFadeInOut.cpp">
+      <Filter>Feature\SceneTransition\FadeInOut</Filter>
+    </ClCompile>
+    <ClCompile Include="Features\SceneTransition\SceneTransitionManager.cpp">
+      <Filter>Feature\SceneTransition\Manager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -406,6 +427,18 @@
     </ClInclude>
     <ClInclude Include="Features\Primitive\OBB.h">
       <Filter>Feature\Shape\OBB</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility\FilePathSearcher\FilePathSearcher.h">
+      <Filter>Utility\FilePathSearcher</Filter>
+    </ClInclude>
+    <ClInclude Include="Features\SceneTransition\TransBase.h">
+      <Filter>Feature\SceneTransition</Filter>
+    </ClInclude>
+    <ClInclude Include="Features\SceneTransition\TransFadeInOut.h">
+      <Filter>Feature\SceneTransition\FadeInOut</Filter>
+    </ClInclude>
+    <ClInclude Include="Features\SceneTransition\SceneTransitionManager.h">
+      <Filter>Feature\SceneTransition\Manager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

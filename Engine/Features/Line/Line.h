@@ -5,12 +5,13 @@
 #include <Common/structs.h>
 #include <wrl.h>
 #include <Core/DirectX12/DirectX12.h>
+#include <vector>
 
 class Line
 {
 public:
-    Line() = default;
-    ~Line() = default;
+    Line(size_t _lineCount) { vertices_.resize(_lineCount * 2); }
+    ~Line();
 
     void Initialize();
     void Finalize();
@@ -18,12 +19,18 @@ public:
     void Draw();
 
 public:
+    Vector3& operator [](size_t _idx) { return vertices_[_idx]; }
+
+
+public:
+    void Resize(size_t _size);
     void SetColor(const Vector4& _color) { color_ = _color; }
     void SetGameEye(GameEye* _eye) { pGameEye_ = _eye; }
 
 
 public: /// Getter
-    Vector3* GetVertices() { return vertices_; }
+    Vector3& GetVertex(size_t _idx) { return vertices_[_idx]; }
+    std::vector<Vector3>& GetVertices() { return vertices_; }
     Vector4& GetColorData() { return color_; }
 
 
@@ -37,9 +44,9 @@ private:
     Microsoft::WRL::ComPtr<ID3D12Resource> colorResource_;
     Vector4* pColorData_ = nullptr;
 
-    D3D12_VERTEX_BUFFER_VIEW vertexBufferView_;
+    D3D12_VERTEX_BUFFER_VIEW vertexBufferView_ = {};
 
-    Vector3 vertices_[2] = {};
+    std::vector<Vector3> vertices_ = {};
     Vector4 color_ = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
 
 private:

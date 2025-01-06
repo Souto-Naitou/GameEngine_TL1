@@ -12,9 +12,11 @@ namespace Json
     /// 前方宣言
     class Value;
 
+
     // 別名定義
     using Array = std::vector<std::shared_ptr<Json::Value>>;
     using Object = std::map<std::string, std::shared_ptr<Json::Value>>;
+
 
     // JSONデータ型の定義
     using Type = std::variant<

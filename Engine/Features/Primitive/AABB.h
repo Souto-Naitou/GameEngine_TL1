@@ -11,6 +11,7 @@ class AABB
 {
 public:
     AABB() = default;
+    ~AABB();
 
     void Initialize();
     void Draw();
@@ -33,7 +34,7 @@ public: /// Getter
 private:
     Vector3 min_; // 最小点
     Vector3 max_; // 最大点
-    std::array<Line, 12> lines;
+    Line* lines = nullptr; // 線
 
 
 private:

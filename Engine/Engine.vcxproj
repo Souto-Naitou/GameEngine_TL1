@@ -160,9 +160,12 @@
     <ClCompile Include="Features\Primitive\OBB.cpp" />
     <ClCompile Include="Features\RandomGenerator\RandomGenerator.cpp" />
     <ClCompile Include="Features\SceneManager\SceneManager.cpp" />
+    <ClCompile Include="Features\SceneTransition\SceneTransitionManager.cpp" />
+    <ClCompile Include="Features\SceneTransition\TransFadeInOut.cpp" />
     <ClCompile Include="Features\Sprite\Sprite.cpp" />
     <ClCompile Include="Features\Sprite\SpriteSystem.cpp" />
     <ClCompile Include="Framework\NimaFramework.cpp" />
+    <ClCompile Include="Utility\FilePathSearcher\FilePathSearcher.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common\define.h" />
@@ -205,12 +208,16 @@
     <ClInclude Include="Features\Primitive\OBB.h" />
     <ClInclude Include="Features\RandomGenerator\RandomGenerator.h" />
     <ClInclude Include="Features\SceneManager\SceneManager.h" />
+    <ClInclude Include="Features\SceneTransition\SceneTransitionManager.h" />
+    <ClInclude Include="Features\SceneTransition\TransBase.h" />
+    <ClInclude Include="Features\SceneTransition\TransFadeInOut.h" />
     <ClInclude Include="Features\Sprite\Sprite.h" />
     <ClInclude Include="Features\Sprite\SpriteSystem.h" />
     <ClInclude Include="Framework\NimaFramework.h" />
     <ClInclude Include="Interfaces\IScene.h" />
     <ClInclude Include="Interfaces\ISceneFactory.h" />
     <ClInclude Include="Utility\ConvertString\ConvertString.h" />
+    <ClInclude Include="Utility\FilePathSearcher\FilePathSearcher.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\ClassDiagram.md" />
@@ -272,6 +279,9 @@
   <ItemGroup>
     <ProjectReference Include="Externals\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">
       <Project>{371b9fa9-4c90-4ac6-a123-aced756d6c77}</Project>
+    </ProjectReference>
+    <ProjectReference Include="Externals\Easing_ImGui\Easing_ImGui.vcxproj">
+      <Project>{ba3d0f34-3210-4d13-8763-196fccc04957}</Project>
     </ProjectReference>
     <ProjectReference Include="Externals\ImGui\ImGui.vcxproj">
       <Project>{f83f6c46-aee0-480c-95fc-2319e6feb02b}</Project>
