@@ -1,4 +1,5 @@
 #include "Input.h"
+#include "Input.h"
 
 #include <cassert>
 
@@ -25,6 +26,20 @@ void Input::Initialize(HINSTANCE _hInstance, HWND _hwnd)
         _hwnd, DISCL_FOREGROUND | DISCL_NONEXCLUSIVE
     );
     assert(SUCCEEDED(hr));
+
+    // マウスデバイスの生成
+    hr = directInput_->CreateDevice(GUID_SysMouse, &mouse_, NULL);
+    assert(SUCCEEDED(hr));
+
+    // 入力データ形式のセット
+    hr = mouse_->SetDataFormat(&c_dfDIMouse);
+    assert(SUCCEEDED(hr));
+
+    // 排他制御レベルのセット
+    hr = mouse_->SetCooperativeLevel(
+        _hwnd, DISCL_FOREGROUND | DISCL_NONEXCLUSIVE
+    );
+    assert(SUCCEEDED(hr));
 }
 
 void Input::Update()
@@ -37,6 +52,34 @@ void Input::Update()
 
     // 全キーの入力情報を取得
     keyboard_->GetDeviceState(sizeof(key_), key_);
+
+    // マウス情報の取得開始
+    mouse_->Acquire();
+
+    // マウスの入力情報を取得
+    mouse_->GetDeviceState(sizeof(DIMOUSESTATE), &mouseState_);
+
+    // 左クリックの入力情報を取得
+    leftClickPre_ = leftClick_;
+    if (mouseState_.rgbButtons[0] & 0x80)
+    {
+        leftClick_ = true;
+    }
+    else
+    {
+        leftClick_ = false;
+    }
+
+    // 右クリックの入力情報を取得
+    rightClickPre_ = rightClick_;
+    if (mouseState_.rgbButtons[1] & 0x80)
+    {
+        rightClick_ = true;
+    }
+    else
+    {
+        rightClick_ = false;
+    }
 }
 
 bool Input::PushKey(BYTE _keyNumber) const
@@ -58,5 +101,45 @@ bool Input::TriggerKey(BYTE _keyNumber) const
             return true;
         }
     }
+    return false;
+}
+
+bool Input::PushMouse(MouseNum _mouseNum) const
+{
+    if (_mouseNum == MouseNum::Left)
+    {
+        if (leftClick_)
+        {
+            return true;
+        }
+    }
+    else if (_mouseNum == MouseNum::Right)
+    {
+        if (rightClick_)
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+bool Input::TriggerMouse(MouseNum _mouseNum) const
+{
+    if (_mouseNum == MouseNum::Left)
+    {
+        if (leftClick_ && !leftClickPre_)
+        {
+            return true;
+        }
+    }
+    else if (_mouseNum == MouseNum::Right)
+    {
+        if (rightClick_ && !rightClickPre_)
+        {
+            return true;
+        }
+    }
+
     return false;
 }

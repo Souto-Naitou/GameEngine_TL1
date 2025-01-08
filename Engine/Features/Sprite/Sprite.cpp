@@ -18,6 +18,11 @@ Sprite::Sprite()
 
 Sprite::~Sprite()
 {
+#if defined (_DEBUG) && defined (DEBUG_ENGINE)
+
+    DebugManager::GetInstance()->DeleteComponent("Sprite", name_.c_str());
+
+#endif
 }
 
 
@@ -166,11 +171,7 @@ void Sprite::Draw()
 
 void Sprite::Finalize()
 {
-#if defined (_DEBUG) && defined (DEBUG_ENGINE)
 
-    DebugManager::GetInstance()->DeleteComponent("Sprite", name_.c_str());
-
-#endif
 }
 
 /// 頂点リソースを作成する

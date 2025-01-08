@@ -45,12 +45,16 @@ public:
     void SetDirectory(std::string _dir) { directory_ = _dir; }
 
 private:
-	CSVLoader() = default;
-	~CSVLoader();
+    CSVLoader();
+    ~CSVLoader();
 
-	std::string directory_ = "Resources/CSV/";
+    std::string directory_ = "Resources/CSV/";
 
-  std::list<std::pair<std::string, CSVData>> fileData_;
+    std::list<std::pair<std::string, CSVData>> fileData_;
+
+    std::string previewFile_;
+private:
+    void DebugWindow();
 };
 
 

@@ -32,6 +32,16 @@ public:
     virtual void Draw3d() = 0;
 
     /// <summary>
+    /// 中景描画
+    /// </summary>
+    virtual void Draw2dMidground() = 0;
+
+    /// <summary>
+    /// 3D中景描画
+    /// </summary>
+    virtual void Draw3dMidground() = 0;
+
+    /// <summary>
     /// ライン描画
     /// </summary>
     virtual void DrawLine() = 0;

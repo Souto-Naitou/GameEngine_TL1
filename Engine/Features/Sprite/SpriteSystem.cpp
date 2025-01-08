@@ -170,7 +170,7 @@ void SpriteSystem::CreatePipelineState()
     // DepthStencilStateの設定
     D3D12_DEPTH_STENCIL_DESC depthStencilDesc = {};
     // Depthの機能を有効にする
-    depthStencilDesc.DepthEnable = true;
+    depthStencilDesc.DepthEnable = false;
     // 書き込みする
     depthStencilDesc.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
     // 比較関数はLessEqual。つまり、近ければ描画される

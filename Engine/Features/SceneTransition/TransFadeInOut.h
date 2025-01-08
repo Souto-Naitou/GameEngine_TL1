@@ -3,7 +3,7 @@
 #include "Features/SceneTransition/TransBase.h"
 #include <string>
 #include <Features/Sprite/Sprite.h>
-#include <Easing.h>
+#include <Timer/Timer.h>
 
 
 class TransFadeInOut : public TransBase
@@ -21,10 +21,14 @@ private:
     uint32_t screenWidth_ = 1280;
     uint32_t screenHeight_ = 720;
 
+    std::string name_;
+
     float opacity_ = 0.0f;
     bool isChangedScene_ = false;
 
-    std::unique_ptr<Easing> easing_;
+    std::unique_ptr<Timer> timer_;
+    double duration_ = 1.0;
+
     uint32_t countPhase_ = 0;
 
     std::string sceneName_;

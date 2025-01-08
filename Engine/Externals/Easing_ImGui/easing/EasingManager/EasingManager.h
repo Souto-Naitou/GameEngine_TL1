@@ -23,15 +23,22 @@ public:
 
     static EasingManager* GetInstance() { static EasingManager instance; return &instance; }
 
-    void SetEasing(Easing* _easing);
     void DeleteEasing(Easing* _target);
-    Easing* GetEasing(std::string _ID);
-
     void DrawUI();
+
+
+public: /// Setter
+    void SetEasing(Easing* _easing);
+    void SetDisplay(bool _isDisplay) { isDisplay_ = _isDisplay; }
+
+public: /// Getter
+    Easing* GetEasing(std::string _ID);
+    bool GetDisplay() const { return isDisplay_; }
 
 private:
     std::list<Easing*> pEasings = {};
     bool isFirstFrame_ = true;
+    bool isDisplay_ = true;
 };
 
 

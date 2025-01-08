@@ -4,6 +4,7 @@
 #include <DebugTools/ImGuiTemplates/ImGuiTemplates.h>
 #include <Features/SceneManager/SceneManager.h>
 #include <Core/Win32/WinSystem.h>
+#include <MathExtension/mathExtension.h>
 
 void TransFadeInOut::Initialize(const std::string& _sceneName)
 {
@@ -12,16 +13,17 @@ void TransFadeInOut::Initialize(const std::string& _sceneName)
     screenWidth_ = WinSystem::kClientWidth;
     screenHeight_ = WinSystem::kClientHeight;
 
-    easing_ = std::make_unique<Easing>("Trans_FadeInOut");
+    timer_ = std::make_unique<Timer>();
 
     sprite_ = std::make_unique<Sprite>();
-    sprite_->Initialize("white32x32.png");
+    sprite_->Initialize("white1x1.png");
     sprite_->SetColor({ 0,0,0,0 });
     sprite_->SetSize({ screenWidth_, screenHeight_ });
-    timer_.Start();
-    easing_->Start();
+    timer_->Start();
     DebugManager::GetInstance()->SetComponent(
-        "Transition", "FadeInOut", std::bind(&TransFadeInOut::DebugWindow, this));
+        "Transition", name_, std::bind(&TransFadeInOut::DebugWindow, this));
+
+    name_ = "FadeInOut";
 }
 
 void TransFadeInOut::Update()
@@ -31,10 +33,10 @@ void TransFadeInOut::Update()
         isEnd_ = true;
         return;
     }
-    if (easing_->GetIsEnd())
+    if (timer_->GetNow() > duration_)
     {
-        easing_->Reset();
-        easing_->Start();
+        timer_->Reset();
+        timer_->Start();
         countPhase_++;
     }
     if (!isChangedScene_ && countPhase_ == 1)
@@ -45,11 +47,11 @@ void TransFadeInOut::Update()
 
     if (countPhase_ == 0)
     {
-        opacity_ = easing_->Update();
+        opacity_ = Math::Lerp(0.0f, 1.0f, timer_->GetNow() / duration_);
     }
     else if (countPhase_ == 1)
     {
-        opacity_ = 1.0f - easing_->Update();
+        opacity_ = Math::Lerp(1.0f, 0.0f, timer_->GetNow() / duration_);
     }
 
     sprite_->SetColor(Vector4(0, 0, 0, opacity_));
@@ -63,7 +65,7 @@ void TransFadeInOut::Draw()
 
 void TransFadeInOut::Finalize()
 {
-    DebugManager::GetInstance()->DeleteComponent("Transition", "FadeInOut");
+    DebugManager::GetInstance()->DeleteComponent("Transition", name_.c_str());
 }
 
 void TransFadeInOut::DebugWindow()
@@ -73,7 +75,7 @@ void TransFadeInOut::DebugWindow()
     auto pFunc = [&]()
     {
         ImGuiTemplate::VariableTableRow("Scene Name", sceneName_);
-        ImGuiTemplate::VariableTableRow("Timer", timer_.GetNow());
+        ImGuiTemplate::VariableTableRow("Timer", timer_->GetNow());
         ImGuiTemplate::VariableTableRow("Phase", countPhase_);
         ImGuiTemplate::VariableTableRow("Opacity", opacity_);
     };

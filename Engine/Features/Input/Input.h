@@ -9,6 +9,13 @@
 class Input
 {
 public:
+    enum class MouseNum
+    {
+        Left = 0,
+        Right = 1,
+        Center = 2,
+    };
+
     Input(const Input&) = delete;
     Input& operator=(const Input&) = delete;
     Input(Input&&) = delete;
@@ -26,6 +33,9 @@ public:
     bool PushKey(BYTE _keyNumber) const;
     bool TriggerKey(BYTE _keyNumber) const;
 
+    bool PushMouse(MouseNum _mouseNum) const;
+    bool TriggerMouse(MouseNum _mouseNum) const;
+
 
 private:
     Input() = default;
@@ -35,6 +45,14 @@ private:
 private:
     Microsoft::WRL::ComPtr<IDirectInput8> directInput_ = nullptr;
     Microsoft::WRL::ComPtr<IDirectInputDevice8> keyboard_ = nullptr;
+    Microsoft::WRL::ComPtr<IDirectInputDevice8> mouse_ = nullptr;
     BYTE key_[256] = {};
     BYTE keyPre_[256] = {};
+
+    DIMOUSESTATE mouseState_ = {};
+
+    bool leftClick_ = false;
+    bool leftClickPre_ = false;
+    bool rightClick_ = false;
+    bool rightClickPre_ = false;
 };
