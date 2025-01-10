@@ -45,7 +45,7 @@ namespace TCP
         void                    Close() const;
 
         bool                    Send(uint32_t _handle, const char* _data, int _size);
-        int                     Receive(uint32_t _handle, char* data, int size) const;
+        std::string             Receive(uint32_t _handle) const;
 
         uint32_t                ListenAndAccept();
 

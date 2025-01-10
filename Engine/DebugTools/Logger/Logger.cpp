@@ -1,5 +1,6 @@
 #include "Logger.h"
-#include <Windows.h>
+
+#include <debugapi.h>
 
 void Log(const std::string& _message)
 {

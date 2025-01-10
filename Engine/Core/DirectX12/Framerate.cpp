@@ -1,7 +1,8 @@
 #include "Framerate.h"
-#include <thread>
 
+#include <thread>
 #include <Windows.h>
+
 #pragma comment(lib, "Winmm.lib")
 
 void FrameRate::Initialize()

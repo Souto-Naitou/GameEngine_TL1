@@ -47,11 +47,11 @@ void TransFadeInOut::Update()
 
     if (countPhase_ == 0)
     {
-        opacity_ = Math::Lerp(0.0f, 1.0f, timer_->GetNow() / duration_);
+        opacity_ = Math::Lerp(0.0f, 1.0f, static_cast<float>(timer_->GetNow() / duration_));
     }
     else if (countPhase_ == 1)
     {
-        opacity_ = Math::Lerp(1.0f, 0.0f, timer_->GetNow() / duration_);
+        opacity_ = Math::Lerp(1.0f, 0.0f, static_cast<float>(timer_->GetNow() / duration_));
     }
 
     sprite_->SetColor(Vector4(0, 0, 0, opacity_));

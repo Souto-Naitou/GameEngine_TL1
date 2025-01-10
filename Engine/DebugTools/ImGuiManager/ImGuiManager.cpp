@@ -27,7 +27,6 @@ void ImGuiManager::Initialize(DirectX12* _pDx12)
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
     ImGui::StyleColorsDark();
-    ImGui_ImplWin32_Init(pWin32App->GetHwnd());
     ImGui_ImplDX12_Init(
         device,
         swapChainDesc.BufferCount,
@@ -36,6 +35,7 @@ void ImGuiManager::Initialize(DirectX12* _pDx12)
         srvDescHeap_->GetCPUDescriptorHandleForHeapStart(),
         srvDescHeap_->GetGPUDescriptorHandleForHeapStart()
     );
+    ImGui_ImplWin32_Init(pWin32App->GetHwnd());
 
 #endif // _DEBUG
 }
