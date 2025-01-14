@@ -61,3 +61,12 @@ protected: /// 他クラスのインスタンス
 protected:
     bool isExitProgram_ = false;
 };
+
+#define CREATE_APPLICATION(class) \
+int _stdcall WinMain(HINSTANCE, HINSTANCE, LPSTR, int) \
+{ \
+    NimaFramework* pSampleProgram = new class(); \
+    pSampleProgram->Run(); \
+    delete pSampleProgram; \
+    return 0; \
+}
