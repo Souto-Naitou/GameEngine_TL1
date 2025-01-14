@@ -1164,7 +1164,7 @@ static void ShowDemoWindowWidgets(ImGuiDemoWindowData* demo_data)
             ImGui::CheckboxFlags("ImGuiTreeNodeFlags_SpanTextWidth",     &base_flags, ImGuiTreeNodeFlags_SpanTextWidth); ImGui::SameLine(); HelpMarker("Reduce hit area to the text label and a bit of margin.");
             ImGui::CheckboxFlags("ImGuiTreeNodeFlags_SpanAllColumns",    &base_flags, ImGuiTreeNodeFlags_SpanAllColumns); ImGui::SameLine(); HelpMarker("For use in Tables only.");
             ImGui::CheckboxFlags("ImGuiTreeNodeFlags_AllowOverlap",      &base_flags, ImGuiTreeNodeFlags_AllowOverlap);
-            ImGui::CheckboxFlags("ImGuiTreeNodeFlags_Framed",            &base_flags, ImGuiTreeNodeFlags_Framed); ImGui::SameLine(); HelpMarker("Draw frame with background (e.g. for CollapsingHeader)");
+            ImGui::CheckboxFlags("ImGuiTreeNodeFlags_Framed",            &base_flags, ImGuiTreeNodeFlags_Framed); ImGui::SameLine(); HelpMarker("Draw2D frame with background (e.g. for CollapsingHeader)");
             ImGui::CheckboxFlags("ImGuiTreeNodeFlags_NavLeftJumpsBackHere", &base_flags, ImGuiTreeNodeFlags_NavLeftJumpsBackHere);
             ImGui::Checkbox("Align label with current X position", &align_label_with_current_x_position);
             ImGui::Checkbox("Test tree node as drag source", &test_drag_and_drop);
@@ -9701,9 +9701,9 @@ static void ShowExampleAppCustomRendering(bool* p_open)
         {
             static bool draw_bg = true;
             static bool draw_fg = true;
-            ImGui::Checkbox("Draw in Background draw list", &draw_bg);
+            ImGui::Checkbox("Draw2D in Background draw list", &draw_bg);
             ImGui::SameLine(); HelpMarker("The Background draw list will be rendered below every Dear ImGui windows.");
-            ImGui::Checkbox("Draw in Foreground draw list", &draw_fg);
+            ImGui::Checkbox("Draw2D in Foreground draw list", &draw_fg);
             ImGui::SameLine(); HelpMarker("The Foreground draw list will be rendered over every Dear ImGui windows.");
             ImVec2 window_pos = ImGui::GetWindowPos();
             ImVec2 window_size = ImGui::GetWindowSize();
@@ -9718,7 +9718,7 @@ static void ShowExampleAppCustomRendering(bool* p_open)
         // Demonstrate out-of-order rendering via channels splitting
         // We use functions in ImDrawList as each draw list contains a convenience splitter,
         // but you can also instantiate your own ImDrawListSplitter if you need to nest them.
-        if (ImGui::BeginTabItem("Draw Channels"))
+        if (ImGui::BeginTabItem("Draw2D Channels"))
         {
             ImDrawList* draw_list = ImGui::GetWindowDrawList();
             {

@@ -18,6 +18,11 @@ Sprite::Sprite()
 
 Sprite::~Sprite()
 {
+#if defined (_DEBUG) && defined (DEBUG_ENGINE)
+
+    DebugManager::GetInstance()->DeleteComponent("Sprite", name_.c_str());
+
+#endif
 }
 
 
@@ -61,8 +66,7 @@ void Sprite::Initialize(std::string _filepath)
     // 座標変換行列を表すデータを作成する
     CreateTransformationMatrixResource();
 
-    std::string textureName = _filepath;
-    texturePath_ = "Resources/" + textureName;
+    texturePath_ = _filepath;
 
     TextureManager::GetInstance()->LoadTexture(texturePath_);
 
@@ -167,11 +171,7 @@ void Sprite::Draw()
 
 void Sprite::Finalize()
 {
-#if defined (_DEBUG) && defined (DEBUG_ENGINE)
 
-    DebugManager::GetInstance()->DeleteComponent("Sprite", name_.c_str());
-
-#endif
 }
 
 /// 頂点リソースを作成する
@@ -284,7 +284,7 @@ void Sprite::DebugWindow()
 
     ImGui::Checkbox("Update", &isUpdate_);
     ImGui::SameLine();
-    ImGui::Checkbox("Draw", &isDraw_);
+    ImGui::Checkbox("Draw2D", &isDraw_);
 
     ImGui::SeparatorText("Transform");
     ImGui::DragFloat2("Size", &size_.x, 0.1f);

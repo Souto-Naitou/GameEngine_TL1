@@ -209,12 +209,12 @@ void DebugManager::DrawUI()
     // デバッグウィンドウ描画
     ImGui::Begin("デバッグ");
 
-    ImGuiTabBarFlags flag = {};
-    flag |= ImGuiTabBarFlags_Reorderable;
-    flag |= ImGuiTabBarFlags_FittingPolicyResizeDown;
-    flag |= ImGuiTabBarFlags_TabListPopupButton;
+    ImGuiTabBarFlags tabFlag = {};
+    tabFlag |= ImGuiTabBarFlags_Reorderable;
+    tabFlag |= ImGuiTabBarFlags_FittingPolicyResizeDown;
+    tabFlag |= ImGuiTabBarFlags_TabListPopupButton;
 
-    ImGui::BeginTabBar("## TABBAR", flag);
+    ImGui::BeginTabBar("## TABBAR", tabFlag);
     for (auto& component : componentList_)
     {
         // componentを展開 (参照)
@@ -259,11 +259,12 @@ void DebugManager::ChangeFont()
     ImGuiIO& io = ImGui::GetIO();
 
     ImFontConfig fontcfg;
-    fontcfg.MergeMode = 0;
+    fontcfg.MergeMode = 1;
     fontcfg.OversampleH = 1;
     fontcfg.PixelSnapH = 1;
     fontcfg.GlyphOffset = ImVec2(0.0f, 0.0f);
 
+    io.Fonts->AddFontDefault();
 
     ImFont* resultFont = io.Fonts->AddFontFromFileTTF(
         "EngineResources/Font/NotoSansCJKjp-Light.ttf",
@@ -282,6 +283,7 @@ void DebugManager::ChangeFont()
 void DebugManager::DefaultStyle()
 {
 #ifdef _DEBUG
+    ImGui::GetIO().ConfigWindowsMoveFromTitleBarOnly = true;
     ImGuiStyle& style = ImGui::GetStyle();
     style.WindowRounding = 6.0f;
     style.TabRounding = 0.0f;

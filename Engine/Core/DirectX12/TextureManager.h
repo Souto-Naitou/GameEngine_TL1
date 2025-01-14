@@ -7,6 +7,7 @@
 #include <vector>
 #include <Core/DirectX12/SRVManager.h>
 #include <unordered_map>
+#include <Utility/FilePathSearcher/FilePathSearcher.h>
 
 class TextureManager
 {
@@ -26,6 +27,11 @@ public:
     /// <param name="_filePath">テクスチャファイルのパス</param>
     void LoadTexture(const std::string& _filePath);
 
+
+public: /// Setter
+    void AddSearchPath(const std::string& _path) { filePathSearcher_.AddSearchPath(_path); }
+
+
 public: /// Getter
     const DirectX::TexMetadata& GetMetaData(const std::string& _filePath);
     uint32_t GetSrvIndex(const std::string& _filePath);
@@ -42,6 +48,7 @@ private:
     };
 
     std::unordered_map<std::string, TextureData> textureDataMap_;
+    FilePathSearcher filePathSearcher_ = {};
 
 private:
     SRVManager* srvManager_ = nullptr;

@@ -8,11 +8,14 @@
 struct Material
 {
     Vector4 color;
-    LightingType lightingType;
-    int32_t enableLighting;
-    float padding[2];
     Matrix4x4 uvTransform;
     float shininess;
+};
+
+struct Lighting
+{
+    int32_t enableLighting;
+    LightingType lightingType;
 };
 
 struct CameraForGPU

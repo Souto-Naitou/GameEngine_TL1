@@ -25,6 +25,15 @@ struct DirectionalLight
     float intensity; //!< 輝度
 };
 
+struct PointLight
+{
+    int enablePointLight; //!< ポイントライトの有効無効
+    float padding[3];
+    Vector4 color; //!< ライトの色
+    Vector3 position; //!< ライトの位置
+    float intensity; //!< 輝度
+};
+
 struct Transform
 {
     Vector3 scale;

@@ -12,9 +12,11 @@ namespace Json
     /// 前方宣言
     class Value;
 
+
     // 別名定義
     using Array = std::vector<std::shared_ptr<Json::Value>>;
     using Object = std::map<std::string, std::shared_ptr<Json::Value>>;
+
 
     // JSONデータ型の定義
     using Type = std::variant<
@@ -96,7 +98,10 @@ namespace Json
             std::string value;
         };
 
-        explicit Tokenizer(const std::string& _jsonStr) : jsonStr_(_jsonStr) {}
+        Tokenizer() = default;
+
+        void Initialize();
+        void SetJsonString(const std::string& _jsonStr) { jsonStr_ = _jsonStr; }
 
         Json::Tokenizer::Token NextToken();
 
@@ -119,7 +124,10 @@ namespace Json
     class Parser
     {
     public:
-        explicit Parser(const std::string& _jsonStr) : tokenizer_(_jsonStr) {};
+        Parser() = default;
+
+        void Initialize();
+        void SetJsonString(const std::string& _jsonStr) { tokenizer_.SetJsonString(_jsonStr); }
 
         void Run();
 
@@ -167,13 +175,13 @@ namespace Json
         /// <param name="_path">保存先ファイルパス</param>
         /// <param name="_value">JSONデータ</param>
         void Run(std::filesystem::path _path, Json::Value _value);
+        std::string GetString(const Json::Value& _value, int _indent, bool _isSameLine);
 
 
     private:
         Saver() = default;
         ~Saver() = default;
 
-        std::string GetString(const Json::Value& _value, int _indent, bool _isSameLine);
 
         uint32_t indentSize_ = 4u;
     };

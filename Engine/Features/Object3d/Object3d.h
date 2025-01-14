@@ -50,6 +50,7 @@ public: /// Getter
     const Vector3& GetScale() const                             { return transform_.scale; }
     const Vector3& GetRotate() const                            { return transform_.rotate; }
     const Vector3& GetTranslate() const                         { return transform_.translate; }
+    const Matrix4x4& GetRotateMatrix() const                    { return rotateMatrix_; }
 
 
 public: /// Setter
@@ -60,10 +61,15 @@ public: /// Setter
     void SetGameEye(GameEye* _pGameEye)                         { pGameEye_ = _pGameEye; }
     void SetName(const std::string& _name)                      { name_ = _name; }
     void SetTilingMultiply(const Vector2& _tilingMultiply)      { tilingData_->tilingMultiply = _tilingMultiply; }
+    void SetDirectionalLight(DirectionalLight* _light)          { directionalLight_ = _light; }
+    void SetEnableLighting(bool _flag)                          { lightingData_->enableLighting = _flag; }
+    void SetLightingType(LightingType _type)                    { lightingData_->lightingType = _type; }
+    void SetPointLight(PointLight* _light)                      { pointLight_ = _light; }
 
 
 private: /// メンバ変数
     Transform                                       transform_                      = {};
+    Matrix4x4                                       rotateMatrix_                   = {};
     std::string                                     name_                           = {};
 
     bool                                            isUpdate_                       = true;
@@ -73,11 +79,17 @@ private: /// メンバ変数
     Microsoft::WRL::ComPtr<ID3D12Resource>          directionalLightResource_       = nullptr;
     Microsoft::WRL::ComPtr<ID3D12Resource>          tilingResource_                 = nullptr;
     Microsoft::WRL::ComPtr<ID3D12Resource>          cameraForGPUResource_           = nullptr;
+    Microsoft::WRL::ComPtr<ID3D12Resource>          lightingResource_               = nullptr;
+    Microsoft::WRL::ComPtr<ID3D12Resource>          pointLightResource_             = nullptr;
 
     TransformationMatrix*                           transformationMatrixData_       = nullptr;
     DirectionalLight*                               directionalLight_               = nullptr;
+    DirectionalLight*                               directionalLightData_           = nullptr;
+    PointLight*                                     pointLight_                     = nullptr;
+    PointLight*                                     pointLightData_                 = nullptr;
     TilingData*                                     tilingData_                     = nullptr;
     CameraForGPU*                                   cameraForGPU_                   = nullptr;
+    Lighting*                                       lightingData_                   = nullptr;
 
     bool                                            isEnableLighting_               = true;
 
@@ -90,6 +102,8 @@ private: /// 非公開メンバ関数
     void CreateDirectionalLightResource();
     void CreateTilingResource();
     void CreateCameraForGPUResource();
+    void CreateLightingResource();
+    void CreatePointLightResource();
 
 #ifdef DEBUG_ENGINE
     void DebugWindow();

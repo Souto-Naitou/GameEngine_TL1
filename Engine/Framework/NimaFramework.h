@@ -16,6 +16,7 @@
 #include <Interfaces/ISceneFactory.h>
 #include <Features/Particle/ParticleManager.h>
 #include <Features/Line/LineSystem.h>
+#include <Features/RandomGenerator/RandomGenerator.h>
 
 // ゲーム共有
 class NimaFramework
@@ -55,7 +56,7 @@ protected: /// 他クラスのインスタンス
     ParticleManager* pParticleManager_;
     LineSystem* pLineSystem_;
     Input* pInput_;
-
+    RandomGenerator* pRandomGenerator_;
 
 protected:
     bool isExitProgram_ = false;

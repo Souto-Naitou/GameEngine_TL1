@@ -51,22 +51,30 @@ public:
     /// JSONファイルが存在するか確認する
     /// </summary>
     /// <param name="_filename">ファイル名</param>
-    bool IsExist(const std::string& _filename);
+    bool IsExist(const std::string& _filename) const;
 
 public: /// 演算子オーバーロード
-    const Json::Value& operator[](const std::string& _filename) const
+    const Json::Value& operator [](const std::string& _filename)
     {
-        return data_.at(_filename);
+        if (IsExist(_filename))
+        {
+            return data_.at(_filename);
+        }
+        else
+        {
+            LoadFile(_filename);
+            return data_.at(_filename);
+        }
     }
 
 
 public: /// Getter
-    const Json::Value& GetObject(const std::string& _filename);
+    const Json::Value& GetValue(const std::string& _filename);
 
 
 private: /// コンストラクタ ・ デストラクタ
     JsonLoader();
-    ~JsonLoader() = default;
+    ~JsonLoader();
 
 
 private: /// メンバ変数

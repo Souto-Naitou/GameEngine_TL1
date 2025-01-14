@@ -102,32 +102,11 @@ Model* ModelManager::FindModel(const std::string& _filePath)
     return models_[fullpath].get();
 }
 
-void ModelManager::SetLightingFlag(const std::string& _filePath, bool _flag)
-{
-    std::string fullpath = GetDirectoryPath(_filePath);
-    if (fullpath.empty()) fullpath = _filePath;
-    else fullpath += "/" + _filePath;
-
-    lightingFlagQueue_.push({ fullpath, _flag });
-}
-
 void ModelManager::Update()
 {
     if (!uploadQueue_.empty())
     {
         uploadQueue_.front()->Upload();
         uploadQueue_.pop();
-    }
-
-    if (!lightingFlagQueue_.empty())
-    {
-        auto& [filepath, flag] = lightingFlagQueue_.front();
-
-        auto model = FindModel(filepath.string());
-        if (model)
-        {
-            model->SetEnableLighting(flag);
-            lightingFlagQueue_.pop();
-        }
     }
 }

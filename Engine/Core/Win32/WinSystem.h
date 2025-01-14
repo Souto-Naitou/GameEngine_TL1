@@ -1,6 +1,7 @@
 #pragma once
-#include <Windows.h>
+
 #include <stdint.h>
+#include <Windows.h>
 
 class WinSystem
 {
@@ -27,7 +28,7 @@ private:
     WinSystem() = default;
     ~WinSystem() = default;
 
-    static LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
+    static LRESULT __stdcall WindowProcedure(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
 
     WNDCLASS    wc_         = {};
     HWND        hwnd_       = {};

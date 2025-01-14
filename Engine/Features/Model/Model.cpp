@@ -48,14 +48,7 @@ void Model::Draw()
 Model::~Model()
 {
     OutputDebugStringA("Model Destructor\n");
-}
-
-void Model::SetEnableLighting(bool _flag)
-{
-    if (materialData_)
-        materialData_->enableLighting = _flag;
-    else
-        isEnableLighting_ = _flag;
+    if (th_LoadObjectFile_.joinable()) th_LoadObjectFile_.join();
 }
 
 void Model::CreateVertexResource()
@@ -81,7 +74,6 @@ void Model::CreateMaterialResource()
     materialResource_->Map(0, nullptr, reinterpret_cast<void**>(&materialData_));
     /// マテリアルデータを初期化
     materialData_->color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
-    materialData_->enableLighting = isEnableLighting_;
     materialData_->uvTransform = Matrix4x4::Identity();
     materialData_->shininess = 1.0f;
 }
@@ -93,7 +85,7 @@ void Model::LoadModelTexture()
     if (!std::filesystem::exists(modelData_.materialData.textureFilePath))
     {
         DebugManager::GetInstance()->PushLog("[Warning] The model's texture could not be loaded so white1x1.png is loaded instead.\n\t path: " + modelData_.materialData.textureFilePath + "\n");
-        filePath = "Resources/white1x1.png";
+        filePath = "white1x1.png";
     }
 
     TextureManager* textureManager = TextureManager::GetInstance();
