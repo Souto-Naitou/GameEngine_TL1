@@ -19,6 +19,12 @@ public:
 
     void Draw3d() override;
 
+    void Draw2dMidground() override;
+
+    void Draw3dMidground() override;
+
+    void DrawLine() override;
+
     void Draw2dForeground() override;
 
 
