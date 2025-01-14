@@ -57,6 +57,18 @@ void RequiredScene::Draw3d()
 
 }
 
+void RequiredScene::Draw2dMidground()
+{
+}
+
+void RequiredScene::Draw3dMidground()
+{
+}
+
+void RequiredScene::DrawLine()
+{
+}
+
 void RequiredScene::Draw2dForeground()
 {
     pGuideSprite_->Draw();

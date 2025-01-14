@@ -37,17 +37,17 @@ void GameScene::Initialize()
     ParticleSystem::GetInstance()->SetDefaultGameEye(pGameEye_);
     LineSystem::GetInstance()->SetDefaultGameEye(pGameEye_);
 
-    ModelManager::GetInstance()->SetLightingFlag("Skydome.obj", false);
-    ModelManager::GetInstance()->SetLightingFlag("Grid_v3.obj", false);
 
     pSkydome_->Initialize("Skydome.obj");
     pSkydome_->SetScale({ 1.0f, 1.0f, 1.0f });
     pSkydome_->SetName("Skydome");
+    pSkydome_->SetEnableLighting(false);
 
     pGrid_->Initialize("Grid_v3.obj");
     pGrid_->SetScale({ 1.0f, 1.0f, 1.0f });
     pGrid_->SetName("Grid");
     pGrid_->SetTilingMultiply({ 100.0f, 100.0f });
+    pGrid_->SetEnableLighting(false);
 
     /// エミッタの初期化
     pFirework_->Initialize("Particle/ParticleSpark.obj", "Resources/Json/Firework.json");
@@ -91,6 +91,18 @@ void GameScene::Update()
 }
 
 void GameScene::Draw2dBackGround()
+{
+}
+
+void GameScene::Draw3dMidground()
+{
+}
+
+void GameScene::Draw2dMidground()
+{
+}
+
+void GameScene::DrawLine()
 {
 }
 
