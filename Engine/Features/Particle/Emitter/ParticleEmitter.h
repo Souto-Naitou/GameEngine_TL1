@@ -40,28 +40,32 @@ class ParticleEmitter
 public:
     virtual ~ParticleEmitter() {};
 
-    void Initialize(const std::string& _modelPath, const std::string& _jsonPath);
+    void Initialize(const std::string& _modelPath, const std::string& _jsonPath, bool _manualMode = false);
     void Update();
     void Draw();
     void Finalize();
 
+    void Emit();
 
 public: /// Getter
     EmitterData& GetEmitterData() { return emitterData_; }
+    bool IsEmit() const { return isEmit_; };
 
 
 private:
-    static constexpr uint32_t kDefaultReserveCount_ = 6000u;
-    std::string     name_;              // 名前
-    std::string     jsonPath_;
-    Timer           timer_;             // 計測用タイマー
-    Timer           reloadTimer_;       // リロード用タイマー
-    double          reloadInterval_ = 1.0;
-    EmitterData     emitterData_;       // エミッタデータ
-    Particle* particle_ = nullptr;
-    std::unique_ptr<AABB> aabb_;
-    bool jsonFileExist_ = true;
-    WinTools        winTools_;
+    static constexpr uint32_t   kDefaultReserveCount_ = 6000u;
+    std::string                 name_               = {};               // 名前
+    std::string                 jsonPath_           = {};               // JSONファイルパス
+    Timer                       timer_              = {};               // 計測用タイマー
+    Timer                       reloadTimer_        = {};               // リロード用タイマー
+    double                      reloadInterval_     = 1.0;              // リロード間隔
+    EmitterData                 emitterData_        = {};               // エミッタデータ
+    Particle*                   particle_           = nullptr;
+    std::unique_ptr<AABB>       aabb_               = nullptr;
+    bool                        jsonFileExist_      = true;
+    WinTools                    winTools_           = {};
+    bool                        isManualMode_       = false;
+    bool                        isEmit_             = false;
 
 
 private:

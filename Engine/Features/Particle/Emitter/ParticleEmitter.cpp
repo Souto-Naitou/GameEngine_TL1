@@ -12,7 +12,7 @@
 
 const uint32_t ParticleEmitter::kDefaultReserveCount_;
 
-void ParticleEmitter::Initialize(const std::string& _modelPath, const std::string& _jsonPath)
+void ParticleEmitter::Initialize(const std::string& _modelPath, const std::string& _jsonPath, bool _manualMode)
 {
 #ifdef _DEBUG
     std::stringstream ss;
@@ -39,10 +39,18 @@ void ParticleEmitter::Initialize(const std::string& _modelPath, const std::strin
 
     aabb_ = std::make_unique<AABB>();
     aabb_->Initialize();
+
+    isManualMode_ = _manualMode;
+    isEmit_ = false;
 }
 
 void ParticleEmitter::Update()
 {
+    if (isManualMode_)
+    {
+        return;
+    }
+
     if (timer_.GetNow() > emitterData_.emitInterval_)
     {
         if (emitterData_.emitNum_ < 0)
@@ -126,6 +134,7 @@ void ParticleEmitter::EmitParticle()
 
     aabb_->SetMinMax(emitterData_.beginPosition_, emitterData_.endPosition_);
 
+    isEmit_ = true;
 }
 
 void ParticleEmitter::DebugWindow()
@@ -282,4 +291,12 @@ void ParticleEmitter::Finalize()
 
     ParticleManager::GetInstance()->ReleaseParticle(particle_);
     particle_ = nullptr;
+}
+
+void ParticleEmitter::Emit()
+{
+    if (isManualMode_)
+    {
+        EmitParticle();
+    }
 }
