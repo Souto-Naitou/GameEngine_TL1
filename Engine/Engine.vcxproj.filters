@@ -166,6 +166,18 @@
     <Filter Include="Feature\SceneTransition\Manager">
       <UniqueIdentifier>{a8bd3d85-68b2-4d21-9e41-d119dee47a7a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Feature\BaseObject">
+      <UniqueIdentifier>{90205c8c-8565-42f7-a0bc-e073e726d0be}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Feature\Collision">
+      <UniqueIdentifier>{8b3b583a-7857-484a-b311-3a30cccc93f5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Feature\Collision\Manager">
+      <UniqueIdentifier>{ba4a3ce3-2435-4b60-99fb-6a6cbefb12c8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Feature\Collision\Collider">
+      <UniqueIdentifier>{c8050890-2b06-4e5c-9f4a-c63151aecca4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DebugTools\DebugManager\DebugManager.cpp">
@@ -287,6 +299,15 @@
     </ClCompile>
     <ClCompile Include="Features\SceneTransition\SceneTransitionManager.cpp">
       <Filter>Feature\SceneTransition\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="Features\BaseObject\BaseObject.cpp">
+      <Filter>Feature\BaseObject</Filter>
+    </ClCompile>
+    <ClCompile Include="Features\Collision\Manager\CollisionManager.cpp">
+      <Filter>Feature\Collision\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="Features\Collision\Collider\Collider.cpp">
+      <Filter>Feature\Collision\Collider</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -439,6 +460,18 @@
     </ClInclude>
     <ClInclude Include="Features\SceneTransition\SceneTransitionManager.h">
       <Filter>Feature\SceneTransition\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Features\BaseObject\BaseObject.h">
+      <Filter>Feature\BaseObject</Filter>
+    </ClInclude>
+    <ClInclude Include="Features\Collision\Manager\CollisionManager.h">
+      <Filter>Feature\Collision\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Features\Collision\Collider\Collider.h">
+      <Filter>Feature\Collision\Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="Features\Collision\Shape.h">
+      <Filter>Feature\Collision</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
