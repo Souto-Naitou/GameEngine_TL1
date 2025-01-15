@@ -141,6 +141,9 @@
     <ClCompile Include="DebugTools\Logger\Logger.cpp" />
     <ClCompile Include="Externals\Timer\Timer.cpp" />
     <ClCompile Include="Features\Audio\Audio.cpp" />
+    <ClCompile Include="Features\BaseObject\BaseObject.cpp" />
+    <ClCompile Include="Features\Collision\Collider\Collider.cpp" />
+    <ClCompile Include="Features\Collision\Manager\CollisionManager.cpp" />
     <ClCompile Include="Features\GameEye\GameEye.cpp" />
     <ClCompile Include="Features\Input\Input.cpp" />
     <ClCompile Include="Features\Lighting\Manager\LightingManager.cpp" />
@@ -185,6 +188,10 @@
     <ClInclude Include="DebugTools\ReakChecker.h" />
     <ClInclude Include="Externals\Timer\Timer.h" />
     <ClInclude Include="Features\Audio\Audio.h" />
+    <ClInclude Include="Features\BaseObject\BaseObject.h" />
+    <ClInclude Include="Features\Collision\Collider\Collider.h" />
+    <ClInclude Include="Features\Collision\Manager\CollisionManager.h" />
+    <ClInclude Include="Features\Collision\Shape.h" />
     <ClInclude Include="Features\GameEye\GameEye.h" />
     <ClInclude Include="Features\IContainer\ListContainer.h" />
     <ClInclude Include="Features\IContainer\VectorContainer.h" />
