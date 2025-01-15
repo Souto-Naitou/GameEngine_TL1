@@ -6,6 +6,7 @@
 #include <Features/Primitive/AABB.h>
 #include <memory>
 #include <WinTools/WinTools.h>
+#include <Features/GameEye/GameEye.h>
 
 struct EmitterData
 {
@@ -47,9 +48,13 @@ public:
 
     void Emit();
 
+public: /// Setter
+    void SetPosition(const Vector3& _position) { position_ = _position; }
+    void SetGameEye(GameEye* _eye) { this->ModifyGameEye(_eye); }
+    void SetEnableBillboard(bool _enable) { particle_->SetEnableBillboard(_enable); }
+
 public: /// Getter
     EmitterData& GetEmitterData() { return emitterData_; }
-    bool IsEmit() const { return isEmit_; };
 
 
 private:
@@ -60,12 +65,14 @@ private:
     Timer                       reloadTimer_        = {};               // リロード用タイマー
     double                      reloadInterval_     = 1.0;              // リロード間隔
     EmitterData                 emitterData_        = {};               // エミッタデータ
+    EmitterData                 fromJsonData_       = {};
     Particle*                   particle_           = nullptr;
     std::unique_ptr<AABB>       aabb_               = nullptr;
     bool                        jsonFileExist_      = true;
     WinTools                    winTools_           = {};
     bool                        isManualMode_       = false;
-    bool                        isEmit_             = false;
+    bool                        isEmitRequest_      = false;
+    Vector3                     position_           = {};
 
 
 private:
@@ -74,4 +81,5 @@ private:
 
 private:
     virtual void DebugWindow();
+    void ModifyGameEye(GameEye* _eye);
 };

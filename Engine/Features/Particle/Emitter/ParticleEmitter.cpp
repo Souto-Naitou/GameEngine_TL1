@@ -29,7 +29,8 @@ void ParticleEmitter::Initialize(const std::string& _modelPath, const std::strin
     particle_->Initialize(_modelPath);
     particle_->reserve(kDefaultReserveCount_);
 
-    emitterData_ = EmitterManager::GetInstance()->LoadFile(jsonPath_);
+    fromJsonData_ = EmitterManager::GetInstance()->LoadFile(jsonPath_);
+    emitterData_ = fromJsonData_;
 
     if (!emitterData_.name_.empty())
     {
@@ -41,16 +42,10 @@ void ParticleEmitter::Initialize(const std::string& _modelPath, const std::strin
     aabb_->Initialize();
 
     isManualMode_ = _manualMode;
-    isEmit_ = false;
 }
 
 void ParticleEmitter::Update()
 {
-    if (isManualMode_)
-    {
-        return;
-    }
-
     if (timer_.GetNow() > emitterData_.emitInterval_)
     {
         if (emitterData_.emitNum_ < 0)
@@ -59,11 +54,26 @@ void ParticleEmitter::Update()
         }
         for (int32_t i = 0; i < emitterData_.emitNum_; ++i)
         {
-            EmitParticle();
+            if (isManualMode_ && isEmitRequest_)
+            {
+                EmitParticle();
+                isEmitRequest_ = false;
+            }
+            else if (!isManualMode_)
+            {
+                EmitParticle();
+            }
         }
         timer_.Reset();
         timer_.Start();
     }
+
+    emitterData_ = fromJsonData_;
+    emitterData_.emitPositionFixed_ = fromJsonData_.emitPositionFixed_ + position_;
+    emitterData_.beginPosition_ = fromJsonData_.beginPosition_ + position_;
+    emitterData_.endPosition_ = fromJsonData_.endPosition_ + position_;
+
+    aabb_->SetMinMax(emitterData_.beginPosition_, emitterData_.endPosition_);
 }
 
 void ParticleEmitter::Draw()
@@ -133,8 +143,6 @@ void ParticleEmitter::EmitParticle()
     datum.accResistance_ = emitterData_.resistance_;
 
     aabb_->SetMinMax(emitterData_.beginPosition_, emitterData_.endPosition_);
-
-    isEmit_ = true;
 }
 
 void ParticleEmitter::DebugWindow()
@@ -146,6 +154,10 @@ void ParticleEmitter::DebugWindow()
 
     if (ImGui::CollapsingHeader("一般"))
     {
+        if (ImGui::Button("マニュアル発生"))
+        {
+            EmitParticle();
+        }
         if (ImGui::InputText("ファイルパス", path, sizeof(path)))
         {
             jsonFileExist_ = std::filesystem::directory_entry(path).exists();
@@ -153,18 +165,18 @@ void ParticleEmitter::DebugWindow()
 
         if (ImGui::Button("保存"))
         {
-            EmitterManager::GetInstance()->SaveFile(path, emitterData_);
+            EmitterManager::GetInstance()->SaveFile(path, fromJsonData_);
         }
         ImGui::SameLine();
         if (ImGui::Button("読み込み"))
         {
             if (std::filesystem::directory_entry(path).exists())
             {
-                emitterData_ = EmitterManager::GetInstance()->ReloadFile(path);
+                fromJsonData_ = EmitterManager::GetInstance()->ReloadFile(path);
                 /// 名前が空でないなら
-                if (!emitterData_.name_.empty())
+                if (!fromJsonData_.name_.empty())
                 {
-                    name_ = emitterData_.name_;
+                    name_ = fromJsonData_.name_;
                 }
                 jsonFileExist_ = true;
             }
@@ -191,66 +203,66 @@ void ParticleEmitter::DebugWindow()
             ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), "ファイルが存在しないか、拡張子がjsonではありません。");
         }
 
-        ImGui::DragFloat("パーティクル寿命", &emitterData_.particleLifeTime_, 0.1f, 0.0f, FLT_MAX);
+        ImGui::DragFloat("パーティクル寿命", &fromJsonData_.particleLifeTime_, 0.1f, 0.0f, FLT_MAX);
 
-        ImGui::DragFloat("発生間隔", &emitterData_.emitInterval_, 0.02f, 0.02f, FLT_MAX);
+        ImGui::DragFloat("発生間隔", &fromJsonData_.emitInterval_, 0.02f, 0.02f, FLT_MAX);
 
-        ImGui::InputInt("発生数", (int*)&emitterData_.emitNum_);
+        ImGui::InputInt("発生数", (int*)&fromJsonData_.emitNum_);
 
-        ImGui::ColorEdit4("開始色", &emitterData_.beginColor_.x);
+        ImGui::ColorEdit4("開始色", &fromJsonData_.beginColor_.x);
         ImGui::SameLine();
         if (ImGui::Button("入れ替え##Color"))
         {
-            Vector4 temp = emitterData_.beginColor_;
-            emitterData_.beginColor_ = emitterData_.endColor_;
-            emitterData_.endColor_ = temp;
+            Vector4 temp = fromJsonData_.beginColor_;
+            fromJsonData_.beginColor_ = fromJsonData_.endColor_;
+            fromJsonData_.endColor_ = temp;
         }
 
-        ImGui::ColorEdit4("終了色", &emitterData_.endColor_.x);
+        ImGui::ColorEdit4("終了色", &fromJsonData_.endColor_.x);
         ImGui::SameLine();
         if (ImGui::Button("同期##Color"))
         {
-            emitterData_.endColor_ = emitterData_.beginColor_;
+            fromJsonData_.endColor_ = fromJsonData_.beginColor_;
         }
 
-        ImGui::SliderFloat("透明度の変化量", &emitterData_.alphaDeltaValue_, -0.2f, 0.0f);
+        ImGui::SliderFloat("透明度の変化量", &fromJsonData_.alphaDeltaValue_, -0.2f, 0.0f);
 
         ImGui::Spacing();
     }
 
     if (ImGui::CollapsingHeader("変形"))
     {
-        ImGui::DragFloat3("開始スケール", &emitterData_.startScale_.x, 0.01f);
+        ImGui::DragFloat3("開始スケール", &fromJsonData_.startScale_.x, 0.01f);
         ImGui::SameLine();
         if (ImGui::Button("入れ替え##Scale"))
         {
-            Vector3 temp = emitterData_.startScale_;
-            emitterData_.startScale_ = emitterData_.endScale_;
-            emitterData_.endScale_ = temp;
+            Vector3 temp = fromJsonData_.startScale_;
+            fromJsonData_.startScale_ = fromJsonData_.endScale_;
+            fromJsonData_.endScale_ = temp;
         }
 
-        ImGui::DragFloat3("終了スケール", &emitterData_.endScale_.x, 0.01f);
+        ImGui::DragFloat3("終了スケール", &fromJsonData_.endScale_.x, 0.01f);
         ImGui::SameLine();
         if (ImGui::Button("同期##Scale"))
         {
-            emitterData_.endScale_ = emitterData_.startScale_;
+            fromJsonData_.endScale_ = fromJsonData_.startScale_;
         }
-        ImGui::DragFloat("スケール遅延時間", &emitterData_.scaleDelayTime_, 0.01f);
+        ImGui::DragFloat("スケール遅延時間", &fromJsonData_.scaleDelayTime_, 0.01f);
 
         ImGui::Spacing();
     }
 
     if (ImGui::CollapsingHeader("生成場所"))
     {
-        ImGui::Checkbox("ランダム範囲生成", &emitterData_.enableRandomEmit_);
-        if (emitterData_.enableRandomEmit_)
+        ImGui::Checkbox("ランダム範囲生成", &fromJsonData_.enableRandomEmit_);
+        if (fromJsonData_.enableRandomEmit_)
         {
-            ImGui::DragFloat3("発生開始地点", &emitterData_.beginPosition_.x, 0.01f);
-            ImGui::DragFloat3("発生終了地点", &emitterData_.endPosition_.x, 0.01f);
+            ImGui::DragFloat3("発生開始地点", &fromJsonData_.beginPosition_.x, 0.01f);
+            ImGui::DragFloat3("発生終了地点", &fromJsonData_.endPosition_.x, 0.01f);
         }
         else
         {
-            ImGui::DragFloat3("発生位置", &emitterData_.emitPositionFixed_.x, 0.01f);
+            ImGui::DragFloat3("発生位置", &fromJsonData_.emitPositionFixed_.x, 0.01f);
         }
 
         ImGui::Spacing();
@@ -258,15 +270,15 @@ void ParticleEmitter::DebugWindow()
 
     if (ImGui::CollapsingHeader("速度"))
     {
-        ImGui::Checkbox("速度のランダマイズ", &emitterData_.enableRandomVelocity_);
-        if (emitterData_.enableRandomVelocity_)
+        ImGui::Checkbox("速度のランダマイズ", &fromJsonData_.enableRandomVelocity_);
+        if (fromJsonData_.enableRandomVelocity_)
         {
-            ImGui::DragFloat3("速度ランダム範囲-開始", &emitterData_.velocityRandomRangeBegin_.x, 0.01f);
-            ImGui::DragFloat3("速度ランダム範囲-終了", &emitterData_.velocityRandomRangeEnd_.x, 0.01f);
+            ImGui::DragFloat3("速度ランダム範囲-開始", &fromJsonData_.velocityRandomRangeBegin_.x, 0.01f);
+            ImGui::DragFloat3("速度ランダム範囲-終了", &fromJsonData_.velocityRandomRangeEnd_.x, 0.01f);
         }
         else
         {
-            ImGui::DragFloat3("速度", &emitterData_.velocityFixed_.x, 0.01f);
+            ImGui::DragFloat3("速度", &fromJsonData_.velocityFixed_.x, 0.01f);
         }
 
         ImGui::Spacing();
@@ -274,13 +286,19 @@ void ParticleEmitter::DebugWindow()
 
     if (ImGui::CollapsingHeader("物理"))
     {
-        ImGui::DragFloat3("重力", &emitterData_.gravity_.x, 0.01f);
-        ImGui::DragFloat3("抵抗", &emitterData_.resistance_.x, 0.01f);
+        ImGui::DragFloat3("重力", &fromJsonData_.gravity_.x, 0.01f);
+        ImGui::DragFloat3("抵抗", &fromJsonData_.resistance_.x, 0.01f);
 
     }
 
     jsonPath_ = path;
 #endif // _DEBUG
+}
+
+void ParticleEmitter::ModifyGameEye(GameEye* _eye)
+{
+    particle_->SetGameEye(_eye);
+    aabb_->SetGameEye(_eye);
 }
 
 void ParticleEmitter::Finalize()
@@ -295,8 +313,5 @@ void ParticleEmitter::Finalize()
 
 void ParticleEmitter::Emit()
 {
-    if (isManualMode_)
-    {
-        EmitParticle();
-    }
+    isEmitRequest_ = true;
 }
