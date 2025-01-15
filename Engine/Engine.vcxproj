@@ -141,6 +141,9 @@
     <ClCompile Include="DebugTools\Logger\Logger.cpp" />
     <ClCompile Include="Externals\Timer\Timer.cpp" />
     <ClCompile Include="Features\Audio\Audio.cpp" />
+    <ClCompile Include="Features\BaseObject\BaseObject.cpp" />
+    <ClCompile Include="Features\Collision\Collider\Collider.cpp" />
+    <ClCompile Include="Features\Collision\Manager\CollisionManager.cpp" />
     <ClCompile Include="Features\GameEye\GameEye.cpp" />
     <ClCompile Include="Features\Input\Input.cpp" />
     <ClCompile Include="Features\Lighting\Manager\LightingManager.cpp" />
@@ -185,6 +188,10 @@
     <ClInclude Include="DebugTools\ReakChecker.h" />
     <ClInclude Include="Externals\Timer\Timer.h" />
     <ClInclude Include="Features\Audio\Audio.h" />
+    <ClInclude Include="Features\BaseObject\BaseObject.h" />
+    <ClInclude Include="Features\Collision\Collider\Collider.h" />
+    <ClInclude Include="Features\Collision\Manager\CollisionManager.h" />
+    <ClInclude Include="Features\Collision\Shape.h" />
     <ClInclude Include="Features\GameEye\GameEye.h" />
     <ClInclude Include="Features\IContainer\ListContainer.h" />
     <ClInclude Include="Features\IContainer\VectorContainer.h" />
@@ -279,9 +286,6 @@
   <ItemGroup>
     <ProjectReference Include="Externals\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">
       <Project>{371b9fa9-4c90-4ac6-a123-aced756d6c77}</Project>
-    </ProjectReference>
-    <ProjectReference Include="Externals\Easing_ImGui\Easing_ImGui.vcxproj">
-      <Project>{ba3d0f34-3210-4d13-8763-196fccc04957}</Project>
     </ProjectReference>
     <ProjectReference Include="Externals\ImGui\ImGui.vcxproj">
       <Project>{f83f6c46-aee0-480c-95fc-2319e6feb02b}</Project>
