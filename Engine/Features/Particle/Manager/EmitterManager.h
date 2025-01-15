@@ -41,4 +41,6 @@ private:
 
 private:
     std::unordered_map<std::filesystem::path, EmitterData> emitterMap_;
+    const std::string kDefaultPath = "EngineResources/Json/EmitterDefault.json";
+
 };

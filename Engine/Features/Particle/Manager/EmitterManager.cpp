@@ -8,7 +8,17 @@ const EmitterData& EmitterManager::LoadFile(std::string _path)
     loader.LoadFile(_path);
     Json::Value root = loader[_path];
 
-    ParseJsonValue(root, data);
+    if (root.type == Json::Value::Type::Null)
+    {
+        loader.LoadFile(kDefaultPath);
+        root = loader[kDefaultPath];
+        ParseJsonValue(root, data);
+        this->SaveFile(kDefaultPath, data);
+    }
+    else
+    {
+        ParseJsonValue(root, data);
+    }
 
     emitterMap_[_path] = data;
 
