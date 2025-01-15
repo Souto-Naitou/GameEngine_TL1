@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Collision/Shape.h>
+#include <Features/Collision/Shape.h>
 #include <Features/Primitive/AABB.h>
 #include <Features/Primitive/OBB.h>
 #include "Vector2.h"

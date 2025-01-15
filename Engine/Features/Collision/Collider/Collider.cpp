@@ -1,5 +1,5 @@
 #include "Collider.h"
-#include <Collision/Manager/CollisionManager.h>
+#include <Features/Collision/Manager/CollisionManager.h>
 #include <DebugTools/ImGuiTemplates/ImGuiTemplates.h>
 #include <sstream>
 
