@@ -13,7 +13,7 @@ const EmitterData& EmitterManager::LoadFile(std::string _path)
         loader.LoadFile(kDefaultPath);
         root = loader[kDefaultPath];
         ParseJsonValue(root, data);
-        this->SaveFile(kDefaultPath, data);
+        this->SaveFile(_path, data);
     }
     else
     {

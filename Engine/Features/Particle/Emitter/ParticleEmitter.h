@@ -6,6 +6,7 @@
 #include <Features/Primitive/AABB.h>
 #include <memory>
 #include <WinTools/WinTools.h>
+#include <Features/GameEye/GameEye.h>
 
 struct EmitterData
 {
@@ -38,7 +39,8 @@ struct EmitterData
 class ParticleEmitter
 {
 public:
-    virtual ~ParticleEmitter() {};
+    ParticleEmitter() = default;
+    ~ParticleEmitter() = default;
 
     void Initialize(const std::string& _modelPath, const std::string& _jsonPath, bool _manualMode = false);
     void Update();
@@ -46,6 +48,11 @@ public:
     void Finalize();
 
     void Emit();
+
+public: /// Setter
+    void SetPosition(const Vector3& _position) { position_ = _position; }
+    void SetGameEye(GameEye* _eye) { this->ModifyGameEye(_eye); }
+    void SetEnableBillboard(bool _enable) { particle_->SetEnableBillboard(_enable); }
 
 public: /// Getter
     EmitterData& GetEmitterData() { return emitterData_; }
@@ -60,12 +67,14 @@ private:
     Timer                       reloadTimer_        = {};               // リロード用タイマー
     double                      reloadInterval_     = 1.0;              // リロード間隔
     EmitterData                 emitterData_        = {};               // エミッタデータ
+    EmitterData                 fromJsonData_       = {};
     Particle*                   particle_           = nullptr;
     std::unique_ptr<AABB>       aabb_               = nullptr;
     bool                        jsonFileExist_      = true;
     WinTools*                   winTools_           = nullptr;
     bool                        isManualMode_       = false;
-    bool                        isEmit_             = false;
+    bool                        isEmitRequest_      = false;
+    Vector3                     position_           = {};
 
 
 private:
@@ -73,5 +82,6 @@ private:
 
 
 private:
-    virtual void DebugWindow();
+    void DebugWindow();
+    void ModifyGameEye(GameEye* _eye);
 };
