@@ -48,11 +48,6 @@ void ParticleEmitter::Initialize(const std::string& _modelPath, const std::strin
 
 void ParticleEmitter::Update()
 {
-    if (isManualMode_)
-    {
-        return;
-    }
-
     if (timer_.GetNow() > emitterData_.emitInterval_)
     {
         if (emitterData_.emitNum_ < 0)
@@ -64,13 +59,13 @@ void ParticleEmitter::Update()
             if (isManualMode_ && isEmitRequest_)
             {
                 EmitParticle();
-                isEmitRequest_ = false;
             }
             else if (!isManualMode_)
             {
                 EmitParticle();
             }
         }
+        isEmitRequest_ = false;
         timer_.Reset();
         timer_.Start();
     }

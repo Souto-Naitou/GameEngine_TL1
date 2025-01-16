@@ -56,8 +56,6 @@ public: /// Setter
 
 public: /// Getter
     EmitterData& GetEmitterData() { return emitterData_; }
-    bool IsEmit() const { return isEmit_; };
-
 
 private:
     static constexpr uint32_t   kDefaultReserveCount_ = 6000u;
