@@ -21,6 +21,8 @@ void ParticleEmitter::Initialize(const std::string& _modelPath, const std::strin
     DebugManager::GetInstance()->SetComponent("ParticleEmitter", name_, std::bind(&ParticleEmitter::DebugWindow, this));
 #endif // _DEBUG
 
+    winTools_ = WinTools::GetInstance();
+
     jsonPath_ = _jsonPath;
 
     timer_.Start();
@@ -46,6 +48,11 @@ void ParticleEmitter::Initialize(const std::string& _modelPath, const std::strin
 
 void ParticleEmitter::Update()
 {
+    if (isManualMode_)
+    {
+        return;
+    }
+
     if (timer_.GetNow() > emitterData_.emitInterval_)
     {
         if (emitterData_.emitNum_ < 0)
@@ -189,7 +196,7 @@ void ParticleEmitter::DebugWindow()
         ImGui::SameLine();
         if (ImGui::Button("参照"))
         {
-            std::string temp = winTools_.OpenFileDialog();
+            std::string temp = winTools_->OpenFileDialog();
             if (!temp.empty() && std::filesystem::path(temp).extension() == ".json")
             {
                 std::memcpy(path, temp.c_str(), temp.size());

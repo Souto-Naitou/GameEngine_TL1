@@ -56,10 +56,11 @@ public: /// Setter
 
 public: /// Getter
     EmitterData& GetEmitterData() { return emitterData_; }
+    bool IsEmit() const { return isEmit_; };
 
 
 private:
-    static constexpr uint32_t   kDefaultReserveCount_ = 2000u;
+    static constexpr uint32_t   kDefaultReserveCount_ = 6000u;
     std::string                 name_               = {};               // 名前
     std::string                 jsonPath_           = {};               // JSONファイルパス
     Timer                       timer_              = {};               // 計測用タイマー
@@ -70,7 +71,7 @@ private:
     Particle*                   particle_           = nullptr;
     std::unique_ptr<AABB>       aabb_               = nullptr;
     bool                        jsonFileExist_      = true;
-    WinTools                    winTools_           = {};
+    WinTools*                   winTools_           = nullptr;
     bool                        isManualMode_       = false;
     bool                        isEmitRequest_      = false;
     Vector3                     position_           = {};
