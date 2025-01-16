@@ -30,16 +30,7 @@ void Particle::Initialize(const std::string& _filepath)
     /// デフォルトのGameEyeを取得
     pGameEye_ = pSystem_->GetDefaultGameEye();
 
-    if (!particleData_.capacity()) reserve(1);
-
-    /// パーティクルリソースを作成
-    CreateParticleForGPUResource();
-
-    /// SRVを作成
-    CreateSRV();
-
-    /// 変形情報を初期化
-    InitializeTransform();
+    if (!particleData_.capacity()) reserve(1, true);
 
     /// モデルを読み込む
     modelPath_ = _filepath;
@@ -136,11 +127,11 @@ void Particle::Draw()
     commandList->DrawInstanced(static_cast<UINT>(pModelData_->vertices.size()), static_cast<UINT>(particleData_.size()), 0, 0);
 }
 
-void Particle::reserve(size_t _size)
+void Particle::reserve(size_t _size, bool _isInit)
 {
     particleData_.reserve(_size);
     CreateParticleForGPUResource();
-    SRVManager::GetInstance()->Deallocate(srvIndex_);
+    if (!_isInit) SRVManager::GetInstance()->Deallocate(srvIndex_);
     CreateSRV();
     InitializeTransform();
     return;

@@ -39,7 +39,8 @@ struct EmitterData
 class ParticleEmitter
 {
 public:
-    virtual ~ParticleEmitter() {};
+    ParticleEmitter() = default;
+    ~ParticleEmitter() = default;
 
     void Initialize(const std::string& _modelPath, const std::string& _jsonPath, bool _manualMode = false);
     void Update();
@@ -58,7 +59,7 @@ public: /// Getter
 
 
 private:
-    static constexpr uint32_t   kDefaultReserveCount_ = 6000u;
+    static constexpr uint32_t   kDefaultReserveCount_ = 2000u;
     std::string                 name_               = {};               // 名前
     std::string                 jsonPath_           = {};               // JSONファイルパス
     Timer                       timer_              = {};               // 計測用タイマー
@@ -80,6 +81,6 @@ private:
 
 
 private:
-    virtual void DebugWindow();
+    void DebugWindow();
     void ModifyGameEye(GameEye* _eye);
 };

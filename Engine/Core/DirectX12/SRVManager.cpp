@@ -54,7 +54,7 @@ uint32_t SRVManager::Allocate()
 
 void SRVManager::Deallocate(uint32_t _index)
 {
-    // assert(isAllocated_[_index] && "すでに開放されています。");
+    assert(isAllocated_[_index] && "すでに開放されています。");
     isAllocated_[_index] = false;
     currentSize_--;
 
