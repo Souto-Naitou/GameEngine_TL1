@@ -63,7 +63,7 @@ private:
     Particle*                   particle_           = nullptr;
     std::unique_ptr<AABB>       aabb_               = nullptr;
     bool                        jsonFileExist_      = true;
-    WinTools                    winTools_           = {};
+    WinTools*                   winTools_           = nullptr;
     bool                        isManualMode_       = false;
     bool                        isEmit_             = false;
 
