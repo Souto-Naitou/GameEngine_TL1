@@ -259,16 +259,16 @@ void DebugManager::ChangeFont()
     ImGuiIO& io = ImGui::GetIO();
 
     ImFontConfig fontcfg;
-    fontcfg.MergeMode = 1;
+    fontcfg.MergeMode = 0;
     fontcfg.OversampleH = 1;
     fontcfg.PixelSnapH = 1;
     fontcfg.GlyphOffset = ImVec2(0.0f, 0.0f);
 
-    io.Fonts->AddFontDefault();
+    //io.Fonts->AddFontDefault();
 
     ImFont* resultFont = io.Fonts->AddFontFromFileTTF(
-        "EngineResources/Font/NotoSansCJKjp-Light.ttf",
-        13,
+        "EngineResources/Font/x12y16pxMaruMonica.ttf",
+        16,
         &fontcfg,
         io.Fonts->GetGlyphRangesJapanese()
     );
