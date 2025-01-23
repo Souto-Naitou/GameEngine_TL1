@@ -48,11 +48,11 @@ public:
     void PresentDraw();
 
 public: /// Getter
-    DirectX12* GetDx12()                        { return pDx12_; }
-    GameEye* GetDefaultGameEye()                { return pDefaultGameEye_; }
+    DirectX12*  GetDx12()                       { return pDx12_; }
+    GameEye**   GetSharedGameEye()              { return &pDefaultGameEye_; }
 
 public: /// Setter
-    void SetDefaultGameEye(GameEye* _pGameEye)  { pDefaultGameEye_ = _pGameEye; }
+    void SetSharedGameEye(GameEye* _pGameEye)   { pDefaultGameEye_ = _pGameEye; }
 
 private:
     Object3dSystem();

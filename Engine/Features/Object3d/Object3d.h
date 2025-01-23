@@ -96,6 +96,7 @@ private: /// メンバ変数
     Model*                                          pModel_                         = nullptr;
     std::string                                     modelPath_                      = {};
     GameEye*                                        pGameEye_                       = nullptr;
+    GameEye**                                       ppSystemGameEye_                = nullptr;
 
 private: /// 非公開メンバ関数
     void CreateTransformationMatrixResource();
