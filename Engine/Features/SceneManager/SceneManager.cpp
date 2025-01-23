@@ -83,6 +83,7 @@ void SceneManager::Finalize()
     if (pCurrentScene_ != nullptr)
     {
         pCurrentScene_->Finalize();
+        delete pCurrentScene_;
     }
 }
 
