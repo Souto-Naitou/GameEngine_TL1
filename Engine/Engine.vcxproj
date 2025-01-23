@@ -145,6 +145,7 @@
     <ClCompile Include="Features\Collision\Collider\Collider.cpp" />
     <ClCompile Include="Features\Collision\Manager\CollisionManager.cpp" />
     <ClCompile Include="Features\CSV\CSVLoader.cpp" />
+    <ClCompile Include="Features\DeltaTimeManager\DeltaTimeManager.cpp" />
     <ClCompile Include="Features\Easing\Easing.cpp" />
     <ClCompile Include="Features\Easing\Easing_impl.cpp" />
     <ClCompile Include="Features\Easing\Manager\EasingManager.cpp" />
@@ -198,6 +199,7 @@
     <ClInclude Include="Features\Collision\Shape.h" />
     <ClInclude Include="Features\CSV\CSVLoader.h" />
     <ClInclude Include="Features\CSV\csvStructure\CSVData.h" />
+    <ClInclude Include="Features\DeltaTimeManager\DeltaTimeManager.h" />
     <ClInclude Include="Features\Easing\Easing.h" />
     <ClInclude Include="Features\Easing\Manager\EasingManager.h" />
     <ClInclude Include="Features\GameEye\GameEye.h" />

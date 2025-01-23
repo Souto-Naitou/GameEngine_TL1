@@ -187,6 +187,9 @@
     <Filter Include="Feature\CSV">
       <UniqueIdentifier>{041acee4-5bdd-4267-9204-84c9d7b43c7c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Feature\DeltaTimeManager">
+      <UniqueIdentifier>{053f48ec-aa29-428d-b1db-321a274f4725}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DebugTools\DebugManager\DebugManager.cpp">
@@ -329,6 +332,9 @@
     </ClCompile>
     <ClCompile Include="Features\CSV\CSVLoader.cpp">
       <Filter>Feature\CSV</Filter>
+    </ClCompile>
+    <ClCompile Include="Features\DeltaTimeManager\DeltaTimeManager.cpp">
+      <Filter>Feature\DeltaTimeManager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -505,6 +511,9 @@
     </ClInclude>
     <ClInclude Include="Features\CSV\csvStructure\CSVData.h">
       <Filter>Feature\CSV</Filter>
+    </ClInclude>
+    <ClInclude Include="Features\DeltaTimeManager\DeltaTimeManager.h">
+      <Filter>Feature\DeltaTimeManager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
