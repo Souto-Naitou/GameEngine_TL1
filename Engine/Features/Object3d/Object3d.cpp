@@ -22,7 +22,7 @@ void Object3d::Initialize(const std::string& _filePath)
     pSystem_ = Object3dSystem::GetInstance();
     pDx12_ = pSystem_->GetDx12();
     device_ = pDx12_->GetDevice();
-    pGameEye_ = pSystem_->GetDefaultGameEye();
+    ppSystemGameEye_ = pSystem_->GetSharedGameEye();
 
 #if defined (DEBUG_ENGINE) && (_DEBUG)
     pDebugManager_ = DebugManager::GetInstance();
@@ -84,6 +84,11 @@ void Object3d::Update()
         auto& vpMatrix = pGameEye_->GetViewProjectionMatrix();
         wvpMatrix = wMatrix * vpMatrix;
     }
+    else if (ppSystemGameEye_ && *ppSystemGameEye_)
+    {
+        auto& vpMatrix = (*ppSystemGameEye_)->GetViewProjectionMatrix();
+        wvpMatrix = wMatrix * vpMatrix;
+    }
     else wvpMatrix = wMatrix;
 
 
@@ -117,7 +122,14 @@ void Object3d::Update()
 
 
     /// カメラのワールド座標を更新
-    cameraForGPU_->worldPosition = pGameEye_->GetTransform().translate;
+    if (pGameEye_)
+    {
+        cameraForGPU_->worldPosition = pGameEye_->GetTransform().translate;
+    }
+    else if (ppSystemGameEye_ && *ppSystemGameEye_)
+    {
+        cameraForGPU_->worldPosition = (*ppSystemGameEye_)->GetTransform().translate;
+    }
 
     if (pModel_) pModel_->Update();
 }
