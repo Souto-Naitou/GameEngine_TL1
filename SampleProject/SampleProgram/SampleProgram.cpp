@@ -62,6 +62,18 @@ void SampleProgram::Draw()
     pObject3dSystem_->PresentDraw();
     pSceneManager_->SceneDraw3d();
 
+    /// 中景スプライトの描画
+    pSpriteSystem_->PresentDraw();
+    pSceneManager_->SceneDraw2dMidground();
+
+    /// 中景3dオブジェクトの描画
+    pObject3dSystem_->PresentDraw();
+    pSceneManager_->SceneDraw3dMidground();
+
+    /// ライン描画
+    pLineSystem_->PresentDraw();
+    pSceneManager_->SceneDrawLine();
+
     /// パーティクル描画
     pParticleSystem_->PresentDraw();
     pParticleManager_->Draw();
