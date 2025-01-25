@@ -104,15 +104,15 @@ void GameScene::Draw2dMidground()
 
 void GameScene::DrawLine()
 {
+    pFirework_->Draw();
+    pSmoke_->Draw();
+    pSpark_->Draw();
 }
 
 void GameScene::Draw3d()
 {
     pSkydome_->Draw();
     pGrid_->Draw();
-    pFirework_->Draw();
-    pSmoke_->Draw();
-    pSpark_->Draw();
 }
 
 void GameScene::Draw2dForeground()
