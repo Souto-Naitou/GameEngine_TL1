@@ -5,6 +5,7 @@
 #include <Features/GameEye/GameEye.h>
 #include <Utility/DIContainer/DIContainer.h>
 #include <Common/structs.h>
+#include <Features/Lighting/PointLight/PointLight.h>
 
 class BaseObject
 {

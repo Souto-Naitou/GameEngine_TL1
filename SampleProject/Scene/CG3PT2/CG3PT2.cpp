@@ -26,25 +26,36 @@ void CG3PT2::Initialize()
     pGrid_->SetScale({ 1.0f, 1.0f, 1.0f });
     pGrid_->SetName("Grid");
     pGrid_->SetTilingMultiply({ 100.0f, 100.0f });
-    pGrid_->SetEnableLighting(false);
+    pGrid_->SetEnableLighting(true);
 
-    /// ライト
+    /// 平行光源
     directionalLight_.direction = { 0.0f, -1.0f, 0.0f };
     directionalLight_.color = { 1.0f, 1.0f, 1.0f, 1.0f };
-    directionalLight_.intensity = 1.0f;
+    directionalLight_.intensity = 0.1f;
 
     pMonsterBall_->SetDirectionalLight(&directionalLight_);
     pGrid_->SetDirectionalLight(&directionalLight_);
 
+    /// 点光源
+    pointLight_.Initialize();
+    pointLight_.enablePointLight = 1;
+    pointLight_.position = { -1.5f, 0.25f, 2.0f };
+    pointLight_.color = { 1.0f, 1.0f, 1.0f, 1.0f };
+    pointLight_.intensity = 0.08f;
+
+    pMonsterBall_->SetPointLight(&pointLight_);
+    pGrid_->SetPointLight(&pointLight_);
 }
 
 void CG3PT2::Finalize()
 {
     pMonsterBall_->Finalize();
+    pGrid_->Finalize();
 }
 
 void CG3PT2::Update()
 {
+    pointLight_.Update();
     pGameEye_->Update();
     pMonsterBall_->Update();
     pGrid_->Update();
@@ -56,6 +67,7 @@ void CG3PT2::Draw2dBackGround()
 
 void CG3PT2::Draw3d()
 {
+    pointLight_.Draw();
     pMonsterBall_->Draw();
     pGrid_->Draw();
 }

@@ -152,6 +152,7 @@
     <ClCompile Include="Features\GameEye\GameEye.cpp" />
     <ClCompile Include="Features\Input\Input.cpp" />
     <ClCompile Include="Features\Lighting\Manager\LightingManager.cpp" />
+    <ClCompile Include="Features\Lighting\PointLight\PointLight.cpp" />
     <ClCompile Include="Features\Line\Line.cpp" />
     <ClCompile Include="Features\Line\LineSystem.cpp" />
     <ClCompile Include="Features\Model\Helper\ModelHelper.cpp" />

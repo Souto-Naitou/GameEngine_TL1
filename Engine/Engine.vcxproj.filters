@@ -327,6 +327,7 @@
     <ClCompile Include="Features\DeltaTimeManager\DeltaTimeManager.cpp">
       <Filter>Feature\DeltaTimeManager</Filter>
     </ClCompile>
+    <ClCompile Include="Features\Lighting\PointLight\PointLight.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common\define.h">

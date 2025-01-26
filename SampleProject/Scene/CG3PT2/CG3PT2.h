@@ -4,6 +4,8 @@
 #include <Features/Object3d/Object3d.h>
 #include <Features/GameEye/GameEye.h>
 
+#include <Common/structs.h>
+
 #include <memory>
 
 class CG3PT2 : public IScene
@@ -23,10 +25,11 @@ public:
     void Draw2dForeground() override;
 
 private:
-    std::unique_ptr<GameEye> pGameEye_ = nullptr;
+    std::unique_ptr<GameEye>    pGameEye_               = nullptr;
 
-    DirectionalLight directionalLight_ = {};
+    DirectionalLight            directionalLight_       = {};
+    PointLight                  pointLight_             = {};
 
-    std::unique_ptr<Object3d> pMonsterBall_ = nullptr;
-    std::unique_ptr<Object3d> pGrid_ = nullptr;
+    std::unique_ptr<Object3d>   pMonsterBall_           = nullptr;
+    std::unique_ptr<Object3d>   pGrid_                  = nullptr;
 };

@@ -9,6 +9,7 @@
 #include <Features/Model/Model.h>
 #include <Common/define.h>
 #include <Features/GameEye/GameEye.h>
+#include <Features/Lighting/PointLight/PointLight.h>
 
 /// 前方宣言
 struct DirectionalLight;
