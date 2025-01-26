@@ -33,7 +33,7 @@ void GameScene::Initialize()
     pGameEye_->SetName("MainCamera");
 
     /// システムにデフォルトのゲームカメラを設定
-    Object3dSystem::GetInstance()->SetDefaultGameEye(pGameEye_);
+    Object3dSystem::GetInstance()->SetSharedGameEye(pGameEye_);
     ParticleSystem::GetInstance()->SetDefaultGameEye(pGameEye_);
     LineSystem::GetInstance()->SetDefaultGameEye(pGameEye_);
 

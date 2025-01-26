@@ -232,6 +232,7 @@
     <ClInclude Include="Interfaces\IScene.h" />
     <ClInclude Include="Interfaces\ISceneFactory.h" />
     <ClInclude Include="Utility\ConvertString\ConvertString.h" />
+    <ClInclude Include="Utility\DIContainer\DIContainer.h" />
     <ClInclude Include="Utility\FilePathSearcher\FilePathSearcher.h" />
   </ItemGroup>
   <ItemGroup>

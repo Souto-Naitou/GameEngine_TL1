@@ -22,7 +22,7 @@ void SampleProgram::Initialize()
     pModelManager_->LoadAllModel();
 
     /// シーンの生成
-    pSceneManager_->ReserveScene("RequiredScene");
+    pSceneManager_->ReserveScene("CG3PT2");
 }
 
 void SampleProgram::Finalize()

@@ -55,6 +55,8 @@ void Object3d::Initialize(const std::string& _filePath)
     /// ポイントライトリソースを作成
     CreatePointLightResource();
 
+    /// マテリアルリソースを作成
+    CreateMaterialResource();
 
     /// モデルを読み込む
     modelPath_ = _filePath;
@@ -153,6 +155,8 @@ void Object3d::Draw()
     commandList->SetGraphicsRootConstantBufferView(6, lightingResource_->GetGPUVirtualAddress());
     // PointLightCBufferの場所を設定
     commandList->SetGraphicsRootConstantBufferView(7, pointLightResource_->GetGPUVirtualAddress());
+    // マテリアルCBufferの場所を設定
+    commandList->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());
 
     if (pModel_) pModel_->Draw();
 }
@@ -220,6 +224,17 @@ void Object3d::CreatePointLightResource()
     pointLightData_->intensity = 1.0f;
 }
 
+void Object3d::CreateMaterialResource()
+{
+    /// マテリアルリソースを作成
+    materialResource_ = DX12Helper::CreateBufferResource(device_, sizeof(Material));
+    materialResource_->Map(0, nullptr, reinterpret_cast<void**>(&materialData_));
+    /// マテリアルデータを初期化
+    materialData_->color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
+    materialData_->uvTransform = Matrix4x4::Identity();
+    materialData_->shininess = 1.0f;
+}
+
 #ifdef DEBUG_ENGINE
 void Object3d::DebugWindow()
 {
@@ -256,6 +271,7 @@ void Object3d::DebugWindow()
 
         if (directionalLight_)
         {
+            ImGui::DragFloat("Shininess", &materialData_->shininess, 0.01f);
             ImGui::ColorEdit4("Color", &directionalLight_->color.x);
             ImGui::DragFloat3("Direction", &directionalLight_->direction.x, 0.01f);
             ImGui::DragFloat("Intensity", &directionalLight_->intensity, 0.01f);

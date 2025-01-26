@@ -1,22 +1,20 @@
 #include "SceneFactory.h"
 
 #include <Scene/GameScene/GameScene.h>
-#include <Scene/RequiredScene/RequiredScene.h>
+#include <Scene/InstancingScene/InstancingScene.h>
+#include <Scene/CG3PT2/CG3PT2.h>
 
 #include <cassert>
+
+#define JUDGE_SCENE(class) if (_sceneName == #class) { return new class(); }
 
 IScene* SceneFactory::CreateScene(const std::string& _sceneName)
 {
     IScene* pNewScene = nullptr;
 
-    if (_sceneName == "RequiredScene")
-    {
-        pNewScene = new RequiredScene();
-    }
-    else if (_sceneName == "GameScene")
-    {
-        pNewScene = new GameScene();
-    }
+    JUDGE_SCENE(InstancingScene)
+    else JUDGE_SCENE(GameScene)
+    else JUDGE_SCENE(CG3PT2)
 
     assert(pNewScene);
 
