@@ -10,7 +10,10 @@
 #include <iostream>
 
 #pragma comment(lib, "d3d12.lib")
+#pragma comment(lib, "d3d11.lib")
 #pragma comment(lib, "dxgi.lib")
+#pragma comment(lib, "d2d1.lib")
+#pragma comment(lib, "dwrite.lib")
 
 
 /// <summary>
@@ -83,10 +86,32 @@ void DirectX12::Initialize()
 
     /// DXCの初期化
     CreateDirectXShaderCompiler();
+
+    ///// D3D11デバイス群の生成
+    //CreateD3D11Device();
+
+
+    ///// Direct2Dのファクトリの生成
+    //CreateD2D1Factory();
+
+
+    ///// D2D1デバイスコンテキストの生成
+    //CreateID2D1DeviceContext();
+
+
+    ///// D2D1レンダーターゲットの生成
+    //CreateD2DRenderTarget();
 }
 
 void DirectX12::PresentDraw()
 {
+    viewport_.TopLeftX = 0;
+    viewport_.TopLeftY = 0;
+    viewport_.Width = static_cast<float>(gameWindowWidth_);
+    viewport_.Height = static_cast<float>(gameWindowHeight_);
+    viewport_.MinDepth = 0.0f;
+    viewport_.MaxDepth = 1.0f;
+
     // バックバッファのインデックスを取得
     backBufferIndex_ = swapChain_->GetCurrentBackBufferIndex();
 

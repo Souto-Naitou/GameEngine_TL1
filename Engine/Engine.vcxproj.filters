@@ -181,6 +181,9 @@
     <Filter Include="Utility\DIContainer">
       <UniqueIdentifier>{d915672d-7d9f-4795-8ba7-1995c72af4b5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Feature\Text">
+      <UniqueIdentifier>{b4382b62-3fb7-4f45-96f9-21e495c77e44}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DebugTools\DebugManager\DebugManager.cpp">
@@ -327,7 +330,13 @@
     <ClCompile Include="Features\DeltaTimeManager\DeltaTimeManager.cpp">
       <Filter>Feature\DeltaTimeManager</Filter>
     </ClCompile>
-    <ClCompile Include="Features\Lighting\PointLight\PointLight.cpp" />
+    <ClCompile Include="Features\Text\TextSystem.cpp">
+      <Filter>Feature\Text</Filter>
+    </ClCompile>
+    <ClCompile Include="Features\Lighting\PointLight\PointLight.cpp">
+      <Filter>Feature\Lighting\PointLight</Filter>
+    </ClCompile>
+    <ClCompile Include="Features\Text\Text.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common\define.h">
@@ -509,6 +518,12 @@
     </ClInclude>
     <ClInclude Include="Utility\DIContainer\DIContainer.h">
       <Filter>Utility\DIContainer</Filter>
+    </ClInclude>
+    <ClInclude Include="Features\Text\Text.h">
+      <Filter>Feature\Text</Filter>
+    </ClInclude>
+    <ClInclude Include="Features\Text\TextSystem.h">
+      <Filter>Feature\Text</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

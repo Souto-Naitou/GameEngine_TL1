@@ -7,6 +7,7 @@
 #include <Common/structs.h>
 
 #include <memory>
+#include <string>
 
 class CG3PT2 : public IScene
 {
@@ -24,6 +25,7 @@ public:
     void DrawLine() override;
     void Draw2dForeground() override;
 
+
 private:
     std::unique_ptr<GameEye>    pGameEye_               = nullptr;
 
@@ -32,4 +34,14 @@ private:
 
     std::unique_ptr<Object3d>   pMonsterBall_           = nullptr;
     std::unique_ptr<Object3d>   pGrid_                  = nullptr;
+
+    std::string                 name_ = "CG3";
+
+    uint32_t*                   wndWidth_               = nullptr;
+    uint32_t*                   wndHeight_              = nullptr;
+
+
+private:
+    void DebugWindow();
+
 };

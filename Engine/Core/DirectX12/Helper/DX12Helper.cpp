@@ -236,7 +236,7 @@ Microsoft::WRL::ComPtr<ID3D12Resource> DX12Helper::CreateBufferResource(const Mi
     vertexResourceDesc.SampleDesc.Count = 1;
     vertexResourceDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
     HRESULT hr = _device->CreateCommittedResource(&uploadHeapProperties, D3D12_HEAP_FLAG_NONE,
-        &vertexResourceDesc, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr,
+        &vertexResourceDesc, D3D12_RESOURCE_STATE_COMMON, nullptr,
         IID_PPV_ARGS(&result));
     assert(SUCCEEDED(hr));
     return result;
@@ -280,7 +280,7 @@ Microsoft::WRL::ComPtr<ID3D12Resource> DX12Helper::CreateTextureResource(const M
         &heapProperties,
         D3D12_HEAP_FLAG_NONE,
         &resourceDesc,
-        D3D12_RESOURCE_STATE_GENERIC_READ,
+        D3D12_RESOURCE_STATE_COMMON,
         nullptr,
         IID_PPV_ARGS(&resource));
     assert(SUCCEEDED(hr));

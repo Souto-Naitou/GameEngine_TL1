@@ -1,8 +1,19 @@
 #include "CG3PT2.h"
 #include <Features/Object3d/Object3dSystem.h>
+#include <imgui.h>
+#include <DebugTools/DebugManager/DebugManager.h>
 
 void CG3PT2::Initialize()
 {
+    DebugManager::GetInstance()->SetComponent("Common", name_, std::bind(&CG3PT2::DebugWindow, this));
+
+    DirectX12* pDx12 = DirectX12::GetInstance();
+
+    wndWidth_ = &pDx12->GetGameWidthRef();
+    wndHeight_ = &pDx12->GetGameHeightRef();
+    
+
+
     /// カメラの初期化
     pGameEye_ = std::make_unique<GameEye>();
     pGameEye_->SetName("MainCamera@CG3PT2");
@@ -51,6 +62,8 @@ void CG3PT2::Finalize()
 {
     pMonsterBall_->Finalize();
     pGrid_->Finalize();
+
+    DebugManager::GetInstance()->DeleteComponent("Common", name_.c_str());
 }
 
 void CG3PT2::Update()
@@ -86,4 +99,16 @@ void CG3PT2::DrawLine()
 
 void CG3PT2::Draw2dForeground()
 {
+}
+
+void CG3PT2::DebugWindow()
+{
+    int width = *wndWidth_;
+    int height = *wndHeight_;
+
+    ImGui::InputInt("Window width", &width);
+    ImGui::InputInt("Window height", &height);
+
+    *wndWidth_ = width;
+    *wndHeight_ = height;
 }

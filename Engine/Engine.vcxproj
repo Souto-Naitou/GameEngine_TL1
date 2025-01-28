@@ -71,6 +71,7 @@
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
       <ForcedIncludeFiles>%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -173,6 +174,8 @@
     <ClCompile Include="Features\SceneTransition\TransFadeInOut.cpp" />
     <ClCompile Include="Features\Sprite\Sprite.cpp" />
     <ClCompile Include="Features\Sprite\SpriteSystem.cpp" />
+    <ClCompile Include="Features\Text\Text.cpp" />
+    <ClCompile Include="Features\Text\TextSystem.cpp" />
     <ClCompile Include="Framework\NimaFramework.cpp" />
     <ClCompile Include="Utility\FilePathSearcher\FilePathSearcher.cpp" />
   </ItemGroup>
@@ -231,6 +234,8 @@
     <ClInclude Include="Features\SceneTransition\TransFadeInOut.h" />
     <ClInclude Include="Features\Sprite\Sprite.h" />
     <ClInclude Include="Features\Sprite\SpriteSystem.h" />
+    <ClInclude Include="Features\Text\Text.h" />
+    <ClInclude Include="Features\Text\TextSystem.h" />
     <ClInclude Include="Framework\NimaFramework.h" />
     <ClInclude Include="Interfaces\IScene.h" />
     <ClInclude Include="Interfaces\ISceneFactory.h" />

@@ -151,8 +151,8 @@ void DirectX12::SetViewportAndScissorRect()
 {
     /// ビューポート
     // クライアント領域のサイズと一緒にして画面全体に表示
-    viewport_.Width = static_cast<FLOAT>(clientWidth_);
-    viewport_.Height = static_cast<FLOAT>(clientHeight_);
+    viewport_.Width = static_cast<FLOAT>(gameWindowWidth_);
+    viewport_.Height = static_cast<FLOAT>(gameWindowHeight_);
     viewport_.TopLeftX = 0;
     viewport_.TopLeftY = 0;
     viewport_.MinDepth = 0.0f;
@@ -179,6 +179,81 @@ void DirectX12::CreateDirectXShaderCompiler()
     /// includeに対応するため
     hr_ = dxcUtils_->CreateDefaultIncludeHandler(&includeHandler_);
     assert(SUCCEEDED(hr_));
+}
+
+void DirectX12::CreateD2D1Factory()
+{
+    /// Direct2Dのファクトリを生成
+    hr_ = D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, IID_PPV_ARGS(&d2dFactory_));
+    assert(SUCCEEDED(hr_));
+}
+
+void DirectX12::CreateD3D11Device()
+{
+#ifdef _DEBUG
+    UINT d3d11flags = D3D11_CREATE_DEVICE_DEBUG | D3D11_CREATE_DEVICE_BGRA_SUPPORT;
+#else
+    UINT d3d11flags = D3D11_CREATE_DEVICE_BGRA_SUPPORT;
+#endif // _DEBUG
+
+    hr_ = D3D11On12CreateDevice(device_.Get(), d3d11flags, nullptr, 0, reinterpret_cast<IUnknown**>(commandQueue_.GetAddressOf()), 1, 0, &d3d11Device_, &d3d11DeviceContext_, nullptr);
+    assert(SUCCEEDED(hr_));
+
+    hr_ = d3d11Device_.As(&d3d11On12Device_);
+    assert(SUCCEEDED(hr_));
+}
+
+void DirectX12::CreateID2D1DeviceContext()
+{
+    hr_ = d3d11On12Device_.As(&dxgiDevice_);
+    assert(SUCCEEDED(hr_));
+
+    hr_ = d2dFactory_->CreateDevice(dxgiDevice_.Get(), &d2dDevice_);
+    assert(SUCCEEDED(hr_));
+
+    hr_ = d2dDevice_->CreateDeviceContext(D2D1_DEVICE_CONTEXT_OPTIONS_NONE, d2dDeviceContext_.ReleaseAndGetAddressOf());
+    assert(SUCCEEDED(hr_));
+}
+
+void DirectX12::CreateD2DRenderTarget()
+{
+    D3D11_RESOURCE_FLAGS d3d11Flags = { D3D11_BIND_RENDER_TARGET };
+    const UINT dpi = GetDpiForWindow(hwnd_);
+    D2D1_BITMAP_PROPERTIES1 bitmapProperties =
+        D2D1::BitmapProperties1(
+            D2D1_BITMAP_OPTIONS_TARGET | D2D1_BITMAP_OPTIONS_CANNOT_DRAW,
+            D2D1::PixelFormat(DXGI_FORMAT_UNKNOWN, D2D1_ALPHA_MODE_PREMULTIPLIED),
+            static_cast<float>(dpi),
+            static_cast<float>(dpi)
+        );
+
+    for (UINT i = 0u; i < 2; ++i)
+    {
+        Microsoft::WRL::ComPtr<ID3D11Resource> wrappedBackBuffer = nullptr;
+        hr_ = d3d11On12Device_->CreateWrappedResource(
+            swapChainResources_[i].Get(),
+            &d3d11Flags,
+            D3D12_RESOURCE_STATE_RENDER_TARGET,
+            D3D12_RESOURCE_STATE_PRESENT,
+            IID_PPV_ARGS(wrappedBackBuffer.ReleaseAndGetAddressOf())
+        );
+        assert(SUCCEEDED(hr_));
+
+        Microsoft::WRL::ComPtr<IDXGISurface> dxgiSurface = nullptr;
+        hr_ = wrappedBackBuffer.As(&dxgiSurface);
+        assert(SUCCEEDED(hr_));
+
+        Microsoft::WRL::ComPtr<ID2D1Bitmap1> d2dRenderTarget = nullptr;
+        hr_ = d2dDeviceContext_->CreateBitmapFromDxgiSurface(
+            dxgiSurface.Get(),
+            &bitmapProperties,
+            d2dRenderTarget.ReleaseAndGetAddressOf()
+        );
+        assert(SUCCEEDED(hr_));
+
+        d3d11WrappedBackBuffers_[i] = wrappedBackBuffer;
+        d2dRenderTargets_[i] = d2dRenderTarget;
+    }
 }
 
 void DirectX12::SetResourceBarrier(
