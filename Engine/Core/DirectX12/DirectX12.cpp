@@ -72,6 +72,10 @@ void DirectX12::Initialize()
     CreateSwapChainAndResource();
 
 
+    /// ゲームスクリーンリソースの生成
+    CreateGameScreenResource();
+
+
     /// DSVの生成とステートの設定
     CreateDSVAndSettingState();
 
@@ -187,6 +191,48 @@ void DirectX12::PostDraw()
     hr_ = commandList_->Reset(commandAllocator_.Get(), nullptr);
     assert(SUCCEEDED(hr_));
 
+}
+
+void DirectX12::CopyRTV()
+{
+    /// レンダーターゲットからテクスチャにコピー
+    D3D12_RESOURCE_BARRIER barrier = {};
+    barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+    barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+    barrier.Transition.pResource = swapChainResources_[backBufferIndex_].Get();
+    barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
+    barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_COPY_SOURCE;
+    barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
+    commandList_->ResourceBarrier(1, &barrier);
+
+
+    D3D12_TEXTURE_COPY_LOCATION srcLocation = {};
+    srcLocation.pResource = swapChainResources_[backBufferIndex_].Get();
+    srcLocation.Type = D3D12_TEXTURE_COPY_TYPE_SUBRESOURCE_INDEX;
+    srcLocation.SubresourceIndex = 0; // コピーするサブリソースインデックス
+
+    D3D12_TEXTURE_COPY_LOCATION dstLocation = {};
+    dstLocation.pResource = gameScreenResource_.Get();
+    dstLocation.Type = D3D12_TEXTURE_COPY_TYPE_SUBRESOURCE_INDEX;
+    dstLocation.SubresourceIndex = 0;
+
+    D3D12_BOX srcBox = {};
+    srcBox.left = 0;
+    srcBox.top = 0;
+    srcBox.front = 0;
+    srcBox.right = 1280; // コピーしたい範囲の幅
+    srcBox.bottom = 720; // コピーしたい範囲の高さ
+    srcBox.back = 1;
+
+    commandList_->CopyTextureRegion(&dstLocation, 0, 0, 0, &srcLocation, &srcBox);
+
+    barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+    barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+    barrier.Transition.pResource = swapChainResources_[backBufferIndex_].Get();
+    barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_COPY_SOURCE;
+    barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
+    barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
+    commandList_->ResourceBarrier(1, &barrier);
 }
 
 DirectX12::~DirectX12()

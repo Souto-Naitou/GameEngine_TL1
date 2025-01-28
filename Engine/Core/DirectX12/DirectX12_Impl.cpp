@@ -113,6 +113,33 @@ void DirectX12::CreateSwapChainAndResource()
     device_->CreateRenderTargetView(swapChainResources_[1].Get(), &rtvDesc_, rtvHandles_[1]);
 }
 
+void DirectX12::CreateGameScreenResource()
+{
+    /// リソースの生成
+    D3D12_RESOURCE_DESC resourceDesc{};
+    resourceDesc.Width = gameWindowWidth_;                                      // 幅
+    resourceDesc.Height = gameWindowHeight_;                                    // 高さ
+    resourceDesc.MipLevels = 1;                                             // mipmapの数
+    resourceDesc.DepthOrArraySize = 1;                                      // 奥行き or 配列Textureの配列数
+    resourceDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;                       // フォーマット
+    resourceDesc.SampleDesc.Count = 1;                                      // サンプリング数
+    resourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;            // 2DTexture
+    resourceDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS;        // UAVを使うためのフラグ
+    resourceDesc.Layout = D3D12_TEXTURE_LAYOUT_UNKNOWN;                     // テクスチャのレイアウト
+
+    D3D12_HEAP_PROPERTIES heapProperties{};
+    heapProperties.Type = D3D12_HEAP_TYPE_DEFAULT;                          // VRAMに
+
+    device_->CreateCommittedResource(
+        &heapProperties,
+        D3D12_HEAP_FLAG_NONE,
+        &resourceDesc,
+        D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
+        nullptr,
+        IID_PPV_ARGS(&gameScreenResource_)
+    );
+}
+
 void DirectX12::CreateDSVAndSettingState()
 {
     /// リソースの生成

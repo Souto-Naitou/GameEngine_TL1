@@ -38,6 +38,7 @@ public:
 
     void PresentDraw();
     void PostDraw();
+    void CopyRTV();
 
 
     static const uint32_t kMaxSRVCount_;
@@ -88,6 +89,7 @@ private:
     Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>       commandList_                    = nullptr;      // コマンドアロケータ
     Microsoft::WRL::ComPtr<IDXGISwapChain4>                 swapChain_                      = nullptr;      // スワップチェーン
     Microsoft::WRL::ComPtr<ID3D12Resource>                  swapChainResources_[2]          = {};           // スワップチェーンリソース
+    Microsoft::WRL::ComPtr<ID3D12Resource>                  gameScreenResource_             = nullptr;      // ゲーム画面リソース
     Microsoft::WRL::ComPtr<ID3D12Fence>                     fence_                          = nullptr;      // フェンス
     Microsoft::WRL::ComPtr<ID3D12DescriptorHeap>            rtvDescriptorHeap_              = nullptr;
     Microsoft::WRL::ComPtr<ID3D12DescriptorHeap>            dsvDescriptorHeap_              = nullptr;
@@ -145,6 +147,12 @@ private:
     /// スワップチェーンの生成
     /// </summary>
     void CreateSwapChainAndResource();
+
+
+    /// <summary>
+    /// ゲーム画面リソースの生成
+    /// </summary>
+    void CreateGameScreenResource();
 
 
     /// <summary>
