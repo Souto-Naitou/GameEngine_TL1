@@ -25,8 +25,14 @@
     <Filter Include="Game\Scene\GameScene">
       <UniqueIdentifier>{57ecc88f-e9ba-458b-8dfb-b7c3788bfd84}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Game\Scene\RequiredScene">
+    <Filter Include="Game\Scene\InstancingScene">
       <UniqueIdentifier>{1f28f099-fa3b-4d3d-95c0-110310ced570}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Scene\CG3PT2">
+      <UniqueIdentifier>{42e6b6ad-9cee-44e7-832f-08ff5d3a64dc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Scene\Empty">
+      <UniqueIdentifier>{352d90bb-cc55-43d0-b199-e968f7902539}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -39,11 +45,17 @@
     <ClCompile Include="Scene\Factory\SceneFactory.cpp">
       <Filter>Game\Scene\Factory</Filter>
     </ClCompile>
-    <ClCompile Include="Scene\RequiredScene\RequiredScene.cpp">
-      <Filter>Game\Scene\RequiredScene</Filter>
-    </ClCompile>
     <ClCompile Include="Scene\GameScene\GameScene.cpp">
       <Filter>Game\Scene\GameScene</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\InstancingScene\InstancingScene.cpp">
+      <Filter>Game\Scene\InstancingScene</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\CG3PT2\CG3PT2.cpp">
+      <Filter>Game\Scene\CG3PT2</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\Empty\EmptyScene.cpp">
+      <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -53,11 +65,17 @@
     <ClInclude Include="Scene\Factory\SceneFactory.h">
       <Filter>Game\Scene\Factory</Filter>
     </ClInclude>
-    <ClInclude Include="Scene\RequiredScene\RequiredScene.h">
-      <Filter>Game\Scene\RequiredScene</Filter>
-    </ClInclude>
     <ClInclude Include="Scene\GameScene\GameScene.h">
       <Filter>Game\Scene\GameScene</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\InstancingScene\InstancingScene.h">
+      <Filter>Game\Scene\InstancingScene</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\CG3PT2\CG3PT2.h">
+      <Filter>Game\Scene\CG3PT2</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\Empty\EmptyScene.h">
+      <Filter>Game\Scene\Empty</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -70,6 +70,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderOutputFile>
       </PrecompiledHeaderOutputFile>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -115,9 +116,11 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="SampleProgram\SampleProgram.cpp" />
+    <ClCompile Include="Scene\CG3PT2\CG3PT2.cpp" />
+    <ClCompile Include="Scene\Empty\EmptyScene.cpp" />
     <ClCompile Include="Scene\Factory\SceneFactory.cpp" />
     <ClCompile Include="Scene\GameScene\GameScene.cpp" />
-    <ClCompile Include="Scene\RequiredScene\RequiredScene.cpp" />
+    <ClCompile Include="Scene\InstancingScene\InstancingScene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Engine\Engine.vcxproj">
@@ -132,9 +135,11 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SampleProgram\SampleProgram.h" />
+    <ClInclude Include="Scene\CG3PT2\CG3PT2.h" />
+    <ClInclude Include="Scene\Empty\EmptyScene.h" />
     <ClInclude Include="Scene\Factory\SceneFactory.h" />
     <ClInclude Include="Scene\GameScene\GameScene.h" />
-    <ClInclude Include="Scene\RequiredScene\RequiredScene.h" />
+    <ClInclude Include="Scene\InstancingScene\InstancingScene.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

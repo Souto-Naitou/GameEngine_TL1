@@ -37,8 +37,6 @@ void Model::Draw()
 
     // 頂点バッファを設定
     commandList->IASetVertexBuffers(0, 1, &vertexBufferView_);
-    // マテリアルCBufferの場所を設定
-    commandList->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());
     // SRVの設定
     commandList->SetGraphicsRootDescriptorTable(2, textureSrvHandleGPU_);
     // 描画！（DrawCall/ドローコール）。頂点
@@ -67,17 +65,6 @@ void Model::CreateVertexResource()
 }
 
 
-void Model::CreateMaterialResource()
-{
-    /// マテリアルリソースを作成
-    materialResource_ = DX12Helper::CreateBufferResource(device_, sizeof(Material));
-    materialResource_->Map(0, nullptr, reinterpret_cast<void**>(&materialData_));
-    /// マテリアルデータを初期化
-    materialData_->color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
-    materialData_->uvTransform = Matrix4x4::Identity();
-    materialData_->shininess = 1.0f;
-}
-
 void Model::LoadModelTexture()
 {
     std::string filePath = modelData_.materialData.textureFilePath;
@@ -99,9 +86,6 @@ void Model::Upload()
 
     /// 頂点リソースを作成
     CreateVertexResource();
-
-    /// マテリアルリソースを作成
-    CreateMaterialResource();
 
     /// テクスチャを読み込む
     LoadModelTexture();

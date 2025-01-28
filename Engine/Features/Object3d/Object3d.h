@@ -9,6 +9,7 @@
 #include <Features/Model/Model.h>
 #include <Common/define.h>
 #include <Features/GameEye/GameEye.h>
+#include <Features/Lighting/PointLight/PointLight.h>
 
 /// 前方宣言
 struct DirectionalLight;
@@ -65,6 +66,7 @@ public: /// Setter
     void SetEnableLighting(bool _flag)                          { lightingData_->enableLighting = _flag; }
     void SetLightingType(LightingType _type)                    { lightingData_->lightingType = _type; }
     void SetPointLight(PointLight* _light)                      { pointLight_ = _light; }
+    void SetShininess(float _shininess)                         { materialData_->shininess = _shininess; }
 
 
 private: /// メンバ変数
@@ -81,6 +83,7 @@ private: /// メンバ変数
     Microsoft::WRL::ComPtr<ID3D12Resource>          cameraForGPUResource_           = nullptr;
     Microsoft::WRL::ComPtr<ID3D12Resource>          lightingResource_               = nullptr;
     Microsoft::WRL::ComPtr<ID3D12Resource>          pointLightResource_             = nullptr;
+    Microsoft::WRL::ComPtr<ID3D12Resource>          materialResource_               = nullptr;
 
     TransformationMatrix*                           transformationMatrixData_       = nullptr;
     DirectionalLight*                               directionalLight_               = nullptr;
@@ -90,6 +93,7 @@ private: /// メンバ変数
     TilingData*                                     tilingData_                     = nullptr;
     CameraForGPU*                                   cameraForGPU_                   = nullptr;
     Lighting*                                       lightingData_                   = nullptr;
+    Material*                                       materialData_                   = nullptr;
 
     bool                                            isEnableLighting_               = true;
 
@@ -105,6 +109,7 @@ private: /// 非公開メンバ関数
     void CreateCameraForGPUResource();
     void CreateLightingResource();
     void CreatePointLightResource();
+    void CreateMaterialResource();
 
 #ifdef DEBUG_ENGINE
     void DebugWindow();

@@ -4,6 +4,7 @@ class IScene
 {
 public:
     /// デストラクタ
+    IScene() {}
     virtual ~IScene() {}
 
     /// <summary>

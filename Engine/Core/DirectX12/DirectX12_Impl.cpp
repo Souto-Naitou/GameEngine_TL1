@@ -7,6 +7,7 @@
 #include <cassert>
 #include <format>
 #include <Core/DirectX12/Helper/DX12Helper.h>
+#include <Core/DirectX12/SRVManager.h>
 
 /// ImGui
 #ifdef _DEBUG
@@ -19,6 +20,15 @@
 #pragma comment(lib, "dxcompiler.lib")
 
 const uint32_t DirectX12::kMaxSRVCount_ = 512ui32;
+
+void DirectX12::SetGameWindowRect(D3D12_VIEWPORT _viewport)
+{
+    viewport_ = _viewport;
+    //pSRVManager_->Deallocate(gameWndSrvIndex_);
+    //gameScreenResource_.Reset();
+
+    //CreateGameScreenResource();
+}
 
 void DirectX12::ChooseAdapter()
 {
@@ -113,6 +123,38 @@ void DirectX12::CreateSwapChainAndResource()
     device_->CreateRenderTargetView(swapChainResources_[1].Get(), &rtvDesc_, rtvHandles_[1]);
 }
 
+void DirectX12::CreateGameScreenResource()
+{
+    /// リソースの生成
+    D3D12_RESOURCE_DESC resourceDesc{};
+    resourceDesc.Width = static_cast<UINT64>(viewport_.Width);              // 幅
+    resourceDesc.Height = static_cast<UINT>(viewport_.Height);              // 高さ
+    resourceDesc.MipLevels = 1;                                             // mipmapの数
+    resourceDesc.DepthOrArraySize = 1;                                      // 奥行き or 配列Textureの配列数
+    resourceDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;                  // フォーマット
+    resourceDesc.SampleDesc.Count = 1;                                      // サンプリング数
+    resourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;            // 2DTexture
+    resourceDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS;        // UAVを使うためのフラグ
+    resourceDesc.Layout = D3D12_TEXTURE_LAYOUT_UNKNOWN;                     // テクスチャのレイアウト
+
+    D3D12_HEAP_PROPERTIES heapProperties{};
+    heapProperties.Type = D3D12_HEAP_TYPE_DEFAULT;                          // VRAMに
+
+    device_->CreateCommittedResource(
+        &heapProperties,
+        D3D12_HEAP_FLAG_NONE,
+        &resourceDesc,
+        D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
+        nullptr,
+        IID_PPV_ARGS(&gameScreenResource_)
+    );
+
+    /// SRVの生成
+    SRVManager* psrvm = SRVManager::GetInstance();
+    gameWndSrvIndex_ = psrvm->Allocate();
+    psrvm->CreateForTexture2D(gameWndSrvIndex_, gameScreenResource_.Get(), DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, 1);
+}
+
 void DirectX12::CreateDSVAndSettingState()
 {
     /// リソースの生成
@@ -151,8 +193,8 @@ void DirectX12::SetViewportAndScissorRect()
 {
     /// ビューポート
     // クライアント領域のサイズと一緒にして画面全体に表示
-    viewport_.Width = static_cast<FLOAT>(clientWidth_);
-    viewport_.Height = static_cast<FLOAT>(clientHeight_);
+    viewport_.Width = static_cast<FLOAT>(1120);
+    viewport_.Height = static_cast<FLOAT>(630);
     viewport_.TopLeftX = 0;
     viewport_.TopLeftY = 0;
     viewport_.MinDepth = 0.0f;
@@ -179,6 +221,81 @@ void DirectX12::CreateDirectXShaderCompiler()
     /// includeに対応するため
     hr_ = dxcUtils_->CreateDefaultIncludeHandler(&includeHandler_);
     assert(SUCCEEDED(hr_));
+}
+
+void DirectX12::CreateD2D1Factory()
+{
+    /// Direct2Dのファクトリを生成
+    hr_ = D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, IID_PPV_ARGS(&d2dFactory_));
+    assert(SUCCEEDED(hr_));
+}
+
+void DirectX12::CreateD3D11Device()
+{
+#ifdef _DEBUG
+    UINT d3d11flags = D3D11_CREATE_DEVICE_DEBUG | D3D11_CREATE_DEVICE_BGRA_SUPPORT;
+#else
+    UINT d3d11flags = D3D11_CREATE_DEVICE_BGRA_SUPPORT;
+#endif // _DEBUG
+
+    hr_ = D3D11On12CreateDevice(device_.Get(), d3d11flags, nullptr, 0, reinterpret_cast<IUnknown**>(commandQueue_.GetAddressOf()), 1, 0, &d3d11Device_, &d3d11DeviceContext_, nullptr);
+    assert(SUCCEEDED(hr_));
+
+    hr_ = d3d11Device_.As(&d3d11On12Device_);
+    assert(SUCCEEDED(hr_));
+}
+
+void DirectX12::CreateID2D1DeviceContext()
+{
+    hr_ = d3d11On12Device_.As(&dxgiDevice_);
+    assert(SUCCEEDED(hr_));
+
+    hr_ = d2dFactory_->CreateDevice(dxgiDevice_.Get(), &d2dDevice_);
+    assert(SUCCEEDED(hr_));
+
+    hr_ = d2dDevice_->CreateDeviceContext(D2D1_DEVICE_CONTEXT_OPTIONS_NONE, d2dDeviceContext_.ReleaseAndGetAddressOf());
+    assert(SUCCEEDED(hr_));
+}
+
+void DirectX12::CreateD2DRenderTarget()
+{
+    D3D11_RESOURCE_FLAGS d3d11Flags = { D3D11_BIND_RENDER_TARGET };
+    const UINT dpi = GetDpiForWindow(hwnd_);
+    D2D1_BITMAP_PROPERTIES1 bitmapProperties =
+        D2D1::BitmapProperties1(
+            D2D1_BITMAP_OPTIONS_TARGET | D2D1_BITMAP_OPTIONS_CANNOT_DRAW,
+            D2D1::PixelFormat(DXGI_FORMAT_UNKNOWN, D2D1_ALPHA_MODE_PREMULTIPLIED),
+            static_cast<float>(dpi),
+            static_cast<float>(dpi)
+        );
+
+    for (UINT i = 0u; i < 2; ++i)
+    {
+        Microsoft::WRL::ComPtr<ID3D11Resource> wrappedBackBuffer = nullptr;
+        hr_ = d3d11On12Device_->CreateWrappedResource(
+            swapChainResources_[i].Get(),
+            &d3d11Flags,
+            D3D12_RESOURCE_STATE_RENDER_TARGET,
+            D3D12_RESOURCE_STATE_PRESENT,
+            IID_PPV_ARGS(wrappedBackBuffer.ReleaseAndGetAddressOf())
+        );
+        assert(SUCCEEDED(hr_));
+
+        Microsoft::WRL::ComPtr<IDXGISurface> dxgiSurface = nullptr;
+        hr_ = wrappedBackBuffer.As(&dxgiSurface);
+        assert(SUCCEEDED(hr_));
+
+        Microsoft::WRL::ComPtr<ID2D1Bitmap1> d2dRenderTarget = nullptr;
+        hr_ = d2dDeviceContext_->CreateBitmapFromDxgiSurface(
+            dxgiSurface.Get(),
+            &bitmapProperties,
+            d2dRenderTarget.ReleaseAndGetAddressOf()
+        );
+        assert(SUCCEEDED(hr_));
+
+        d3d11WrappedBackBuffers_[i] = wrappedBackBuffer;
+        d2dRenderTargets_[i] = d2dRenderTarget;
+    }
 }
 
 void DirectX12::SetResourceBarrier(

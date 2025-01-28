@@ -26,7 +26,7 @@ public: /// Getter
     D3D12_VERTEX_BUFFER_VIEW GetVertexBufferView() const { return vertexBufferView_; }
     bool IsUploaded() const { return isUploaded_; }
     D3D12_GPU_DESCRIPTOR_HANDLE GetTextureSrvHandleGPU() const { return textureSrvHandleGPU_; }
-    Material* GetMaterialData() { return materialData_; }
+
 
 private: /// メンバ変数
     static const std::string kDefaultDirectoryPath;
@@ -35,15 +35,12 @@ private: /// メンバ変数
     Microsoft::WRL::ComPtr<ID3D12Resource>  vertexResource_             = nullptr;
     D3D12_VERTEX_BUFFER_VIEW                vertexBufferView_           = {};
     VertexData*                             vertexData_                 = nullptr;
-    Microsoft::WRL::ComPtr<ID3D12Resource>  materialResource_           = nullptr;
-    Material*                               materialData_               = nullptr;
     D3D12_GPU_DESCRIPTOR_HANDLE             textureSrvHandleGPU_        = {};
 
     bool                                    isUploaded_                 = false;
 
 
 private: /// 非公開メンバ関数
-    void CreateMaterialResource();
     void CreateVertexResource();
     void LoadModelTexture();
 

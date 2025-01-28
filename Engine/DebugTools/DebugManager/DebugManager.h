@@ -4,6 +4,7 @@
 #include <list>
 #include <string>
 #include <tuple>
+#include <Core/DirectX12/DirectX12.h>
 
 #include <Timer/Timer.h>
 
@@ -60,6 +61,7 @@ public:
     void DefaultStyle();
     void SetDisplay(bool _isEnable) { onDisplay_ = _isEnable; }
     bool GetDisplay() const { return onDisplay_; }
+    void DrawGameWindow();
 
     void PushLog(const std::string& _log)
     {
@@ -81,6 +83,9 @@ private:
     bool            onDisplay_ = true;
     std::string     textLog_ = "";
     bool            enableAutoScroll_ = true;
+
+private: /// 借 り 物
+    DirectX12* pDX12_ = nullptr;
 
 private:
     void DebugWindowOverall() const;

@@ -86,6 +86,9 @@ void NimaFramework::Initialize()
 
     /// 乱数生成器の初期化
     pRandomGenerator_->Initialize();
+
+    /// SRVManagerが初期化したらゲーム画面リソースを生成
+    pDirectX_->CreateGameScreenResource();
 }
 
 void NimaFramework::Finalize()

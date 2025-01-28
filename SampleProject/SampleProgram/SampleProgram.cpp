@@ -22,7 +22,7 @@ void SampleProgram::Initialize()
     pModelManager_->LoadAllModel();
 
     /// シーンの生成
-    pSceneManager_->ReserveScene("RequiredScene");
+    pSceneManager_->ReserveScene("CG3PT2");
 }
 
 void SampleProgram::Finalize()
@@ -81,6 +81,8 @@ void SampleProgram::Draw()
     /// 前景スプライトの描画
     pSpriteSystem_->PresentDraw();
     pSceneManager_->SceneDraw2dForeground();
+
+    pDirectX_->CopyRTV();
 
     pImGuiManager_->EndFrame();
     pDirectX_->PostDraw();

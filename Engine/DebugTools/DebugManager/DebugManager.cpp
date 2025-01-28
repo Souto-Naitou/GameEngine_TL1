@@ -5,8 +5,11 @@
 #include <imgui_impl_dx12.h>
 #endif // _DEBUG
 
+#include <Core/DirectX12/SRVManager.h>
+
 DebugManager::DebugManager()
 {
+    pDX12_ = DirectX12::GetInstance();
 }
 
 DebugManager::~DebugManager()
@@ -197,6 +200,8 @@ void DebugManager::DrawUI()
 
     DebugWindowOverall();
 
+    DrawGameWindow();
+
     Window_Log();
 
     // 登録されていないなら早期リターン
@@ -292,6 +297,21 @@ void DebugManager::DefaultStyle()
     style.Colors[ImGuiCol_TitleBgActive] = ImVec4(0.8f, 0.1f, 0.1f, 0.75f);
     style.Colors[ImGuiCol_TitleBg] = ImVec4(0.0f, 0.0f, 0.0f, 0.90f);
 #endif // _DEBUG
+}
+
+void DebugManager::DrawGameWindow()
+{
+    uint32_t srvIndex = pDX12_->GetGameWndSRVIndex();
+    auto gpuHnd = SRVManager::GetInstance()->GetGPUDescriptorHandle(srvIndex);
+
+    auto vp = pDX12_->GetGameWindowRect();
+
+    uint32_t width = static_cast<uint32_t>(vp.Width);
+    uint32_t height = static_cast<uint32_t>(vp.Height);
+
+    ImGui::Begin("GameWindow", nullptr, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoBringToFrontOnFocus);
+    ImGui::Image((ImTextureID)gpuHnd.ptr, ImVec2(static_cast<float>(width), static_cast<float>(height)));
+    ImGui::End();
 }
 
 void DebugManager::PhotoshopStyle()
