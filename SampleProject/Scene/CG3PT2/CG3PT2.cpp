@@ -9,10 +9,7 @@ void CG3PT2::Initialize()
 
     DirectX12* pDx12 = DirectX12::GetInstance();
 
-    wndWidth_ = &pDx12->GetGameWidthRef();
-    wndHeight_ = &pDx12->GetGameHeightRef();
-    
-
+    viewport_ = pDx12->GetGameWindowRect();
 
     /// カメラの初期化
     pGameEye_ = std::make_unique<GameEye>();
@@ -103,12 +100,20 @@ void CG3PT2::Draw2dForeground()
 
 void CG3PT2::DebugWindow()
 {
-    int width = *wndWidth_;
-    int height = *wndHeight_;
+    int width = static_cast<int>(viewport_.Width);
+    int height = static_cast<int>(viewport_.Height);
 
-    ImGui::InputInt("Window width", &width);
-    ImGui::InputInt("Window height", &height);
+    if (ImGui::InputInt("Window width", &width))
+    {
+        /// 16:9の比率を保つ
+        height = static_cast<int>(width * 9 / 16);
+    }
+    if (ImGui::InputInt("Window height", &height))
+    {
+        /// 16:9の比率を保つ
+        width = static_cast<int>(height * 16 / 9);
+    }
 
-    *wndWidth_ = width;
-    *wndHeight_ = height;
+    viewport_.Width = static_cast<float>(width);
+    viewport_.Height = static_cast<float>(height);
 }

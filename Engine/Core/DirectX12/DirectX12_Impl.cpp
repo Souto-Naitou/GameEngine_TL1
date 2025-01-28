@@ -7,6 +7,7 @@
 #include <cassert>
 #include <format>
 #include <Core/DirectX12/Helper/DX12Helper.h>
+#include <Core/DirectX12/SRVManager.h>
 
 /// ImGui
 #ifdef _DEBUG
@@ -19,6 +20,15 @@
 #pragma comment(lib, "dxcompiler.lib")
 
 const uint32_t DirectX12::kMaxSRVCount_ = 512ui32;
+
+void DirectX12::SetGameWindowRect(D3D12_VIEWPORT _viewport)
+{
+    viewport_ = _viewport;
+    //pSRVManager_->Deallocate(gameWndSrvIndex_);
+    //gameScreenResource_.Reset();
+
+    //CreateGameScreenResource();
+}
 
 void DirectX12::ChooseAdapter()
 {
@@ -117,11 +127,11 @@ void DirectX12::CreateGameScreenResource()
 {
     /// リソースの生成
     D3D12_RESOURCE_DESC resourceDesc{};
-    resourceDesc.Width = gameWindowWidth_;                                      // 幅
-    resourceDesc.Height = gameWindowHeight_;                                    // 高さ
+    resourceDesc.Width = static_cast<UINT64>(viewport_.Width);              // 幅
+    resourceDesc.Height = static_cast<UINT>(viewport_.Height);              // 高さ
     resourceDesc.MipLevels = 1;                                             // mipmapの数
     resourceDesc.DepthOrArraySize = 1;                                      // 奥行き or 配列Textureの配列数
-    resourceDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;                       // フォーマット
+    resourceDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;                  // フォーマット
     resourceDesc.SampleDesc.Count = 1;                                      // サンプリング数
     resourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;            // 2DTexture
     resourceDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS;        // UAVを使うためのフラグ
@@ -138,6 +148,11 @@ void DirectX12::CreateGameScreenResource()
         nullptr,
         IID_PPV_ARGS(&gameScreenResource_)
     );
+
+    /// SRVの生成
+    SRVManager* psrvm = SRVManager::GetInstance();
+    gameWndSrvIndex_ = psrvm->Allocate();
+    psrvm->CreateForTexture2D(gameWndSrvIndex_, gameScreenResource_.Get(), DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, 1);
 }
 
 void DirectX12::CreateDSVAndSettingState()
@@ -178,8 +193,8 @@ void DirectX12::SetViewportAndScissorRect()
 {
     /// ビューポート
     // クライアント領域のサイズと一緒にして画面全体に表示
-    viewport_.Width = static_cast<FLOAT>(gameWindowWidth_);
-    viewport_.Height = static_cast<FLOAT>(gameWindowHeight_);
+    viewport_.Width = static_cast<FLOAT>(1120);
+    viewport_.Height = static_cast<FLOAT>(630);
     viewport_.TopLeftX = 0;
     viewport_.TopLeftY = 0;
     viewport_.MinDepth = 0.0f;

@@ -37,8 +37,7 @@ private:
 
     std::string                 name_ = "CG3";
 
-    uint32_t*                   wndWidth_               = nullptr;
-    uint32_t*                   wndHeight_              = nullptr;
+    D3D12_VIEWPORT              viewport_               = {};
 
 
 private:

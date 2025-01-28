@@ -11,6 +11,9 @@
 #include <dxcapi.h>
 #include <d3d11on12.h>
 
+
+#include <Vector4.h>
+
 /// DirectWrite
 #include <d2d1_3.h>
 #include <dwrite_3.h>
@@ -19,6 +22,8 @@
 #include <vector>
 #include <array>
 #include <DebugTools/ReakChecker.h>
+
+class SRVManager;
 
 class DirectX12
 {
@@ -39,6 +44,11 @@ public:
     void PresentDraw();
     void PostDraw();
     void CopyRTV();
+
+    /// <summary>
+    /// ゲーム画面リソースの生成
+    /// </summary>
+    void CreateGameScreenResource();
 
 
     static const uint32_t kMaxSRVCount_;
@@ -66,8 +76,11 @@ public: /// Getter
     ID2D1Factory3*                                          GetD2D1Factory()                            { return d2dFactory_.Get(); }
     ID2D1Device2*                                           GetDirect2dDevice()                         { return d2dDevice_.Get(); }
     ID2D1DeviceContext2*                                    GetDirect2dDeviceContext()                  { return d2dDeviceContext_.Get(); }
-    uint32_t&                                               GetGameWidthRef()                           { return gameWindowWidth_; }
-    uint32_t&                                               GetGameHeightRef()                          { return gameWindowHeight_; }
+    D3D12_VIEWPORT                                          GetGameWindowRect() const                   { return viewport_; }
+    uint32_t                                                GetGameWndSRVIndex() const                  { return gameWndSrvIndex_; }
+
+public:
+    void SetGameWindowRect(D3D12_VIEWPORT _viewport);
 
 private:
     DirectX12() = default;
@@ -118,16 +131,16 @@ private:
     D3D12_VIEWPORT                                          viewport_                       = {};           // ビューポート
     D3D12_RECT                                              scissorRect_                    = {};           // シザーレクト
     D3D12_CPU_DESCRIPTOR_HANDLE                             rtvHandles_[2]                  = {};           // RTVハンドル
-    uint32_t                                                clientWidth_                    = 1280u;
-    uint32_t                                                clientHeight_                   = 720u;
-    uint32_t                                                gameWindowWidth_                = 1280u;
-    uint32_t                                                gameWindowHeight_               = 720u;
+    uint32_t                                                clientWidth_                    = 0;
+    uint32_t                                                clientHeight_                   = 0;
     float                                                   clearColor_[4]                  = { 0.2f, 0.2f, 0.4f, 1.0f };
+    Vector4                                                 editorBG_                       = { 0.03f, 0.03f, 0.05f, 1.0f };
     uint32_t                                                backBufferIndex_                = 0u;
     uint32_t                                                kDescriptorSizeSRV              = 0u;
     uint32_t                                                kDescriptorSizeRTV              = 0u;
     uint32_t                                                kDescriptorSizeDSV              = 0u;
     int32_t                                                 numUploadedTexture              = 0;
+    uint32_t                                                gameWndSrvIndex_                = 0;
 
 private:
 
@@ -147,12 +160,6 @@ private:
     /// スワップチェーンの生成
     /// </summary>
     void CreateSwapChainAndResource();
-
-
-    /// <summary>
-    /// ゲーム画面リソースの生成
-    /// </summary>
-    void CreateGameScreenResource();
 
 
     /// <summary>
@@ -221,5 +228,5 @@ private:
 
 private: /// 他クラスのインスタンス(シングルトンなど)
     FrameRate* pFramerate_ = nullptr;
-
+    SRVManager* pSRVManager_ = nullptr;
 };
