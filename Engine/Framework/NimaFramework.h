@@ -17,6 +17,10 @@
 #include <Features/Particle/ParticleManager.h>
 #include <Features/Line/LineSystem.h>
 #include <Features/RandomGenerator/RandomGenerator.h>
+#include <Features/Line/Line.h>
+#include <Features/Text/TextSystem.h>
+
+#include <memory>
 
 // ゲーム共有
 class NimaFramework
@@ -55,6 +59,7 @@ protected: /// 他クラスのインスタンス
     ParticleSystem* pParticleSystem_;
     ParticleManager* pParticleManager_;
     LineSystem* pLineSystem_;
+    TextSystem* pTextSystem_;
     Input* pInput_;
     RandomGenerator* pRandomGenerator_;
 

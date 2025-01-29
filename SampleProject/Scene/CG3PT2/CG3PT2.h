@@ -3,6 +3,7 @@
 #include <Interfaces/IScene.h>
 #include <Features/Object3d/Object3d.h>
 #include <Features/GameEye/GameEye.h>
+#include <Features/Text/Text.h>
 
 #include <Common/structs.h>
 
@@ -24,6 +25,7 @@ public:
     void Draw3dMidground() override;
     void DrawLine() override;
     void Draw2dForeground() override;
+    void DrawTexts() override;
 
 
 private:
@@ -34,6 +36,8 @@ private:
 
     std::unique_ptr<Object3d>   pMonsterBall_           = nullptr;
     std::unique_ptr<Object3d>   pGrid_                  = nullptr;
+
+    std::unique_ptr<Text>       pText_ = nullptr;
 
     std::string                 name_ = "CG3";
 

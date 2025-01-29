@@ -1,5 +1,4 @@
 #include "Object3d.h"
-#include "Object3d.h"
 
 #include <Matrix4x4.h>
 #include <Common/structs.h>
