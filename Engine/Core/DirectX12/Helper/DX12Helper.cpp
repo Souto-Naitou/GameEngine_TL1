@@ -87,7 +87,8 @@ void DX12Helper::PauseError(ID3D12Device* _device, Microsoft::WRL::ComPtr<ID3D12
         // 抑制するメッセージのID
         D3D12_MESSAGE_ID denyIds[] = {
             // Windows11でのDXGIデバッグレイヤーとDX12デバッグレイヤーの相互作用バグによるエラーメッセージ
-            D3D12_MESSAGE_ID_RESOURCE_BARRIER_MISMATCHING_COMMAND_LIST_TYPE
+            D3D12_MESSAGE_ID_RESOURCE_BARRIER_MISMATCHING_COMMAND_LIST_TYPE,
+            D3D12_MESSAGE_ID_CREATERESOURCE_STATE_IGNORED
         };
 
         // 抑制するレベル

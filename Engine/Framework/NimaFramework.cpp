@@ -42,6 +42,7 @@ void NimaFramework::Initialize()
     pLineSystem_ = LineSystem::GetInstance();
     pInput_ = Input::GetInstance();
     pRandomGenerator_ = RandomGenerator::GetInstance();
+    pTextSystem_ = TextSystem::GetInstance();
 
     pAudio_ = new Audio();
 
@@ -78,6 +79,9 @@ void NimaFramework::Initialize()
     /// ライン基盤の初期化
     pLineSystem_->Initialize();
 
+    /// テキスト基盤の初期化
+    pTextSystem_->Initialize();
+
     /// オーディオの初期化
     pAudio_->Initialize();
 
@@ -88,14 +92,13 @@ void NimaFramework::Initialize()
     pRandomGenerator_->Initialize();
 
     /// SRVManagerが初期化したらゲーム画面リソースを生成
-    pDirectX_->CreateGameScreenResource();
+    //pDirectX_->CreateGameScreenResource();
 }
 
 void NimaFramework::Finalize()
 {
     pImGuiManager_->Finalize();
     pWinSystem_->Finalize();
-
     delete pImGuiManager_;
 }
 

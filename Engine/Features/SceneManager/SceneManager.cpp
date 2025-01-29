@@ -1,5 +1,8 @@
 #include "SceneManager.h"
-#include "SceneManager.h"
+
+#include <imgui.h>
+#include <DebugTools/DebugManager/DebugManager.h>
+
 #include <cassert>
 
 void SceneManager::ReserveScene(const std::string& _name)
@@ -8,6 +11,11 @@ void SceneManager::ReserveScene(const std::string& _name)
     nextSceneName_ = _name;
 
     return;
+}
+
+void SceneManager::Initialize()
+{
+    DebugManager::GetInstance()->SetComponent("#Window", name_, std::bind(&SceneManager::DebugWindow, this));
 }
 
 void SceneManager::Update()
@@ -78,6 +86,14 @@ void SceneManager::SceneDraw2dForeground()
     }
 }
 
+void SceneManager::SceneDrawText()
+{
+    if (pCurrentScene_ != nullptr)
+    {
+        pCurrentScene_->DrawTexts();
+    }
+}
+
 void SceneManager::Finalize()
 {
     if (pCurrentScene_ != nullptr)
@@ -85,6 +101,8 @@ void SceneManager::Finalize()
         pCurrentScene_->Finalize();
         delete pCurrentScene_;
     }
+
+    DebugManager::GetInstance()->DeleteComponent("#Window", name_.c_str());
 }
 
 void SceneManager::ChangeScene()
@@ -99,4 +117,14 @@ void SceneManager::ChangeScene()
 
     pCurrentScene_ = pSceneFactory_->CreateScene(nextSceneName_);
     pCurrentScene_->Initialize();
+}
+
+void SceneManager::DebugWindow()
+{
+    ImGui::InputText("Next Scene Name", buffer, 128);
+    ImGui::SameLine();
+    if (ImGui::Button("Change"))
+    {
+        this->ReserveScene(buffer);
+    }
 }

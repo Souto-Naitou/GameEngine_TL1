@@ -119,3 +119,7 @@ void GameScene::Draw2dForeground()
 {
     pGuideSprite_->Draw();
 }
+
+void GameScene::DrawTexts()
+{
+}

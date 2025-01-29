@@ -42,6 +42,7 @@ public:
     void Initialize();
 
     void PresentDraw();
+    void CommandExecute();
     void PostDraw();
     void CopyRTV();
 
@@ -78,6 +79,11 @@ public: /// Getter
     ID2D1DeviceContext2*                                    GetDirect2dDeviceContext()                  { return d2dDeviceContext_.Get(); }
     D3D12_VIEWPORT                                          GetGameWindowRect() const                   { return viewport_; }
     uint32_t                                                GetGameWndSRVIndex() const                  { return gameWndSrvIndex_; }
+    uint32_t                                                GetBackBufferIndex() const                  { return backBufferIndex_; }
+    ID3D11Resource*                                         GetD3D11WrappedBackBuffer(uint32_t _index)  { return d3d11WrappedBackBuffers_[_index].Get(); }
+    ID2D1Bitmap1*                                           GetD2D1RenderTarget(uint32_t _index)        { return d2dRenderTargets_[_index].Get(); }
+    ID3D11On12Device*                                       GetD3D11On12Device()                        { return d3d11On12Device_.Get(); }
+    ID3D11DeviceContext*                                    GetD3D11On12DeviceContext()                 { return d3d11On12DeviceContext_.Get(); }
 
 public:
     void SetGameWindowRect(D3D12_VIEWPORT _viewport);
@@ -112,7 +118,7 @@ private:
     Microsoft::WRL::ComPtr<IDxcCompiler3>                   dxcCompiler_                    = nullptr;
     Microsoft::WRL::ComPtr<IDxcIncludeHandler>              includeHandler_                 = nullptr;
     Microsoft::WRL::ComPtr<ID3D11Device>                    d3d11Device_                    = nullptr;      // D3D11デバイス
-    Microsoft::WRL::ComPtr<ID3D11DeviceContext>             d3d11DeviceContext_             = nullptr;      // D3D11デバイスコンテキスト
+    Microsoft::WRL::ComPtr<ID3D11DeviceContext>             d3d11On12DeviceContext_             = nullptr;      // D3D11デバイスコンテキスト
     Microsoft::WRL::ComPtr<ID3D11On12Device>                d3d11On12Device_                = nullptr;      // D3D11On12デバイス
     Microsoft::WRL::ComPtr<ID2D1Factory3>                   d2dFactory_                     = nullptr;      // Direct2D
     Microsoft::WRL::ComPtr<IDXGIDevice>                     dxgiDevice_                     = nullptr;      // DXGIデバイス
@@ -205,7 +211,7 @@ private:
 
 
     /// <summary>
-    /// テクスチャのアップロード
+    /// レンダーターゲットの生成
     /// </summary>
     void CreateD2DRenderTarget();
 

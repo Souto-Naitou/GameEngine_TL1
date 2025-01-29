@@ -184,6 +184,9 @@
     <Filter Include="Feature\Text">
       <UniqueIdentifier>{b4382b62-3fb7-4f45-96f9-21e495c77e44}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Feature\GameEye\FreeLookEye">
+      <UniqueIdentifier>{c17c349e-3a19-4e0f-a99e-2d416a60926a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DebugTools\DebugManager\DebugManager.cpp">
@@ -336,7 +339,9 @@
     <ClCompile Include="Features\Lighting\PointLight\PointLight.cpp">
       <Filter>Feature\Lighting\PointLight</Filter>
     </ClCompile>
-    <ClCompile Include="Features\Text\Text.cpp" />
+    <ClCompile Include="Features\Text\Text.cpp">
+      <Filter>Feature\Text</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common\define.h">
@@ -524,6 +529,9 @@
     </ClInclude>
     <ClInclude Include="Features\Text\TextSystem.h">
       <Filter>Feature\Text</Filter>
+    </ClInclude>
+    <ClInclude Include="Features\GameEye\FreeLook\FreeLookEye.h">
+      <Filter>Feature\GameEye\FreeLookEye</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

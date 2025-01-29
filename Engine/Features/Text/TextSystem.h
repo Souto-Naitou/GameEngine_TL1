@@ -5,6 +5,7 @@
 #include <wrl.h>
 #include <dwrite.h>
 #include <map>
+#include <unordered_map>
 #include <string>
 #include <utility>
 
@@ -25,10 +26,15 @@ public:
     void PresentDraw();
     void PostDraw();
 
+public:
+    void SetColorBrush(const std::string _key, const D2D1::ColorF& _color);
+
 
 public: /// Getter
     IDWriteFactory7* GetDWriteFactory() const { return dwriteFactory_.Get(); }
     IDWriteTextFormat* GetTextFormat(const std::string& _fontFamily, float _fontSize);
+    ID2D1SolidColorBrush* GetColorBrush(const std::string& _key);
+    ID2D1DeviceContext2* GetD2D1DeviceContext() const { return d2dDeviceContext_; }
 
 
 private:
@@ -41,6 +47,7 @@ private:
     HRESULT hr_ = 0;
 
     std::map<std::pair<std::string, float>, Microsoft::WRL::ComPtr<IDWriteTextFormat>> textFormats_;
+    std::unordered_map<std::string, Microsoft::WRL::ComPtr<ID2D1SolidColorBrush >> colorBrushes_;
 
     Microsoft::WRL::ComPtr<IDWriteFactory7> dwriteFactory_ = nullptr;      // DirectWrite
 
@@ -51,4 +58,6 @@ private: /// 借り物
     ID2D1Factory3* d2dFactory_ = nullptr;
     ID2D1Device2* d2dDevice_ = nullptr;
     ID2D1DeviceContext2* d2dDeviceContext_ = nullptr;
+    ID3D11On12Device* d3d11On12Device_ = nullptr;
+    ID3D11DeviceContext* d3d11On12DeviceContext_ = nullptr;
 };

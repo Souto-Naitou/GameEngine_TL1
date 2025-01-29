@@ -200,8 +200,6 @@ void DebugManager::DrawUI()
 
     DebugWindowOverall();
 
-    DrawGameWindow();
-
     Window_Log();
 
     // 登録されていないなら早期リターン
@@ -406,7 +404,6 @@ void DebugManager::PhotoshopStyle()
     style.Colors[ImGuiCol_ModalWindowDimBg] = ImVec4(0.0f, 0.0f, 0.0f, 0.5860000252723694f);
 #endif // _DEBUG
 }
-
 
 void DebugManager::RoundedVisualStudioStyle()
 {

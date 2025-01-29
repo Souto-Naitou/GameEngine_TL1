@@ -206,6 +206,7 @@
     <ClInclude Include="Features\DeltaTimeManager\DeltaTimeManager.h" />
     <ClInclude Include="Features\Easing\Easing.h" />
     <ClInclude Include="Features\Easing\Manager\EasingManager.h" />
+    <ClInclude Include="Features\GameEye\FreeLook\FreeLookEye.h" />
     <ClInclude Include="Features\GameEye\GameEye.h" />
     <ClInclude Include="Features\IContainer\ListContainer.h" />
     <ClInclude Include="Features\IContainer\VectorContainer.h" />

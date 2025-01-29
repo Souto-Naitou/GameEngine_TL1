@@ -195,8 +195,8 @@ void DirectX12::SetViewportAndScissorRect()
     // クライアント領域のサイズと一緒にして画面全体に表示
     viewport_.Width = static_cast<FLOAT>(1120);
     viewport_.Height = static_cast<FLOAT>(630);
-    viewport_.TopLeftX = 0;
-    viewport_.TopLeftY = 0;
+    viewport_.TopLeftX = 9;
+    viewport_.TopLeftY = 9;
     viewport_.MinDepth = 0.0f;
     viewport_.MaxDepth = 1.0f;
 
@@ -238,7 +238,7 @@ void DirectX12::CreateD3D11Device()
     UINT d3d11flags = D3D11_CREATE_DEVICE_BGRA_SUPPORT;
 #endif // _DEBUG
 
-    hr_ = D3D11On12CreateDevice(device_.Get(), d3d11flags, nullptr, 0, reinterpret_cast<IUnknown**>(commandQueue_.GetAddressOf()), 1, 0, &d3d11Device_, &d3d11DeviceContext_, nullptr);
+    hr_ = D3D11On12CreateDevice(device_.Get(), d3d11flags, nullptr, 0, reinterpret_cast<IUnknown**>(commandQueue_.GetAddressOf()), 1, 0, &d3d11Device_, &d3d11On12DeviceContext_, nullptr);
     assert(SUCCEEDED(hr_));
 
     hr_ = d3d11Device_.As(&d3d11On12Device_);

@@ -51,4 +51,9 @@ public:
     /// 前景描画
     /// </summary>
     virtual void Draw2dForeground() = 0;
+
+    /// <summary>
+    /// テキスト描画
+    /// </summary>
+    virtual void DrawTexts() = 0;
 };

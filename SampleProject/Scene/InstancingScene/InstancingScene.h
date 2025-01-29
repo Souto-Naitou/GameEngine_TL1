@@ -27,6 +27,7 @@ public:
 
     void Draw2dForeground() override;
 
+    void DrawTexts() override;
 
 private:
     Particle* particle_ = nullptr;
