@@ -90,20 +90,20 @@ void DirectX12::Initialize()
     /// DXCの初期化
     CreateDirectXShaderCompiler();
 
-    ///// D3D11デバイス群の生成
-    //CreateD3D11Device();
+    /// D3D11デバイス群の生成
+    CreateD3D11Device();
 
 
-    ///// Direct2Dのファクトリの生成
-    //CreateD2D1Factory();
+    /// Direct2Dのファクトリの生成
+    CreateD2D1Factory();
 
 
-    ///// D2D1デバイスコンテキストの生成
-    //CreateID2D1DeviceContext();
+    /// D2D1デバイスコンテキストの生成
+    CreateID2D1DeviceContext();
 
 
-    ///// D2D1レンダーターゲットの生成
-    //CreateD2DRenderTarget();
+    /// D2D1レンダーターゲットの生成
+    CreateD2DRenderTarget();
 }
 
 void DirectX12::PresentDraw()
@@ -127,18 +127,12 @@ void DirectX12::PresentDraw()
     // 指定した深度で画面全体をクリア
     commandList_->ClearDepthStencilView(dsvHandle, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 
-    commandList_->RSSetViewports(1, &viewport_);        // Viewportを設定
-    commandList_->RSSetScissorRects(1, &scissorRect_);        // Scissorを設定
+    commandList_->RSSetViewports(1, &viewport_);            // Viewportを設定
+    commandList_->RSSetScissorRects(1, &scissorRect_);      // Scissorを設定
 }
 
-void DirectX12::PostDraw()
+void DirectX12::CommandExecute()
 {
-    /// 描く状態から画面に映す状態に遷移
-    SetResourceBarrier(D3D12_RESOURCE_BARRIER_TYPE_TRANSITION, D3D12_RESOURCE_BARRIER_FLAG_NONE,
-        swapChainResources_[backBufferIndex_].Get(),
-        D3D12_RESOURCE_STATE_RENDER_TARGET,
-        D3D12_RESOURCE_STATE_PRESENT);
-
     /// コマンドリストの内容を確定させる。すべてのコマンドを積んでからCloseする
     hr_ = commandList_->Close();
     assert(SUCCEEDED(hr_) && "コマンドリストのクローズに失敗");
@@ -147,7 +141,15 @@ void DirectX12::PostDraw()
     /// GPUにコマンドリストの実行を行わせる
     Microsoft::WRL::ComPtr<ID3D12CommandList> commandLists[] = { commandList_.Get() };
     commandQueue_->ExecuteCommandLists(1, commandLists->GetAddressOf());
+}
 
+void DirectX12::PostDraw()
+{
+    /// 描く状態から画面に映す状態に遷移
+    //SetResourceBarrier(D3D12_RESOURCE_BARRIER_TYPE_TRANSITION, D3D12_RESOURCE_BARRIER_FLAG_NONE,
+    //    swapChainResources_[backBufferIndex_].Get(),
+    //    D3D12_RESOURCE_STATE_RENDER_TARGET,
+    //    D3D12_RESOURCE_STATE_PRESENT);
 
     /// GPUとISに画面の交換を行うよう通知する
     swapChain_->Present(1, 0);
@@ -244,11 +246,11 @@ void DirectX12::CopyRTV()
     commandList_->ResourceBarrier(1, &destBarrier);
 
 
-    D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle = dsvDescriptorHeap_->GetCPUDescriptorHandleForHeapStart();
-    // 画面全体のクリア
-    commandList_->ClearRenderTargetView(rtvHandles_[backBufferIndex_], &editorBG_.x, 0, nullptr);
-    // 指定した深度で画面全体をクリア
-    commandList_->ClearDepthStencilView(dsvHandle, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
+    //D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle = dsvDescriptorHeap_->GetCPUDescriptorHandleForHeapStart();
+    //// 画面全体のクリア
+    //commandList_->ClearRenderTargetView(rtvHandles_[backBufferIndex_], &editorBG_.x, 0, nullptr);
+    //// 指定した深度で画面全体をクリア
+    //commandList_->ClearDepthStencilView(dsvHandle, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 
 }
 

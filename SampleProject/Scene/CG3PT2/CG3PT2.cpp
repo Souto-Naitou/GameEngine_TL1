@@ -53,12 +53,25 @@ void CG3PT2::Initialize()
 
     pMonsterBall_->SetPointLight(&pointLight_);
     pGrid_->SetPointLight(&pointLight_);
+
+    /// テキスト
+    pText_ = std::make_unique<Text>();
+    pText_->Initialize();
+    pText_->SetName("Text@CG3PT2");
+    pText_->SetText("CG3PT2");
+    pText_->SetPosition({ 10.0f, 10.0f });
+    pText_->SetMaxSize({ 100.0f, 100.0f });
+    pText_->SetFontFamily("Meiryo");
+    pText_->SetFontSize(15.0f);
+    pText_->SetColorName("Black");
 }
 
 void CG3PT2::Finalize()
 {
     pMonsterBall_->Finalize();
     pGrid_->Finalize();
+    pointLight_.Finalize();
+    pText_->Finalize();
 
     DebugManager::GetInstance()->DeleteComponent("Common", name_.c_str());
 }
@@ -69,6 +82,8 @@ void CG3PT2::Update()
     pGameEye_->Update();
     pMonsterBall_->Update();
     pGrid_->Update();
+
+    pText_->Update();
 }
 
 void CG3PT2::Draw2dBackGround()
@@ -98,17 +113,33 @@ void CG3PT2::Draw2dForeground()
 {
 }
 
+void CG3PT2::DrawTexts()
+{
+    pText_->Draw();
+}
+
 void CG3PT2::DebugWindow()
 {
+    int x = static_cast<int>(viewport_.TopLeftX);
+    int y = static_cast<int>(viewport_.TopLeftY);
     int width = static_cast<int>(viewport_.Width);
     int height = static_cast<int>(viewport_.Height);
 
-    if (ImGui::InputInt("Window width", &width))
+    if (ImGui::DragInt("Window X", &x))
+    {
+        viewport_.TopLeftX = static_cast<float>(x);
+    }
+    if (ImGui::DragInt("Window Y", &y))
+    {
+        viewport_.TopLeftY = static_cast<float>(y);
+    }
+
+    if (ImGui::InputInt("Window Width", &width))
     {
         /// 16:9の比率を保つ
         height = static_cast<int>(width * 9 / 16);
     }
-    if (ImGui::InputInt("Window height", &height))
+    if (ImGui::InputInt("Window Height", &height))
     {
         /// 16:9の比率を保つ
         width = static_cast<int>(height * 16 / 9);
@@ -116,4 +147,6 @@ void CG3PT2::DebugWindow()
 
     viewport_.Width = static_cast<float>(width);
     viewport_.Height = static_cast<float>(height);
+
+    DirectX12::GetInstance()->SetGameWindowRect(viewport_);
 }

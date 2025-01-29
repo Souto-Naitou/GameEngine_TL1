@@ -30,6 +30,8 @@ public:
 
     void Draw2dForeground() override;
 
+    void DrawTexts() override;
+
 private:
     GameEye* pGameEye_;
     ParticleEmitter* pSmoke_;

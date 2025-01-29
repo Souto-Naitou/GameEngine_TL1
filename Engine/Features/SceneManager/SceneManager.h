@@ -29,6 +29,7 @@ public:
 
 
 public: /// シーン動作
+    void Initialize();
     void Update();
     void SceneDraw2dBackGround();
     void SceneDraw3d();
@@ -36,12 +37,17 @@ public: /// シーン動作
     void SceneDraw3dMidground();
     void SceneDrawLine();
     void SceneDraw2dForeground();
+    void SceneDrawText();
     void Finalize();
 
 
 private:
     SceneManager() = default;
     void ChangeScene();
+    void DebugWindow();
+
+    std::string name_ = "SceneManager";
+    char buffer[128] = {};
 
     bool isReserveScene_ = false;
 

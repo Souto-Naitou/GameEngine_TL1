@@ -74,6 +74,10 @@ void InstancingScene::Draw2dForeground()
     pGuideSprite_->Draw();
 }
 
+void InstancingScene::DrawTexts()
+{
+}
+
 void InstancingScene::InitializeParticle()
 {
     for (int i = 9; i >= 0; --i)

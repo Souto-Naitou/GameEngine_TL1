@@ -8,6 +8,8 @@
 
 #include <Timer/Timer.h>
 
+#define BINDCOMPONENT(class, __funcName) std::bind(&class::__funcName, this)
+
 class DebugManager
 {
 public:
