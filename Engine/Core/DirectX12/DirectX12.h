@@ -140,7 +140,7 @@ private:
     uint32_t                                                clientWidth_                    = 0;
     uint32_t                                                clientHeight_                   = 0;
     float                                                   clearColor_[4]                  = { 0.2f, 0.2f, 0.4f, 1.0f };
-    Vector4                                                 editorBG_                       = { 0.03f, 0.03f, 0.05f, 1.0f };
+    Vector4                                                 editorBG_                       = { 0.03f, 0.03f, 0.03f, 1.0f };
     uint32_t                                                backBufferIndex_                = 0u;
     uint32_t                                                kDescriptorSizeSRV              = 0u;
     uint32_t                                                kDescriptorSizeRTV              = 0u;
