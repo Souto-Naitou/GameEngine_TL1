@@ -120,6 +120,8 @@ void CG3PT2::DrawTexts()
 
 void CG3PT2::DebugWindow()
 {
+#ifdef _DEBUG
+
     int x = static_cast<int>(viewport_.TopLeftX);
     int y = static_cast<int>(viewport_.TopLeftY);
     int width = static_cast<int>(viewport_.Width);
@@ -149,4 +151,6 @@ void CG3PT2::DebugWindow()
     viewport_.Height = static_cast<float>(height);
 
     DirectX12::GetInstance()->SetGameWindowRect(viewport_);
+
+#endif // _DEBUG
 }

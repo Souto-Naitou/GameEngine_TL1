@@ -121,10 +121,14 @@ void SceneManager::ChangeScene()
 
 void SceneManager::DebugWindow()
 {
+#ifdef _DEBUG
+
     ImGui::InputText("Next Scene Name", buffer, 128);
     ImGui::SameLine();
     if (ImGui::Button("Change"))
     {
         this->ReserveScene(buffer);
     }
+
+#endif // _DEBUG
 }

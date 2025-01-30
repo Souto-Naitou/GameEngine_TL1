@@ -55,7 +55,7 @@
       <Filter>Game\Scene\CG3PT2</Filter>
     </ClCompile>
     <ClCompile Include="Scene\Empty\EmptyScene.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>Game\Scene\Empty</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
