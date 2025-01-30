@@ -59,6 +59,8 @@ void Text::CreateTextLayout()
 
 void Text::DebugWindow()
 {
+#ifdef _DEBUG
+
     char buffer[256] = { 0 };
     strcpy_s(buffer, text_.c_str());
 
@@ -83,4 +85,6 @@ void Text::DebugWindow()
     {
         fontFamily_ = buffer;
     }
+
+#endif // _DEBUG
 }

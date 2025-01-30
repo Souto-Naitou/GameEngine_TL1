@@ -299,6 +299,8 @@ void DebugManager::DefaultStyle()
 
 void DebugManager::DrawGameWindow()
 {
+#ifdef _DEBUG
+
     uint32_t srvIndex = pDX12_->GetGameWndSRVIndex();
     auto gpuHnd = SRVManager::GetInstance()->GetGPUDescriptorHandle(srvIndex);
 
@@ -310,6 +312,8 @@ void DebugManager::DrawGameWindow()
     ImGui::Begin("GameWindow", nullptr, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoBringToFrontOnFocus);
     ImGui::Image((ImTextureID)gpuHnd.ptr, ImVec2(static_cast<float>(width), static_cast<float>(height)));
     ImGui::End();
+
+#endif // _DEBUG
 }
 
 void DebugManager::PhotoshopStyle()
