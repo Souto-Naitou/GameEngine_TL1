@@ -123,7 +123,7 @@ void DirectX12::PresentDraw()
     commandList_->OMSetRenderTargets(1, &rtvHandles_[backBufferIndex_], false, &dsvHandle);
 
     // 画面全体のクリア
-    commandList_->ClearRenderTargetView(rtvHandles_[backBufferIndex_], clearColor_, 0, nullptr);
+    commandList_->ClearRenderTargetView(rtvHandles_[backBufferIndex_], &editorBG_.x, 0, nullptr);
     // 指定した深度で画面全体をクリア
     commandList_->ClearDepthStencilView(dsvHandle, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 

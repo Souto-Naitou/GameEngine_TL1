@@ -13,6 +13,8 @@ void Text::Initialize()
     d2dDeviceContext_ = pTextSystem_->GetD2D1DeviceContext();
 
     DebugManager::GetInstance()->SetComponent("Text", name_, BINDCOMPONENT(Text, DebugWindow));
+
+    fontFamily_ = "Bahnschrift";
 }
 
 void Text::Update()
@@ -57,6 +59,8 @@ void Text::CreateTextLayout()
 
 void Text::DebugWindow()
 {
+#ifdef _DEBUG
+
     char buffer[256] = { 0 };
     strcpy_s(buffer, text_.c_str());
 
@@ -81,4 +85,6 @@ void Text::DebugWindow()
     {
         fontFamily_ = buffer;
     }
+
+#endif // _DEBUG
 }

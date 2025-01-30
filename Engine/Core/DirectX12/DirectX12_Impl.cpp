@@ -192,13 +192,25 @@ void DirectX12::CreateFenceAndEvent()
 void DirectX12::SetViewportAndScissorRect()
 {
     /// ビューポート
-    // クライアント領域のサイズと一緒にして画面全体に表示
+#ifdef _DEBUG
+        // クライアント領域のサイズと一緒にして画面全体に表示
     viewport_.Width = static_cast<FLOAT>(1120);
     viewport_.Height = static_cast<FLOAT>(630);
     viewport_.TopLeftX = 9;
     viewport_.TopLeftY = 9;
     viewport_.MinDepth = 0.0f;
     viewport_.MaxDepth = 1.0f;
+
+#else
+    viewport_.Width = static_cast<FLOAT>(clientWidth_);
+    viewport_.Height = static_cast<FLOAT>(clientHeight_);
+    viewport_.TopLeftX = 0;
+    viewport_.TopLeftY = 0;
+    viewport_.MinDepth = 0.0f;
+    viewport_.MaxDepth = 1.0f;
+#endif // _DEBUG
+
+
 
 
     /// シザー矩形
