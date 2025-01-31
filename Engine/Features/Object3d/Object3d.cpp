@@ -254,6 +254,17 @@ void Object3d::DebugWindow()
     }
 
 
+    /// マテリアル
+    ImGui::SeparatorText("Material");
+    {
+        ImGui::PushID("MATERIAL");
+        ImGui::ColorEdit4("Color", &materialData_->color.x);
+        ImGui::DragFloat2("UV Offset", &materialData_->uvTransform.m[3][0], 0.01f);
+        ImGui::DragFloat2("UV Tiling", &materialData_->uvTransform.m[0][0], 0.01f);
+        ImGui::PopID();
+    }
+
+
     /// 平行光源
     ImGui::SeparatorText("Directional Light");
     {

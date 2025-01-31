@@ -14,9 +14,14 @@ const uint32_t ParticleEmitter::kDefaultReserveCount_;
 
 void ParticleEmitter::Initialize(const std::string& _modelPath, const std::string& _jsonPath, bool _manualMode)
 {
+    if (!emitterData_.name_.empty())
+    {
+        particleName_ = emitterData_.name_;
+    }
+
 #ifdef _DEBUG
     std::stringstream ss;
-    ss << "instance##0x" << std::hex << this;
+    ss << particleName_ << "##0x" << std::hex << this;
     name_ = ss.str();
     DebugManager::GetInstance()->SetComponent("ParticleEmitter", name_, std::bind(&ParticleEmitter::DebugWindow, this));
 #endif // _DEBUG
@@ -33,11 +38,6 @@ void ParticleEmitter::Initialize(const std::string& _modelPath, const std::strin
 
     fromJsonData_ = EmitterManager::GetInstance()->LoadFile(jsonPath_);
     emitterData_ = fromJsonData_;
-
-    if (!emitterData_.name_.empty())
-    {
-        name_ = emitterData_.name_;
-    }
 
 
     aabb_ = std::make_unique<AABB>();
@@ -56,11 +56,7 @@ void ParticleEmitter::Update()
         }
         for (int32_t i = 0; i < emitterData_.emitNum_; ++i)
         {
-            if (isManualMode_ && isEmitRequest_)
-            {
-                EmitParticle();
-            }
-            else if (!isManualMode_)
+            if (!isManualMode_)
             {
                 EmitParticle();
             }
@@ -154,6 +150,7 @@ void ParticleEmitter::DebugWindow()
     char path[512] = "";
     std::memcpy(path, jsonPath_.c_str(), jsonPath_.size());
 
+    ImGui::Text("Name : %s", particleName_.c_str());
     if (ImGui::CollapsingHeader("一般"))
     {
         if (ImGui::Button("マニュアル発生"))
@@ -309,11 +306,18 @@ void ParticleEmitter::Finalize()
     DebugManager::GetInstance()->DeleteComponent("ParticleEmitter", name_.c_str());
 #endif
 
-    ParticleManager::GetInstance()->ReleaseParticle(particle_);
+    ParticleManager::GetInstance()->ReserveDeleteParticle(particle_);
     particle_ = nullptr;
 }
 
 void ParticleEmitter::Emit()
 {
-    isEmitRequest_ = true;
+    if (isManualMode_)
+    {
+        this->Update();
+        for (int32_t i = 0; i < emitterData_.emitNum_; ++i)
+        {
+            EmitParticle();
+        }
+    }
 }

@@ -174,6 +174,14 @@ void Sprite::Finalize()
 
 }
 
+void Sprite::SetSizeMultiply(float _multiply)
+{
+    size_ = Vector2(
+        static_cast<float>(metadata_.width), 
+        static_cast<float>(metadata_.height)
+    ) * _multiply;
+}
+
 /// 頂点リソースを作成する
 void Sprite::CreateVertexResource()
 {
@@ -256,11 +264,11 @@ void Sprite::CreateTransformationMatrixResource()
 void Sprite::AdjustSpriteSize()
 {
     // テクスチャのサイズを取得
-    const DirectX::TexMetadata& metadata = TextureManager::GetInstance()->GetMetaData(texturePath_);
+    metadata_ = TextureManager::GetInstance()->GetMetaData(texturePath_);
 
     // テクスチャのサイズを取得
-    float textureWidth = static_cast<float>(metadata.width);
-    float textureHeight = static_cast<float>(metadata.height);
+    float textureWidth = static_cast<float>(metadata_.width);
+    float textureHeight = static_cast<float>(metadata_.height);
 
     // サイズを調整
     size_ = Vector2(textureWidth, textureHeight);

@@ -26,6 +26,9 @@ public:
 public:
     Particle& CreateParticle();
     void ReleaseParticle(Particle* _particle);
+    void ReserveDeleteParticle(Particle* _particle);
+    void ReleaseAllParticle();
+
 
 private:
     ParticleManager() = default;
@@ -34,5 +37,6 @@ private:
 
 public:
     std::list<Particle> particles_;
+    std::list<Particle*> deleteParticles_;
 
 };
