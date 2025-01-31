@@ -7,6 +7,16 @@ void ParticleManager::Update()
     {
         particle.Update();
     }
+
+    deleteParticles_.remove_if([&](Particle* _particle)
+    {
+        if (_particle->IsAbleDelete())
+        {
+            ReleaseParticle(_particle);
+            return true;
+        }
+        return false;
+    });
 }
 
 void ParticleManager::Draw()
@@ -37,5 +47,22 @@ void ParticleManager::ReleaseParticle(Particle* _particle)
 
     assert(false);
 
+    return;
+}
+
+void ParticleManager::ReserveDeleteParticle(Particle* _particle)
+{
+    deleteParticles_.push_back(_particle);
+    return;
+}
+
+void ParticleManager::ReleaseAllParticle()
+{
+    for (auto& particle : particles_)
+    {
+        particle.Finalize();
+    }
+    particles_.clear();
+    deleteParticles_.clear();
     return;
 }

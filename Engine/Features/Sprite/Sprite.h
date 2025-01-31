@@ -5,6 +5,8 @@
 #include <Vector2.h>
 #include <Core/DirectX12/DirectX12.h>
 #include <Common/structs.h>
+#include <string>
+#include <DirectXTex/DirectXTex.h>
 
 class SpriteSystem;
 
@@ -30,32 +32,33 @@ public:
 
 
 public: /// Getter
-    const std::string&  GetName()           const               { return name_; }
-    const bool          GetEnableUpdate()   const               { return isUpdate_; }
-    const bool          GetEnableDraw()     const               { return isDraw_; }
-    const float         GetRotation()       const               { return rotate_; }
-    const Vector2&      GetPosition()       const               { return translate_; }
-    const Vector4&      GetColor()          const               { return materialData_->color; }
-    const Vector2&      GetSize()           const               { return size_; }
-    const Vector2&      GetAnchorPoint()    const               { return anchorPoint_; }
-    const bool          GetFlipX()          const               { return isFlipX; }
-    const bool          GetFlipY()          const               { return isFlipY; }
-    const Vector2&      GetTextureLeftTop() const               { return textureLeftTop_; }
-    const Vector2&      GetTextureSize()    const               { return textureSize_; }
+    const std::string&  GetName()           const                   { return name_; }
+    const bool          GetEnableUpdate()   const                   { return isUpdate_; }
+    const bool          GetEnableDraw()     const                   { return isDraw_; }
+    const float         GetRotation()       const                   { return rotate_; }
+    const Vector2&      GetPosition()       const                   { return translate_; }
+    const Vector4&      GetColor()          const                   { return materialData_->color; }
+    const Vector2&      GetSize()           const                   { return size_; }
+    const Vector2&      GetAnchorPoint()    const                   { return anchorPoint_; }
+    const bool          GetFlipX()          const                   { return isFlipX; }
+    const bool          GetFlipY()          const                   { return isFlipY; }
+    const Vector2&      GetTextureLeftTop() const                   { return textureLeftTop_; }
+    const Vector2&      GetTextureSize()    const                   { return textureSize_; }
 
 public: /// Setter
-    void                SetName(const std::string& _name)       { name_ = _name; }
-    void                SetEnableUpdate(const bool _isUpdate)   { isUpdate_ = _isUpdate; }
-    void                SetEnableDraw(const bool _isDraw)       { isDraw_ = _isDraw; }
-    void                SetRotation(const float _rotation)      { rotate_ = _rotation; }
-    void                SetPosition(const Vector2& _position)   { translate_ = _position; }
-    void                SetColor(const Vector4& _color)         { materialData_->color = _color; }
-    void                SetSize(const Vector2& _size)           { size_ = _size; }
-    void                SetAnchorPoint(const Vector2& _anchor)  { anchorPoint_ = _anchor; }
-    void                SetFlipX(const bool _isFlipX)           { isFlipX = _isFlipX; }
-    void                SetFlipY(const bool _isFlipY)           { isFlipY = _isFlipY; }
-    void                SetTextureLeftTop(const Vector2& _lt)   { textureLeftTop_ = _lt; }
-    void                SetTextureSize(const Vector2& _size)    { textureSize_ = _size; }
+    void                SetName(const std::string& _name)           { name_ = _name; }
+    void                SetEnableUpdate(const bool _isUpdate)       { isUpdate_ = _isUpdate; }
+    void                SetEnableDraw(const bool _isDraw)           { isDraw_ = _isDraw; }
+    void                SetRotation(const float _rotation)          { rotate_ = _rotation; }
+    void                SetPosition(const Vector2& _position)       { translate_ = _position; }
+    void                SetColor(const Vector4& _color)             { materialData_->color = _color; }
+    void                SetSize(const Vector2& _size)               { size_ = _size; }
+    void                SetSizeMultiply(float _multiply);
+    void                SetAnchorPoint(const Vector2& _anchor)      { anchorPoint_ = _anchor; }
+    void                SetFlipX(const bool _isFlipX)               { isFlipX = _isFlipX; }
+    void                SetFlipY(const bool _isFlipY)               { isFlipY = _isFlipY; }
+    void                SetTextureLeftTop(const Vector2& _lt)       { textureLeftTop_ = _lt; }
+    void                SetTextureSize(const Vector2& _size)        { textureSize_ = _size; }
 
 
 private: /// 他クラスが所持するインスタンスへのポインタ
@@ -103,6 +106,9 @@ private: /// メンバ変数
     /// 変換行列
     Microsoft::WRL::ComPtr<ID3D12Resource>      transformationMatrixResource_   = nullptr;              // 変換行列リソース
     TransformationMatrix*                       transformationMatrixData_       = nullptr;              // 変換行列データ
+
+    /// メタデータ
+    DirectX::TexMetadata                        metadata_                       = {};                   // テクスチャのメタデータ
 
     /// ImGui用
     float                                       aspectRatio_                    = 0.0f;                 // アスペクト比

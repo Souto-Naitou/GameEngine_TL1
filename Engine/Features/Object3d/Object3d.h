@@ -58,6 +58,7 @@ public: /// Setter
     void SetScale(const Vector3& _scale)                        { transform_.scale = _scale; }
     void SetRotate(const Vector3& _rotate)                      { transform_.rotate = _rotate; }
     void SetTranslate(const Vector3& _translate)                { transform_.translate = _translate; }
+    void SetColor(const Vector4& _color)                        { materialData_->color = _color; }
     void SetModel(Model* _pModel)                               { pModel_ = _pModel; }
     void SetGameEye(GameEye* _pGameEye)                         { pGameEye_ = _pGameEye; }
     void SetName(const std::string& _name)                      { name_ = _name; }

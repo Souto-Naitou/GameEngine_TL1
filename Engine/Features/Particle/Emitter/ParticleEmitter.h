@@ -60,6 +60,7 @@ public: /// Getter
 private:
     static constexpr uint32_t   kDefaultReserveCount_ = 6000u;
     std::string                 name_               = {};               // 名前
+    std::string                 particleName_       = {};               // 名前
     std::string                 jsonPath_           = {};               // JSONファイルパス
     Timer                       timer_              = {};               // 計測用タイマー
     Timer                       reloadTimer_        = {};               // リロード用タイマー

@@ -58,6 +58,7 @@ public: /// Getter
     const std::string& GetName() const { return name_; }
     bool GetEnableBillboard() const { return enableBillboard_; }
     auto& GetParticleData() { return particleData_; }
+    bool IsAbleDelete() const { return particleData_.empty(); }
 
 
 public: /// container operator
