@@ -112,4 +112,11 @@ namespace DX12Helper
     /// </summary>
     /// <param name="_device">デバイス</param>
     Microsoft::WRL::ComPtr<ID3D12Resource> CreateVertexResource(const Microsoft::WRL::ComPtr<ID3D12Device> _device, unsigned int _countVertex);
+
+    void ChangeStateResource(
+        const Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>& _commandList, 
+        const Microsoft::WRL::ComPtr<ID3D12Resource>& _resource, 
+        D3D12_RESOURCE_STATES _before, 
+        D3D12_RESOURCE_STATES _after
+    );
 }

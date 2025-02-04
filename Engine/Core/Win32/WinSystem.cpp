@@ -8,6 +8,7 @@ extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg
 #endif // _DEBUG
 
 bool WinSystem::isMoving_ = false;
+bool WinSystem::isResized_ = false;
 
 void WinSystem::Initialize()
 {
@@ -58,6 +59,16 @@ UINT WinSystem::GetMsg()
     return msg_.message;
 }
 
+bool WinSystem::IsResized()
+{
+    if (isResized_)
+    {
+        isResized_ = false;
+        return true;
+    }
+    return false;
+}
+
 LRESULT CALLBACK WinSystem::WindowProcedure(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 {
 #ifdef _DEBUG
@@ -82,6 +93,8 @@ LRESULT CALLBACK WinSystem::WindowProcedure(HWND hwnd, UINT msg, WPARAM wparam, 
         // ウィンドウサイズ変更終了
         isMoving_ = false;
         break;
+    case WM_SIZE:
+        isResized_ = true;
     }
 
     // 標準のメッセージ処理を行う

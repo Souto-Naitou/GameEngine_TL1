@@ -7,6 +7,8 @@
 #include <Features/Line/LineSystem.h>
 #include <Features/GameEye/GameEye.h>
 
+#include <memory>
+
 class AABB
 {
 public:
@@ -34,7 +36,7 @@ public: /// Getter
 private:
     Vector3 min_; // 最小点
     Vector3 max_; // 最大点
-    Line* lines = nullptr; // 線
+    std::unique_ptr<Line> lines = nullptr; // 線
 
 
 private:

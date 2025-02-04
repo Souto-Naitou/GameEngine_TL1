@@ -177,6 +177,7 @@
     <ClCompile Include="Features\Sprite\SpriteSystem.cpp" />
     <ClCompile Include="Features\Text\Text.cpp" />
     <ClCompile Include="Features\Text\TextSystem.cpp" />
+    <ClCompile Include="Features\Viewport\Viewport.cpp" />
     <ClCompile Include="Framework\NimaFramework.cpp" />
     <ClCompile Include="Utility\FilePathSearcher\FilePathSearcher.cpp" />
   </ItemGroup>
@@ -238,6 +239,7 @@
     <ClInclude Include="Features\Sprite\SpriteSystem.h" />
     <ClInclude Include="Features\Text\Text.h" />
     <ClInclude Include="Features\Text\TextSystem.h" />
+    <ClInclude Include="Features\Viewport\Viewport.h" />
     <ClInclude Include="Framework\NimaFramework.h" />
     <ClInclude Include="Interfaces\IScene.h" />
     <ClInclude Include="Interfaces\ISceneFactory.h" />
@@ -298,6 +300,10 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="EngineResources\Shaders\Object3d.VS.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="EngineResources\Shaders\WithoutAlpha.CS.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </FxCompile>

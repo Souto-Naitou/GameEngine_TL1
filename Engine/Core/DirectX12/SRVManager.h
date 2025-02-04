@@ -33,6 +33,7 @@ public:
 
     void CreateForTexture2D(uint32_t _index, ID3D12Resource* _pTexture, DXGI_FORMAT _format, UINT _mipLevels);
     void CreateForStructuredBuffer(uint32_t _index, ID3D12Resource* _pBuffer, UINT _numElements, UINT _stride);
+    void CreateForUAV(uint32_t _index, ID3D12Resource* _pTexture, DXGI_FORMAT _format);
 
 
 public: /// Getter

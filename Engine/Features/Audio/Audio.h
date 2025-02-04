@@ -4,6 +4,8 @@
 #include <fstream>
 #include <wrl.h>
 
+#include <memory>
+
 #include <Common/HRESULT_ASSERT.h>
 
 #pragma comment(lib, "xaudio2.lib")
@@ -29,7 +31,7 @@ struct FormatChunk
 struct SoundData
 {
     WAVEFORMATEX wfex;
-    BYTE* pBuffer;
+    std::unique_ptr<BYTE[]> pBuffer;
     DWORD bufferSize;
 };
 

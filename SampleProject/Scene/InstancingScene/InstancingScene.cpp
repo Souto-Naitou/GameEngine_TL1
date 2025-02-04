@@ -6,11 +6,11 @@
 void InstancingScene::Initialize()
 {
     pInput_ = Input::GetInstance();
-    pGameEye_ = new GameEye();
+    pGameEye_ = std::make_unique<GameEye>();
     pGameEye_->SetName("InstancingScene_Camera");
     pGameEye_->SetTranslate(Vector3(0.0f, 0.0f, -10.0f));
 
-    pGuideSprite_ = new Sprite();
+    pGuideSprite_ = std::make_unique<Sprite>();
     pGuideSprite_->Initialize("Text/SceneChangeGuide.png");
     pGuideSprite_->SetName("GuideText");
     pGuideSprite_->SetPosition(Vector2(1280.0f - 40.0f, 720.0f - 40.0f));
@@ -18,7 +18,7 @@ void InstancingScene::Initialize()
 
     particle_ = &ParticleManager::GetInstance()->CreateParticle();
     particle_->Initialize("plane.obj");
-    particle_->SetGameEye(pGameEye_);
+    particle_->SetGameEye(pGameEye_.get());
     particle_->reserve(10);
     InitializeParticle();
 }
@@ -27,8 +27,6 @@ void InstancingScene::Finalize()
 {
     pGuideSprite_->Finalize();
 
-    delete pGameEye_;
-    delete pGuideSprite_;
 
     ParticleManager::GetInstance()->ReleaseParticle(particle_);
     particle_ = nullptr;

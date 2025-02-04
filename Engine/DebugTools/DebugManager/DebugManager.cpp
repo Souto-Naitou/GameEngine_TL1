@@ -196,11 +196,15 @@ void DebugManager::DrawUI()
 
     if (!onDisplay_) return;
 
+    ShowDockSpace();
+
     MeasureFPS();
 
-    DebugWindowOverall();
+    //DebugWindowOverall();
 
     Window_Log();
+
+    //DrawGameWindow();
 
     // 登録されていないなら早期リターン
     if (componentList_.size() == 0) return;
@@ -283,6 +287,23 @@ void DebugManager::ChangeFont()
 #endif // _DEBUG
 }
 
+void DebugManager::EnableDocking()
+{
+    ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+}
+
+void DebugManager::ShowDockSpace()
+{
+    if (!(ImGui::GetIO().ConfigFlags & ImGuiConfigFlags_DockingEnable))
+    {
+        return;
+    }
+
+    auto vp = ImGui::GetMainViewport();
+
+    ImGui::DockSpaceOverViewport(ImGui::GetID("Inspector"), vp, ImGuiDockNodeFlags_PassthruCentralNode);
+}
+
 void DebugManager::DefaultStyle()
 {
 #ifdef _DEBUG
@@ -309,9 +330,13 @@ void DebugManager::DrawGameWindow()
     uint32_t width = static_cast<uint32_t>(vp.Width);
     uint32_t height = static_cast<uint32_t>(vp.Height);
 
+    ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
+    ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0, 0, 0, 0));
     ImGui::Begin("GameWindow", nullptr, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoBringToFrontOnFocus);
     ImGui::Image((ImTextureID)gpuHnd.ptr, ImVec2(static_cast<float>(width), static_cast<float>(height)));
     ImGui::End();
+    ImGui::PopStyleVar();
+    ImGui::PopStyleColor();
 
 #endif // _DEBUG
 }

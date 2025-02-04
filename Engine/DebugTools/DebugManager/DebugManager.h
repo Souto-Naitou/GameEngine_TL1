@@ -60,6 +60,7 @@ public:
 
     void DrawUI();
     void ChangeFont();
+    void EnableDocking();
     void DefaultStyle();
     void SetDisplay(bool _isEnable) { onDisplay_ = _isEnable; }
     bool GetDisplay() const { return onDisplay_; }
@@ -94,6 +95,7 @@ private:
     void MeasureFPS();
     void Window_ObjectList();
     void Window_Log();
+    void ShowDockSpace();
     std::list<std::tuple<std::string, const std::string&, const std::function<void(void)>, bool>>::iterator
         GetInsertIterator(std::string _parentName);
 };

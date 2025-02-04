@@ -149,10 +149,37 @@ void DirectX12::CreateGameScreenResource()
         IID_PPV_ARGS(&gameScreenResource_)
     );
 
+
     /// SRVの生成
     SRVManager* psrvm = SRVManager::GetInstance();
     gameWndSrvIndex_ = psrvm->Allocate();
     psrvm->CreateForTexture2D(gameWndSrvIndex_, gameScreenResource_.Get(), DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, 1);
+
+    /// UAVの生成
+    D3D12_RESOURCE_DESC textureDesc = {};
+    textureDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
+    textureDesc.Alignment = 0;
+    textureDesc.Width = static_cast<UINT64>(viewport_.Width);
+    textureDesc.Height = static_cast<UINT>(viewport_.Height);
+    textureDesc.DepthOrArraySize = 1;
+    textureDesc.MipLevels = 1;
+    textureDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+    textureDesc.SampleDesc.Count = 1;
+    textureDesc.SampleDesc.Quality = 0;
+    textureDesc.Layout = D3D12_TEXTURE_LAYOUT_UNKNOWN;
+    textureDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS;
+
+    D3D12_HEAP_PROPERTIES heapPropertiesUAV = {};
+    heapPropertiesUAV.Type = D3D12_HEAP_TYPE_DEFAULT;
+
+    device_->CreateCommittedResource(
+        &heapPropertiesUAV,
+        D3D12_HEAP_FLAG_NONE,
+        &textureDesc,
+        D3D12_RESOURCE_STATE_UNORDERED_ACCESS,
+        nullptr,
+        IID_PPV_ARGS(&gameScreenComputed_)
+    );
 }
 
 void DirectX12::CreateDSVAndSettingState()
@@ -325,4 +352,19 @@ void DirectX12::SetResourceBarrier(
 
     /// Barrierを張る
     commandList_->ResourceBarrier(1, &barrier_);
+}
+
+void DirectX12::WaitForGPU()
+{
+    /// GPUがここまでたどり着いたときに、Fenceの値を指定した値に代入するようにSignalを送る
+    commandQueue_->Signal(fence_.Get(), fenceValue_);
+
+    /// GPUがすでに指定したフェンス値を超えていれば、待機せずに処理を進める
+    if (fence_->GetCompletedValue() < fenceValue_)
+    {
+        // 指定したSignalにたどり着いていないので、たどり着くまで待つようにイベントを設定する
+        fence_->SetEventOnCompletion(fenceValue_, fenceEvent_);
+        // イベントを待つ
+        WaitForSingleObject(fenceEvent_, INFINITE);
+    }
 }

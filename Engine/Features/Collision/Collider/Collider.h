@@ -31,7 +31,7 @@ public: /// Getter
     inline  const Sphere*               GetSphere()                 const       { return std::get<Sphere*>(shapeData_); }
 
     inline  uint32_t                    GetCollisionAttribute()     const       { return collisionAttribute_; }
-    inline  uint32_t                    GetCollisionMask()          const       { return *pCollisionMask_;}
+    inline  uint32_t                    GetCollisionMask()          const       { return pCollisionMask_ ? *pCollisionMask_ : 0xffffffff; }
     inline  Shape                       GetShape()                  const       { return shape_; }
     inline  unsigned int                GetRadius()                 const       { return radiusCollider_; }
     inline  const std::string&          GetColliderID()             const       { return colliderID_; }
@@ -97,7 +97,7 @@ private:
     // 衝突属性(自分)
     uint32_t                        collisionAttribute_         = 0xffffffff;
     // 衝突マスク(相手)
-    uint32_t*                       pCollisionMask_             = new uint32_t(0xffffffff);
+    uint32_t*                       pCollisionMask_             = nullptr;
 
 private:
     void DebugWindow();

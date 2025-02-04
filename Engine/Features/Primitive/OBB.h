@@ -8,6 +8,7 @@
 #include <Features/GameEye/GameEye.h>
 
 #include <array>
+#include <memory>
 
 class OBB
 {
@@ -53,7 +54,7 @@ private:
 
     Matrix4x4 rotateMatrix_ = {};
 
-    Line* lines = nullptr;
+    std::unique_ptr<Line> lines = nullptr;
 
 
 private:

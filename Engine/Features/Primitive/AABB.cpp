@@ -2,14 +2,13 @@
 
 AABB::~AABB()
 {
-    delete lines;
 }
 
 void AABB::Initialize()
 {
     pLineSystem = LineSystem::GetInstance();
 
-    lines = new Line(12);
+    lines = std::make_unique<Line>(12);
     lines->Initialize();
 }
 

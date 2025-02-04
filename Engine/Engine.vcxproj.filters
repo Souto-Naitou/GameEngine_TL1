@@ -187,6 +187,9 @@
     <Filter Include="Feature\GameEye\FreeLookEye">
       <UniqueIdentifier>{c17c349e-3a19-4e0f-a99e-2d416a60926a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Feature\Viewport">
+      <UniqueIdentifier>{df1d1947-10ff-440f-aa75-24724059b1c8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DebugTools\DebugManager\DebugManager.cpp">
@@ -341,6 +344,9 @@
     </ClCompile>
     <ClCompile Include="Features\Text\Text.cpp">
       <Filter>Feature\Text</Filter>
+    </ClCompile>
+    <ClCompile Include="Features\Viewport\Viewport.cpp">
+      <Filter>Feature\Viewport</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -533,6 +539,9 @@
     <ClInclude Include="Features\GameEye\FreeLook\FreeLookEye.h">
       <Filter>Feature\GameEye\FreeLookEye</Filter>
     </ClInclude>
+    <ClInclude Include="Features\Viewport\Viewport.h">
+      <Filter>Feature\Viewport</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
@@ -573,6 +582,9 @@
       <Filter>HLSL</Filter>
     </FxCompile>
     <FxCompile Include="EngineResources\Shaders\Line.PS.hlsl">
+      <Filter>HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="EngineResources\Shaders\WithoutAlpha.CS.hlsl">
       <Filter>HLSL</Filter>
     </FxCompile>
   </ItemGroup>
