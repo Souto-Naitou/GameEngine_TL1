@@ -105,15 +105,27 @@ void SRVManager::CreateForStructuredBuffer(uint32_t _index, ID3D12Resource* _pBu
     pDx12_->GetDevice()->CreateShaderResourceView(_pBuffer, &srvDesc, GetCPUDescriptorHandle(_index));
 }
 
+void SRVManager::CreateForUAV(uint32_t _index, ID3D12Resource* _pTexture, DXGI_FORMAT _format)
+{
+    D3D12_UNORDERED_ACCESS_VIEW_DESC uavDesc = {};
+    uavDesc.ViewDimension = D3D12_UAV_DIMENSION_TEXTURE2D;
+    uavDesc.Format = _format;
+
+    pDx12_->GetDevice()->CreateUnorderedAccessView(_pTexture, nullptr, &uavDesc, GetCPUDescriptorHandle(_index));
+}
+
 void SRVManager::DebugWindow()
 {
 #ifdef _DEBUG
+
+
     auto pFunc = [&]()
     {
         ImGuiTemplate::VariableTableRow("SRV許容数", kMaxSRVCount_);
         ImGuiTemplate::VariableTableRow("現在のSRV数", currentSize_);
     };
     ImGuiTemplate::VariableTable("SRVManager", pFunc);
+
 
 #endif // _DEBUG
 }

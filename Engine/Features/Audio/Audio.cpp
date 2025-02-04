@@ -2,6 +2,7 @@
 
 #include <fstream>
 #include <cassert>
+#include <memory>
 
 void Audio::Initialize()
 {
@@ -63,8 +64,8 @@ SoundData Audio::LoadWave(const char* _filename)
     }
 
     /// 波形データ読み込み
-    char* pBuffer = new char[data.size];
-    file.read(pBuffer, data.size);
+    std::unique_ptr<char[]> pBuffer = std::make_unique<char[]>(data.size);
+    file.read(pBuffer.get(), data.size);
 
 
     /// ファイルクローズ
@@ -73,17 +74,17 @@ SoundData Audio::LoadWave(const char* _filename)
 
     SoundData soundData = {};
     soundData.wfex = format.wfex;
-    soundData.pBuffer = reinterpret_cast<BYTE*>(pBuffer);
+    soundData.pBuffer = std::make_unique<BYTE[]>(data.size);
     soundData.bufferSize = data.size;
+
+    std::memcpy(soundData.pBuffer.get(), pBuffer.get(), data.size);
 
     return soundData;
 }
 
 void Audio::Unload(SoundData* soundData)
 {
-    delete soundData->pBuffer;
-
-    soundData->pBuffer = nullptr;
+    soundData->pBuffer.reset();
     soundData->bufferSize = 0;
     soundData->wfex = {};
 
@@ -99,7 +100,7 @@ void Audio::PlayWave(IXAudio2* xAudio2, const SoundData& soundData)
 
     /// バッファ設定
     XAUDIO2_BUFFER buffer = {};
-    buffer.pAudioData = soundData.pBuffer;
+    buffer.pAudioData = soundData.pBuffer.get();
     buffer.AudioBytes = soundData.bufferSize;
     buffer.Flags = XAUDIO2_END_OF_STREAM;
 

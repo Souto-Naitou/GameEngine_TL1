@@ -46,7 +46,7 @@ void NimaFramework::Initialize()
 
     pAudio_ = new Audio();
 
-    pImGuiManager_ = new ImGuiManager();
+    pImGuiManager_ = std::make_unique<ImGuiManager>();
 
     /// ウィンドウの初期化
     pWinSystem_->Initialize();
@@ -91,15 +91,18 @@ void NimaFramework::Initialize()
     /// 乱数生成器の初期化
     pRandomGenerator_->Initialize();
 
-    /// SRVManagerが初期化したらゲーム画面リソースを生成
-    //pDirectX_->CreateGameScreenResource();
+    /// SRVが初期化された後に呼ぶ
+    pDirectX_->CreateGameScreenResource();
+
+    /// ビューポートの初期化
+    //pViewport_ = std::make_unique<Viewport>();
+    //pViewport_->Initialize();
 }
 
 void NimaFramework::Finalize()
 {
     pImGuiManager_->Finalize();
     pWinSystem_->Finalize();
-    delete pImGuiManager_;
 }
 
 void NimaFramework::Update()

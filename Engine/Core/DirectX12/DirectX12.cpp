@@ -6,6 +6,11 @@
 #include <Core/DirectX12/Helper/DX12Helper.h>           // ヘルパー
 #include <Core/DirectX12/SRVManager.h>                  // SRV管理
 
+#ifdef _DEBUG
+#include <imgui_impl_dx12.h>
+#endif // DEBUG
+
+
 #include <cassert>
 #include <format>
 #include <iostream>
@@ -112,10 +117,7 @@ void DirectX12::PresentDraw()
     backBufferIndex_ = swapChain_->GetCurrentBackBufferIndex();
 
     // リソースバリアの設定
-    SetResourceBarrier(D3D12_RESOURCE_BARRIER_TYPE_TRANSITION, D3D12_RESOURCE_BARRIER_FLAG_NONE,
-        swapChainResources_[backBufferIndex_].Get(),
-        D3D12_RESOURCE_STATE_PRESENT,
-        D3D12_RESOURCE_STATE_RENDER_TARGET);
+    DX12Helper::ChangeStateResource(commandList_, swapChainResources_[backBufferIndex_].Get(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET);
 
 
     /// 描画先のRTV/DSVの設定
@@ -146,10 +148,7 @@ void DirectX12::CommandExecute()
 void DirectX12::PostDraw()
 {
     /// 描く状態から画面に映す状態に遷移
-    //SetResourceBarrier(D3D12_RESOURCE_BARRIER_TYPE_TRANSITION, D3D12_RESOURCE_BARRIER_FLAG_NONE,
-    //    swapChainResources_[backBufferIndex_].Get(),
-    //    D3D12_RESOURCE_STATE_RENDER_TARGET,
-    //    D3D12_RESOURCE_STATE_PRESENT);
+    /// (Direct2dで行われる)
 
     /// GPUとISに画面の交換を行うよう通知する
     swapChain_->Present(1, 0);
@@ -181,30 +180,14 @@ void DirectX12::PostDraw()
     assert(SUCCEEDED(hr_));
     hr_ = commandList_->Reset(commandAllocator_.Get(), nullptr);
     assert(SUCCEEDED(hr_));
-
 }
 
-void DirectX12::CopyRTV()
+void DirectX12::CopyFromRTV()
 {
     /// レンダーターゲットからコピー元状態にする
-    D3D12_RESOURCE_BARRIER barrier = {};
-    barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
-    barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
-    barrier.Transition.pResource = swapChainResources_[backBufferIndex_].Get();
-    barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
-    barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_COPY_SOURCE;
-    barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
-    commandList_->ResourceBarrier(1, &barrier);
+    ChangeStateRTV(D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_COPY_SOURCE);
 
-
-    D3D12_RESOURCE_BARRIER destBarrier = {};
-    destBarrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
-    destBarrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
-    destBarrier.Transition.pResource = gameScreenResource_.Get();
-    destBarrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
-    destBarrier.Transition.StateAfter = D3D12_RESOURCE_STATE_COPY_DEST;
-    destBarrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
-    commandList_->ResourceBarrier(1, &destBarrier);
+    DX12Helper::ChangeStateResource(commandList_, gameScreenResource_, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, D3D12_RESOURCE_STATE_COPY_DEST);
 
 
     D3D12_TEXTURE_COPY_LOCATION srcLocation = {};
@@ -228,30 +211,31 @@ void DirectX12::CopyRTV()
 
     commandList_->CopyTextureRegion(&dstLocation, 0, 0, 0, &srcLocation, &srcBox);
 
-    /// リソースバリアを戻す
+    /// バリアを戻す
+    ChangeStateRTV(D3D12_RESOURCE_STATE_COPY_SOURCE, D3D12_RESOURCE_STATE_RENDER_TARGET);
+
+    DX12Helper::ChangeStateResource(
+        commandList_, 
+        gameScreenResource_, 
+        D3D12_RESOURCE_STATE_COPY_DEST, 
+        D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE
+    );
+
+    /// rtvのクリア
+    //commandList_->ClearRenderTargetView(rtvHandles_[backBufferIndex_], &editorBG_.x, 0, nullptr);
+}
+
+void DirectX12::ChangeStateRTV(D3D12_RESOURCE_STATES _now, D3D12_RESOURCE_STATES _next)
+{
+    /// リソースステートの設定
+    D3D12_RESOURCE_BARRIER barrier = {};
     barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
     barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
     barrier.Transition.pResource = swapChainResources_[backBufferIndex_].Get();
-    barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_COPY_SOURCE;
-    barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
+    barrier.Transition.StateBefore = _now;
+    barrier.Transition.StateAfter = _next;
     barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
     commandList_->ResourceBarrier(1, &barrier);
-
-    destBarrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
-    destBarrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
-    destBarrier.Transition.pResource = gameScreenResource_.Get();
-    destBarrier.Transition.StateBefore = D3D12_RESOURCE_STATE_COPY_DEST;
-    destBarrier.Transition.StateAfter = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
-    destBarrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
-    commandList_->ResourceBarrier(1, &destBarrier);
-
-
-    //D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle = dsvDescriptorHeap_->GetCPUDescriptorHandleForHeapStart();
-    //// 画面全体のクリア
-    //commandList_->ClearRenderTargetView(rtvHandles_[backBufferIndex_], &editorBG_.x, 0, nullptr);
-    //// 指定した深度で画面全体をクリア
-    //commandList_->ClearDepthStencilView(dsvHandle, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
-
 }
 
 DirectX12::~DirectX12()

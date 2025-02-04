@@ -3,13 +3,12 @@
 
 OBB::~OBB()
 {
-    delete lines;
 }
 
 void OBB::Initialize()
 {
     pLineSystem = LineSystem::GetInstance();
-    lines = new Line(12);
+    lines = std::make_unique<Line>(12);
     lines->Initialize();
     lines->SetColor(Vector4(0.0f, 1.0f, 0.0f, 1.0f));
 }

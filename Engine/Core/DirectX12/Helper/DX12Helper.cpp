@@ -348,6 +348,19 @@ Microsoft::WRL::ComPtr<ID3D12Resource> DX12Helper::CreateVertexResource(const Mi
     return vertexResource;
 }
 
+void DX12Helper::ChangeStateResource(const Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>& _commandList, const Microsoft::WRL::ComPtr<ID3D12Resource>& _resource, D3D12_RESOURCE_STATES _before, D3D12_RESOURCE_STATES _after)
+{
+    Log(std::format("[DEBUG] Changing resource state: {:p} from {} to {}\n", reinterpret_cast<void*>(_resource.Get()), static_cast<int>(_before), static_cast<int>(_after)));
+
+    D3D12_RESOURCE_BARRIER barrier{};
+    barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+    barrier.Transition.pResource = _resource.Get();
+    barrier.Transition.StateBefore = _before;
+    barrier.Transition.StateAfter = _after;
+    barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
+    _commandList->ResourceBarrier(1, &barrier);
+}
+
 D3D12_CPU_DESCRIPTOR_HANDLE DX12Helper::GetCPUDescriptorHandle(const Microsoft::WRL::ComPtr<ID3D12DescriptorHeap>& _descriptorHeap, uint32_t _descriptorSize, uint32_t _index)
 {
     D3D12_CPU_DESCRIPTOR_HANDLE handleCPU = _descriptorHeap->GetCPUDescriptorHandleForHeapStart();

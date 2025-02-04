@@ -24,6 +24,8 @@ public:
     void ShowWnd();
     UINT GetMsg();
 
+    bool IsResized();
+
 private:
     WinSystem() = default;
     ~WinSystem() = default;
@@ -33,5 +35,7 @@ private:
     WNDCLASS    wc_         = {};
     HWND        hwnd_       = {};
     MSG         msg_        = {};
+    POINT       wndSize_    = {};
     static bool isMoving_;
+    static bool isResized_;
 };

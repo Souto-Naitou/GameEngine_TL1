@@ -6,17 +6,15 @@
 
 #include <cassert>
 
-#define JUDGE_SCENE(class) if (_sceneName == #class) { return new class(); }
+#define JUDGE_SCENE(class) if (_sceneName == #class) { return std::make_unique<class>(); }
 
-IScene* SceneFactory::CreateScene(const std::string& _sceneName)
+std::unique_ptr<IScene> SceneFactory::CreateScene(const std::string & _sceneName)
 {
-    IScene* pNewScene = nullptr;
-
     JUDGE_SCENE(InstancingScene)
     else JUDGE_SCENE(GameScene)
     else JUDGE_SCENE(CG3PT2)
 
-    assert(pNewScene);
+    assert(false && "シーンの生成に失敗しました");
 
-    return pNewScene;
+    return nullptr;
 }

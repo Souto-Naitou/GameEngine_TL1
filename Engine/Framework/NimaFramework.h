@@ -19,6 +19,7 @@
 #include <Features/RandomGenerator/RandomGenerator.h>
 #include <Features/Line/Line.h>
 #include <Features/Text/TextSystem.h>
+#include <Features/Viewport/Viewport.h>
 
 #include <memory>
 
@@ -41,9 +42,10 @@ public:
 
 
 protected: /// システムクラスのインスタンス
-    ISceneFactory* pSceneFactory_ = nullptr;
-    ImGuiManager* pImGuiManager_;
+    std::unique_ptr<ISceneFactory> pSceneFactory_ = nullptr;
+    std::unique_ptr<ImGuiManager> pImGuiManager_;
     Audio* pAudio_;
+    std::unique_ptr<Viewport> pViewport_;
 
 
 protected: /// 他クラスのインスタンス
@@ -70,8 +72,7 @@ protected:
 #define CREATE_APPLICATION(class) \
 int _stdcall WinMain(HINSTANCE, HINSTANCE, LPSTR, int) \
 { \
-    NimaFramework* pSampleProgram = new class(); \
+    std::unique_ptr<NimaFramework> pSampleProgram = std::make_unique<class>(); \
     pSampleProgram->Run(); \
-    delete pSampleProgram; \
     return 0; \
 }

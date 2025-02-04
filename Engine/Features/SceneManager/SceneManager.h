@@ -52,7 +52,7 @@ private:
     bool isReserveScene_ = false;
 
     std::string nextSceneName_;
-    IScene* pCurrentScene_ = nullptr;
+    std::unique_ptr<IScene> pCurrentScene_ = nullptr;
 
 
 private: /// 他クラスのインスタンス

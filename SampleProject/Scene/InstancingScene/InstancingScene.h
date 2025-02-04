@@ -6,6 +6,8 @@
 #include <Features/Input/Input.h>
 #include <Features/Sprite/Sprite.h>
 
+#include <memory>
+
 class InstancingScene : public IScene
 {
 public:
@@ -31,8 +33,8 @@ public:
 
 private:
     Particle* particle_ = nullptr;
-    GameEye* pGameEye_ = nullptr;
-    Sprite* pGuideSprite_ = nullptr;
+    std::unique_ptr<GameEye> pGameEye_ = nullptr;
+    std::unique_ptr<Sprite> pGuideSprite_ = nullptr;
 
 
 private: /// 他クラスのインスタンス

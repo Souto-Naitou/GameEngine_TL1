@@ -44,7 +44,9 @@ public:
     void PresentDraw();
     void CommandExecute();
     void PostDraw();
-    void CopyRTV();
+    void WaitForGPU();
+    void ChangeStateRTV(D3D12_RESOURCE_STATES _now, D3D12_RESOURCE_STATES _next);
+    void CopyFromRTV();
 
     /// <summary>
     /// ゲーム画面リソースの生成
@@ -84,9 +86,12 @@ public: /// Getter
     ID2D1Bitmap1*                                           GetD2D1RenderTarget(uint32_t _index)        { return d2dRenderTargets_[_index].Get(); }
     ID3D11On12Device*                                       GetD3D11On12Device()                        { return d3d11On12Device_.Get(); }
     ID3D11DeviceContext*                                    GetD3D11On12DeviceContext()                 { return d3d11On12DeviceContext_.Get(); }
+    ID3D12Resource*                                         GetGameScreenResource()                     { return gameScreenResource_.Get(); }
+    ID3D12Resource*                                         GetGameScreenComputed()                     { return gameScreenComputed_.Get(); }
 
 public:
     void SetGameWindowRect(D3D12_VIEWPORT _viewport);
+    void SetGameWndSRVIndex(uint32_t _index) { gameWndSrvIndexComputed_ = _index; }
 
 private:
     DirectX12() = default;
@@ -108,17 +113,19 @@ private:
     Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>       commandList_                    = nullptr;      // コマンドアロケータ
     Microsoft::WRL::ComPtr<IDXGISwapChain4>                 swapChain_                      = nullptr;      // スワップチェーン
     Microsoft::WRL::ComPtr<ID3D12Resource>                  swapChainResources_[2]          = {};           // スワップチェーンリソース
-    Microsoft::WRL::ComPtr<ID3D12Resource>                  gameScreenResource_             = nullptr;      // ゲーム画面リソース
+    //Microsoft::WRL::ComPtr<ID3D12Resource>                  gameScreenResource_             = nullptr;      // ゲーム画面リソース
     Microsoft::WRL::ComPtr<ID3D12Fence>                     fence_                          = nullptr;      // フェンス
     Microsoft::WRL::ComPtr<ID3D12DescriptorHeap>            rtvDescriptorHeap_              = nullptr;
     Microsoft::WRL::ComPtr<ID3D12DescriptorHeap>            dsvDescriptorHeap_              = nullptr;
     Microsoft::WRL::ComPtr<ID3D12DescriptorHeap>            descriptorHeaps_                = nullptr;
     Microsoft::WRL::ComPtr<ID3D12Resource>                  depthStencilResource_           = nullptr;      // 深度ステンシルリソース
+    Microsoft::WRL::ComPtr<ID3D12Resource>                  gameScreenResource_             = nullptr;      // ゲーム画面(ImGuiを含まない)リソース
+    Microsoft::WRL::ComPtr<ID3D12Resource>                  gameScreenComputed_             = nullptr;      // ゲーム画面(コンピュートシェーダー後)リソース
     Microsoft::WRL::ComPtr<IDxcUtils>                       dxcUtils_                       = nullptr;
     Microsoft::WRL::ComPtr<IDxcCompiler3>                   dxcCompiler_                    = nullptr;
     Microsoft::WRL::ComPtr<IDxcIncludeHandler>              includeHandler_                 = nullptr;
     Microsoft::WRL::ComPtr<ID3D11Device>                    d3d11Device_                    = nullptr;      // D3D11デバイス
-    Microsoft::WRL::ComPtr<ID3D11DeviceContext>             d3d11On12DeviceContext_             = nullptr;      // D3D11デバイスコンテキスト
+    Microsoft::WRL::ComPtr<ID3D11DeviceContext>             d3d11On12DeviceContext_         = nullptr;      // D3D11デバイスコンテキスト
     Microsoft::WRL::ComPtr<ID3D11On12Device>                d3d11On12Device_                = nullptr;      // D3D11On12デバイス
     Microsoft::WRL::ComPtr<ID2D1Factory3>                   d2dFactory_                     = nullptr;      // Direct2D
     Microsoft::WRL::ComPtr<IDXGIDevice>                     dxgiDevice_                     = nullptr;      // DXGIデバイス
@@ -147,6 +154,7 @@ private:
     uint32_t                                                kDescriptorSizeDSV              = 0u;
     int32_t                                                 numUploadedTexture              = 0;
     uint32_t                                                gameWndSrvIndex_                = 0;
+    uint32_t                                                gameWndSrvIndexComputed_        = 0;
 
 private:
 

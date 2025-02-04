@@ -11,8 +11,8 @@ void SampleProgram::Initialize()
     NimaFramework::Initialize();
 
     /// シーンファクトリの設定
-    pSceneFactory_ = new SceneFactory();
-    pSceneManager_->SetSceneFactory(pSceneFactory_);
+    pSceneFactory_ = std::make_unique<SceneFactory>();
+    pSceneManager_->SetSceneFactory(pSceneFactory_.get());
 
     /// 自動ロードパスの追加
     pModelManager_->AddAutoLoadPath("resources/models");
@@ -32,9 +32,6 @@ void SampleProgram::Finalize()
     NimaFramework::Finalize();
 
     pSceneManager_->Finalize();
-
-    /// シーンファクトリの解放
-    delete pSceneFactory_;
 }
 
 void SampleProgram::Update()
@@ -82,6 +79,9 @@ void SampleProgram::Draw()
     /// 前景スプライトの描画
     pSpriteSystem_->PresentDraw();
     pSceneManager_->SceneDraw2dForeground();
+
+    pDirectX_->CopyFromRTV();
+    //pViewport_->Compute();
 
     pImGuiManager_->EndFrame();
 

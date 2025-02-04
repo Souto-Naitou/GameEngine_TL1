@@ -54,8 +54,11 @@ void ImGuiManager::BeginFrame()
 #ifdef _DEBUG
     if (!isChangedFont_)
     {
-        DebugManager::GetInstance()->ChangeFont();
-        DebugManager::GetInstance()->DefaultStyle();
+        DebugManager* debugManager = DebugManager::GetInstance();
+        debugManager->ChangeFont();
+        debugManager->DefaultStyle();
+        debugManager->EnableDocking();
+        
         isChangedFont_ = true;
     }
 

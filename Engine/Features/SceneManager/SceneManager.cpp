@@ -99,7 +99,6 @@ void SceneManager::Finalize()
     if (pCurrentScene_ != nullptr)
     {
         pCurrentScene_->Finalize();
-        delete pCurrentScene_;
     }
 
     DebugManager::GetInstance()->DeleteComponent("#Window", name_.c_str());
@@ -112,7 +111,6 @@ void SceneManager::ChangeScene()
     if (pCurrentScene_ != nullptr)
     {
         pCurrentScene_->Finalize();
-        delete pCurrentScene_;
     }
 
     pCurrentScene_ = pSceneFactory_->CreateScene(nextSceneName_);

@@ -13,16 +13,16 @@ void GameScene::Initialize()
 {
     pInput_ = Input::GetInstance();
 
-    pFirework_ = new ParticleEmitter();
-    pSmoke_ = new ParticleEmitter();
-    pSpark_ = new ParticleEmitter();
+    pFirework_ = std::make_unique<ParticleEmitter>();
+    pSmoke_ = std::make_unique<ParticleEmitter>();
+    pSpark_ = std::make_unique<ParticleEmitter>();
 
 
-    pGameEye_ = new GameEye();
-    pSkydome_ = new Object3d();
-    pGrid_ = new Object3d();
+    pGameEye_ = std::make_unique<GameEye>();
+    pSkydome_ = std::make_unique<Object3d>();
+    pGrid_ = std::make_unique<Object3d>();
 
-    pGuideSprite_ = new Sprite();
+    pGuideSprite_ = std::make_unique<Sprite>();
     pGuideSprite_->Initialize("Text/SceneChangeGuide.png");
     pGuideSprite_->SetName("GuideText");
     pGuideSprite_->SetPosition(Vector2(WinSystem::kClientWidth - 40.0f, WinSystem::kClientHeight - 40.0f));
@@ -33,9 +33,9 @@ void GameScene::Initialize()
     pGameEye_->SetName("MainCamera");
 
     /// システムにデフォルトのゲームカメラを設定
-    Object3dSystem::GetInstance()->SetSharedGameEye(pGameEye_);
-    ParticleSystem::GetInstance()->SetDefaultGameEye(pGameEye_);
-    LineSystem::GetInstance()->SetDefaultGameEye(pGameEye_);
+    Object3dSystem::GetInstance()->SetSharedGameEye(pGameEye_.get());
+    ParticleSystem::GetInstance()->SetDefaultGameEye(pGameEye_.get());
+    LineSystem::GetInstance()->SetDefaultGameEye(pGameEye_.get());
 
 
     pSkydome_->Initialize("Skydome.obj");
@@ -63,21 +63,13 @@ void GameScene::Finalize()
     pFirework_->Finalize();
     pSmoke_->Finalize();
     pSpark_->Finalize();
-
-    delete pFirework_;
-    delete pSmoke_;
-    delete pSpark_;
-    delete pGuideSprite_;
-    delete pGrid_;
-    delete pSkydome_;
-    delete pGameEye_;
 }
 
 void GameScene::Update()
 {
     if (pInput_->PushKey(DIK_LCONTROL) && pInput_->PushKey(DIK_1))
     {
-        SceneManager::GetInstance()->ReserveScene("RequiredScene");
+        SceneManager::GetInstance()->ReserveScene("InstancingScene");
     }
 
     /// 更新処理
