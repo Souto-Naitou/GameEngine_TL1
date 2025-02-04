@@ -289,11 +289,15 @@ void DebugManager::ChangeFont()
 
 void DebugManager::EnableDocking()
 {
+#ifdef _DEBUG
     ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+#endif
 }
 
 void DebugManager::ShowDockSpace()
 {
+#ifdef _DEBUG
+
     if (!(ImGui::GetIO().ConfigFlags & ImGuiConfigFlags_DockingEnable))
     {
         return;
@@ -302,6 +306,8 @@ void DebugManager::ShowDockSpace()
     auto vp = ImGui::GetMainViewport();
 
     ImGui::DockSpaceOverViewport(ImGui::GetID("Inspector"), vp, ImGuiDockNodeFlags_PassthruCentralNode);
+
+#endif // _DEBUG
 }
 
 void DebugManager::DefaultStyle()
