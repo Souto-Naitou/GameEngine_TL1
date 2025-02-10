@@ -28,6 +28,7 @@ void NimaFramework::Run()
 void NimaFramework::Initialize()
 {
     /// システムクラスの初期化
+    pLogger_ = Logger::GetInstance();
     pDirectX_ = DirectX12::GetInstance();
     pDebugManager_ = DebugManager::GetInstance();
     pWinSystem_ = WinSystem::GetInstance();
@@ -43,10 +44,11 @@ void NimaFramework::Initialize()
     pInput_ = Input::GetInstance();
     pRandomGenerator_ = RandomGenerator::GetInstance();
     pTextSystem_ = TextSystem::GetInstance();
-
-    pAudio_ = new Audio();
-
+    pAudioManager_ = AudioManager::GetInstance();
     pImGuiManager_ = std::make_unique<ImGuiManager>();
+
+    /// ロガーの初期化
+    pLogger_->Initialize();
 
     /// ウィンドウの初期化
     pWinSystem_->Initialize();
@@ -83,7 +85,7 @@ void NimaFramework::Initialize()
     pTextSystem_->Initialize();
 
     /// オーディオの初期化
-    pAudio_->Initialize();
+    pAudioManager_->Initialize();
 
     /// 入力の初期化
     pInput_->Initialize(GetModuleHandleA(nullptr), pWinSystem_->GetHwnd());
@@ -101,8 +103,10 @@ void NimaFramework::Initialize()
 
 void NimaFramework::Finalize()
 {
+    pAudioManager_->Finalize();
     pImGuiManager_->Finalize();
     pWinSystem_->Finalize();
+    pLogger_->Save();
 }
 
 void NimaFramework::Update()
@@ -116,6 +120,7 @@ void NimaFramework::Update()
 
     /// マネージャ更新
     pModelManager_->Update();
+    pAudioManager_->Update();
     pImGuiManager_->BeginFrame();
     pDebugManager_->DrawUI();
     pImGuiManager_->Render();

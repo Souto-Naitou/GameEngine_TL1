@@ -87,7 +87,11 @@ void Viewport::CreateRootSignature()
         D3D_ROOT_SIGNATURE_VERSION_1, &signatureBlob, &errorBlob);
     if (FAILED(hr))
     {
-        Log(reinterpret_cast<char*>(errorBlob->GetBufferPointer()));
+        Logger::GetInstance()->LogError(
+            "Viewport",
+            "CreateRootSignature",
+            reinterpret_cast<char*>(errorBlob->GetBufferPointer())
+        );
         assert(false);
     }
     // バイナリをもとに生成

@@ -2,7 +2,6 @@
 
 #include "DirectX12.h"
 
-#include <DebugTools/Logger/Logger.h>
 #include <Utility/ConvertString/ConvertString.h>
 #include <cassert>
 #include <format>
@@ -39,36 +38,125 @@ void DirectX12::ChooseAdapter()
         /// アダプタ情報を取得
         DXGI_ADAPTER_DESC3 adapterDesc{};
         hr_ = useAdapter_->GetDesc3(&adapterDesc);
-        assert(SUCCEEDED(hr_) && "アダプター情報の取得に失敗");
+        if (FAILED(hr_))
+        {
+            pLogger_->LogError(
+                "DirectX12",
+                "ChooseAdapter",
+                "アダプタ情報の取得に失敗"
+            );
+            assert(false && "Failed to get adapter description");
+        }
+
         // ソフトウェアアダプタではなければ採用
         if (!(adapterDesc.Flags & DXGI_ADAPTER_FLAG3_SOFTWARE))
         {
             // 出力
-            Log(std::format("Adapter : {}\n", ConvertString(adapterDesc.Description)));
+            pLogger_->LogInfo(
+                "DirectX12",
+                "ChooseAdapter",
+                std::format("Adapter : {}", ConvertString(adapterDesc.Description)));
             break;
         }
         useAdapter_ = nullptr;
     }
-    assert(useAdapter_ != nullptr && "アダプタが見つかりませんでした。");
+
+    // アダプタが見つからなかった場合
+    if (!useAdapter_)
+    {
+        pLogger_->LogError(
+            "DirectX12",
+            "ChooseAdapter",
+            "アダプタが見つかりませんでした"
+        );
+        assert(useAdapter_ && "Failed to find adapter");
+    }
 }
 
 void DirectX12::CreateCommandResources()
 {
     /// コマンドキューを生成
+    pLogger_->LogInfo(
+        "DirectX12",
+        "CreateCommandResources",
+        "コマンドキューの生成を開始"
+    );
     hr_ = device_->CreateCommandQueue(&commandQueueDesc_, IID_PPV_ARGS(&commandQueue_));
-    assert(SUCCEEDED(hr_) && "コマンドキューの生成に失敗");
-    if (!commandQueue_) return;
+    if (FAILED(hr_))
+    {
+        pLogger_->LogError(
+            "DirectX12",
+            "CreateCommandResources",
+            "コマンドキューの生成に失敗"
+        );
+        assert(false && "Failed to create command queue");
+
+        return;
+    }
+    else
+    {
+        pLogger_->LogInfo(
+            "DirectX12",
+            "CreateCommandResources",
+            "コマンドキューの生成を完了"
+        );
+    }
 
 
     /// コマンドアロケータを生成
+    pLogger_->LogInfo(
+        "DirectX12",
+        "CreateCommandResources",
+        "コマンドアロケータの生成を開始"
+    );
     hr_ = device_->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&commandAllocator_));
-    assert(SUCCEEDED(hr_) && "コマンドアロケータの生成に失敗");
-    if (!commandAllocator_) return;
+    if (FAILED(hr_))
+    {
+        pLogger_->LogError(
+            "DirectX12",
+            "CreateCommandResources",
+            "コマンドアロケータの生成に失敗"
+        );
+        assert(false && "Failed to create command allocator");
+
+        return;
+    }
+    else
+    {
+        pLogger_->LogInfo(
+            "DirectX12",
+            "CreateCommandResources",
+            "コマンドアロケータの生成を完了"
+        );
+    }
+
 
     /// コマンドリストを生成
+    pLogger_->LogInfo(
+        "DirectX12",
+        "CreateCommandResources",
+        "コマンドリストの生成を開始"
+    );
     hr_ = device_->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, commandAllocator_.Get(), nullptr, IID_PPV_ARGS(&commandList_));
-    assert(SUCCEEDED(hr_) && "コマンドリストの生成がうまくいかなかったので起動できない");
+    if (FAILED(hr_))
+    {
+        pLogger_->LogError(
+            "DirectX12",
+            "CreateCommandResources",
+            "コマンドリストの生成に失敗"
+        );
+        assert(false && "Failed to create command list");
 
+        return;
+    }
+    else
+    {
+        pLogger_->LogInfo(
+            "DirectX12",
+            "CreateCommandResources",
+            "コマンドリストの生成を完了"
+        );
+    }
 }
 
 void DirectX12::CreateSwapChainAndResource()
@@ -86,7 +174,24 @@ void DirectX12::CreateSwapChainAndResource()
 
     /// 生成
     hr_ = dxgiFactory_->CreateSwapChainForHwnd(commandQueue_.Get(), hwnd_, &swapChainDesc_, nullptr, nullptr, reinterpret_cast<IDXGISwapChain1**>(swapChain_.GetAddressOf()));
-    assert(SUCCEEDED(hr_));
+    if (FAILED(hr_))
+    {
+        pLogger_->LogError(
+            "DirectX12",
+            "CreateSwapChainAndResource",
+            "スワップチェーンの生成に失敗"
+        );
+        assert(false && "Failed to create swap chain");
+        return;
+    }
+    else
+    {
+        pLogger_->LogInfo(
+            "DirectX12",
+            "CreateSwapChainAndResource",
+            "スワップチェーンの生成を完了"
+        );
+    }
 
 
     /// Descriptorのサイズを取得 (動的に変わらないもの)
@@ -102,9 +207,33 @@ void DirectX12::CreateSwapChainAndResource()
 
     /// SwapChainからResourceを引っ張ってくる
     hr_ = swapChain_->GetBuffer(0, IID_PPV_ARGS(&swapChainResources_[0]));
-    assert(SUCCEEDED(hr_) && "SwapChainからリソースを取得できませんでした [0]");
+    if (FAILED(hr_))
+    {
+        pLogger_->LogError(
+            "DirectX12",
+            "CreateSwapChainAndResource",
+            "スワップチェーンからリソースを取得に失敗 [0]"
+        );
+        assert(false && "Failed to get resource from swap chain [0]");
+        return;
+    }
     hr_ = swapChain_->GetBuffer(1, IID_PPV_ARGS(&swapChainResources_[1]));
-    assert(SUCCEEDED(hr_) && "SwapChainからリソースを取得できませんでした [1]");
+    if (FAILED(hr_))
+    {
+        pLogger_->LogError(
+            "DirectX12",
+            "CreateSwapChainAndResource",
+            "スワップチェーンからリソースを取得に失敗 [1]"
+        );
+        assert(false && "Failed to get resource from swap chain [1]");
+        return;
+    }
+    pLogger_->LogInfo(
+        "DirectX12",
+        "CreateSwapChainAndResource",
+        "スワップチェーンからリソースを取得完了"
+    );
+    
     swapChain_->SetColorSpace1(DXGI_COLOR_SPACE_RGB_FULL_G22_NONE_P709);
 
 
@@ -208,7 +337,23 @@ void DirectX12::CreateFenceAndEvent()
 {
     /// 初期値0でFenceを作る
     hr_ = device_->CreateFence(fenceValue_, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&fence_));
-    assert(SUCCEEDED(hr_) && "フェンス生成に失敗");
+    if (FAILED(hr_))
+    {
+        pLogger_->LogError(
+            "DirectX12",
+            "CreateFenceAndEvent",
+            "フェンス生成に失敗"
+        );
+        assert(false && "Failed to create fence");
+    }
+    else 
+    {
+        pLogger_->LogInfo(
+            "DirectX12",
+            "CreateFenceAndEvent",
+            "フェンス生成完了"
+        );
+    }
 
 
     /// FenceのSignalを待つためのイベントを作成する
@@ -252,21 +397,66 @@ void DirectX12::CreateDirectXShaderCompiler()
 {
     /// dxcCompilerを初期化
     hr_ = DxcCreateInstance(CLSID_DxcUtils, IID_PPV_ARGS(&dxcUtils_));
-    assert(SUCCEEDED(hr_));
+    if (FAILED(hr_))
+    {
+        pLogger_->LogError(
+            "DirectX12",
+            "CreateDirectXShaderCompiler",
+            "DXCの初期化に失敗"
+        );
+        assert(false && "Failed to create DXCUtils");
+    }
     hr_ = DxcCreateInstance(CLSID_DxcCompiler, IID_PPV_ARGS(&dxcCompiler_));
-    assert(SUCCEEDED(hr_));
-
+    if (FAILED(hr_))
+    {
+        pLogger_->LogError(
+            "DirectX12",
+            "CreateDirectXShaderCompiler",
+            "DXCの初期化に失敗"
+        );
+        assert(false && "Failed to create DXCCompiler");
+    }
 
     /// includeに対応するため
     hr_ = dxcUtils_->CreateDefaultIncludeHandler(&includeHandler_);
-    assert(SUCCEEDED(hr_));
+    if (FAILED(hr_))
+    {
+        pLogger_->LogError(
+            "DirectX12",
+            "CreateDirectXShaderCompiler",
+            "IncludeHandlerの生成に失敗"
+        );
+        assert(false && "Failed to create include handler");
+    }
+
+    pLogger_->LogInfo(
+        "DirectX12",
+        "CreateDirectXShaderCompiler",
+        "DXCの初期化完了"
+    );
 }
 
 void DirectX12::CreateD2D1Factory()
 {
     /// Direct2Dのファクトリを生成
     hr_ = D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, IID_PPV_ARGS(&d2dFactory_));
-    assert(SUCCEEDED(hr_));
+    if (FAILED(hr_))
+    {
+        pLogger_->LogError(
+            "DirectX12",
+            "CreateD2D1Factory",
+            "D2D1ファクトリの生成に失敗"
+        );
+        assert(false && "Failed to create D2D1 factory");
+    }
+    else
+    {
+        pLogger_->LogInfo(
+            "DirectX12",
+            "CreateD2D1Factory",
+            "D2D1ファクトリの生成完了"
+        );
+    }
 }
 
 void DirectX12::CreateD3D11Device()
@@ -278,22 +468,84 @@ void DirectX12::CreateD3D11Device()
 #endif // _DEBUG
 
     hr_ = D3D11On12CreateDevice(device_.Get(), d3d11flags, nullptr, 0, reinterpret_cast<IUnknown**>(commandQueue_.GetAddressOf()), 1, 0, &d3d11Device_, &d3d11On12DeviceContext_, nullptr);
-    assert(SUCCEEDED(hr_));
+    if (FAILED(hr_))
+    {
+        pLogger_->LogError(
+            "DirectX12",
+            "CreateD3D11Device",
+            "D3D11デバイスの生成に失敗"
+        );
+        assert(false && "Failed to create D3D11 device");
+    }
+    else
+    {
+        pLogger_->LogInfo(
+            "DirectX12",
+            "CreateD3D11Device",
+            "D3D11デバイスの生成完了"
+        );
+    }
 
     hr_ = d3d11Device_.As(&d3d11On12Device_);
-    assert(SUCCEEDED(hr_));
+    if (FAILED(hr_))
+    {
+        pLogger_->LogError(
+            "DirectX12",
+            "CreateD3D11Device",
+            "D3D11On12デバイスの生成に失敗"
+        );
+        assert(false && "Failed to create D3D11On12 device");
+    }
+    else
+    {
+        pLogger_->LogInfo(
+            "DirectX12",
+            "CreateD3D11Device",
+            "D3D11On12デバイスの生成完了"
+        );
+    }
 }
 
 void DirectX12::CreateID2D1DeviceContext()
 {
     hr_ = d3d11On12Device_.As(&dxgiDevice_);
-    assert(SUCCEEDED(hr_));
+    if (FAILED(hr_))
+    {
+        pLogger_->LogError(
+            "DirectX12",
+            "CreateID2D1DeviceContext",
+            "DXGIデバイスの生成に失敗"
+        );
+        assert(false && "Failed to create DXGI device");
+    }
 
     hr_ = d2dFactory_->CreateDevice(dxgiDevice_.Get(), &d2dDevice_);
-    assert(SUCCEEDED(hr_));
+    if (FAILED(hr_))
+    {
+        pLogger_->LogError(
+            "DirectX12",
+            "CreateID2D1DeviceContext",
+            "D2Dデバイスの生成に失敗"
+        );
+        assert(false && "Failed to create D2D device");
+    }
 
     hr_ = d2dDevice_->CreateDeviceContext(D2D1_DEVICE_CONTEXT_OPTIONS_NONE, d2dDeviceContext_.ReleaseAndGetAddressOf());
-    assert(SUCCEEDED(hr_));
+    if (FAILED(hr_))
+    {
+        pLogger_->LogError(
+            "DirectX12",
+            "CreateID2D1DeviceContext",
+            "D2Dデバイスコンテキストの生成に失敗"
+        );
+        assert(false && "Failed to create D2D device context");
+    }
+
+    pLogger_->LogInfo(
+        "DirectX12",
+        "CreateID2D1DeviceContext",
+        "D2Dデバイスコンテキストの生成完了"
+    );
 }
 
 void DirectX12::CreateD2DRenderTarget()
@@ -318,11 +570,31 @@ void DirectX12::CreateD2DRenderTarget()
             D3D12_RESOURCE_STATE_PRESENT,
             IID_PPV_ARGS(wrappedBackBuffer.ReleaseAndGetAddressOf())
         );
-        assert(SUCCEEDED(hr_));
+        if (FAILED(hr_))
+        {
+            pLogger_->LogError(
+                "DirectX12",
+                "CreateD2DRenderTarget",
+                "D2Dレンダーターゲットの生成に失敗"
+            );
+            assert(false && "Failed to create D2D render target");
+
+            return;
+        }
 
         Microsoft::WRL::ComPtr<IDXGISurface> dxgiSurface = nullptr;
         hr_ = wrappedBackBuffer.As(&dxgiSurface);
-        assert(SUCCEEDED(hr_));
+        if (FAILED(hr_))
+        {
+            pLogger_->LogError(
+                "DirectX12",
+                "CreateD2DRenderTarget",
+                "DXGIサーフェスの生成に失敗"
+            );
+            assert(false && "Failed to create DXGI surface");
+
+            return;
+        }
 
         Microsoft::WRL::ComPtr<ID2D1Bitmap1> d2dRenderTarget = nullptr;
         hr_ = d2dDeviceContext_->CreateBitmapFromDxgiSurface(
@@ -330,11 +602,27 @@ void DirectX12::CreateD2DRenderTarget()
             &bitmapProperties,
             d2dRenderTarget.ReleaseAndGetAddressOf()
         );
-        assert(SUCCEEDED(hr_));
+        if (FAILED(hr_))
+        {
+            pLogger_->LogError(
+                "DirectX12",
+                "CreateD2DRenderTarget",
+                "D2Dレンダーターゲットの生成に失敗"
+            );
+            assert(false && "Failed to create D2D render target");
+
+            return;
+        }
 
         d3d11WrappedBackBuffers_[i] = wrappedBackBuffer;
         d2dRenderTargets_[i] = d2dRenderTarget;
     }
+
+    pLogger_->LogInfo(
+        "DirectX12",
+        "CreateD2DRenderTarget",
+        "D2Dレンダーターゲットの生成完了"
+    );
 }
 
 void DirectX12::SetResourceBarrier(

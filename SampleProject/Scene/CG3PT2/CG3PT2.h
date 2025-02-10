@@ -4,6 +4,7 @@
 #include <Features/Object3d/Object3d.h>
 #include <Features/GameEye/GameEye.h>
 #include <Features/Text/Text.h>
+#include <Features/Audio/Audio.h>
 
 #include <Common/structs.h>
 
@@ -37,9 +38,11 @@ private:
     std::unique_ptr<Object3d>   pMonsterBall_           = nullptr;
     std::unique_ptr<Object3d>   pGrid_                  = nullptr;
 
-    std::unique_ptr<Text>       pText_ = nullptr;
+    std::unique_ptr<Text>       pText_                  = nullptr;
 
-    std::string                 name_ = "CG3";
+    std::string                 name_                   = "CG3";
+
+    Audio*                      pAudio_                 = nullptr;
 
     D3D12_VIEWPORT              viewport_               = {};
 

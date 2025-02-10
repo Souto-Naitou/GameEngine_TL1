@@ -143,6 +143,7 @@
     <ClCompile Include="DebugTools\Logger\Logger.cpp" />
     <ClCompile Include="Externals\Timer\Timer.cpp" />
     <ClCompile Include="Features\Audio\Audio.cpp" />
+    <ClCompile Include="Features\Audio\AudioManager.cpp" />
     <ClCompile Include="Features\BaseObject\BaseObject.cpp" />
     <ClCompile Include="Features\Collision\Collider\Collider.cpp" />
     <ClCompile Include="Features\Collision\Manager\CollisionManager.cpp" />
@@ -199,6 +200,7 @@
     <ClInclude Include="DebugTools\ReakChecker.h" />
     <ClInclude Include="Externals\Timer\Timer.h" />
     <ClInclude Include="Features\Audio\Audio.h" />
+    <ClInclude Include="Features\Audio\AudioManager.h" />
     <ClInclude Include="Features\BaseObject\BaseObject.h" />
     <ClInclude Include="Features\Collision\Collider\Collider.h" />
     <ClInclude Include="Features\Collision\Manager\CollisionManager.h" />

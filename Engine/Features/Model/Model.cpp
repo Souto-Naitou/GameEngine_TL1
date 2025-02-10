@@ -82,7 +82,10 @@ void Model::LoadModelTexture()
 
 void Model::Upload()
 {
-    th_LoadObjectFile_.join();
+    if (th_LoadObjectFile_.joinable())
+    {
+        th_LoadObjectFile_.join();
+    }
 
     /// 頂点リソースを作成
     CreateVertexResource();

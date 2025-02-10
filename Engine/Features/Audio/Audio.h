@@ -4,6 +4,7 @@
 #include <fstream>
 #include <wrl.h>
 
+#include <list>
 #include <memory>
 
 #include <Common/HRESULT_ASSERT.h>
@@ -41,13 +42,18 @@ public:
     void Initialize();
     void Finalize();
 
-    SoundData LoadWave(const char* _filename);
     void Unload(SoundData* soundData);
+    void Play();
 
-    void PlayWave(IXAudio2* xAudio2, const SoundData& soundData);
+
+public:
+    void SetSoundData(SoundData* _soundData) { soundData_ = _soundData; }
+    void SetXAudio2(IXAudio2* _pXAudio2) { pXAudio2_ = _pXAudio2; }
+
 
 private:
     HRESULT_ASSERT hr_ = {};
-    Microsoft::WRL::ComPtr<IXAudio2> pXAudio2_;
-    IXAudio2MasteringVoice* pMasteringVoice_ = nullptr;
+    SoundData* soundData_ = nullptr;
+    IXAudio2* pXAudio2_ = nullptr;
+    IXAudio2SourceVoice* pCurrentSourceVoice_ = nullptr;
 };
