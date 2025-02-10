@@ -272,7 +272,6 @@ DirectX12::~DirectX12()
         fence->SetEventOnCompletion(fenceSignalValue, fenceEvent_);
         WaitForSingleObject(fenceEvent_, INFINITE);
     }
-    auto ref = device_->Release();
 
     pSRVManager_->Deallocate(gameWndSrvIndex_);
 }

@@ -6,6 +6,7 @@
 #include <string>
 #include <Core/DirectX12/DirectX12.h>
 #include <thread>
+#include <memory>
 
 
 struct Material;
@@ -47,7 +48,7 @@ private: /// 非公開メンバ関数
 private: /// 他クラスのインスタンス
     DirectX12* pDx12_ = nullptr;
     ID3D12Device* device_ = nullptr;
-    std::thread th_LoadObjectFile_ = {};
+    std::unique_ptr<std::thread> th_LoadObjectFile_ = nullptr;
     std::string filePath_;
     std::string directoryPath_;
 };

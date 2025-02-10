@@ -17,7 +17,6 @@ namespace DX12Helper
     /// <param name="_device">生成先</param>
     /// <param name="_adapter">使用するアダプタ</param>
     void CreateDevice(Microsoft::WRL::ComPtr<ID3D12Device>& _device, Microsoft::WRL::ComPtr<IDXGIAdapter4>& _adapter);
-    //void CreateDevice(ID3D12Device** _device, Microsoft::WRL::ComPtr<IDXGIAdapter4>& _adapter);
 
 
     /// <summary>
@@ -110,7 +109,7 @@ namespace DX12Helper
     /// 頂点リソースを生成
     /// </summary>
     /// <param name="_device">デバイス</param>
-    Microsoft::WRL::ComPtr<ID3D12Resource> CreateVertexResource(const Microsoft::WRL::ComPtr<ID3D12Device> _device, unsigned int _countVertex);
+    Microsoft::WRL::ComPtr<ID3D12Resource> CreateVertexResource(const Microsoft::WRL::ComPtr<ID3D12Device>& _device, unsigned int _countVertex);
 
     void ChangeStateResource(
         const Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>& _commandList, 
