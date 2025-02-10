@@ -11,10 +11,11 @@ Object3dSystem::Object3dSystem()
 void Object3dSystem::Initialize()
 {
     CreateRootSignature();
-    CreatePipelineState();
+    CreateMainPipelineState();
+    CreateDepthPipelineState();
 }
 
-void Object3dSystem::PresentDraw()
+void Object3dSystem::DepthDrawSetting()
 {
     ID3D12GraphicsCommandList* commandList = pDx12_->GetCommandList();
 
@@ -22,7 +23,21 @@ void Object3dSystem::PresentDraw()
     commandList->SetGraphicsRootSignature(rootSignature_.Get());
 
     /// グラフィックスパイプラインステートをセットする
-    commandList->SetPipelineState(graphicsPipelineState_.Get());
+    commandList->SetPipelineState(psoEarlyZ_.Get());
+
+    /// プリミティブトポロジーをセットする
+    commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+}
+
+void Object3dSystem::MainDrawSetting()
+{
+    ID3D12GraphicsCommandList* commandList = pDx12_->GetCommandList();
+
+    /// ルートシグネチャをセットする
+    commandList->SetGraphicsRootSignature(rootSignature_.Get());
+
+    /// グラフィックスパイプラインステートをセットする
+    commandList->SetPipelineState(psoMain_.Get());
 
     /// プリミティブトポロジーをセットする
     commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
@@ -123,7 +138,7 @@ void Object3dSystem::CreateRootSignature()
     assert(SUCCEEDED(hr));
 }
 
-void Object3dSystem::CreatePipelineState()
+void Object3dSystem::CreateMainPipelineState()
 {
     ID3D12Device* device = pDx12_->GetDevice();
     IDxcUtils* dxcUtils = pDx12_->GetDxcUtils();
@@ -133,48 +148,47 @@ void Object3dSystem::CreatePipelineState()
     uint32_t clientHeight = pDx12_->GetClientHeight();
 
     /// InputLayout
-    D3D12_INPUT_ELEMENT_DESC inputElementDescs[3] = {};
-    inputElementDescs[0].SemanticName = "POSITION";
-    inputElementDescs[0].SemanticIndex = 0;
-    inputElementDescs[0].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
-    inputElementDescs[0].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
-    inputElementDescs[1].SemanticName = "TEXCOORD";
-    inputElementDescs[1].SemanticIndex = 0;
-    inputElementDescs[1].Format = DXGI_FORMAT_R32G32_FLOAT;
-    inputElementDescs[1].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
-    inputElementDescs[2].SemanticName = "NORMAL";
-    inputElementDescs[2].SemanticIndex = 0;
-    inputElementDescs[2].Format = DXGI_FORMAT_R32G32B32_FLOAT;
-    inputElementDescs[2].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
+    inputElementDescs_[0].SemanticName = "POSITION";
+    inputElementDescs_[0].SemanticIndex = 0;
+    inputElementDescs_[0].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+    inputElementDescs_[0].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
+    inputElementDescs_[1].SemanticName = "TEXCOORD";
+    inputElementDescs_[1].SemanticIndex = 0;
+    inputElementDescs_[1].Format = DXGI_FORMAT_R32G32_FLOAT;
+    inputElementDescs_[1].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
+    inputElementDescs_[2].SemanticName = "NORMAL";
+    inputElementDescs_[2].SemanticIndex = 0;
+    inputElementDescs_[2].Format = DXGI_FORMAT_R32G32B32_FLOAT;
+    inputElementDescs_[2].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
 
 
-    D3D12_INPUT_LAYOUT_DESC inputLayoutDesc{};
-    inputLayoutDesc.pInputElementDescs = inputElementDescs;
-    inputLayoutDesc.NumElements = _countof(inputElementDescs);
+    inputLayoutDesc_.pInputElementDescs = inputElementDescs_;
+    inputLayoutDesc_.NumElements = _countof(inputElementDescs_);
 
     /// BlendStateの設定
     D3D12_BLEND_DESC blendDesc{};
-    // すべての色要素を書き込む
-    blendDesc.RenderTarget[0].RenderTargetWriteMask =
-        D3D12_COLOR_WRITE_ENABLE_ALL;
+    blendDesc.RenderTarget[0].BlendEnable = TRUE;
+    blendDesc.RenderTarget[0].SrcBlend = D3D12_BLEND_SRC_ALPHA;
+    blendDesc.RenderTarget[0].DestBlend = D3D12_BLEND_INV_SRC_ALPHA;
+    blendDesc.RenderTarget[0].BlendOp = D3D12_BLEND_OP_ADD;
+    blendDesc.RenderTarget[0].SrcBlendAlpha = D3D12_BLEND_ONE;
+    blendDesc.RenderTarget[0].DestBlendAlpha = D3D12_BLEND_ZERO;
+    blendDesc.RenderTarget[0].BlendOpAlpha = D3D12_BLEND_OP_ADD;
+    blendDesc.RenderTarget[0].RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
 
-    // RasterizerStateの設定
-    D3D12_RASTERIZER_DESC rasterizerDesc{};
-    // 裏面（時計回り）を表示しない
-    rasterizerDesc.CullMode = D3D12_CULL_MODE_NONE;
-    // 三角形の中を塗りつぶす
-    rasterizerDesc.FillMode = D3D12_FILL_MODE_SOLID;
-    rasterizerDesc.MultisampleEnable = TRUE;  // アンチエイリアス有効化
-    rasterizerDesc.AntialiasedLineEnable = TRUE;  // ラインのアンチエイリアス有効化
+
+    /// RasterizerStateの設定
+    rasterizerDesc_.CullMode = D3D12_CULL_MODE_NONE;
+    rasterizerDesc_.FillMode = D3D12_FILL_MODE_SOLID;
+    rasterizerDesc_.MultisampleEnable = TRUE;  // アンチエイリアス有効化
+    rasterizerDesc_.AntialiasedLineEnable = TRUE;  // ラインのアンチエイリアス有効化
 
     /// ShaderをCompileする
-    Microsoft::WRL::ComPtr<IDxcBlob> vertexShaderBlob = DX12Helper::CompileShader(kVertexShaderPath,
-        L"vs_6_0", dxcUtils, dxcCompiler, includeHandler);
-    assert(vertexShaderBlob != nullptr);
+    vertexShaderBlob_ = DX12Helper::CompileShader(kVertexShaderPath, L"vs_6_0", dxcUtils, dxcCompiler, includeHandler);
+    assert(vertexShaderBlob_ != nullptr);
 
-    Microsoft::WRL::ComPtr<IDxcBlob> pixelShaderBlob = DX12Helper::CompileShader(kPixelShaderPath,
-        L"ps_6_0", dxcUtils, dxcCompiler, includeHandler);
-    assert(pixelShaderBlob != nullptr);
+    pixelShaderBlob_ = DX12Helper::CompileShader(kPixelShaderPath, L"ps_6_0", dxcUtils, dxcCompiler, includeHandler);
+    assert(pixelShaderBlob_ != nullptr);
 
     // DespStencilResource
     Microsoft::WRL::ComPtr<ID3D12Resource> depthStencilResource = DX12Helper::CreateDepthStencilTextureResource(device, clientWidth, clientHeight);
@@ -191,20 +205,18 @@ void Object3dSystem::CreatePipelineState()
     // Depthの機能を有効にする
     depthStencilDesc.DepthEnable = true;
     // 書き込みする
-    depthStencilDesc.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
+    depthStencilDesc.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ZERO;
     // 比較関数はLessEqual。つまり、近ければ描画される
     depthStencilDesc.DepthFunc = D3D12_COMPARISON_FUNC_LESS_EQUAL;
 
     /// PSOを生成する
     D3D12_GRAPHICS_PIPELINE_STATE_DESC graphicsPipelineStateDesc{};
     graphicsPipelineStateDesc.pRootSignature = rootSignature_.Get();    // RootSignature
-    graphicsPipelineStateDesc.InputLayout = inputLayoutDesc;    // InputLayout
-    graphicsPipelineStateDesc.VS = { vertexShaderBlob.Get()->GetBufferPointer(),
-    vertexShaderBlob.Get()->GetBufferSize() };                        // VertexShader
-    graphicsPipelineStateDesc.PS = { pixelShaderBlob.Get()->GetBufferPointer(),
-    pixelShaderBlob.Get()->GetBufferSize() };                            // PixelShader
+    graphicsPipelineStateDesc.InputLayout = inputLayoutDesc_;    // InputLayout
+    graphicsPipelineStateDesc.VS = { vertexShaderBlob_.Get()->GetBufferPointer(), vertexShaderBlob_.Get()->GetBufferSize() };
+    graphicsPipelineStateDesc.PS = { pixelShaderBlob_.Get()->GetBufferPointer(), pixelShaderBlob_.Get()->GetBufferSize() };
     graphicsPipelineStateDesc.BlendState = blendDesc;            // BlendState
-    graphicsPipelineStateDesc.RasterizerState = rasterizerDesc;    // RasterizerState
+    graphicsPipelineStateDesc.RasterizerState = rasterizerDesc_;    // RasterizerState
     // 書き込むRTVの情報
     graphicsPipelineStateDesc.NumRenderTargets = 1;
     graphicsPipelineStateDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
@@ -219,7 +231,71 @@ void Object3dSystem::CreatePipelineState()
     graphicsPipelineStateDesc.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
     // 実際に生成
     HRESULT hr = device->CreateGraphicsPipelineState(&graphicsPipelineStateDesc,
-        IID_PPV_ARGS(&graphicsPipelineState_));
+        IID_PPV_ARGS(&psoMain_));
     assert(SUCCEEDED(hr));
+    return;
+}
+
+void Object3dSystem::CreateDepthPipelineState()
+{
+    ID3D12Device* device = pDx12_->GetDevice();
+    IDxcUtils* dxcUtils = pDx12_->GetDxcUtils();
+    IDxcCompiler3* dxcCompiler = pDx12_->GetDxcCompiler();
+    IDxcIncludeHandler* includeHandler = pDx12_->GetIncludeHandler();
+    uint32_t clientWidth = pDx12_->GetClientWidth();
+    uint32_t clientHeight = pDx12_->GetClientHeight();
+
+
+    /// BlendDesc
+    D3D12_BLEND_DESC blendDesc = {};
+    blendDesc.RenderTarget[0].RenderTargetWriteMask = 0;
+
+
+    // DespStencilResource
+    Microsoft::WRL::ComPtr<ID3D12Resource> depthStencilResource = DX12Helper::CreateDepthStencilTextureResource(device, clientWidth, clientHeight);
+    // DSV用のヒープでディスクリプタの数は1。DSVはShader内で触るものではないため、ShaderVisibleはfalse
+    Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> dsvDescriptorHeap = DX12Helper::CreateDescriptorHeap(device, D3D12_DESCRIPTOR_HEAP_TYPE_DSV, 1, false);
+    // DSVの設定
+    D3D12_DEPTH_STENCIL_VIEW_DESC dsvDesc = {};
+    dsvDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT; // Format。基本的にはResourceに合わせる
+    dsvDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D; // 2dTexture
+    // DSVHeapの先頭にDSVを作る
+    device->CreateDepthStencilView(depthStencilResource.Get(), &dsvDesc, dsvDescriptorHeap.Get()->GetCPUDescriptorHandleForHeapStart());
+
+    /// DepthStencilStateの設定 (Early-Zのために変更)
+    D3D12_DEPTH_STENCIL_DESC depthStencilDesc = {};
+    depthStencilDesc.DepthEnable = true;
+    depthStencilDesc.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
+    depthStencilDesc.DepthFunc = D3D12_COMPARISON_FUNC_LESS_EQUAL;
+
+    /// PSOを生成する
+    D3D12_GRAPHICS_PIPELINE_STATE_DESC graphicsPipelineStateDesc{};
+    graphicsPipelineStateDesc.pRootSignature = rootSignature_.Get();
+    graphicsPipelineStateDesc.InputLayout = inputLayoutDesc_;
+    graphicsPipelineStateDesc.VS = { vertexShaderBlob_.Get()->GetBufferPointer(), vertexShaderBlob_.Get()->GetBufferSize() };
+    graphicsPipelineStateDesc.PS = { nullptr, 0 };
+    graphicsPipelineStateDesc.BlendState = blendDesc;
+    graphicsPipelineStateDesc.RasterizerState = rasterizerDesc_;
+
+    // 書き込むRTVの情報
+    graphicsPipelineStateDesc.NumRenderTargets = 0;
+
+    // 利用するトポロジ（形状）のタイプ。三角形
+    graphicsPipelineStateDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+
+    // どのように画面に色を打ち込むかの設定（気にしなくて良い）
+    graphicsPipelineStateDesc.SampleDesc.Count = 1;
+    graphicsPipelineStateDesc.SampleMask = D3D12_DEFAULT_SAMPLE_MASK;
+
+    // DepthStencilの設定
+    graphicsPipelineStateDesc.DepthStencilState = depthStencilDesc;
+    graphicsPipelineStateDesc.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
+    
+
+    /// 生成
+    HRESULT hr = device->CreateGraphicsPipelineState(&graphicsPipelineStateDesc, IID_PPV_ARGS(&psoEarlyZ_));
+    assert(SUCCEEDED(hr));
+
+
     return;
 }

@@ -57,7 +57,9 @@ void SampleProgram::Draw()
     pSceneManager_->SceneDraw2dBackGround();
 
     /// 3D描画
-    pObject3dSystem_->PresentDraw();
+    pObject3dSystem_->DepthDrawSetting();
+    pSceneManager_->SceneDraw3d();
+    pObject3dSystem_->MainDrawSetting();
     pSceneManager_->SceneDraw3d();
 
     /// 中景スプライトの描画
@@ -65,7 +67,7 @@ void SampleProgram::Draw()
     pSceneManager_->SceneDraw2dMidground();
 
     /// 中景3dオブジェクトの描画
-    pObject3dSystem_->PresentDraw();
+    pObject3dSystem_->MainDrawSetting();
     pSceneManager_->SceneDraw3dMidground();
 
     /// ライン描画

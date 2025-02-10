@@ -45,7 +45,8 @@ public:
     /// </summary>
     void Initialize();
 
-    void PresentDraw();
+    void DepthDrawSetting();
+    void MainDrawSetting();
 
 public: /// Getter
     DirectX12*  GetDx12()                       { return pDx12_; }
@@ -58,13 +59,21 @@ private:
     Object3dSystem();
 
     void CreateRootSignature();
-    void CreatePipelineState();
+    void CreateMainPipelineState();
+    void CreateDepthPipelineState();
 
 private: /// メンバ変数
     static constexpr wchar_t kVertexShaderPath[] = L"EngineResources/Shaders/Object3d.VS.hlsl";
     static constexpr wchar_t kPixelShaderPath[] = L"EngineResources/Shaders/Object3d.PS.hlsl";
     Microsoft::WRL::ComPtr<ID3D12RootSignature> rootSignature_ = nullptr;
-    Microsoft::WRL::ComPtr<ID3D12PipelineState> graphicsPipelineState_ = nullptr;
+    Microsoft::WRL::ComPtr<ID3D12PipelineState> psoMain_ = nullptr;
+    Microsoft::WRL::ComPtr<ID3D12PipelineState> psoEarlyZ_ = nullptr;
+    Microsoft::WRL::ComPtr<IDxcBlob> vertexShaderBlob_ = nullptr;
+    Microsoft::WRL::ComPtr<IDxcBlob> pixelShaderBlob_ = nullptr;
+
+    D3D12_INPUT_ELEMENT_DESC inputElementDescs_[3] = {};
+    D3D12_INPUT_LAYOUT_DESC inputLayoutDesc_ = {};
+    D3D12_RASTERIZER_DESC rasterizerDesc_ = {};
 
 
 private:
