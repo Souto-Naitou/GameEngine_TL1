@@ -104,7 +104,6 @@ private:
     std::vector<D3D12_GPU_DESCRIPTOR_HANDLE>                srvHandlesGPUList_              = {};           // SRVハンドルリスト(GPU)
     std::vector<D3D12_CPU_DESCRIPTOR_HANDLE>                srvHandlesCPUList_              = {};           // SRVハンドルリスト(CPU)
     std::vector<Microsoft::WRL::ComPtr<ID3D12Resource>>     textureResources_               = {};           // テクスチャリソース
-    Microsoft::WRL::ComPtr<ID3D12Device>                    device_                         = nullptr;      // デバイス
     Microsoft::WRL::ComPtr<ID3D12Debug1>                    debugController_                = nullptr;      // デバッグコントローラ
     Microsoft::WRL::ComPtr<IDXGIFactory7>                   dxgiFactory_                    = nullptr;      // DXGIファクトリ
     Microsoft::WRL::ComPtr<IDXGIAdapter4>                   useAdapter_                     = nullptr;      // 使うアダプタ
@@ -132,6 +131,7 @@ private:
     Microsoft::WRL::ComPtr<IDXGIDevice>                     dxgiDevice_                     = nullptr;      // DXGIデバイス
     Microsoft::WRL::ComPtr<ID2D1Device2>                    d2dDevice_                      = nullptr;      // d2d1デバイス
     Microsoft::WRL::ComPtr<ID2D1DeviceContext2>             d2dDeviceContext_               = nullptr;      // d2d1デバイスコンテキスト
+    Microsoft::WRL::ComPtr<ID3D12Device>                    device_                         = nullptr;      // デバイス
 
     std::array<Microsoft::WRL::ComPtr<ID3D11Resource>, 2>   d3d11WrappedBackBuffers_        = {};           // D3D11のラップされたバックバッファ
     std::array<Microsoft::WRL::ComPtr<ID2D1Bitmap1>, 2>     d2dRenderTargets_               = {};           // D2D1のレンダーターゲット

@@ -406,7 +406,7 @@ void DX12Helper::CreateNewTexture(const Microsoft::WRL::ComPtr<ID3D12Device>& _d
     return;
 }
 
-Microsoft::WRL::ComPtr<ID3D12Resource> DX12Helper::CreateVertexResource(const Microsoft::WRL::ComPtr<ID3D12Device> _device, unsigned int _countVertex)
+Microsoft::WRL::ComPtr<ID3D12Resource> DX12Helper::CreateVertexResource(const Microsoft::WRL::ComPtr<ID3D12Device>& _device, unsigned int _countVertex)
 {
     // 頂点リソースを作る
     Microsoft::WRL::ComPtr<ID3D12Resource> vertexResource = CreateBufferResource(_device, sizeof(VertexData) * _countVertex);

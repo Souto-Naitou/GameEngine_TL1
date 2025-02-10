@@ -1,34 +1,18 @@
 {
-    "alphaDeltaValue" : 0.000000,
-    "beginColor" : {
-        "a" : 1.000000,
-        "b" : 0.749020,
-        "g" : 0.976471,
-        "r" : 0.976471
-    },
-    "beginPosition" : {
-        "x" : 0.000000,
-        "y" : 0.000000,
-        "z" : 0.000000
-    },
-    "emitInterval" : 0.050000,
-    "emitNum" : 7,
-    "emitPositionFixed" : {
-        "x" : 1.000000,
-        "y" : 0.000000,
-        "z" : 0.000000
-    },
     "emitterLifeTime" : 2.000000,
     "emitterName" : "Spark",
-    "enableRandomEmit" : false,
-    "enableRandomVelocity" : true,
-    "endColor" : {
-        "a" : 0.000000,
-        "b" : 0.149020,
-        "g" : 0.474510,
-        "r" : 0.976471
+    "emitInterval" : 0.050000,
+    "velocityRandomRangeBegin" : {
+        "x" : -0.500000,
+        "y" : -0.500000,
+        "z" : -0.500000
     },
-    "endPosition" : {
+    "startScale" : {
+        "x" : 0.050000,
+        "y" : 0.050000,
+        "z" : 0.050000
+    },
+    "resistance" : {
         "x" : 0.000000,
         "y" : 0.000000,
         "z" : 0.000000
@@ -43,31 +27,47 @@
         "y" : 0.000000,
         "z" : 0.000000
     },
+    "scaleDelayTime" : 0.000000,
     "particleLifeTime" : 2.500000,
-    "resistance" : {
+    "emitNum" : 7,
+    "enableRandomEmit" : false,
+    "beginPosition" : {
         "x" : 0.000000,
         "y" : 0.000000,
         "z" : 0.000000
     },
-    "scaleDelayTime" : 0.000000,
-    "startScale" : {
-        "x" : 0.050000,
-        "y" : 0.050000,
-        "z" : 0.050000
+    "endPosition" : {
+        "x" : 0.000000,
+        "y" : 0.000000,
+        "z" : 0.000000
+    },
+    "emitPositionFixed" : {
+        "x" : 1.000000,
+        "y" : 0.000000,
+        "z" : 0.000000
+    },
+    "enableRandomVelocity" : true,
+    "velocityRandomRangeEnd" : {
+        "x" : 0.500000,
+        "y" : 0.500000,
+        "z" : 0.500000
     },
     "velocityFixed" : {
         "x" : 0.000000,
         "y" : 1.000000,
         "z" : 0.000000
     },
-    "velocityRandomRangeBegin" : {
-        "x" : -0.500000,
-        "y" : -0.500000,
-        "z" : -0.500000
+    "beginColor" : {
+        "r" : 0.976471,
+        "b" : 0.749020,
+        "g" : 0.976471,
+        "a" : 1.000000
     },
-    "velocityRandomRangeEnd" : {
-        "x" : 0.500000,
-        "y" : 0.500000,
-        "z" : 0.500000
-    }
+    "endColor" : {
+        "r" : 0.976471,
+        "b" : 0.149020,
+        "g" : 0.474510,
+        "a" : 0.000000
+    },
+    "alphaDeltaValue" : 0.000000
 }
