@@ -47,7 +47,7 @@ private: /// 非公開メンバ関数
 private: /// 他クラスのインスタンス
     DirectX12* pDx12_ = nullptr;
     ID3D12Device* device_ = nullptr;
-    std::thread th_LoadObjectFile_;
+    std::thread th_LoadObjectFile_ = {};
     std::string filePath_;
     std::string directoryPath_;
 };

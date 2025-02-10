@@ -190,6 +190,12 @@
     <Filter Include="Feature\Viewport">
       <UniqueIdentifier>{df1d1947-10ff-440f-aa75-24724059b1c8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Feature\Audio\Manager">
+      <UniqueIdentifier>{030b04de-ede8-4d48-9db9-94abc9e9e97b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Feature\Audio\Command">
+      <UniqueIdentifier>{38ba84f9-eca5-442a-a4ee-52776a6ec517}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DebugTools\DebugManager\DebugManager.cpp">
@@ -263,9 +269,6 @@
     </ClCompile>
     <ClCompile Include="Common\HRESULT_ASSERT.cpp">
       <Filter>Common\HRESULT_ASSERT</Filter>
-    </ClCompile>
-    <ClCompile Include="Features\Audio\Audio.cpp">
-      <Filter>Feature\Audio</Filter>
     </ClCompile>
     <ClCompile Include="Framework\NimaFramework.cpp">
       <Filter>Framework</Filter>
@@ -347,6 +350,12 @@
     </ClCompile>
     <ClCompile Include="Features\Viewport\Viewport.cpp">
       <Filter>Feature\Viewport</Filter>
+    </ClCompile>
+    <ClCompile Include="Features\Audio\AudioManager.cpp">
+      <Filter>Feature\Audio\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="Features\Audio\Audio.cpp">
+      <Filter>Feature\Audio\Command</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -436,9 +445,6 @@
     </ClInclude>
     <ClInclude Include="Common\HRESULT_ASSERT.h">
       <Filter>Common\HRESULT_ASSERT</Filter>
-    </ClInclude>
-    <ClInclude Include="Features\Audio\Audio.h">
-      <Filter>Feature\Audio</Filter>
     </ClInclude>
     <ClInclude Include="Framework\NimaFramework.h">
       <Filter>Framework</Filter>
@@ -541,6 +547,12 @@
     </ClInclude>
     <ClInclude Include="Features\Viewport\Viewport.h">
       <Filter>Feature\Viewport</Filter>
+    </ClInclude>
+    <ClInclude Include="Features\Audio\AudioManager.h">
+      <Filter>Feature\Audio\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Features\Audio\Audio.h">
+      <Filter>Feature\Audio\Command</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

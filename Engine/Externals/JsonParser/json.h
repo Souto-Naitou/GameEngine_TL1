@@ -3,7 +3,7 @@
 #include <string>
 #include <variant>
 #include <memory>
-#include <map>
+#include <unordered_map>
 #include <vector>
 #include <filesystem>
 
@@ -15,7 +15,7 @@ namespace Json
 
     // 別名定義
     using Array = std::vector<std::shared_ptr<Json::Value>>;
-    using Object = std::map<std::string, std::shared_ptr<Json::Value>>;
+    using Object = std::unordered_map<std::string, std::shared_ptr<Json::Value>>;
 
 
     // JSONデータ型の定義
@@ -54,8 +54,8 @@ namespace Json
         Json::Value::Type type = Json::Value::Type::Null;
         Json::Type value;
 
-        Value operator[](const char* _key) const;
-        Value operator[](const std::string& _key) const;
+        Value& operator[](const char* _key);
+        Value& operator[](const std::string& _key);
 
         operator int() const;
         operator float() const;
@@ -64,9 +64,13 @@ namespace Json
         operator Json::Array() const;
         operator Json::Object() const;
 
+        Value& operator=(const Json::Object& _obj);
+        Value& operator=(const Json::Array& _array);
+        Value& operator=(const std::shared_ptr<Json::Value>& _value);
+
 
     private:
-        Value recursive_search(const std::string& _key, const Json::Object& _obj) const;
+        Value& recursive_search(const std::string& _key, const Json::Object& _obj);
     };
 
 
@@ -185,4 +189,11 @@ namespace Json
 
         uint32_t indentSize_ = 4u;
     };
+
+    std::shared_ptr<Json::Value> NewValue(int _data);
+    std::shared_ptr<Json::Value> NewValue(float _data);
+    std::shared_ptr<Json::Value> NewValue(const std::string& _data);
+    std::shared_ptr<Json::Value> NewValue(bool _data);
+    std::shared_ptr<Json::Value> NewValue(const Json::Array& _data);
+    std::shared_ptr<Json::Value> NewValue(const Json::Object& _data);
 };

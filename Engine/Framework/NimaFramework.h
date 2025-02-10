@@ -1,6 +1,7 @@
 #pragma once
 
-#include <Features/Audio/Audio.h>
+#include <DebugTools/Logger/Logger.h>
+#include <Features/Audio/AudioManager.h>
 #include <Features/Input/Input.h>
 #include <Core/DirectX12/TextureManager.h>
 #include <DebugTools/DebugManager/DebugManager.h>
@@ -44,11 +45,11 @@ public:
 protected: /// システムクラスのインスタンス
     std::unique_ptr<ISceneFactory> pSceneFactory_ = nullptr;
     std::unique_ptr<ImGuiManager> pImGuiManager_;
-    Audio* pAudio_;
     std::unique_ptr<Viewport> pViewport_;
 
 
 protected: /// 他クラスのインスタンス
+    Logger* pLogger_;
     DirectX12* pDirectX_;
     DebugManager* pDebugManager_;
     WinSystem* pWinSystem_;
@@ -64,6 +65,7 @@ protected: /// 他クラスのインスタンス
     TextSystem* pTextSystem_;
     Input* pInput_;
     RandomGenerator* pRandomGenerator_;
+    AudioManager* pAudioManager_;
 
 protected:
     bool isExitProgram_ = false;

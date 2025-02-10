@@ -22,6 +22,7 @@
 #include <vector>
 #include <array>
 #include <DebugTools/ReakChecker.h>
+#include <DebugTools/Logger/Logger.h>
 
 class SRVManager;
 
@@ -243,4 +244,5 @@ private:
 private: /// 他クラスのインスタンス(シングルトンなど)
     FrameRate* pFramerate_ = nullptr;
     SRVManager* pSRVManager_ = nullptr;
+    Logger* pLogger_ = nullptr;
 };

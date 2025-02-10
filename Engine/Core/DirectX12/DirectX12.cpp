@@ -1,6 +1,5 @@
 #include "DirectX12.h"
 
-#include <DebugTools/Logger/Logger.h>                   // ログ出力ラッパークラス
 #include <Utility/ConvertString/ConvertString.h>        // wideとの互換
 #include <Core/Win32/WinSystem.h>                       // Window関連
 #include <Core/DirectX12/Helper/DX12Helper.h>           // ヘルパー
@@ -45,6 +44,8 @@ void DirectX12::Initialize()
     pFramerate_ = FrameRate::GetInstance();
     pFramerate_->Initialize();
 
+    pLogger_ = Logger::GetInstance();
+
     // ウィンドウハンドルを取得
     hwnd_ = WinSystem::GetInstance()->GetHwnd();
 
@@ -53,7 +54,17 @@ void DirectX12::Initialize()
     clientHeight_ = WinSystem::kClientHeight;
 
     hr_ = CreateDXGIFactory(IID_PPV_ARGS(&dxgiFactory_));
-    assert(SUCCEEDED(hr_) && "DXGIファクトリの生成に失敗");
+
+    if (FAILED(hr_))
+    {
+        pLogger_->LogError(
+            "DirectX12",
+            "Initialize",
+            std::format("DXGIファクトリの生成に失敗")
+        );
+
+        return;
+    }
 
 
     /// アダプタ
@@ -61,7 +72,7 @@ void DirectX12::Initialize()
 
 
     /// デバイス生成
-    DX12Helper::CreateDevice(&device_, useAdapter_);
+    DX12Helper::CreateDevice(device_, useAdapter_);
 
 
     /// エラー時停止処理
@@ -69,7 +80,11 @@ void DirectX12::Initialize()
 
 
     /// 出力ウィンドウに初期化完了を出力
-    Log(std::format("DirectX12 Initialized.\n"));
+    pLogger_->LogInfo(
+        "DirectX12",
+        "Initialize",
+        std::format("DirectX12 Initialized.")
+    );
 
 
     /// コマンド系を生成
@@ -137,7 +152,15 @@ void DirectX12::CommandExecute()
 {
     /// コマンドリストの内容を確定させる。すべてのコマンドを積んでからCloseする
     hr_ = commandList_->Close();
-    assert(SUCCEEDED(hr_) && "コマンドリストのクローズに失敗");
+    if (FAILED(hr_))
+    {
+        pLogger_->LogError(
+            "DirectX12",
+            "CommandExecute",
+            "コマンドリストのクローズに失敗"
+        );
+        assert(false && "Failed to close command list");
+    }
 
 
     /// GPUにコマンドリストの実行を行わせる
@@ -249,7 +272,7 @@ DirectX12::~DirectX12()
         fence->SetEventOnCompletion(fenceSignalValue, fenceEvent_);
         WaitForSingleObject(fenceEvent_, INFINITE);
     }
-    //auto ref = device_->Release();
+    auto ref = device_->Release();
 
     pSRVManager_->Deallocate(gameWndSrvIndex_);
 }

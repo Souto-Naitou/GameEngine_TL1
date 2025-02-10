@@ -22,58 +22,31 @@ void DX12Helper::CreateDevice(Microsoft::WRL::ComPtr<ID3D12Device>& _device, Mic
     for (size_t i = 0; i < _countof(featureLevels); ++i)
     {
         // 採用したアダプターでデバイスを生成
-        HRESULT hr = D3D12CreateDevice(_adapter.Get(), featureLevels[i], IID_PPV_ARGS(&_device));
+        HRESULT hr = D3D12CreateDevice(_adapter.Get(), featureLevels[i], IID_PPV_ARGS(_device.GetAddressOf()));
         // 指定した機能レベルでデバイスが生成できたかを確認
         if (SUCCEEDED(hr))
         {
             // 生成できたのでログ出力を行ってループを抜ける
-            Log(std::format("FeatureLevel : {}\n", featureLevelStrings[i]));
+            Logger::GetInstance()->LogInfo("DX12Helper", "CreateDevice", std::format("機能レベル : {}", featureLevelStrings[i]));
             break;
         }
     }
     // デバイスの生成がうまくいかなかったので起動できない
-    assert(_device && "デバイスの生成に失敗");
-    Log("Complete create D3D12Device!!!\n"); // 初期化完了のログを出力
-}
-
-void DX12Helper::CreateDevice(ID3D12Device** _device, Microsoft::WRL::ComPtr<IDXGIAdapter4>& _adapter)
-{
-    /// D3D12Deviceの生成
-
-    // 機能レベルとログ出力用の文字列
-    D3D_FEATURE_LEVEL featureLevels[] =
+    if (!_device)
     {
-        D3D_FEATURE_LEVEL_12_2, D3D_FEATURE_LEVEL_12_1, D3D_FEATURE_LEVEL_12_0
-    };
-    const char* featureLevelStrings[] = { "12.2", "12.1", "12.0" };
-    // 高い順に生成できるか試していく
-    for (size_t i = 0; i < _countof(featureLevels); ++i)
-    {
-        // 採用したアダプターでデバイスを生成
-        HRESULT hr = D3D12CreateDevice(_adapter.Get(), featureLevels[i], IID_PPV_ARGS(_device));
-        // 指定した機能レベルでデバイスが生成できたかを確認
-        if (SUCCEEDED(hr))
-        {
-            // 生成できたのでログ出力を行ってループを抜ける
-            Log(std::format("FeatureLevel : {}\n", featureLevelStrings[i]));
-            break;
-        }
+        Logger::GetInstance()->LogError("DX12Helper", "CreateDevice", "デバイスの生成に失敗");
+        assert(_device && "Failed to create device");
     }
-    // デバイスの生成がうまくいかなかったので起動できない
-    assert(_device && "デバイスの生成に失敗");
-    Log("Complete create D3D12Device!!!\n"); // 初期化完了のログを出力
+
+    Logger::GetInstance()->LogInfo("DX12Helper", "CreateDevice", "初期化が正常に終了"); // 初期化完了のログを出力
 }
 
 
 void DX12Helper::PauseError(Microsoft::WRL::ComPtr<ID3D12Device>& _device, Microsoft::WRL::ComPtr<ID3D12InfoQueue>& _infoQ)
 {
-    PauseError(_device.Get(), _infoQ);
-}
-
-void DX12Helper::PauseError(ID3D12Device* _device, Microsoft::WRL::ComPtr<ID3D12InfoQueue>& _infoQ)
-{
 #ifdef _DEBUG
-    if (SUCCEEDED(_device->QueryInterface(IID_PPV_ARGS(&_infoQ))))
+
+    if (SUCCEEDED(_device->QueryInterface(IID_PPV_ARGS(_infoQ.GetAddressOf()))))
     {
         // やばいエラー時に止まる
         _infoQ->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_CORRUPTION, true);
@@ -81,8 +54,6 @@ void DX12Helper::PauseError(ID3D12Device* _device, Microsoft::WRL::ComPtr<ID3D12
         _infoQ->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_ERROR, true);
         //警告時に止まる
         _infoQ->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_WARNING, true);
-        // 開放
-        _infoQ->Release();
 
         // 抑制するメッセージのID
         D3D12_MESSAGE_ID denyIds[] = {
@@ -101,10 +72,9 @@ void DX12Helper::PauseError(ID3D12Device* _device, Microsoft::WRL::ComPtr<ID3D12
         // 指定したメッセージの表示を制限する
         _infoQ->PushStorageFilter(&filter);
     }
+
 #endif // _DEBUG
-
 }
-
 
 Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> DX12Helper::CreateDescriptorHeap(const Microsoft::WRL::ComPtr<ID3D12Device>& _device, D3D12_DESCRIPTOR_HEAP_TYPE _heapType, UINT _numDescriptors, bool _shaderVisible)
 {
@@ -151,7 +121,16 @@ Microsoft::WRL::ComPtr<ID3D12Resource> DX12Helper::CreateDepthStencilTextureReso
         &depthClearValue,
         IID_PPV_ARGS(&resource)
     );
-    assert(SUCCEEDED(hr));
+
+    if (FAILED(hr))
+    {
+        Logger::GetInstance()->LogError(
+            "DX12Helper",
+            "CreateDepthStencilTextureResource",
+            "深度ステンシルテクスチャリソースの生成に失敗"
+        );
+        assert(false && "Failed create depth stencil texture resource");
+    }
 
 
     return resource;
@@ -168,12 +147,40 @@ Microsoft::WRL::ComPtr<IDxcBlob> DX12Helper::CompileShader(
     /// 1. hlslファイルを読み込む
 
     // これからシェーダーをコンパイルする旨をログに出す
-    Log(ConvertString(std::format(L"Begin CompileShader, path:{}, profile:{}\n", filePath, profile)));
+    Logger::GetInstance()->LogInfo(
+        "DX12Helper",
+        "CompileShader",
+        ConvertString(
+            std::format(
+                L"シェーダーのコンパイルを開始 パス:{}, プロファイル:{}",
+                filePath, 
+                profile
+            )
+        )
+    );
+
     // hlslファイルを読む
     Microsoft::WRL::ComPtr<IDxcBlobEncoding> shaderSource = nullptr;
     HRESULT hr = dxcUtils->LoadFile(filePath.c_str(), nullptr, &shaderSource);
+
     // 読めなかったら止める
-    assert(SUCCEEDED(hr));
+    if (FAILED(hr))
+    {
+        Logger::GetInstance()->LogError(
+            "DX12Helper",
+            "CompileShader",
+            ConvertString(
+                std::format(
+                    L"ファイルの読み込みに失敗 パス:{}, プロファイル:{}",
+                    filePath,
+                    profile
+                )
+            )
+        );
+
+        assert(false && "Failed loadfile.");
+    }
+
     // 読み込んだファイルの内容を設定する
     DxcBuffer shaderSourceBuffer;
     shaderSourceBuffer.Ptr = shaderSource->GetBufferPointer();
@@ -189,6 +196,7 @@ Microsoft::WRL::ComPtr<IDxcBlob> DX12Helper::CompileShader(
         L"-Od",						// 最適化を外しておく
         L"-Zpr",					// メモリレイアウトは行優先
     };
+
     // 実際にShaderをコンパイルする
     Microsoft::WRL::ComPtr<IDxcResult> shaderResult = nullptr;
     hr = dxcCompiler->Compile(
@@ -198,16 +206,35 @@ Microsoft::WRL::ComPtr<IDxcBlob> DX12Helper::CompileShader(
         includeHandler.Get(),				// includeが含まれた諸々
         IID_PPV_ARGS(&shaderResult)	// コンパイル結果
     );
+
     // コンパイルエラーではなくdxcが起動できないなど致命的な状況
-    assert(SUCCEEDED(hr));
+    if (FAILED(hr))
+    {
+        Logger::GetInstance()->LogError(
+            "DX12Helper",
+            "CompileShader",
+            ConvertString(
+                std::format(
+                    L"Failed compile shader, path:{}, profile:{}",
+                    filePath,
+                    profile
+                )
+            )
+        );
+        assert(false && "Failed compile shader");
+    }
 
     /// 3. 警告・エラーが出ていないか確認する
     Microsoft::WRL::ComPtr<IDxcBlobUtf8> shaderError = nullptr;
     shaderResult->GetOutput(DXC_OUT_ERRORS, IID_PPV_ARGS(&shaderError), nullptr);
     if (shaderError != nullptr && shaderError->GetStringLength() != 0)
     {
-        Log(shaderError->GetStringPointer());
-        // 警告・エラーダメゼッタイ
+        Logger::GetInstance()->LogError(
+            "DX12Helper",
+            "CompileShader",
+            shaderError->GetStringPointer()
+        );
+
         assert(false);
     }
 
@@ -218,7 +245,18 @@ Microsoft::WRL::ComPtr<IDxcBlob> DX12Helper::CompileShader(
     hr = shaderResult->GetOutput(DXC_OUT_OBJECT, IID_PPV_ARGS(&shaderBlob), nullptr);
     assert(SUCCEEDED(hr));
     // 成功したログを出す
-    Log(ConvertString(std::format(L"Compile Succeeded, path:{}, profile:{}\n", filePath, profile)));
+    Logger::GetInstance()->LogInfo(
+        "DX12Helper",
+        "CompileShader",
+        ConvertString(
+            std::format(
+                L"Compile succeeded, path:{}, profile:{}",
+                filePath,
+                profile
+            )
+        )
+    );
+
     // 実行用のバイナリを返却
     return shaderBlob;
 }
@@ -239,7 +277,13 @@ Microsoft::WRL::ComPtr<ID3D12Resource> DX12Helper::CreateBufferResource(const Mi
     HRESULT hr = _device->CreateCommittedResource(&uploadHeapProperties, D3D12_HEAP_FLAG_NONE,
         &vertexResourceDesc, D3D12_RESOURCE_STATE_COMMON, nullptr,
         IID_PPV_ARGS(&result));
-    assert(SUCCEEDED(hr));
+
+    if (FAILED(hr))
+    {
+        Logger::GetInstance()->LogError("DX12Helper", "CreateBufferResource", "CreateCommittedResource failed");
+        assert(false && "Create committed resource failed");
+    }
+
     return result;
 }
 
@@ -248,11 +292,19 @@ DirectX::ScratchImage DX12Helper::LoadTexture(const std::string _filePath)
     DirectX::ScratchImage image{};
     std::wstring filePathW = ConvertString(_filePath);
     HRESULT hr = DirectX::LoadFromWICFile(filePathW.c_str(), DirectX::WIC_FLAGS_FORCE_SRGB, nullptr, image);
-    assert(SUCCEEDED(hr));
+    if (FAILED(hr))
+    {
+        Logger::GetInstance()->LogError("DX12Helper", "LoadTexture", "Failed LoadFromWICFile");
+        assert(false && "Failed LoadFromWICFile");
+    }
 
     DirectX::ScratchImage mipImages{};
     hr = DirectX::GenerateMipMaps(image.GetImages(), image.GetImageCount(), image.GetMetadata(), DirectX::TEX_FILTER_SRGB, 0, mipImages);
-    assert(SUCCEEDED(hr));
+    if (FAILED(hr))
+    {
+        Logger::GetInstance()->LogError("DX12Helper", "LoadTexture", "Failed GenerateMipMaps");
+        assert(false && "Failed GenerateMipMaps");
+    }
 
     return mipImages;
 }
@@ -284,7 +336,14 @@ Microsoft::WRL::ComPtr<ID3D12Resource> DX12Helper::CreateTextureResource(const M
         D3D12_RESOURCE_STATE_COMMON,
         nullptr,
         IID_PPV_ARGS(&resource));
-    assert(SUCCEEDED(hr));
+
+    if (FAILED(hr))
+    {
+        Logger::GetInstance()->LogError("DX12Helper", "CreateTextureResource", "CreateCommittedResource failed");
+        assert(false && "Create committed resource failed");
+    }
+
+
     return resource;
 }
 
@@ -305,8 +364,14 @@ void DX12Helper::UploadTextureData(const Microsoft::WRL::ComPtr<ID3D12Resource>&
             UINT(img->rowPitch),
             UINT(img->slicePitch)
         );
-        assert(SUCCEEDED(hr));
+        if (FAILED(hr))
+        {
+            Logger::GetInstance()->LogError("DX12Helper", "UploadTextureData", "WriteToSubresource failed");
+            assert(false && "WriteToSubresource failed");
+        }
     }
+
+    return;
 }
 
 void DX12Helper::CreateNewTexture(const Microsoft::WRL::ComPtr<ID3D12Device>& _device,
@@ -350,7 +415,14 @@ Microsoft::WRL::ComPtr<ID3D12Resource> DX12Helper::CreateVertexResource(const Mi
 
 void DX12Helper::ChangeStateResource(const Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>& _commandList, const Microsoft::WRL::ComPtr<ID3D12Resource>& _resource, D3D12_RESOURCE_STATES _before, D3D12_RESOURCE_STATES _after)
 {
-    Log(std::format("[DEBUG] Changing resource state: {:p} from {} to {}\n", reinterpret_cast<void*>(_resource.Get()), static_cast<int>(_before), static_cast<int>(_after)));
+    //Logger::GetInstance()->LogForOutput(
+    //    std::format(
+    //        "[DEBUG] Changing resource state: {:p} from {} to {}",
+    //        reinterpret_cast<void*>(_resource.Get()),
+    //        static_cast<int>(_before),
+    //        static_cast<int>(_after)
+    //    )
+    //);
 
     D3D12_RESOURCE_BARRIER barrier{};
     barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;

@@ -139,6 +139,7 @@ void Sprite::Update()
     Matrix4x4 WVPMatrix = worldMatrix * viewMatrix * projectionMatrix;
     transformationMatrixData_->wvp = WVPMatrix;
 
+
     /// UVTransformMatrixの更新 (まだ使えない)
     uvTransformMatrix_ = Matrix4x4::ScaleMatrix(uvTransform_.scale);
     uvTransformMatrix_ *= Matrix4x4::RotateZMatrix(uvTransform_.rotate.z);

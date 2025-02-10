@@ -2,6 +2,9 @@
 #include <Features/Object3d/Object3dSystem.h>
 #include <imgui.h>
 #include <DebugTools/DebugManager/DebugManager.h>
+#include <Features/Audio/AudioManager.h>
+
+#include <Features/Input/Input.h>
 
 void CG3PT2::Initialize()
 {
@@ -64,6 +67,8 @@ void CG3PT2::Initialize()
     pText_->SetFontFamily("Meiryo");
     pText_->SetFontSize(15.0f);
     pText_->SetColorName("Black");
+
+    pAudio_ = AudioManager::GetInstance()->GetNewAudio("piano.wav");
 }
 
 void CG3PT2::Finalize()
@@ -84,6 +89,11 @@ void CG3PT2::Update()
     pGrid_->Update();
 
     pText_->Update();
+
+    if (Input::GetInstance()->TriggerKey(DIK_SPACE))
+    {
+        pAudio_->Play();
+    }
 }
 
 void CG3PT2::Draw2dBackGround()
