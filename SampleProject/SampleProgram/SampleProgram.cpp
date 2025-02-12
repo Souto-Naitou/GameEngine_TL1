@@ -15,7 +15,7 @@ void SampleProgram::Initialize()
     pSceneManager_->SetSceneFactory(pSceneFactory_.get());
 
     /// 自動ロードパスの追加
-    pModelManager_->AddAutoLoadPath("resources/models");
+    pModelManager_->AddAutoLoadPath("resources/temp");
     pTextureManager_->AddSearchPath("resources");
 
     /// モデルを全てロード
@@ -23,7 +23,7 @@ void SampleProgram::Initialize()
 
     /// シーンの生成
     pSceneManager_->Initialize();
-    pSceneManager_->ReserveScene("CG3PT2");
+    pSceneManager_->ReserveScene("PG3PT1");
 }
 
 void SampleProgram::Finalize()
