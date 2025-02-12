@@ -82,7 +82,7 @@ void SampleProgram::Draw()
     pSpriteSystem_->PresentDraw();
     pSceneManager_->SceneDraw2dForeground();
 
-    pDirectX_->CopyFromRTV();
+    //pDirectX_->CopyFromRTV();
     //pViewport_->Compute();
 
     pImGuiManager_->EndFrame();

@@ -35,3 +35,7 @@ void EmptyScene::DrawLine()
 void EmptyScene::Draw2dForeground()
 {
 }
+
+void EmptyScene::DrawTexts()
+{
+}
