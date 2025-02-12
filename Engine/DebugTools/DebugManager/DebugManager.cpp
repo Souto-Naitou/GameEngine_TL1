@@ -24,7 +24,7 @@ void DebugManager::DebugWindowOverall() const
 
     const float PAD = 10.0f;
     const ImGuiViewport* viewport = ImGui::GetMainViewport();
-    ImVec2 work_pos = viewport->WorkPos; // Use work area to avoid menu-bar/task-bar, if any!
+    ImVec2 work_pos = viewport->WorkPos;
     ImVec2 work_size = viewport->WorkSize;
     ImVec2 window_pos, window_pos_pivot;
     window_pos.x = PAD;
@@ -55,7 +55,7 @@ void DebugManager::MeasureFPS()
         timer_.Start();
     }
     /// フレームレート計算
-    if (timer_.GetNow() - elapsedFrameCount_ >= 2.0)
+    if (timer_.GetNow() - elapsedFrameCount_ >= 0.1)
     {
         fps_ = frameCount_ * 1.0 / (timer_.GetNow() - elapsedFrameCount_);
 
@@ -200,7 +200,7 @@ void DebugManager::DrawUI()
 
     MeasureFPS();
 
-    //DebugWindowOverall();
+    DebugWindowOverall();
 
     Window_Log();
 

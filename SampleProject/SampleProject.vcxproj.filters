@@ -34,6 +34,9 @@
     <Filter Include="Game\Scene\Empty">
       <UniqueIdentifier>{352d90bb-cc55-43d0-b199-e968f7902539}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game\Scene\DepthScene">
+      <UniqueIdentifier>{530a3488-5a08-450e-a0e5-1a76324cded4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -57,6 +60,9 @@
     <ClCompile Include="Scene\Empty\EmptyScene.cpp">
       <Filter>Game\Scene\Empty</Filter>
     </ClCompile>
+    <ClCompile Include="Scene\DepthScene\DepthScene.cpp">
+      <Filter>Game\Scene\DepthScene</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SampleProgram\SampleProgram.h">
@@ -76,6 +82,9 @@
     </ClInclude>
     <ClInclude Include="Scene\Empty\EmptyScene.h">
       <Filter>Game\Scene\Empty</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\DepthScene\DepthScene.h">
+      <Filter>Game\Scene\DepthScene</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

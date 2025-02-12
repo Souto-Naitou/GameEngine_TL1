@@ -17,6 +17,7 @@ public:
     void Draw3dMidground() override;
     void DrawLine() override;
     void Draw2dForeground() override;
+    void DrawTexts() override;
 
 private:
 };

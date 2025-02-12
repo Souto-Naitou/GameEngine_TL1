@@ -17,8 +17,8 @@ void Model::Initialize(const std::string& _filePath)
     filePath_ = _filePath;
 
     /// モデルデータを読み込む
-    th_LoadObjectFile_ = std::make_unique<std::thread>([&](){
-
+    th_LoadObjectFile_ = std::make_unique<std::thread>([&]()
+    {
         directoryPath_ = ModelManager::GetInstance()->GetDirectoryPath(filePath_);
         modelData_ = ModelHelper::LoadObjFile(directoryPath_, filePath_);
         ModelManager::GetInstance()->InqueueUpload(this);
