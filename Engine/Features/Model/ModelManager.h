@@ -82,4 +82,6 @@ private:
 
     ModelManager() = default;
     ~ModelManager() = default;
+
+    std::filesystem::path GetLowerPath(const std::string& _path);
 };

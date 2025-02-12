@@ -2,6 +2,7 @@
 #include <Features/Model/Helper/ModelHelper.h>
 #include <filesystem>
 #include <Features/Particle/Particle.h>
+#include <algorithm>
 
 void ModelManager::Initialize()
 {
@@ -79,17 +80,24 @@ std::string ModelManager::GetDirectoryPath(std::string _fileName)
 
 void ModelManager::LoadModel(const std::string& _filePath)
 {
-    std::string fullpath = GetDirectoryPath(_filePath);
+    std::filesystem::path fullpath = GetDirectoryPath(_filePath);
     if (fullpath.empty()) fullpath = _filePath;
     else fullpath += "/" + _filePath;
 
-    if (models_.contains(fullpath))
+    for ( auto& model : models_ )
     {
-        return;
+        std::filesystem::path fsModelPath = GetLowerPath(model.first.string());
+        std::filesystem::path fsFullPath = GetLowerPath(fullpath.string());
+
+        if ( fsModelPath == fsFullPath )
+        {
+            return;
+        }
     }
+
     std::unique_ptr<Model> model = std::make_unique<Model>();
 
-    model->Initialize(fullpath);
+    model->Initialize(fullpath.string());
     models_.emplace(fullpath, std::move(model));
 }
 
@@ -99,7 +107,33 @@ Model* ModelManager::FindModel(const std::string& _filePath)
     if (fullpath.empty()) fullpath = _filePath;
     else fullpath += "/" + _filePath;
 
-    return models_[fullpath].get();
+    auto lowerFullPath = GetLowerPath(fullpath);
+
+    Model* result = nullptr;
+
+    for ( auto& model : models_ )
+    {
+        auto lowerModelPath = GetLowerPath(model.first.string());
+        if ( lowerModelPath == lowerFullPath )
+        {
+            result = model.second.get();
+            break;
+        }
+    }
+
+    return result;
+}
+
+std::filesystem::path ModelManager::GetLowerPath(const std::string& _path)
+{
+    std::filesystem::path result = _path;
+    std::string str = _path;
+
+    std::transform(str.begin(), str.end(), str.begin(), ::tolower);
+
+    result = str;
+
+    return result;
 }
 
 void ModelManager::Update()
