@@ -15,6 +15,7 @@ void SampleProgram::Initialize()
     pSceneManager_->SetSceneFactory(pSceneFactory_.get());
 
     /// 自動ロードパスの追加
+    pModelManager_->AddAutoLoadPath("resources/models");
     pModelManager_->AddAutoLoadPath("resources/temp");
     pTextureManager_->AddSearchPath("resources");
 
