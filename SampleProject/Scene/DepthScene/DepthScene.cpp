@@ -1,12 +1,18 @@
 #include "DepthScene.h"
 
 #include <DebugTools/DebugManager/DebugManager.h>
+
+#ifdef _DEBUG
 #include <imgui.h>
+#endif // _DEBUG
 
 void DepthScene::Initialize()
 {
     pInput_ = Input::GetInstance();
+
+#ifdef _DEBUG
     DebugManager::GetInstance()->SetComponent("Scene", windowName_, std::bind(&DepthScene::DebugWindow, this));
+#endif // _DEBUG
 
     pGameEye_ = std::make_unique<GameEye>();
     pGameEye_->SetName("DepthScene_Camera");
@@ -19,7 +25,9 @@ void DepthScene::Finalize()
 {
     objectList_.clear();
 
+#ifdef _DEBUG
     DebugManager::GetInstance()->DeleteComponent("Scene", windowName_.c_str());
+#endif // _DEBUG
 }
 
 void DepthScene::Update()
@@ -87,6 +95,8 @@ void DepthScene::CreateObject()
 
 void DepthScene::DebugWindow()
 {
+#ifdef _DEBUG
+
     ImGui::Text("Object count : %d", objectList_.size());
 
     /// 一括作成の個数の入力
@@ -97,4 +107,6 @@ void DepthScene::DebugWindow()
     {
         nextCreateCount_ = nextCreateCountTemp_;
     }
+
+#endif // _DEBUG
 }
