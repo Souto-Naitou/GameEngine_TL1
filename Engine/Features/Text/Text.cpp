@@ -160,6 +160,7 @@ void Text::DebugWindow()
     if (ImGui::InputInt("Font Size", &fontSize))
     {
         fontSize_ = static_cast<float>(fontSize);
+        isChanged_ = true;
     }
 
     strcpy_s(buffer, fontFamily_.c_str());
