@@ -195,7 +195,7 @@ void DirectX12::PostDraw()
 
 
     /// フレームレート固定
-    //pFramerate_->FixFramerate();
+    pFramerate_->FixFramerate();
 
 
     /// 次のフレーム用のコマンドリストを準備
