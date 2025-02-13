@@ -12,7 +12,9 @@ void Text::Initialize()
     dwriteFactory_ = pTextSystem_->GetDWriteFactory();
     d2dDeviceContext_ = pTextSystem_->GetD2D1DeviceContext();
 
+#ifdef _DEBUG
     DebugManager::GetInstance()->SetComponent("Text", name_, BINDCOMPONENT(Text, DebugWindow));
+#endif // _DEBUG
 
     fontFamily_ = "Bahnschrift";
 }
@@ -49,7 +51,9 @@ void Text::Draw()
 
 void Text::Finalize()
 {
+#ifdef _DEBUG
     DebugManager::GetInstance()->DeleteComponent("Text", name_.c_str());
+#endif // _DEBUG
 }
 
 void Text::SetText(const std::string& _text)
