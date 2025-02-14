@@ -4,6 +4,7 @@
 #include <string>
 #include <JsonParser/JsonLoader.h>
 #include <list>
+#include <mutex>
 
 
 /// <summary>
@@ -38,6 +39,12 @@ public:
     void Initialize();
     void Save();
 
+    void DrawUI();
+
+    const std::string& GetLogPayload() const
+    {
+        return logPayload_;
+    }
 
 public:
     void LogError(
@@ -84,10 +91,13 @@ private:
     const std::string folderPath_ = "Log/";
     std::string fileName_ = "";
 
+    std::string logPayload_ = "";
+    bool enableAutoScroll_ = true;
 
 private:
     JsonLoader* pJsonLoader_ = nullptr;
 
+    mutable std::mutex mutex_ = {};
 
 private:
     Logger() = default;

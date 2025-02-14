@@ -67,7 +67,7 @@
       <Filter>Game\Scene\DepthScene</Filter>
     </ClCompile>
     <ClCompile Include="Scene\PG3PT1\PG3PT1.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>Game\Scene\PG3PT1</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

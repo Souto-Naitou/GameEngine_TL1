@@ -1,5 +1,7 @@
 #include "PG3PT1.h"
 
+#include <imgui.h>
+
 void PG3PT1::Initialize()
 {
     pGameEye_ = std::make_unique<GameEye>();

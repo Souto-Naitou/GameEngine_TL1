@@ -26,4 +26,6 @@ private:
     std::unique_ptr<GameEye> pGameEye_ = nullptr;
 
     DirectionalLight directionalLight_ = {};
+
+    bool isOpen_ = true;
 };
