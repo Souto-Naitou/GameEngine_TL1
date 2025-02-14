@@ -2,6 +2,7 @@
 #include <Common/structs.h>
 #include <Matrix4x4.h>
 #include <string>
+#include <Features/RandomGenerator/RandomGenerator.h>
 
 class GameEye
 {
@@ -9,6 +10,11 @@ public:
     GameEye();
     ~GameEye();
     void                Update();
+
+
+public:
+    void Shake(const Vector3& _begin, const Vector3& _end);
+    void Shake(float _power);
 
 public: /// Getter
     const Transform&    GetTransform() const            { return transform_; }
@@ -40,7 +46,12 @@ private: /// メンバ変数
     float               aspectRatio_    = 0.0f;
     float               nearClip_       = 0.0f;
     float               farClip_        = 0.0f;
+    Vector3             shakePositon_   = {};
 
 private:
     void DebugWindow();
+
+
+private:
+    RandomGenerator* pRandomGenerator_ = nullptr;
 };

@@ -3,6 +3,7 @@
 #include <Interfaces/IScene.h>
 #include <Features/Object3d/Object3d.h>
 #include <Features/GameEye/GameEye.h>
+#include <Features/Input/Input.h>
 #include <Common/structs.h>
 
 class PG3PT1 : public IScene
@@ -28,4 +29,8 @@ private:
     DirectionalLight directionalLight_ = {};
 
     bool isOpen_ = true;
+
+
+private:
+    Input* pInput_ = nullptr;
 };
