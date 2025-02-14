@@ -27,18 +27,18 @@ void DX12Helper::CreateDevice(Microsoft::WRL::ComPtr<ID3D12Device>& _device, Mic
         if (SUCCEEDED(hr))
         {
             // 生成できたのでログ出力を行ってループを抜ける
-            Logger::GetInstance()->LogInfo("DX12Helper", "CreateDevice", std::format("機能レベル : {}", featureLevelStrings[i]));
+            Logger::GetInstance()->LogInfo("DX12Helper", "CreateDevice", std::format("FeatureLevel : {}", featureLevelStrings[i]));
             break;
         }
     }
     // デバイスの生成がうまくいかなかったので起動できない
     if (!_device)
     {
-        Logger::GetInstance()->LogError("DX12Helper", "CreateDevice", "デバイスの生成に失敗");
+        Logger::GetInstance()->LogError("DX12Helper", "CreateDevice", "Failed to create");
         assert(_device && "Failed to create device");
     }
 
-    Logger::GetInstance()->LogInfo("DX12Helper", "CreateDevice", "初期化が正常に終了"); // 初期化完了のログを出力
+    Logger::GetInstance()->LogInfo("DX12Helper", "CreateDevice", "Initilization succeeded"); // 初期化完了のログを出力
 }
 
 
@@ -127,7 +127,7 @@ Microsoft::WRL::ComPtr<ID3D12Resource> DX12Helper::CreateDepthStencilTextureReso
         Logger::GetInstance()->LogError(
             "DX12Helper",
             "CreateDepthStencilTextureResource",
-            "深度ステンシルテクスチャリソースの生成に失敗"
+            "Failed to Create DSTR"
         );
         assert(false && "Failed create depth stencil texture resource");
     }
@@ -152,7 +152,7 @@ Microsoft::WRL::ComPtr<IDxcBlob> DX12Helper::CompileShader(
         "CompileShader",
         ConvertString(
             std::format(
-                L"シェーダーのコンパイルを開始 パス:{}, プロファイル:{}",
+                L"Begin compile. Path:{}, Profile:{}",
                 filePath, 
                 profile
             )
@@ -171,7 +171,7 @@ Microsoft::WRL::ComPtr<IDxcBlob> DX12Helper::CompileShader(
             "CompileShader",
             ConvertString(
                 std::format(
-                    L"ファイルの読み込みに失敗 パス:{}, プロファイル:{}",
+                    L"Failed to load file. Path:{}, Profile:{}",
                     filePath,
                     profile
                 )

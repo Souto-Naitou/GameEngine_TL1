@@ -23,7 +23,6 @@ void SampleProgram::Initialize()
     pModelManager_->LoadAllModel();
 
     /// シーンの生成
-    pSceneManager_->Initialize();
     pSceneManager_->ReserveScene("PG3PT1");
 }
 
@@ -31,17 +30,12 @@ void SampleProgram::Finalize()
 {
     /// 基底クラスの終了処理
     NimaFramework::Finalize();
-
-    pSceneManager_->Finalize();
 }
 
 void SampleProgram::Update()
 {
     /// 基底クラスの更新処理
     NimaFramework::Update();
-
-    /// シーン更新
-    pSceneManager_->Update();
 
     /// パーティクル更新
     pParticleManager_->Update();

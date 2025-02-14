@@ -5,6 +5,10 @@
 
 #include <debugapi.h>
 
+#ifdef _DEBUG
+#include <imgui.h>
+#endif // _DEBUG
+
 void Log(const std::string& _message)
 {
 	OutputDebugStringA(_message.c_str());
@@ -34,6 +38,8 @@ void Logger::Initialize()
 
 void Logger::Save()
 {
+    std::lock_guard<std::mutex> lock(mutex_);
+
     auto now = std::chrono::system_clock::now();
 
     std::string filepath = folderPath_ + fileName_;
@@ -57,7 +63,41 @@ void Logger::Save()
     ofs << filePayload;
     ofs.close();
 
+    logPayload_ = filePayload;
+
     return;
+}
+
+void Logger::DrawUI()
+{
+#ifdef _DEBUG
+
+    ImGuiWindowFlags flag = {};
+    flag |= ImGuiWindowFlags_HorizontalScrollbar;
+    if ( enableAutoScroll_ )
+    {
+        flag = ImGuiWindowFlags_NoScrollWithMouse;
+        flag |= ImGuiWindowFlags_NoScrollbar;
+    }
+
+    if ( ImGui::Begin("Log", nullptr, flag) )
+    {
+        ImGui::Checkbox("Auto Scroll", &enableAutoScroll_);
+
+        ImGui::BeginChild("LogChild", ImVec2(-1, -1), ImGuiChildFlags_Border, flag);
+
+        ImGui::TextUnformatted(logPayload_.data());
+
+        if ( enableAutoScroll_ )
+        {
+            ImGui::SetScrollHereY(1.0f);
+        }
+
+        ImGui::EndChild();
+    }
+    ImGui::End();
+
+#endif // _DEBUG
 }
 
 void Logger::LogError(const std::string& _className, const std::string& _action, const std::string& _message)
@@ -82,6 +122,7 @@ void Logger::LogForOutput(const std::string& _message)
 
 void Logger::Log(const std::string& _status, const std::string& _className, const std::string& _action, const std::string& _message)
 {
+
     auto now = std::chrono::system_clock::now();
     auto now_sec = std::chrono::floor<std::chrono::seconds>(now);
 
@@ -98,8 +139,11 @@ void Logger::Log(const std::string& _status, const std::string& _className, cons
     data.message = _message;
 
 
-    logData_.emplace_back(data);
-    LogJson(date, time, _status, _className, _action, _message);
+    {
+        std::lock_guard<std::mutex> lock(mutex_);
+        logData_.emplace_back(data);
+        LogJson(date, time, _status, _className, _action, _message);
+    }
 
     OutputDebugStringA(std::format("[{}] {} {}, {}, {}, {}\n", _status, date, time, _className, _action, _message).c_str());
 

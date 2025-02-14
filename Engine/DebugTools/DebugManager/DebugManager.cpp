@@ -114,31 +114,7 @@ void DebugManager::Window_Log()
 {
 #ifdef _DEBUG
 
-    ImGuiWindowFlags flag = {};
-    flag |= ImGuiWindowFlags_HorizontalScrollbar;
-    if (enableAutoScroll_)
-    {
-        flag = ImGuiWindowFlags_NoScrollWithMouse;
-        flag |= ImGuiWindowFlags_NoScrollbar;
-    }
 
-    if (ImGui::Begin("Log", nullptr, flag))
-    {
-        ImGui::Checkbox("Auto Scroll", &enableAutoScroll_);
-
-        ImGui::BeginChild("LogChild", ImVec2(-1, -1), ImGuiChildFlags_Border, flag);
-
-        //ImGui::InputTextMultiline("##Log", textLog_.data(), textLog_.size(), ImVec2(-1, -1), ImGuiInputTextFlags_ReadOnly);
-        ImGui::Text(textLog_.data());
-
-        if (enableAutoScroll_)
-        {
-            ImGui::SetScrollHereY(1.0f);
-        }
-
-        ImGui::EndChild();
-    }
-    ImGui::End();
 #endif // _DEBUG
 }
 
@@ -201,8 +177,6 @@ void DebugManager::DrawUI()
     MeasureFPS();
 
     DebugWindowOverall();
-
-    Window_Log();
 
     //DrawGameWindow();
 
@@ -318,7 +292,7 @@ void DebugManager::DefaultStyle()
     style.WindowRounding = 6.0f;
     style.TabRounding = 0.0f;
     style.WindowTitleAlign = ImVec2(0.5f, 0.5f);
-    style.Colors[ImGuiCol_WindowBg] = ImVec4(0.02f, 0.03f, 0.1f, 0.98f);
+    style.Colors[ImGuiCol_WindowBg] = ImVec4(0.02f, 0.03f, 0.1f, 0.0f);
     style.Colors[ImGuiCol_TitleBgActive] = ImVec4(0.8f, 0.1f, 0.1f, 0.75f);
     style.Colors[ImGuiCol_TitleBg] = ImVec4(0.0f, 0.0f, 0.0f, 0.90f);
 #endif // _DEBUG

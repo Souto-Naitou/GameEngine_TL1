@@ -2,6 +2,8 @@
 
 void NimaFramework::Run()
 {
+    setlocale(LC_ALL, "ja_JP.Utf-8");
+
     /// 初期化
     Initialize();
 
@@ -99,6 +101,9 @@ void NimaFramework::Initialize()
     /// ビューポートの初期化
     //pViewport_ = std::make_unique<Viewport>();
     //pViewport_->Initialize();
+
+    /// シーンマネージャの初期化
+    pSceneManager_->Initialize();
 }
 
 void NimaFramework::Finalize()
@@ -107,6 +112,8 @@ void NimaFramework::Finalize()
     pImGuiManager_->Finalize();
     pWinSystem_->Finalize();
     pLogger_->Save();
+
+    pSceneManager_->Finalize();
 }
 
 void NimaFramework::Update()
@@ -119,10 +126,15 @@ void NimaFramework::Update()
     }
 
     /// マネージャ更新
+    pInput_->Update();
     pModelManager_->Update();
     pAudioManager_->Update();
     pImGuiManager_->BeginFrame();
     pDebugManager_->DrawUI();
+    pLogger_->DrawUI();
+
+    /// シーン更新
+    pSceneManager_->Update();
+
     pImGuiManager_->Render();
-    pInput_->Update();
 }

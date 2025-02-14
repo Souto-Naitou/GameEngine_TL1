@@ -60,7 +60,7 @@ void DirectX12::Initialize()
         pLogger_->LogError(
             "DirectX12",
             "Initialize",
-            std::format("DXGIファクトリの生成に失敗")
+            "Failed to create DXGI Factory."
         );
 
         return;
@@ -83,7 +83,7 @@ void DirectX12::Initialize()
     pLogger_->LogInfo(
         "DirectX12",
         "Initialize",
-        std::format("DirectX12 Initialized.")
+        "DirectX12 Initialized."
     );
 
 
@@ -157,7 +157,7 @@ void DirectX12::CommandExecute()
         pLogger_->LogError(
             "DirectX12",
             "CommandExecute",
-            "コマンドリストのクローズに失敗"
+            "Failed to close command list."
         );
         assert(false && "Failed to close command list");
     }
