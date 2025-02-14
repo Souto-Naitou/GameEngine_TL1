@@ -18,6 +18,7 @@ GameEye::GameEye()
     , vpMatrix_(vMatrix_* pMatrix_)
 {
     DebugManager::GetInstance()->SetComponent("GameEye", name_, std::bind(&GameEye::DebugWindow, this));
+    pRandomGenerator_ = RandomGenerator::GetInstance();
 }
 
 GameEye::~GameEye()
@@ -27,10 +28,12 @@ GameEye::~GameEye()
 
 void GameEye::Update()
 {
-    wMatrix_ = Matrix4x4::AffineMatrix({ 1.0f, 1.0f, 1.0f }, transform_.rotate, transform_.translate);
+    wMatrix_ = Matrix4x4::AffineMatrix({ 1.0f, 1.0f, 1.0f }, transform_.rotate, transform_.translate + shakePositon_);
     vMatrix_ = wMatrix_.Inverse();
     pMatrix_ = Matrix4x4::PerspectiveFovMatrix(fovY_, aspectRatio_, nearClip_, farClip_);
     vpMatrix_ = vMatrix_ * pMatrix_;
+
+    shakePositon_ = Vector3();
 }
 
 void GameEye::DebugWindow()
@@ -53,4 +56,22 @@ void GameEye::DebugWindow()
     ImGui::PopID();
 
 #endif
+}
+
+void GameEye::Shake(const Vector3& _begin, const Vector3& _end)
+{
+    shakePositon_ = Vector3(
+        pRandomGenerator_->Generate(_begin.x, _end.x),
+        pRandomGenerator_->Generate(_begin.y, _end.y),
+        pRandomGenerator_->Generate(_begin.z, _end.z)
+    );
+}
+
+void GameEye::Shake(float _power)
+{
+    shakePositon_ = Vector3(
+        pRandomGenerator_->Generate(-_power, _power),
+        pRandomGenerator_->Generate(-_power, _power),
+        pRandomGenerator_->Generate(-_power, _power)
+    );
 }

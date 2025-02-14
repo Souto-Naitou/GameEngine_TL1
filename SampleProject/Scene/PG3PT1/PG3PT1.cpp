@@ -4,6 +4,8 @@
 
 void PG3PT1::Initialize()
 {
+    pInput_ = Input::GetInstance();
+
     pGameEye_ = std::make_unique<GameEye>();
     pBunny_ = std::make_unique<Object3d>();
 
@@ -30,6 +32,11 @@ void PG3PT1::Finalize()
 
 void PG3PT1::Update()
 {
+    if ( pInput_->PushKey(DIK_SPACE) )
+    {
+        pGameEye_->Shake(0.01f);
+    }
+
     pGameEye_->Update();
     pBunny_->Update();
 }
