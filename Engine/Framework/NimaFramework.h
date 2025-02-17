@@ -78,3 +78,16 @@ int _stdcall WinMain(HINSTANCE, HINSTANCE, LPSTR, int) \
     program->Run(); \
     return 0; \
 }
+
+#define CREATE_FRAMEWORK(classname) \
+\
+class classname : public NimaFramework \
+{ \
+public: \
+    void Initialize() override; \
+    void Finalize() override; \
+    void Update() override; \
+    void Draw() override; \
+    bool IsExitProgram() { return isExitProgram_; } \
+private: \
+};
