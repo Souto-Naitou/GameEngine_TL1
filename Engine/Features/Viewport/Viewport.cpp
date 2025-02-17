@@ -3,8 +3,8 @@
 #include <DebugTools/Logger/Logger.h>
 #include <Core/DirectX12/Helper/DX12Helper.h>
 
-#include <dxcapi.h>
 #include <d3dcompiler.h>
+#include <imgui.h>
 
 #include <cassert>
 
@@ -128,27 +128,27 @@ void Viewport::CreatePSO()
 void Viewport::CreateSRV()
 {
     inputSRVIndex_ = pSRVManager_->Allocate();
-    pSRVManager_->CreateForTexture2D(inputSRVIndex_, inputTexture_, DXGI_FORMAT_R8G8B8A8_UNORM, 1);
+    pSRVManager_->CreateForTexture2D(inputSRVIndex_, inputTexture_, DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, 1);
 
     outputSRVIndex_ = pSRVManager_->Allocate();
-    pSRVManager_->CreateForTexture2D(outputSRVIndex_, outputTexture_, DXGI_FORMAT_R8G8B8A8_UNORM, 1);
+    pSRVManager_->CreateForTexture2D(outputSRVIndex_, outputTexture_, DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, 1);
 }
 
 void Viewport::CreateUAV()
 {
     outputUAVIndex_ = pSRVManager_->Allocate();
-    pSRVManager_->CreateForUAV(pSRVManager_->Allocate(), outputTexture_, DXGI_FORMAT_R8G8B8A8_UNORM);
+    pSRVManager_->CreateForUAV(outputUAVIndex_, outputTexture_, DXGI_FORMAT_R8G8B8A8_UNORM);
 }
 
 void Viewport::Compute()
 {
     /// ステートの変更
-    //DX12Helper::ChangeStateResource(
-    //    commandList_, 
-    //    outputTexture_, 
-    //    D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
-    //    D3D12_RESOURCE_STATE_UNORDERED_ACCESS
-    //);
+    DX12Helper::ChangeStateResource(
+        commandList_, 
+        outputTexture_, 
+        D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
+        D3D12_RESOURCE_STATE_UNORDERED_ACCESS
+    );
 
     DX12Helper::ChangeStateResource(
         commandList_,
@@ -185,10 +185,35 @@ void Viewport::Compute()
     );
 
     /// ステートの変更
-    //DX12Helper::ChangeStateResource(
-    //    commandList_,
-    //    outputTexture_,
-    //    D3D12_RESOURCE_STATE_UNORDERED_ACCESS,
-    //    D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE
-    //);
+    DX12Helper::ChangeStateResource(
+        commandList_,
+        outputTexture_,
+        D3D12_RESOURCE_STATE_UNORDERED_ACCESS,
+        D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE
+    );
+}
+
+void Viewport::DrawWindow()
+{
+    #ifdef _DEBUG
+
+    auto gpuHnd = SRVManager::GetInstance()->GetGPUDescriptorHandle(outputSRVIndex_);
+    auto vp = pDx12_->GetGameWindowRect();
+
+    uint32_t width = static_cast<uint32_t>(vp.Width);
+    uint32_t height = static_cast<uint32_t>(vp.Height);
+
+    ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
+    ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0, 0, 0, 0));
+
+    if(ImGui::Begin("Viewport", nullptr, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoBringToFrontOnFocus))
+    {
+        ImGui::Image((ImTextureID)gpuHnd.ptr, ImVec2(static_cast<float>(width), static_cast<float>(height)));
+    }
+    ImGui::End();
+
+    ImGui::PopStyleVar();
+    ImGui::PopStyleColor();
+
+    #endif // _DEBUG
 }

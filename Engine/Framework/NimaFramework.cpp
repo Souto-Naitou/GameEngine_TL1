@@ -1,4 +1,5 @@
 #include "NimaFramework.h"
+#include <clocale>
 
 void NimaFramework::Run()
 {
@@ -99,8 +100,8 @@ void NimaFramework::Initialize()
     pDirectX_->CreateGameScreenResource();
 
     /// ビューポートの初期化
-    //pViewport_ = std::make_unique<Viewport>();
-    //pViewport_->Initialize();
+    pViewport_ = std::make_unique<Viewport>();
+    pViewport_->Initialize();
 
     /// シーンマネージャの初期化
     pSceneManager_->Initialize();
@@ -132,6 +133,7 @@ void NimaFramework::Update()
     pImGuiManager_->BeginFrame();
     pDebugManager_->Update();
     pDebugManager_->DrawUI();
+    pViewport_->DrawWindow();
     pLogger_->DrawUI();
 
     /// シーン更新

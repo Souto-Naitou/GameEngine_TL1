@@ -203,8 +203,6 @@ void DebugManager::DrawUI()
 
     DebugInfoBar();
 
-    //DrawGameWindow();
-
     DebugInfoWindow();
 
     // 登録されていないなら早期リターン
