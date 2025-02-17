@@ -79,15 +79,18 @@ private:
     ~DebugManager();
 
     std::list<std::tuple<std::string, const std::string&, const std::function<void(void)>, bool>> componentList_;
-    Timer           timer_ = {};
-    Timer           frameTimer_ = {};
-    double          elapsedFrameCount_ = 0.0;
-    double          fps_ = 0.0;
-    unsigned int    frameCount_ = 0u;
-    bool            onDisplay_ = true;
-    std::string     textLog_ = "";
-    bool            enableAutoScroll_ = true;
-    double          frameTime_ = 0.0;
+    Timer                   timer_ = {};
+    Timer                   frameTimer_ = {};
+    double                  elapsedFrameCount_ = 0.0;
+    double                  fps_ = 0.0;
+    std::array<float, 120>  fpsList_ = {};
+    unsigned int            frameCount_ = 0u;
+    bool                    onDisplay_ = true;
+    std::string             textLog_ = "";
+    bool                    enableAutoScroll_ = true;
+    double                  frameTime_ = 0.0;
+
+    bool                    isExistSettingFile_ = false;
 
 private: /// 借 り 物
     DirectX12* pDX12_ = nullptr;
@@ -102,7 +105,7 @@ private:
 private: /// Windows
     void OverlayFPS() const;
     void Window_ObjectList();
-    void Window_Log();
+    void DebugInfoWindow();
     void ShowDockSpace();
     void DrawGameWindow();
     void DebugInfoBar() const;
