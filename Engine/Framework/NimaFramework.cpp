@@ -130,6 +130,7 @@ void NimaFramework::Update()
     pModelManager_->Update();
     pAudioManager_->Update();
     pImGuiManager_->BeginFrame();
+    pDebugManager_->Update();
     pDebugManager_->DrawUI();
     pLogger_->DrawUI();
 

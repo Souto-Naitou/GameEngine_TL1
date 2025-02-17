@@ -9,6 +9,7 @@
 #include <queue>
 #include "Model.h"
 #include <filesystem>
+#include <mutex>
 
 class Particle;
 
@@ -69,9 +70,15 @@ public:
     /// アップロードキューに登録
     /// </summary>
     /// <param name="_pFunc">関数ポインタ</param>
-    void InqueueUpload(Model* _ptr) { uploadQueue_.push(_ptr); }
+    void InqueueUpload(Model* _ptr) 
+    {
+        std::lock_guard<std::mutex> lock(mtx_);
+        uploadQueue_.push(_ptr); 
+    }
 
 private:
+    mutable std::mutex mtx_;
+
     std::list<std::string> searchPaths_;
     std::list<std::string> autoLoadPaths_;
 
