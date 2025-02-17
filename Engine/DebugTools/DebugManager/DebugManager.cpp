@@ -50,6 +50,7 @@ void DebugManager::OverlayFPS() const
 void DebugManager::MeasureFPS()
 {
 #ifdef _DEBUG
+
     if (!timer_.GetIsStart())
     {
         timer_.Start();
@@ -58,11 +59,14 @@ void DebugManager::MeasureFPS()
     if (timer_.GetNow() - elapsedFrameCount_ >= 0.1)
     {
         fps_ = frameCount_ * 1.0 / (timer_.GetNow() - elapsedFrameCount_);
-
         frameCount_ = 0;
         elapsedFrameCount_ = timer_.GetNow();
     }
     frameCount_++;
+
+    std::rotate(fpsList_.begin(), fpsList_.begin() + 1, fpsList_.end());
+    fpsList_.back() = static_cast<float>(fps_);
+
 #endif // _DEBUG
 }
 
@@ -121,13 +125,19 @@ void DebugManager::Window_ObjectList()
 #endif // DEBUG
 }
 
-void DebugManager::Window_Log()
+void DebugManager::DebugInfoWindow()
 {
-#ifdef _DEBUG
+    #ifdef _DEBUG
 
+    if(ImGui::Begin("DebugInfo"))
+    {
+        ImGui::PlotLines("FPS", fpsList_.data(), static_cast<int>(fpsList_.size()), 0, nullptr, 0.0f, 60.0f, ImVec2(0, 80));
+    }
+    ImGui::End();
 
-#endif // _DEBUG
+    #endif // _DEBUG
 }
+
 
 std::list<std::tuple<std::string, const std::string&, const std::function<void(void)>, bool>>::iterator
     DebugManager::GetInsertIterator(std::string _parentName)
@@ -194,6 +204,8 @@ void DebugManager::DrawUI()
     DebugInfoBar();
 
     //DrawGameWindow();
+
+    DebugInfoWindow();
 
     // 登録されていないなら早期リターン
     if (componentList_.size() == 0) return;
@@ -340,7 +352,7 @@ void DebugManager::DebugInfoBar() const
 {
 #ifdef _DEBUG
 
-    if ( ImGui::Begin("DebugInfoBar") )
+    if ( ImGui::Begin("DebugInfoBar", nullptr, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoTitleBar) )
     {
         ImGui::Text("%.2lfFPS", fps_);
         ImGui::SameLine();

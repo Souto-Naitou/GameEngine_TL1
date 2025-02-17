@@ -369,7 +369,7 @@ void DirectX12::SetViewportAndScissorRect()
     viewport_.Width = static_cast<FLOAT>(1120);
     viewport_.Height = static_cast<FLOAT>(630);
     viewport_.TopLeftX = 130;
-    viewport_.TopLeftY = 9;
+    viewport_.TopLeftY = 40;
     viewport_.MinDepth = 0.0f;
     viewport_.MaxDepth = 1.0f;
 
