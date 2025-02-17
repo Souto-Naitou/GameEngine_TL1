@@ -74,7 +74,7 @@ protected:
 #define CREATE_APPLICATION(class) \
 int _stdcall WinMain(HINSTANCE, HINSTANCE, LPSTR, int) \
 { \
-    std::unique_ptr<NimaFramework> pSampleProgram = std::make_unique<class>(); \
-    pSampleProgram->Run(); \
+    std::unique_ptr<NimaFramework> program = std::make_unique<class>(); \
+    program->Run(); \
     return 0; \
 }

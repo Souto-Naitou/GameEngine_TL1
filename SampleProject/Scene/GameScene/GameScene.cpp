@@ -50,7 +50,7 @@ void GameScene::Initialize()
     pGrid_->SetEnableLighting(false);
 
     /// エミッタの初期化
-    pFirework_->Initialize("Triangle/Triangle.obj", "Resources/Json/Firework.json");
+    pFirework_->Initialize("Box/Box.obj", "Resources/Json/Box.json");
     pSmoke_->Initialize("Particle/ParticleSpark.obj", "Resources/Json/Smoke.json");
     pSpark_->Initialize("Particle/ParticleSpark.obj", "Resources/Json/Spark.json");
 }

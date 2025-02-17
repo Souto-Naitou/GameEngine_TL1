@@ -17,7 +17,7 @@ DebugManager::~DebugManager()
 
 }
 
-void DebugManager::DebugWindowOverall() const
+void DebugManager::OverlayFPS() const
 {
 #ifdef _DEBUG
     ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoNav;
@@ -27,11 +27,8 @@ void DebugManager::DebugWindowOverall() const
     ImVec2 work_pos = viewport->WorkPos;
     ImVec2 work_size = viewport->WorkSize;
     ImVec2 window_pos, window_pos_pivot;
-    window_pos.x = PAD;
+    window_pos.x = work_size.x - PAD;
     window_pos.y = PAD;
-    window_pos_pivot.x = 0.0f;
-    window_pos_pivot.y = 0.0f;
-    ImGui::SetNextWindowPos(window_pos, ImGuiCond_Always, window_pos_pivot);
     ImGui::SetNextWindowViewport(viewport->ID);
     window_flags |= ImGuiWindowFlags_NoMove;
 
@@ -42,6 +39,9 @@ void DebugManager::DebugWindowOverall() const
         ImGui::Text("%.2lfFPS", fps_);
         ImGui::SameLine();
         ImGui::ProgressBar(static_cast<float>(fps_) / 60.0f, ImVec2(0, 0), "");
+
+        auto wndSize = ImGui::GetWindowSize();
+        ImGui::SetWindowPos(ImVec2(work_size.x - wndSize.x - PAD, PAD));
     }
     ImGui::End();
 #endif // _DEBUG
@@ -63,6 +63,17 @@ void DebugManager::MeasureFPS()
         elapsedFrameCount_ = timer_.GetNow();
     }
     frameCount_++;
+#endif // _DEBUG
+}
+
+void DebugManager::MeasureFrameTime()
+{
+#ifdef _DEBUG
+
+    frameTime_ = frameTimer_.GetNow();
+    frameTimer_.Reset();
+    frameTimer_.Start();
+
 #endif // _DEBUG
 }
 
@@ -166,6 +177,12 @@ void DebugManager::DeleteComponent(const char* _parentID, const char* _childID)
     });
 }
 
+void DebugManager::Update()
+{
+    MeasureFrameTime();
+    MeasureFPS();
+}
+
 void DebugManager::DrawUI()
 {
 #ifdef _DEBUG
@@ -174,9 +191,7 @@ void DebugManager::DrawUI()
 
     ShowDockSpace();
 
-    MeasureFPS();
-
-    DebugWindowOverall();
+    DebugInfoBar();
 
     //DrawGameWindow();
 
@@ -319,6 +334,19 @@ void DebugManager::DrawGameWindow()
     ImGui::PopStyleColor();
 
 #endif // _DEBUG
+}
+
+void DebugManager::DebugInfoBar() const
+{
+    if ( ImGui::Begin("DebugInfoBar") )
+    {
+        ImGui::Text("%.2lfFPS", fps_);
+        ImGui::SameLine();
+        ImGui::ProgressBar(static_cast<float>(fps_) / 60.0f, ImVec2(200, 0), "");
+        ImGui::SameLine();
+        ImGui::Text("Update: %dms", static_cast<int>(frameTime_ * 1000));
+    }
+    ImGui::End();
 }
 
 void DebugManager::PhotoshopStyle()

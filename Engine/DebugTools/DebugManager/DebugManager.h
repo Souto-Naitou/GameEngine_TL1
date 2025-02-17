@@ -58,13 +58,13 @@ public:
     void DeleteComponent(const char* _strID);
     void DeleteComponent(const char* _parentID, const char* _childID);
 
+    void Update();
     void DrawUI();
     void ChangeFont();
     void EnableDocking();
     void DefaultStyle();
     void SetDisplay(bool _isEnable) { onDisplay_ = _isEnable; }
     bool GetDisplay() const { return onDisplay_; }
-    void DrawGameWindow();
 
     void PushLog(const std::string& _log)
     {
@@ -80,22 +80,30 @@ private:
 
     std::list<std::tuple<std::string, const std::string&, const std::function<void(void)>, bool>> componentList_;
     Timer           timer_ = {};
+    Timer           frameTimer_ = {};
     double          elapsedFrameCount_ = 0.0;
     double          fps_ = 0.0;
     unsigned int    frameCount_ = 0u;
     bool            onDisplay_ = true;
     std::string     textLog_ = "";
     bool            enableAutoScroll_ = true;
+    double          frameTime_ = 0.0;
 
 private: /// 借 り 物
     DirectX12* pDX12_ = nullptr;
 
 private:
-    void DebugWindowOverall() const;
     void MeasureFPS();
+    void MeasureFrameTime();
+    std::list<std::tuple<std::string, const std::string&, const std::function<void(void)>, bool>>::iterator
+        GetInsertIterator(std::string _parentName);
+
+
+private: /// Windows
+    void OverlayFPS() const;
     void Window_ObjectList();
     void Window_Log();
     void ShowDockSpace();
-    std::list<std::tuple<std::string, const std::string&, const std::function<void(void)>, bool>>::iterator
-        GetInsertIterator(std::string _parentName);
+    void DrawGameWindow();
+    void DebugInfoBar() const;
 };
