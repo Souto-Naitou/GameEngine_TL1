@@ -23,3 +23,9 @@ public: \
     SceneFactory() = default; \
     std::unique_ptr<IScene> CreateScene(const std::string& _sceneName) override; \
 };
+
+#define JUDGE_SCENE_NAME(class) \
+if (_sceneName == #class) \
+{ \
+    return std::make_unique<class>(); \
+}
