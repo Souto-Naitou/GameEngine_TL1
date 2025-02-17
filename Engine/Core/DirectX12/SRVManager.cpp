@@ -110,6 +110,7 @@ void SRVManager::CreateForUAV(uint32_t _index, ID3D12Resource* _pTexture, DXGI_F
     D3D12_UNORDERED_ACCESS_VIEW_DESC uavDesc = {};
     uavDesc.ViewDimension = D3D12_UAV_DIMENSION_TEXTURE2D;
     uavDesc.Format = _format;
+    uavDesc.Texture2D.MipSlice = 0;
 
     pDx12_->GetDevice()->CreateUnorderedAccessView(_pTexture, nullptr, &uavDesc, GetCPUDescriptorHandle(_index));
 }

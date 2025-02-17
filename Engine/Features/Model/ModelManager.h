@@ -3,9 +3,7 @@
 #include <unordered_map>
 #include <string>
 #include <memory>
-#include <Core/DirectX12/DirectX12.h>
 #include <list>
-#include <functional>
 #include <queue>
 #include "Model.h"
 #include <filesystem>

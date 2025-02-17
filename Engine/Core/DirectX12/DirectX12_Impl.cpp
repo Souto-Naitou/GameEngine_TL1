@@ -305,7 +305,7 @@ void DirectX12::CreateGameScreenResource()
         &heapPropertiesUAV,
         D3D12_HEAP_FLAG_NONE,
         &textureDesc,
-        D3D12_RESOURCE_STATE_UNORDERED_ACCESS,
+        D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
         nullptr,
         IID_PPV_ARGS(&gameScreenComputed_)
     );

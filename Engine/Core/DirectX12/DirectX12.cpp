@@ -225,11 +225,11 @@ void DirectX12::CopyFromRTV()
 
     /// コピー範囲
     D3D12_BOX srcBox = {};
-    srcBox.left = 0;
-    srcBox.top = 0;
+    srcBox.left = static_cast<UINT>(viewport_.TopLeftX);
+    srcBox.top = static_cast<UINT>(viewport_.TopLeftY);
+    srcBox.right = static_cast<UINT>(viewport_.Width + viewport_.TopLeftX);
+    srcBox.bottom = static_cast<UINT>(viewport_.Height + viewport_.TopLeftY);
     srcBox.front = 0;
-    srcBox.right = static_cast<UINT>(viewport_.Width);
-    srcBox.bottom = static_cast<UINT>(viewport_.Height);
     srcBox.back = 1;
 
     commandList_->CopyTextureRegion(&dstLocation, 0, 0, 0, &srcLocation, &srcBox);
@@ -245,7 +245,7 @@ void DirectX12::CopyFromRTV()
     );
 
     /// rtvのクリア
-    //commandList_->ClearRenderTargetView(rtvHandles_[backBufferIndex_], &editorBG_.x, 0, nullptr);
+    commandList_->ClearRenderTargetView(rtvHandles_[backBufferIndex_], &editorBG_.x, 0, nullptr);
 }
 
 void DirectX12::ChangeStateRTV(D3D12_RESOURCE_STATES _now, D3D12_RESOURCE_STATES _next)

@@ -16,6 +16,8 @@ public:
     void Initialize();
     void Compute();
 
+    void DrawWindow();
+
 
 public: /// Getter
     uint32_t GetOutputSRVIndex() const { return outputSRVIndex_; }

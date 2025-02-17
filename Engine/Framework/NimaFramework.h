@@ -18,7 +18,6 @@
 #include <Features/Particle/ParticleManager.h>
 #include <Features/Line/LineSystem.h>
 #include <Features/RandomGenerator/RandomGenerator.h>
-#include <Features/Line/Line.h>
 #include <Features/Text/TextSystem.h>
 #include <Features/Viewport/Viewport.h>
 
