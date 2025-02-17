@@ -338,6 +338,8 @@ void DebugManager::DrawGameWindow()
 
 void DebugManager::DebugInfoBar() const
 {
+#ifdef _DEBUG
+
     if ( ImGui::Begin("DebugInfoBar") )
     {
         ImGui::Text("%.2lfFPS", fps_);
@@ -347,6 +349,8 @@ void DebugManager::DebugInfoBar() const
         ImGui::Text("Update: %dms", static_cast<int>(frameTime_ * 1000));
     }
     ImGui::End();
+
+#endif // debug
 }
 
 void DebugManager::PhotoshopStyle()
