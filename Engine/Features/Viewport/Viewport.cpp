@@ -8,6 +8,8 @@
 
 #include <cassert>
 
+#pragma comment(lib, "d3dcompiler.lib")
+
 void Viewport::Initialize()
 {
     /// インスタンスの取得
@@ -142,6 +144,8 @@ void Viewport::CreateUAV()
 
 void Viewport::Compute()
 {
+    #ifdef _DEBUG
+
     /// ステートの変更
     DX12Helper::ChangeStateResource(
         commandList_, 
@@ -191,6 +195,8 @@ void Viewport::Compute()
         D3D12_RESOURCE_STATE_UNORDERED_ACCESS,
         D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE
     );
+
+    #endif // _DEBUG
 }
 
 void Viewport::DrawWindow()
