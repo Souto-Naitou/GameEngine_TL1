@@ -25,7 +25,7 @@ void Model::Initialize(const std::string& _filePath)
         Logger::GetInstance()->LogInfo(
             "Model",
             "LoadModel",
-            "Succeed"
+            "Succeed : " + directoryPath_ + filePath_
         );
     });
 }

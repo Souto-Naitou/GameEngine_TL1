@@ -30,7 +30,7 @@ void ImGuiManager::Initialize(DirectX12* _pDx12)
     ImGui_ImplDX12_Init(
         device,
         swapChainDesc.BufferCount,
-        DXGI_FORMAT_R8G8B8A8_UNORM_SRGB,
+        DXGI_FORMAT_R8G8B8A8_UNORM,
         srvDescHeap_,
         srvDescHeap_->GetCPUDescriptorHandleForHeapStart(),
         srvDescHeap_->GetGPUDescriptorHandleForHeapStart()

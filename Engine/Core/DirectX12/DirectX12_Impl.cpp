@@ -238,7 +238,7 @@ void DirectX12::CreateSwapChainAndResource()
 
 
     /// RTVの設定
-    rtvDesc_.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+    rtvDesc_.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
     rtvDesc_.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
 
 
@@ -260,7 +260,7 @@ void DirectX12::CreateGameScreenResource()
     resourceDesc.Height = static_cast<UINT>(viewport_.Height);              // 高さ
     resourceDesc.MipLevels = 1;                                             // mipmapの数
     resourceDesc.DepthOrArraySize = 1;                                      // 奥行き or 配列Textureの配列数
-    resourceDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;                  // フォーマット
+    resourceDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;                       // フォーマット
     resourceDesc.SampleDesc.Count = 1;                                      // サンプリング数
     resourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;            // 2DTexture
     resourceDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS;        // UAVを使うためのフラグ
@@ -282,7 +282,7 @@ void DirectX12::CreateGameScreenResource()
     /// SRVの生成
     SRVManager* psrvm = SRVManager::GetInstance();
     gameWndSrvIndex_ = psrvm->Allocate();
-    psrvm->CreateForTexture2D(gameWndSrvIndex_, gameScreenResource_.Get(), DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, 1);
+    psrvm->CreateForTexture2D(gameWndSrvIndex_, gameScreenResource_.Get(), DXGI_FORMAT_R8G8B8A8_UNORM, 1);
 
     /// UAVの生成
     D3D12_RESOURCE_DESC textureDesc = {};
