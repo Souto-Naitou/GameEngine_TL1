@@ -357,6 +357,7 @@
     <ClCompile Include="Features\Audio\Audio.cpp">
       <Filter>Feature\Audio\Command</Filter>
     </ClCompile>
+    <ClCompile Include="Features\GameEye\FreeLook\FreeLookEye.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common\define.h">

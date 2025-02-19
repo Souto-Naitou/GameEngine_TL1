@@ -1,12 +1,12 @@
 #include "PG3PT1.h"
 
-#include <imgui.h>
+#include <Features/GameEye/FreeLook/FreeLookEye.h>
 
 void PG3PT1::Initialize()
 {
     pInput_ = Input::GetInstance();
 
-    pGameEye_ = std::make_unique<GameEye>();
+    pGameEye_ = std::make_unique<FreeLookEye>();
     pBunny_ = std::make_unique<Object3d>();
 
     directionalLight_.color = { 1.0f, 1.0f, 1.0f, 1.0f };
