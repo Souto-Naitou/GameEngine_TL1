@@ -17,6 +17,7 @@ public:
     void Render();
     void EndFrame();
     void Finalize();
+    void Resize();
 
 private:
     bool isChangedFont_ = false;

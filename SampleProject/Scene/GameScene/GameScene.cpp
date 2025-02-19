@@ -1,12 +1,11 @@
 #include "GameScene.h"
 
-#include <Features/Model/ModelManager.h>
-#include <Features/Sprite/SpriteSystem.h>
 #include <Features/Object3d/Object3dSystem.h>
 #include <Features/Particle/ParticleSystem.h>
 #include <Features/SceneManager/SceneManager.h>
 #include <Features/Line/LineSystem.h>
 #include <Core/Win32/WinSystem.h>
+#include <Features/GameEye/FreeLook/FreeLookEye.h>
 
 
 void GameScene::Initialize()
@@ -18,14 +17,14 @@ void GameScene::Initialize()
     pSpark_ = std::make_unique<ParticleEmitter>();
 
 
-    pGameEye_ = std::make_unique<GameEye>();
+    pGameEye_ = std::make_unique<FreeLookEye>();
     pSkydome_ = std::make_unique<Object3d>();
     pGrid_ = std::make_unique<Object3d>();
 
     pGuideSprite_ = std::make_unique<Sprite>();
     pGuideSprite_->Initialize("Text/SceneChangeGuide.png");
     pGuideSprite_->SetName("GuideText");
-    pGuideSprite_->SetPosition(Vector2(WinSystem::kClientWidth - 40.0f, WinSystem::kClientHeight - 40.0f));
+    pGuideSprite_->SetPosition(Vector2(WinSystem::clientWidth - 40.0f, WinSystem::clientHeight - 40.0f));
     pGuideSprite_->SetAnchorPoint({ 1,1 });
 
     pGameEye_->SetRotate({ 0.1f, 0.0f, 0.0f });

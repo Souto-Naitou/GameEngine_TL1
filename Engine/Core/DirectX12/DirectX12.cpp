@@ -50,8 +50,8 @@ void DirectX12::Initialize()
     hwnd_ = WinSystem::GetInstance()->GetHwnd();
 
     // ウィンドウのクライアントサイズを取得
-    clientWidth_ = WinSystem::kClientWidth;
-    clientHeight_ = WinSystem::kClientHeight;
+    clientWidth_ = WinSystem::clientWidth;
+    clientHeight_ = WinSystem::clientHeight;
 
     hr_ = CreateDXGIFactory(IID_PPV_ARGS(&dxgiFactory_));
 
