@@ -244,8 +244,12 @@ void DirectX12::CopyFromRTV()
         D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE
     );
 
+    #ifdef _DEBUG
+
     /// rtvのクリア
     commandList_->ClearRenderTargetView(rtvHandles_[backBufferIndex_], &editorBG_.x, 0, nullptr);
+
+    #endif // _DEBUG
 }
 
 void DirectX12::ChangeStateRTV(D3D12_RESOURCE_STATES _now, D3D12_RESOURCE_STATES _next)

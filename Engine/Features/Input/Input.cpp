@@ -92,15 +92,37 @@ bool Input::PushKey(BYTE _keyNumber) const
     return false;
 }
 
+bool Input::PushKeyC(char _key) const
+{
+    // 指定キーを押して入ればtrueを返す
+    if(key_[GetKeyNumber(_key)])
+    {
+        return true;
+    }
+
+    return false;
+}
+
 bool Input::TriggerKey(BYTE _keyNumber) const
 {
-    if (key_[_keyNumber])
+    // キーが押された瞬間ならtrueを返す
+    if(key_[_keyNumber] && !keyPre_[_keyNumber])
     {
-        if (key_[_keyNumber] && !keyPre_[_keyNumber])
-        {
-            return true;
-        }
+        return true;
     }
+
+    return false;
+}
+
+bool Input::TriggerKeyC(char _key) const
+{
+    // キーが押された瞬間ならtrueを返す
+    BYTE keyNumber = GetKeyNumber(_key);
+    if(key_[keyNumber] && !keyPre_[keyNumber])
+    {
+        return true;
+    }
+
     return false;
 }
 
@@ -142,4 +164,10 @@ bool Input::TriggerMouse(MouseNum _mouseNum) const
     }
 
     return false;
+}
+
+BYTE Input::GetKeyNumber(char _key) const
+{
+    // キーの文字からキー番号を取得
+    return MapVirtualKey(_key, MAPVK_VK_TO_VSC);
 }

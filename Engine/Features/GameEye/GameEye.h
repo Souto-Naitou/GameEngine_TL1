@@ -9,7 +9,7 @@ class GameEye
 public:
     GameEye();
     ~GameEye();
-    void                Update();
+    virtual void        Update();
 
 
 public:

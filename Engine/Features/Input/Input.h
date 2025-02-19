@@ -30,7 +30,9 @@ public:
     void Update();
 
     bool PushKey(BYTE _keyNumber) const;
+    bool PushKeyC(char _key) const;
     bool TriggerKey(BYTE _keyNumber) const;
+    bool TriggerKeyC(char _key) const;
 
     bool PushMouse(MouseNum _mouseNum) const;
     bool TriggerMouse(MouseNum _mouseNum) const;
@@ -40,6 +42,7 @@ private:
     Input() = default;
     ~Input() = default;
 
+    BYTE GetKeyNumber(char _key) const;
 
 private:
     Microsoft::WRL::ComPtr<IDirectInput8> directInput_ = nullptr;

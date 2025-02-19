@@ -152,6 +152,7 @@
     <ClCompile Include="Features\Easing\Easing.cpp" />
     <ClCompile Include="Features\Easing\Easing_impl.cpp" />
     <ClCompile Include="Features\Easing\Manager\EasingManager.cpp" />
+    <ClCompile Include="Features\GameEye\FreeLook\FreeLookEye.cpp" />
     <ClCompile Include="Features\GameEye\GameEye.cpp" />
     <ClCompile Include="Features\Input\Input.cpp" />
     <ClCompile Include="Features\Lighting\Manager\LightingManager.cpp" />
