@@ -2,3 +2,7 @@
 |Debug|Release|
 |:---:|:---:|
 [![DebugBuild](https://github.com/Souto-Naitou/GameEngine_DX12/actions/workflows/DebugBuildTest.yml/badge.svg)](https://github.com/Souto-Naitou/GameEngine_DX12/actions/workflows/DebugBuildTest.yml)|[![ReleaseBuild](https://github.com/Souto-Naitou/GameEngine_DX12/actions/workflows/ReleaseBuildTest.yml/badge.svg)](https://github.com/Souto-Naitou/GameEngine_DX12/actions/workflows/ReleaseBuildTest.yml)|
+
+## Overall
+![image](https://github.com/user-attachments/assets/f29ccb5d-5841-4c7c-b0f3-bef61f794683)
+- Imediate drawing for DirectX 12!!
