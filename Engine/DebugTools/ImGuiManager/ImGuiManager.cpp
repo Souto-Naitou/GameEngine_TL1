@@ -12,7 +12,7 @@
 
 void ImGuiManager::Initialize(DirectX12* _pDx12)
 {
-#ifdef _DEBUG
+    #ifdef _DEBUG
 
     SRVManager* srvManager = SRVManager::GetInstance();
     srvIndex_ = srvManager->Allocate();
@@ -37,20 +37,24 @@ void ImGuiManager::Initialize(DirectX12* _pDx12)
     );
     ImGui_ImplWin32_Init(pWin32App->GetHwnd());
 
-#endif // _DEBUG
+    #endif // _DEBUG
 }
 
 void ImGuiManager::Finalize()
 {
-#ifdef _DEBUG
+    #ifdef _DEBUG
+
     ImGui_ImplDX12_Shutdown();
     ImGui_ImplWin32_Shutdown();
     ImGui::DestroyContext();
-#endif // _DEBUG
+
+    #endif // _DEBUG
 }
 
 void ImGuiManager::Resize()
 {
+    #ifdef _DEBUG
+
     auto& io = ImGui::GetIO();
     io.DisplaySize.x = static_cast<float>(WinSystem::clientWidth);
     io.DisplaySize.y = static_cast<float>(WinSystem::clientHeight);
@@ -59,50 +63,58 @@ void ImGuiManager::Resize()
     float scaleY = static_cast<float>(WinSystem::clientHeight) / static_cast<float>(WinSystem::preClientHeight);
 
     io.DisplayFramebufferScale = ImVec2(scaleX, scaleY);
-    
+
     auto* drawData = ImGui::GetDrawData();
     if(drawData)
     {
         drawData->DisplayPos = ImVec2(0.0f, 0.0f);
         drawData->DisplaySize = ImVec2(io.DisplaySize.x, io.DisplaySize.y);
     }
+
+    #endif // _DEBUG
 }
 
 void ImGuiManager::BeginFrame()
 {
-#ifdef _DEBUG
-    if (!isChangedFont_)
+    #ifdef _DEBUG
+
+    if(!isChangedFont_)
     {
         DebugManager* debugManager = DebugManager::GetInstance();
         debugManager->ChangeFont();
         debugManager->DefaultStyle();
         debugManager->EnableDocking();
-        
+
         isChangedFont_ = true;
     }
 
     ImGui_ImplDX12_NewFrame();
     ImGui_ImplWin32_NewFrame();
     ImGui::NewFrame();
-#endif
+
+    #endif
 }
 
 void ImGuiManager::Render()
 {
-#ifdef _DEBUG
+    #ifdef _DEBUG
+
     ImGui::EndFrame();
     ImGui::Render();
-#endif // _DEBUG
+
+    #endif // _DEBUG
 }
 
 void ImGuiManager::EndFrame()
 {
-#ifdef _DEBUG
+    #ifdef _DEBUG
+
     ID3D12GraphicsCommandList* commandList = DirectX12::GetInstance()->GetCommandList();
 
     //ID3D12DescriptorHeap* descriptorHeaps[] = { srvDescHeap_ };
     //commandList->SetDescriptorHeaps(1, descriptorHeaps);
 
     ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), commandList);
-#endif
+
+    #endif
 }
