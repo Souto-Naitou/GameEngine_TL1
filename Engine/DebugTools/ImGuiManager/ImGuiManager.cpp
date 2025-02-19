@@ -55,8 +55,8 @@ void ImGuiManager::Resize()
     io.DisplaySize.x = static_cast<float>(WinSystem::clientWidth);
     io.DisplaySize.y = static_cast<float>(WinSystem::clientHeight);
 
-    float scaleX = WinSystem::clientWidth / WinSystem::preClientWidth;
-    float scaleY = WinSystem::clientHeight / WinSystem::preClientHeight;
+    float scaleX = static_cast<float>(WinSystem::clientWidth) / static_cast<float>(WinSystem::preClientWidth);
+    float scaleY = static_cast<float>(WinSystem::clientHeight) / static_cast<float>(WinSystem::preClientHeight);
 
     io.DisplayFramebufferScale = ImVec2(scaleX, scaleY);
     

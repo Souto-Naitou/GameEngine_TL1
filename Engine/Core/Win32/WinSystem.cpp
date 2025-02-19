@@ -9,6 +9,8 @@ extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg
 
 uint32_t WinSystem::clientWidth = 1600;
 uint32_t WinSystem::clientHeight = 900;
+uint32_t WinSystem::preClientWidth = 1600;
+uint32_t WinSystem::preClientHeight = 900;
 
 bool WinSystem::isMoving_ = false;
 bool WinSystem::isResized_ = false;
