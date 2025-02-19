@@ -23,7 +23,7 @@
 
 #include <memory>
 
-// ゲーム共有
+/// ゲーム共通のフレームワーククラス
 class NimaFramework
 {
 public:

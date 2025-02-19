@@ -1,13 +1,15 @@
 #pragma once
 
-#include <stdint.h>
 #include <Windows.h>
+#include <cstdint>
 
 class WinSystem
 {
 public:
-    static const uint32_t kClientWidth = 1600u;
-    static const uint32_t kClientHeight = 900u;
+    static uint32_t clientWidth;
+    static uint32_t clientHeight;
+    static uint32_t preClientWidth;
+    static uint32_t preClientHeight;
 
     WinSystem(const WinSystem&) = delete;
     WinSystem(const WinSystem&&) = delete;
@@ -35,7 +37,7 @@ private:
     WNDCLASS    wc_         = {};
     HWND        hwnd_       = {};
     MSG         msg_        = {};
-    POINT       wndSize_    = {};
+    RECT        wndSize_    = {};
     static bool isMoving_;
     static bool isResized_;
 };

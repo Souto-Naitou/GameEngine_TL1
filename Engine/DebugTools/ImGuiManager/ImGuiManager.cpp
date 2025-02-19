@@ -49,6 +49,25 @@ void ImGuiManager::Finalize()
 #endif // _DEBUG
 }
 
+void ImGuiManager::Resize()
+{
+    auto& io = ImGui::GetIO();
+    io.DisplaySize.x = static_cast<float>(WinSystem::clientWidth);
+    io.DisplaySize.y = static_cast<float>(WinSystem::clientHeight);
+
+    float scaleX = WinSystem::clientWidth / WinSystem::preClientWidth;
+    float scaleY = WinSystem::clientHeight / WinSystem::preClientHeight;
+
+    io.DisplayFramebufferScale = ImVec2(scaleX, scaleY);
+    
+    auto* drawData = ImGui::GetDrawData();
+    if(drawData)
+    {
+        drawData->DisplayPos = ImVec2(0.0f, 0.0f);
+        drawData->DisplaySize = ImVec2(io.DisplaySize.x, io.DisplaySize.y);
+    }
+}
+
 void ImGuiManager::BeginFrame()
 {
 #ifdef _DEBUG

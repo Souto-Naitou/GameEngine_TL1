@@ -10,8 +10,8 @@ void TransFadeInOut::Initialize(const std::string& _sceneName)
 {
     sceneName_ = _sceneName;
 
-    screenWidth_ = WinSystem::kClientWidth;
-    screenHeight_ = WinSystem::kClientHeight;
+    screenWidth_ = WinSystem::clientWidth;
+    screenHeight_ = WinSystem::clientHeight;
 
     timer_ = std::make_unique<Timer>();
 

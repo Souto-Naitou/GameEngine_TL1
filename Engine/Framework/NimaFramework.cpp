@@ -126,6 +126,11 @@ void NimaFramework::Update()
         return;
     }
 
+    if(pWinSystem_->IsResized())
+    {
+        pImGuiManager_->Resize();
+    }
+
     /// マネージャ更新
     pInput_->Update();
     pModelManager_->Update();

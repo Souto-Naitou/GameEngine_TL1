@@ -7,6 +7,9 @@
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 #endif // _DEBUG
 
+uint32_t WinSystem::clientWidth = 1600;
+uint32_t WinSystem::clientHeight = 900;
+
 bool WinSystem::isMoving_ = false;
 bool WinSystem::isResized_ = false;
 
@@ -30,7 +33,7 @@ void WinSystem::Finalize()
 
 void WinSystem::ShowWnd()
 {
-    RECT wrc = { 0,0,kClientWidth, kClientHeight };
+    RECT wrc = { 0,0,static_cast<LONG>(clientWidth), static_cast<LONG>(clientHeight) };
     AdjustWindowRect(&wrc, WS_OVERLAPPEDWINDOW, false);
     hwnd_ = CreateWindow(
         wc_.lpszClassName,          // 利用するクラス名
@@ -51,7 +54,7 @@ void WinSystem::ShowWnd()
 UINT WinSystem::GetMsg()
 {
     // Windowにメッセージが来てたら最優先で処理させる
-    if (PeekMessage(&msg_, NULL, 0, 0, PM_REMOVE))
+    if(PeekMessage(&msg_, NULL, 0, 0, PM_REMOVE))
     {
         TranslateMessage(&msg_);    // メッセージを解釈？
         DispatchMessage(&msg_);    // デキュー的な？
@@ -61,9 +64,18 @@ UINT WinSystem::GetMsg()
 
 bool WinSystem::IsResized()
 {
-    if (isResized_)
+    if(isResized_)
     {
         isResized_ = false;
+
+        // ウィンドウのサイズを取得
+        preClientWidth = clientWidth;
+        preClientHeight = clientHeight;
+
+        GetClientRect(hwnd_, &wndSize_);
+        clientWidth = static_cast<uint32_t>(wndSize_.right - wndSize_.left);
+        clientHeight = static_cast<uint32_t>(wndSize_.bottom - wndSize_.top);
+
         return true;
     }
     return false;
@@ -71,28 +83,32 @@ bool WinSystem::IsResized()
 
 LRESULT CALLBACK WinSystem::WindowProcedure(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 {
-#ifdef _DEBUG
-    if (ImGui_ImplWin32_WndProcHandler(hwnd, msg, wparam, lparam))
+    #ifdef _DEBUG
+    if(ImGui_ImplWin32_WndProcHandler(hwnd, msg, wparam, lparam))
     {
         return true;
     }
-#endif // _DEBUG
+    #endif // _DEBUG
 
     // メッセージに応じてゲーム固有の処理を行う
-    switch (msg)
+    switch(msg)
     {
     case WM_DESTROY:	// ウィンドウが破壊された
         // OSに対して、アプリ終了を伝える
         PostQuitMessage(0);
         return 0;
+
     case WM_ENTERSIZEMOVE:
         // ウィンドウサイズ変更開始
         isMoving_ = true;
         break;
+
+
     case WM_EXITSIZEMOVE:
         // ウィンドウサイズ変更終了
         isMoving_ = false;
         break;
+
     case WM_SIZE:
         isResized_ = true;
     }
