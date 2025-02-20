@@ -21,7 +21,8 @@
 #include <Features/Text/TextSystem.h>
 #include <Features/Viewport/Viewport.h>
 
-#include <memory>
+#include <memory> /// std::unique_ptr
+
 
 /// ゲーム共通のフレームワーククラス
 class NimaFramework
@@ -36,39 +37,44 @@ public:
     virtual void Initialize();
     virtual void Finalize();
     virtual void Update();
-    virtual void Draw() = 0;
-
+    virtual void Draw();
     virtual bool IsExitProgram() const { return isExitProgram_; }
+
+    void PreProcess();
+    void PostProcess();
 
 
 protected: /// システムクラスのインスタンス
-    std::unique_ptr<ISceneFactory> pSceneFactory_ = nullptr;
-    std::unique_ptr<ImGuiManager> pImGuiManager_;
-    std::unique_ptr<Viewport> pViewport_;
+    std::unique_ptr<ISceneFactory>  pSceneFactory_              = nullptr;
+    std::unique_ptr<ImGuiManager>   pImGuiManager_              = nullptr;
+    std::unique_ptr<Viewport>       pViewport_                  = nullptr;
 
 
 protected: /// 他クラスのインスタンス
-    Logger* pLogger_;
-    DirectX12* pDirectX_;
-    DebugManager* pDebugManager_;
-    WinSystem* pWinSystem_;
-    ModelManager* pModelManager_;
-    SRVManager* pSRVManager_;
-    TextureManager* pTextureManager_;
-    SceneManager* pSceneManager_;
-    SpriteSystem* pSpriteSystem_;
-    Object3dSystem* pObject3dSystem_;
-    ParticleSystem* pParticleSystem_;
-    ParticleManager* pParticleManager_;
-    LineSystem* pLineSystem_;
-    TextSystem* pTextSystem_;
-    Input* pInput_;
-    RandomGenerator* pRandomGenerator_;
-    AudioManager* pAudioManager_;
+    Logger*                         pLogger_                    = nullptr;
+    DirectX12*                      pDirectX_                   = nullptr;
+    DebugManager*                   pDebugManager_              = nullptr;
+    WinSystem*                      pWinSystem_                 = nullptr;
+    ModelManager*                   pModelManager_              = nullptr;
+    SRVManager*                     pSRVManager_                = nullptr;
+    TextureManager*                 pTextureManager_            = nullptr;
+    SceneManager*                   pSceneManager_              = nullptr;
+    SpriteSystem*                   pSpriteSystem_              = nullptr;
+    Object3dSystem*                 pObject3dSystem_            = nullptr;
+    ParticleSystem*                 pParticleSystem_            = nullptr;
+    ParticleManager*                pParticleManager_           = nullptr;
+    LineSystem*                     pLineSystem_                = nullptr;
+    TextSystem*                     pTextSystem_                = nullptr;
+    Input*                          pInput_                     = nullptr;
+    RandomGenerator*                pRandomGenerator_           = nullptr;
+    AudioManager*                   pAudioManager_              = nullptr;
+
 
 protected:
-    bool isExitProgram_ = false;
+    bool                            isExitProgram_              = false;
 };
+
+
 
 #define CREATE_APPLICATION(class) \
 int _stdcall WinMain(HINSTANCE, HINSTANCE, LPSTR, int) \

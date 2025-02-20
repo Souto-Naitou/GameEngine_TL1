@@ -142,6 +142,8 @@ void Object3d::Draw()
     ID3D12GraphicsCommandList* commandList = pDx12_->GetCommandList();
     std::vector<D3D12_GPU_DESCRIPTOR_HANDLE> textureSrvHandleGPUs = pDx12_->GetSRVHandlesGPUList();
 
+    // マテリアルCBufferの場所を設定
+    commandList->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());
     // TransformationMatrixCBufferの場所を設定
     commandList->SetGraphicsRootConstantBufferView(1, transformationMatrixResource_->GetGPUVirtualAddress());
     // 平行光源CBufferの場所を設定
@@ -154,8 +156,6 @@ void Object3d::Draw()
     commandList->SetGraphicsRootConstantBufferView(6, lightingResource_->GetGPUVirtualAddress());
     // PointLightCBufferの場所を設定
     commandList->SetGraphicsRootConstantBufferView(7, pointLightResource_->GetGPUVirtualAddress());
-    // マテリアルCBufferの場所を設定
-    commandList->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());
 
     if (pModel_) pModel_->Draw();
 }
