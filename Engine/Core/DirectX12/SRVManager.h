@@ -20,7 +20,7 @@ public:
         return &instance;
     }
     void Initialize(DirectX12* _pDx12);
-    void PresentDraw();
+    void SetDescriptorHeaps();
 
     uint32_t Allocate();
     void Deallocate(uint32_t _index);

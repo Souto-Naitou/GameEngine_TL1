@@ -25,6 +25,9 @@ public:
     /// </summary>
     void Draw() override;
 
+    /// <summary>
+    /// プログラム終了判定
+    /// </summary>
     bool IsExitProgram() { return isExitProgram_; }
 
 

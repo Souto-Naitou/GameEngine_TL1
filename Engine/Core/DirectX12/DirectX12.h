@@ -42,9 +42,9 @@ public:
 
     void Initialize();
 
-    void PresentDraw();
+    void NewFrame();
     void CommandExecute();
-    void PostDraw();
+    void DisplayFrame();
     void WaitForGPU();
     void ChangeStateRTV(D3D12_RESOURCE_STATES _now, D3D12_RESOURCE_STATES _next);
     void CopyFromRTV();

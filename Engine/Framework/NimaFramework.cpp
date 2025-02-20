@@ -144,5 +144,69 @@ void NimaFramework::Update()
     /// シーン更新
     pSceneManager_->Update();
 
+    /// ImGui更新
     pImGuiManager_->Render();
+
+    /// パーティクル更新
+    pParticleManager_->Update();
+}
+
+void NimaFramework::Draw()
+{
+    /// 背景スプライトの描画
+    pSpriteSystem_->PresentDraw();
+    pSceneManager_->SceneDraw2dBackGround();
+
+    /// 3D描画
+    pObject3dSystem_->DepthDrawSetting();
+    pSceneManager_->SceneDraw3d();
+    pObject3dSystem_->MainDrawSetting();
+    pSceneManager_->SceneDraw3d();
+
+    /// 中景スプライトの描画
+    pSpriteSystem_->PresentDraw();
+    pSceneManager_->SceneDraw2dMidground();
+
+    /// 中景3dオブジェクトの描画
+    pObject3dSystem_->MainDrawSetting();
+    pSceneManager_->SceneDraw3dMidground();
+
+    /// ライン描画
+    pLineSystem_->PresentDraw();
+    pSceneManager_->SceneDrawLine();
+
+    /// パーティクル描画
+    pParticleSystem_->PresentDraw();
+    pParticleManager_->Draw();
+
+    /// 前景スプライトの描画
+    pSpriteSystem_->PresentDraw();
+    pSceneManager_->SceneDraw2dForeground();
+
+    /// レンダーターゲットからビューポート用リソースにコピー
+    pDirectX_->CopyFromRTV();
+    /// コンピュートシェーダーの実行
+    pViewport_->Compute();
+
+    /// ImGuiの描画
+    pImGuiManager_->EndFrame();
+
+    /// コマンドの実行
+    pDirectX_->CommandExecute();
+
+    /// テキストの描画
+    pTextSystem_->PresentDraw();
+    pSceneManager_->SceneDrawText();
+    pTextSystem_->PostDraw();
+}
+
+void NimaFramework::PreProcess()
+{
+    pDirectX_->NewFrame();
+    pSRVManager_->SetDescriptorHeaps();
+}
+
+void NimaFramework::PostProcess()
+{
+    pDirectX_->DisplayFrame();
 }

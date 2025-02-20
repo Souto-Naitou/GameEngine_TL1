@@ -24,7 +24,7 @@ void SRVManager::Initialize(DirectX12* _pDx12)
     descriptorSize_ = pDx12_->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 }
 
-void SRVManager::PresentDraw()
+void SRVManager::SetDescriptorHeaps()
 {
     ID3D12DescriptorHeap* descriptorHeaps[] = { pDescHeap_.Get() };
     pDx12_->GetCommandList()->SetDescriptorHeaps(_countof(descriptorHeaps), descriptorHeaps);

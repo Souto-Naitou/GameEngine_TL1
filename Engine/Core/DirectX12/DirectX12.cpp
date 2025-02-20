@@ -126,7 +126,7 @@ void DirectX12::Initialize()
     CreateD2DRenderTarget();
 }
 
-void DirectX12::PresentDraw()
+void DirectX12::NewFrame()
 {
     // バックバッファのインデックスを取得
     backBufferIndex_ = swapChain_->GetCurrentBackBufferIndex();
@@ -168,7 +168,7 @@ void DirectX12::CommandExecute()
     commandQueue_->ExecuteCommandLists(1, commandLists->GetAddressOf());
 }
 
-void DirectX12::PostDraw()
+void DirectX12::DisplayFrame()
 {
     /// 描く状態から画面に映す状態に遷移
     /// (Direct2dで行われる)
