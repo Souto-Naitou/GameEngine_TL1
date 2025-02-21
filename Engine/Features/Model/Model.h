@@ -17,7 +17,7 @@ class Model
 public: /// 公開メンバ関数
     void Initialize(const std::string& _filePath);
     void Update();
-    void Draw();
+    void Draw(ID3D12GraphicsCommandList* _commandList);
     void Upload();
     ~Model();
 

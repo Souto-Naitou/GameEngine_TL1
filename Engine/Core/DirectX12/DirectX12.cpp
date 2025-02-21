@@ -164,8 +164,12 @@ void DirectX12::CommandExecute()
 
 
     /// GPUにコマンドリストの実行を行わせる
-    Microsoft::WRL::ComPtr<ID3D12CommandList> commandLists[] = { commandList_.Get() };
-    commandQueue_->ExecuteCommandLists(1, commandLists->GetAddressOf());
+    std::vector<ID3D12CommandList*> commandLists = { commandList_.Get() };
+    for(auto& cl : commandLists_)
+    {
+        commandLists.push_back(cl);
+    }
+    commandQueue_->ExecuteCommandLists(static_cast<UINT>(commandLists.size()), commandLists.data());
 }
 
 void DirectX12::DisplayFrame()
@@ -205,12 +209,12 @@ void DirectX12::DisplayFrame()
     assert(SUCCEEDED(hr_));
 }
 
-void DirectX12::CopyFromRTV()
+void DirectX12::CopyFromRTV(ID3D12GraphicsCommandList* _commandList)
 {
     /// レンダーターゲットからコピー元状態にする
-    ChangeStateRTV(D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_COPY_SOURCE);
+    ChangeStateRTV(_commandList, D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_COPY_SOURCE);
 
-    DX12Helper::ChangeStateResource(commandList_, gameScreenResource_, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, D3D12_RESOURCE_STATE_COPY_DEST);
+    DX12Helper::ChangeStateResource(_commandList, gameScreenResource_, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, D3D12_RESOURCE_STATE_COPY_DEST);
 
 
     D3D12_TEXTURE_COPY_LOCATION srcLocation = {};
@@ -232,13 +236,13 @@ void DirectX12::CopyFromRTV()
     srcBox.front = 0;
     srcBox.back = 1;
 
-    commandList_->CopyTextureRegion(&dstLocation, 0, 0, 0, &srcLocation, &srcBox);
+    _commandList->CopyTextureRegion(&dstLocation, 0, 0, 0, &srcLocation, &srcBox);
 
     /// バリアを戻す
-    ChangeStateRTV(D3D12_RESOURCE_STATE_COPY_SOURCE, D3D12_RESOURCE_STATE_RENDER_TARGET);
+    ChangeStateRTV(_commandList, D3D12_RESOURCE_STATE_COPY_SOURCE, D3D12_RESOURCE_STATE_RENDER_TARGET);
 
     DX12Helper::ChangeStateResource(
-        commandList_, 
+        _commandList, 
         gameScreenResource_, 
         D3D12_RESOURCE_STATE_COPY_DEST, 
         D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE
@@ -247,12 +251,12 @@ void DirectX12::CopyFromRTV()
     #ifdef _DEBUG
 
     /// rtvのクリア
-    commandList_->ClearRenderTargetView(rtvHandles_[backBufferIndex_], &editorBG_.x, 0, nullptr);
+    _commandList->ClearRenderTargetView(rtvHandles_[backBufferIndex_], &editorBG_.x, 0, nullptr);
 
     #endif // _DEBUG
 }
 
-void DirectX12::ChangeStateRTV(D3D12_RESOURCE_STATES _now, D3D12_RESOURCE_STATES _next)
+void DirectX12::ChangeStateRTV(ID3D12GraphicsCommandList* _commandList, D3D12_RESOURCE_STATES _now, D3D12_RESOURCE_STATES _next)
 {
     /// リソースステートの設定
     D3D12_RESOURCE_BARRIER barrier = {};
@@ -262,7 +266,7 @@ void DirectX12::ChangeStateRTV(D3D12_RESOURCE_STATES _now, D3D12_RESOURCE_STATES
     barrier.Transition.StateBefore = _now;
     barrier.Transition.StateAfter = _next;
     barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
-    commandList_->ResourceBarrier(1, &barrier);
+    _commandList->ResourceBarrier(1, &barrier);
 }
 
 DirectX12::~DirectX12()

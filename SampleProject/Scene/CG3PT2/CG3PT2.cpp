@@ -12,7 +12,7 @@ void CG3PT2::Initialize()
 
     DirectX12* pDx12 = DirectX12::GetInstance();
 
-    viewport_ = pDx12->GetGameWindowRect();
+    viewport_ = pDx12->GetViewport();
 
     /// カメラの初期化
     pGameEye_ = std::make_unique<GameEye>();

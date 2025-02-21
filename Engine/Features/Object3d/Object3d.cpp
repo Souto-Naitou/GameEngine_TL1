@@ -139,6 +139,8 @@ void Object3d::Draw()
 {
     if (!isDraw_) return;
 
+    #ifdef _DEBUG
+
     ID3D12GraphicsCommandList* commandList = pDx12_->GetCommandList();
     std::vector<D3D12_GPU_DESCRIPTOR_HANDLE> textureSrvHandleGPUs = pDx12_->GetSRVHandlesGPUList();
 
@@ -157,7 +159,23 @@ void Object3d::Draw()
     // PointLightCBufferの場所を設定
     commandList->SetGraphicsRootConstantBufferView(7, pointLightResource_->GetGPUVirtualAddress());
 
-    if (pModel_) pModel_->Draw();
+    if (pModel_) pModel_->Draw(pDx12_->GetCommandList());
+
+    #else
+
+    Object3dSystem::CommandListData data;
+    data.cbuffers[0] = materialResource_.Get();
+    data.cbuffers[1] = transformationMatrixResource_.Get();
+    data.cbuffers[3] = directionalLightResource_.Get();
+    data.cbuffers[4] = tilingResource_.Get();
+    data.cbuffers[5] = cameraForGPUResource_.Get();
+    data.cbuffers[6] = lightingResource_.Get();
+    data.cbuffers[7] = pointLightResource_.Get();
+    data.model = pModel_;
+
+    pSystem_->AddCommandListData(data);
+
+    #endif // _DEBUG
 }
 
 void Object3d::Finalize()

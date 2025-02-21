@@ -29,11 +29,12 @@ public:
 
     bool IsFull() const { return currentIndex_ >= kMaxSRVCount_; }
 
-    void SetGraphicsRootDescriptorTable(UINT _rootParameterIndex, uint32_t _srvIndex);
-
     void CreateForTexture2D(uint32_t _index, ID3D12Resource* _pTexture, DXGI_FORMAT _format, UINT _mipLevels);
     void CreateForStructuredBuffer(uint32_t _index, ID3D12Resource* _pBuffer, UINT _numElements, UINT _stride);
     void CreateForUAV(uint32_t _index, ID3D12Resource* _pTexture, DXGI_FORMAT _format);
+
+public: /// Setter
+    void SetGraphicsRootDescriptorTable(UINT _rootParameterIndex, uint32_t _srvIndex);
 
 
 public: /// Getter

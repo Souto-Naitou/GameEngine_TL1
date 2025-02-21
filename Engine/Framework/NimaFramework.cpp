@@ -20,7 +20,11 @@ void NimaFramework::Run()
         }
 
         /// 描画
+        #ifdef _DEBUG
         Draw();
+        #else
+        DrawHighPerformance();
+        #endif // _DEBUG
     }
 
     Finalize();
@@ -105,6 +109,10 @@ void NimaFramework::Initialize()
 
     /// シーンマネージャの初期化
     pSceneManager_->Initialize();
+
+    /// コマンドリストを追加
+    pDirectX_->AddCommandList(pObject3dSystem_->GetCommandList());
+    pDirectX_->AddCommandList(pSpriteSystem_->GetCommandList());
 }
 
 void NimaFramework::Finalize()
@@ -153,19 +161,11 @@ void NimaFramework::Update()
 
 void NimaFramework::Draw()
 {
-    /// 背景スプライトの描画
-    pSpriteSystem_->PresentDraw();
-    pSceneManager_->SceneDraw2dBackGround();
-
     /// 3D描画
     pObject3dSystem_->DepthDrawSetting();
     pSceneManager_->SceneDraw3d();
     pObject3dSystem_->MainDrawSetting();
     pSceneManager_->SceneDraw3d();
-
-    /// 中景スプライトの描画
-    pSpriteSystem_->PresentDraw();
-    pSceneManager_->SceneDraw2dMidground();
 
     /// 中景3dオブジェクトの描画
     pObject3dSystem_->MainDrawSetting();
@@ -184,7 +184,7 @@ void NimaFramework::Draw()
     pSceneManager_->SceneDraw2dForeground();
 
     /// レンダーターゲットからビューポート用リソースにコピー
-    pDirectX_->CopyFromRTV();
+    pDirectX_->CopyFromRTV(pDirectX_->GetCommandList());
     /// コンピュートシェーダーの実行
     pViewport_->Compute();
 
@@ -193,6 +193,49 @@ void NimaFramework::Draw()
 
     /// コマンドの実行
     pDirectX_->CommandExecute();
+
+    /// テキストの描画
+    pTextSystem_->PresentDraw();
+    pSceneManager_->SceneDrawText();
+    pTextSystem_->PostDraw();
+}
+
+void NimaFramework::DrawHighPerformance()
+{
+    /// 3D描画
+    pSceneManager_->SceneDraw3d();
+    pObject3dSystem_->DrawCall();
+
+    /// 中景3dオブジェクトの描画
+    pSceneManager_->SceneDraw3dMidground();
+
+    /// ライン描画
+    pLineSystem_->PresentDraw();
+    pSceneManager_->SceneDrawLine();
+
+    /// パーティクル描画
+    pParticleSystem_->PresentDraw();
+    pParticleManager_->Draw();
+
+    /// 前景スプライトの描画
+    pSceneManager_->SceneDraw2dForeground();
+    pSpriteSystem_->DrawCall();
+
+
+    /// コンピュートシェーダーの実行
+    pViewport_->Compute();
+
+    /// ImGuiの描画
+    pImGuiManager_->EndFrame();
+
+    /// 同期
+    pObject3dSystem_->Sync();
+    pSpriteSystem_->Sync();
+
+
+    /// コマンドの実行
+    pDirectX_->CommandExecute();
+
 
     /// テキストの描画
     pTextSystem_->PresentDraw();

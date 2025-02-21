@@ -151,8 +151,12 @@ void Sprite::Draw()
 {
     if (!isDraw_) return;
 
+
+    #ifdef _DEBUG
+
+
     ID3D12GraphicsCommandList* commandList = pDx12_->GetCommandList();
-    std::vector<D3D12_GPU_DESCRIPTOR_HANDLE> textureSrvHandleGPUs = pDx12_->GetSRVHandlesGPUList();
+
     // VBVの設定
     commandList->IASetVertexBuffers(0, 1, &vertexBufferView_);
     // IBVの設定
@@ -168,6 +172,21 @@ void Sprite::Draw()
     // 描画！（DrawCall/ドローコール）
     commandList->DrawIndexedInstanced(6, 1, 0, 0, 0);
 
+
+    #else
+
+
+    SpriteSystem::CommandListData data;
+    data.materialResource = materialResource_.Get();
+    data.transformationMatrixResource = transformationMatrixResource_.Get();
+    data.srvHandleGPU = textureSrvHandleGPU_;
+    data.pVBV = &vertexBufferView_;
+    data.pIBV = &indexBufferView_;
+
+    SpriteSystem::GetInstance()->AddCommandListData(data);
+
+
+    #endif // _DEBUG
 }
 
 void Sprite::Finalize()

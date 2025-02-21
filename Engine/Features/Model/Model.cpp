@@ -34,17 +34,16 @@ void Model::Update()
 {
 }
 
-void Model::Draw()
+void Model::Draw(ID3D12GraphicsCommandList* _commandList)
 {
     if (th_LoadObjectFile_->joinable()) return;
-    ID3D12GraphicsCommandList* commandList = pDx12_->GetCommandList();
 
     // 頂点バッファを設定
-    commandList->IASetVertexBuffers(0, 1, &vertexBufferView_);
+    _commandList->IASetVertexBuffers(0, 1, &vertexBufferView_);
     // SRVの設定
-    commandList->SetGraphicsRootDescriptorTable(2, textureSrvHandleGPU_);
-    // 描画！（DrawCall/ドローコール）。頂点
-    commandList->DrawInstanced(static_cast<uint32_t>(modelData_.vertices.size()), 1, 0, 0);
+    _commandList->SetGraphicsRootDescriptorTable(2, textureSrvHandleGPU_);
+    // 描画！（DrawCall/ドローコール）
+    _commandList->DrawInstanced(static_cast<uint32_t>(modelData_.vertices.size()), 1, 0, 0);
 }
 
 Model::~Model()

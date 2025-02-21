@@ -196,6 +196,12 @@
     <Filter Include="Feature\Audio\Command">
       <UniqueIdentifier>{38ba84f9-eca5-442a-a4ee-52776a6ec517}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ClassStyle">
+      <UniqueIdentifier>{2f0b747a-3f33-4993-a0f0-1abcc42de342}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BaseClass">
+      <UniqueIdentifier>{6eba742e-07c6-4355-a651-8ec2446a5ca1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DebugTools\DebugManager\DebugManager.cpp">
@@ -358,6 +364,7 @@
       <Filter>Feature\Audio\Command</Filter>
     </ClCompile>
     <ClCompile Include="Features\GameEye\FreeLook\FreeLookEye.cpp" />
+    <ClCompile Include="BaseClasses\ObjectSystemBase.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common\define.h">
@@ -554,6 +561,12 @@
     </ClInclude>
     <ClInclude Include="Features\Audio\Audio.h">
       <Filter>Feature\Audio\Command</Filter>
+    </ClInclude>
+    <ClInclude Include="ClassStyles\SingletonStyle.h">
+      <Filter>ClassStyle</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseClasses\ObjectSystemBase.h">
+      <Filter>BaseClass</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -21,7 +21,7 @@ void Viewport::Initialize()
     includeHandler_ = pDx12_->GetIncludeHandler();
     commandList_ = pDx12_->GetCommandList();
 
-    viewport_ = pDx12_->GetGameWindowRect();
+    viewport_ = pDx12_->GetViewport();
 
     inputTexture_ = pDx12_->GetGameScreenResource();
     outputTexture_ = pDx12_->GetGameScreenComputed();
@@ -204,7 +204,7 @@ void Viewport::DrawWindow()
     #ifdef _DEBUG
 
     auto gpuHnd = SRVManager::GetInstance()->GetGPUDescriptorHandle(outputSRVIndex_);
-    auto vp = pDx12_->GetGameWindowRect();
+    auto vp = pDx12_->GetViewport();
 
     uint32_t width = static_cast<uint32_t>(vp.Width);
     uint32_t height = static_cast<uint32_t>(vp.Height);

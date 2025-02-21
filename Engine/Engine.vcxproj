@@ -128,6 +128,7 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="BaseClasses\ObjectSystemBase.cpp" />
     <ClCompile Include="Common\HRESULT_ASSERT.cpp" />
     <ClCompile Include="Core\DirectX12\BlendMode.cpp" />
     <ClCompile Include="Core\DirectX12\DirectX12.cpp" />
@@ -184,6 +185,8 @@
     <ClCompile Include="Utility\FilePathSearcher\FilePathSearcher.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BaseClasses\ObjectSystemBase.h" />
+    <ClInclude Include="ClassStyles\SingletonStyle.h" />
     <ClInclude Include="Common\define.h" />
     <ClInclude Include="Common\HRESULT_ASSERT.h" />
     <ClInclude Include="Common\structs.h" />
