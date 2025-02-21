@@ -113,6 +113,7 @@ void NimaFramework::Initialize()
     /// コマンドリストを追加
     pDirectX_->AddCommandList(pObject3dSystem_->GetCommandList());
     pDirectX_->AddCommandList(pSpriteSystem_->GetCommandList());
+    pDirectX_->AddCommandList(pParticleSystem_->GetCommandList());
 }
 
 void NimaFramework::Finalize()
@@ -206,16 +207,13 @@ void NimaFramework::DrawHighPerformance()
     pSceneManager_->SceneDraw3d();
     pObject3dSystem_->DrawCall();
 
-    /// 中景3dオブジェクトの描画
-    pSceneManager_->SceneDraw3dMidground();
-
     /// ライン描画
     pLineSystem_->PresentDraw();
     pSceneManager_->SceneDrawLine();
 
     /// パーティクル描画
-    pParticleSystem_->PresentDraw();
     pParticleManager_->Draw();
+    pParticleSystem_->DrawCall();
 
     /// 前景スプライトの描画
     pSceneManager_->SceneDraw2dForeground();
@@ -230,6 +228,7 @@ void NimaFramework::DrawHighPerformance()
 
     /// 同期
     pObject3dSystem_->Sync();
+    pParticleSystem_->Sync();
     pSpriteSystem_->Sync();
 
 

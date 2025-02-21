@@ -363,8 +363,12 @@
     <ClCompile Include="Features\Audio\Audio.cpp">
       <Filter>Feature\Audio\Command</Filter>
     </ClCompile>
-    <ClCompile Include="Features\GameEye\FreeLook\FreeLookEye.cpp" />
-    <ClCompile Include="BaseClasses\ObjectSystemBase.cpp" />
+    <ClCompile Include="Features\GameEye\FreeLook\FreeLookEye.cpp">
+      <Filter>Feature\GameEye\FreeLookEye</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseClasses\ObjectSystemBase.cpp">
+      <Filter>BaseClass</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common\define.h">

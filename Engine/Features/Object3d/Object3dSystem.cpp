@@ -10,10 +10,11 @@ Object3dSystem::Object3dSystem()
 
 void Object3dSystem::Initialize()
 {
+    ObjectSystemBase::Initialize();
+
     CreateRootSignature();
     CreateMainPipelineState();
     CreateDepthPipelineState();
-    CreateCommandList();
 }
 
 void Object3dSystem::DepthDrawSetting()
@@ -95,7 +96,6 @@ void Object3dSystem::DrawCall()
 
         _commandList->Close();
     };
-
 
     worker_ = std::async(std::launch::async, record, commandList_.Get());
 }

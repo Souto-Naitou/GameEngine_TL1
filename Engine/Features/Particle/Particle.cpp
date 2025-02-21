@@ -118,13 +118,28 @@ void Particle::Draw()
 {
     /// モデルのテクスチャがアップロードされていない場合は描画しない
     if (!pModel_->IsUploaded()) return;
-    auto commandList = pDx12_->GetCommandList();
 
+    #ifdef _DEBUG
+
+    auto commandList = pDx12_->GetCommandList();
     /// 描画設定と実行
     commandList->IASetVertexBuffers(0, 1, &vertexBufferView_);
     commandList->SetGraphicsRootDescriptorTable(0, srvGpuHandle_);
     commandList->SetGraphicsRootDescriptorTable(1, textureSRVHandleGPU_);
     commandList->DrawInstanced(static_cast<UINT>(pModelData_->vertices.size()), static_cast<UINT>(particleData_.size()), 0, 0);
+
+    #else
+
+    ParticleSystem::CommandListData data = {};
+    data.pVBV = &vertexBufferView_;
+    data.srvHandle = srvGpuHandle_;
+    data.textureSrvHandle = textureSRVHandleGPU_;
+    data.vertexCount = static_cast<UINT>(pModelData_->vertices.size());
+    data.instanceCount = static_cast<UINT>(particleData_.size());
+
+    pSystem_->AddCommandListData(data);
+
+    #endif // _DEBUG
 }
 
 void Particle::reserve(size_t _size, bool _isInit)

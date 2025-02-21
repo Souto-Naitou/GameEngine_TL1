@@ -8,11 +8,11 @@
 class ObjectSystemBase
 {
 public:
-    virtual ~ObjectSystemBase() = default;
+    virtual         ~ObjectSystemBase() = default;
 
-    virtual void Initialize();
-    virtual void DrawCall() = 0;
-    virtual void Sync() = 0;
+    virtual void    Initialize();
+    virtual void    DrawCall() = 0;
+    virtual void    Sync() = 0;
 
 
 public: /// Getter

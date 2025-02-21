@@ -7,6 +7,8 @@
 
 void ParticleSystem::Initialize()
 {
+    ObjectSystemBase::Initialize();
+
     /// 必要なインスタンスを取得
     pDx12_ = DirectX12::GetInstance();
 
@@ -28,6 +30,50 @@ void ParticleSystem::PresentDraw()
     /// プリミティブトポロジーをセットする
     commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
+}
+
+void ParticleSystem::DrawCall()
+{
+    if(commandListDatas_.empty()) return;
+
+    auto record = [&](ID3D12GraphicsCommandList* _commandList)
+    {
+        _commandList->Reset(commandAllocator_.Get(), nullptr);
+
+        /// コマンドリストの設定
+        DX12Helper::CommandListCommonSetting(_commandList);
+
+        /// ルートシグネチャをセットする
+        _commandList->SetGraphicsRootSignature(rootSignature_.Get());
+
+        /// グラフィックスパイプラインステートをセットする
+        _commandList->SetPipelineState(graphicsPipelineState_.Get());
+
+        /// プリミティブトポロジーをセットする
+        _commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+        for(auto& data : commandListDatas_)
+        {
+            _commandList->IASetVertexBuffers(0, 1, data.pVBV);
+            _commandList->SetGraphicsRootDescriptorTable(0, data.srvHandle);
+            _commandList->SetGraphicsRootDescriptorTable(1, data.textureSrvHandle);
+            _commandList->DrawInstanced(data.vertexCount, data.instanceCount, 0, 0);
+        }
+
+        _commandList->Close();
+    };
+
+    worker_ = std::async(std::launch::async, record, commandList_.Get());
+
+    return;
+}
+
+void ParticleSystem::Sync()
+{
+    if(!worker_.valid()) return;
+
+    worker_.get();
+    commandListDatas_.clear();
 }
 
 void ParticleSystem::CreateRootSignature()
