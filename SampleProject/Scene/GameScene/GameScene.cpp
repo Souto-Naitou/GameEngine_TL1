@@ -6,7 +6,7 @@
 #include <Features/Line/LineSystem.h>
 #include <Core/Win32/WinSystem.h>
 #include <Features/GameEye/FreeLook/FreeLookEye.h>
-#include <Features/UI/UI.h>
+#include <Features/NiUI/NiUI.h>
 #include <Features/Audio/AudioManager.h>
 
 
@@ -86,18 +86,18 @@ void GameScene::Update()
     pSmoke_->Update();
     pSpark_->Update();
 
-    if (UI::Button("Button1", "white1x1.png", { 100, 100 }, { 100, 30 }))
+    if (NiUI::Button("Button1", "white1x1.png", { 100, 100 }, { 100, 30 }))
     {
         /// Do anything...
         pAudio_->Play();
     }
 
-    if (UI::Button("Button2", "white1x1.png", { 100, 150 }, { 100, 30 }))
+    if (NiUI::Button("Button2", "white1x1.png", { 100, 150 }, { 100, 30 }))
     {
         /// Do anything...
     }
 
-    if (UI::Button("Button3", "white1x1.png", { 100, 200 }, { 100, 30 }))
+    if (NiUI::Button("Button3", "white1x1.png", { 100, 200 }, { 100, 30 }))
     {
         /// Do anything...
     }

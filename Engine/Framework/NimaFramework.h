@@ -20,7 +20,7 @@
 #include <Features/RandomGenerator/RandomGenerator.h>
 #include <Features/Text/TextSystem.h>
 #include <Features/Viewport/Viewport.h>
-#include <Features/UI/Derived/Drawer.h>
+#include <Features/NiUI/Derived/Drawer.h>
 
 #include <memory> /// std::unique_ptr
 

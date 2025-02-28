@@ -1,18 +1,18 @@
-#include "UI.h"
+#include "NiUI.h"
 
 #include <stdexcept> // runtime_error
 
-UI_Input UI::input_ = UI_Input();
-bool UI::isInitialized_ = false;
-bool UI::isBeginFrame_ = false;
-NiVec2 UI::leftTop_ = { 0, 0 };
-NiVec2 UI::size_ = { 0, 0 };
-std::unordered_map<std::string, ButtonImageData> UI::buttonImages_ = std::unordered_map<std::string, ButtonImageData>();
-std::string UI::activeComponentID_ = {};
-IDrawer* UI::drawer_ = nullptr;
+NiUI_Input NiUI::input_ = NiUI_Input();
+bool NiUI::isInitialized_ = false;
+bool NiUI::isBeginFrame_ = false;
+NiVec2 NiUI::leftTop_ = { 0, 0 };
+NiVec2 NiUI::size_ = { 0, 0 };
+std::unordered_map<std::string, ButtonImageData> NiUI::buttonImages_ = std::unordered_map<std::string, ButtonImageData>();
+std::string NiUI::activeComponentID_ = {};
+IDrawer* NiUI::drawer_ = nullptr;
 
 
-void UI::Initialize(const NiVec2& _size, const NiVec2& _leftTop)
+void NiUI::Initialize(const NiVec2& _size, const NiVec2& _leftTop)
 {
     isInitialized_ = true;
     leftTop_ = _leftTop;
@@ -24,7 +24,7 @@ void UI::Initialize(const NiVec2& _size, const NiVec2& _leftTop)
 }
 
 
-void UI::BeginFrame()
+void NiUI::BeginFrame()
 {
     CheckValid_BeginFrame();
 
@@ -37,7 +37,7 @@ void UI::BeginFrame()
     return;
 }
 
-void UI::DrawUI()
+void NiUI::DrawUI()
 {
     // 描画処理に必要なデータの確認
     CheckValid_DrawUI();
@@ -55,13 +55,13 @@ void UI::DrawUI()
     isBeginFrame_ = false;
 }
 
-void UI::NiUI_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
+void NiUI::NiUI_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
     input_.WndProcHandler(hWnd, msg, wParam, lParam);
     return;
 }
 
-bool UI::Button(const std::string& _id, const std::string& _textureName, const NiVec2& _leftTop, const NiVec2& _size)
+bool NiUI::Button(const std::string& _id, const std::string& _textureName, const NiVec2& _leftTop, const NiVec2& _size)
 {
     auto& buttonImage = buttonImages_[_id];
     bool isTrigger = false;
@@ -85,7 +85,7 @@ bool UI::Button(const std::string& _id, const std::string& _textureName, const N
     return result;
 }
 
-bool UI::ButtonBehavior(const std::string& _id, bool _isHover, bool _isTrigger, bool _isRelease, bool& _out_held)
+bool NiUI::ButtonBehavior(const std::string& _id, bool _isHover, bool _isTrigger, bool _isRelease, bool& _out_held)
 {
     if(_isTrigger)
     {
@@ -106,7 +106,7 @@ bool UI::ButtonBehavior(const std::string& _id, bool _isHover, bool _isTrigger, 
     return false;
 }
 
-void UI::ButtonDataEnqueue()
+void NiUI::ButtonDataEnqueue()
 {
     for(auto& buttonImage : buttonImages_)
     {
@@ -115,7 +115,7 @@ void UI::ButtonDataEnqueue()
     }
 }
 
-void UI::CheckValid_BeginFrame()
+void NiUI::CheckValid_BeginFrame()
 {
     if(!isInitialized_)
     {
@@ -128,7 +128,7 @@ void UI::CheckValid_BeginFrame()
     }
 }
 
-void UI::CheckValid_DrawUI()
+void NiUI::CheckValid_DrawUI()
 {
     if(!isInitialized_)
     {
@@ -146,7 +146,7 @@ void UI::CheckValid_DrawUI()
     }
 }
 
-void UI::JudgeClickRect(const NiVec2& _leftTop, const NiVec2& _size, bool& _isHover, bool& _isTrigger, bool& _isRelease)
+void NiUI::JudgeClickRect(const NiVec2& _leftTop, const NiVec2& _size, bool& _isHover, bool& _isTrigger, bool& _isRelease)
 {
     NiVec2 leftTop = _leftTop + leftTop_;
 

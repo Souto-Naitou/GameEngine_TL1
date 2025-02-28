@@ -1,9 +1,9 @@
 #pragma once
 
-#include "Type/ComponentData.h" // ComponentData
+#include "Type/NiUI_ComponentData.h" // ComponentData
 #include "math/NiVec2.h" // NiVec2
-#include "UI_Input.h" // UI_Input
-#include "Interface/IDrawer.h"
+#include "NiUI_Input.h" // NiUI_Input
+#include "Interface/NiUI_IDrawer.h"
 
 #include <unordered_map> // unordered_map
 #include <string> // string
@@ -12,11 +12,11 @@
 
 
 /// UIクラス
-class UI
+class NiUI
 {
 public: /// コンストラクタとデストラクタ
-    UI() = default;
-    ~UI() = default;
+    NiUI() = default;
+    ~NiUI() = default;
 
 
 public: /// 一般
@@ -59,7 +59,7 @@ private: /// メンバ変数
     static bool isBeginFrame_;
 
     // 入力データ
-    static UI_Input input_;
+    static NiUI_Input input_;
 
     // ウィンドウのサイズ
     static NiVec2 leftTop_;

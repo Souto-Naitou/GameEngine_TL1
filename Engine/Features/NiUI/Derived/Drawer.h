@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Features/UI/Interface/IDrawer.h>
+#include <Features/NiUI/Interface/NiUI_IDrawer.h>
 
 #include <Features/Sprite/Sprite.h>
 #include <list>

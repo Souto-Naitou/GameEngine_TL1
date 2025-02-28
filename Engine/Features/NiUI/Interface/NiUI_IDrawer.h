@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../Type/ComponentData.h"
+#include "../Type/NiUI_ComponentData.h"
 #include <list>
 
 class IDrawer
