@@ -202,6 +202,21 @@
     <Filter Include="BaseClass">
       <UniqueIdentifier>{6eba742e-07c6-4355-a651-8ec2446a5ca1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Feature\NiUI">
+      <UniqueIdentifier>{d98c20b8-5fe8-4446-9d77-e434980fd03a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Feature\NiUI\Input">
+      <UniqueIdentifier>{d2082772-fe19-449f-bba8-c556151af90a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Feature\NiUI\Interface">
+      <UniqueIdentifier>{450f7409-a262-48b1-84ff-01116c55e66e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Feature\NiUI\Math">
+      <UniqueIdentifier>{50796d06-4468-4736-92f5-2266673d46a6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Feature\NiUI\Type">
+      <UniqueIdentifier>{bf8221f0-25df-4dee-af29-0539d74ea716}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DebugTools\DebugManager\DebugManager.cpp">
@@ -368,6 +383,21 @@
     </ClCompile>
     <ClCompile Include="BaseClasses\ObjectSystemBase.cpp">
       <Filter>BaseClass</Filter>
+    </ClCompile>
+    <ClCompile Include="Features\NiUI\Derived\Drawer.cpp">
+      <Filter>Feature\NiUI</Filter>
+    </ClCompile>
+    <ClCompile Include="Features\NiUI\NiUI.cpp">
+      <Filter>Feature\NiUI</Filter>
+    </ClCompile>
+    <ClCompile Include="Features\NiUI\NiUI_Input.cpp">
+      <Filter>Feature\NiUI\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="Features\NiUI\Interface\NiUI_IDrawer.cpp">
+      <Filter>Feature\NiUI\Interface</Filter>
+    </ClCompile>
+    <ClCompile Include="Features\NiUI\Math\NiVec2.cpp">
+      <Filter>Feature\NiUI\Math</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -571,6 +601,27 @@
     </ClInclude>
     <ClInclude Include="BaseClasses\ObjectSystemBase.h">
       <Filter>BaseClass</Filter>
+    </ClInclude>
+    <ClInclude Include="Features\NiUI\Derived\Drawer.h">
+      <Filter>Feature\NiUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Features\NiUI\NiUI.h">
+      <Filter>Feature\NiUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Features\NiUI\NiUI_Input.h">
+      <Filter>Feature\NiUI\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Features\NiUI\Interface\NiUI_IDrawer.h">
+      <Filter>Feature\NiUI\Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="Features\NiUI\Math\NiVec2.h">
+      <Filter>Feature\NiUI\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Features\NiUI\Type\NiUI_Enum.h">
+      <Filter>Feature\NiUI\Type</Filter>
+    </ClInclude>
+    <ClInclude Include="Features\NiUI\Type\NiUI_ComponentData.h">
+      <Filter>Feature\NiUI\Type</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

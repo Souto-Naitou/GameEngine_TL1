@@ -21,6 +21,8 @@ public:
 
 public: /// Getter
     uint32_t GetOutputSRVIndex() const { return outputSRVIndex_; }
+    Vector2 GetViewportPos() const { return vpPos_; }
+    Vector2 GetViewportSize() const { return vpSize_; }
 
 
 private:
@@ -44,6 +46,10 @@ private:
     uint32_t outputUAVIndex_ = 0u;
     
     static constexpr wchar_t kComputeShaderPath_[] = L"EngineResources/Shaders/WithoutAlpha.CS.hlsl";
+
+    Vector2 windowPos_ = { 0, 0 };
+    Vector2 vpPos_ = { 0, 0 };
+    Vector2 vpSize_ = { 0, 0 };
 
 
 private: /// 借り物

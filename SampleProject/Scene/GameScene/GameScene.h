@@ -3,11 +3,10 @@
 #include <Features/Input/Input.h>
 #include <Interfaces/IScene.h>
 #include <Features/Object3d/Object3d.h>
-#include <Features/Model/Model.h>
 #include <Features/GameEye/GameEye.h>
-#include <Features/Particle/Particle.h>
 #include <Features/Particle/Emitter/ParticleEmitter.h>
 #include <Features/Sprite/Sprite.h>
+#include <Features/Audio/Audio.h>
 
 #include <memory>
 
@@ -42,6 +41,7 @@ private:
     std::unique_ptr<Object3d> pSkydome_;
     std::unique_ptr<Object3d> pGrid_;
     std::unique_ptr<Sprite> pGuideSprite_;
+    Audio* pAudio_;
 
 private:
     Input* pInput_;

@@ -449,7 +449,6 @@ void DX12Helper::CommandListCommonSetting(ID3D12GraphicsCommandList* _commandLis
     /// コマンドリストの設定
     _commandList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
     _commandList->OMSetRenderTargets(1, &rtv[backBufferIndex], FALSE, &dsvHandle);
-    _commandList->ClearDepthStencilView(dsvHandle, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
     _commandList->RSSetViewports(1, &viewport);
     _commandList->RSSetScissorRects(1, &scissorRect);
 

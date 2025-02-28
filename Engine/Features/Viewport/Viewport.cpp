@@ -214,7 +214,16 @@ void Viewport::DrawWindow()
 
     if(ImGui::Begin("Viewport", nullptr, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoBringToFrontOnFocus))
     {
+        auto pos = ImGui::GetWindowPos();
+        windowPos_ = { pos.x, pos.y };
+
+        auto wndSize = ImGui::GetWindowSize();
+        vpSize_ = { wndSize.x, wndSize.y };
+
         ImGui::Image((ImTextureID)gpuHnd.ptr, ImVec2(static_cast<float>(width), static_cast<float>(height)));
+
+        auto itempos = ImGui::GetItemRectMin();
+        vpPos_ = { itempos.x, itempos.y };
     }
     ImGui::End();
 

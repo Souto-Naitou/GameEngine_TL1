@@ -20,6 +20,7 @@
 #include <Features/RandomGenerator/RandomGenerator.h>
 #include <Features/Text/TextSystem.h>
 #include <Features/Viewport/Viewport.h>
+#include <Features/UI/Derived/Drawer.h>
 
 #include <memory> /// std::unique_ptr
 
@@ -49,6 +50,7 @@ protected: /// システムクラスのインスタンス
     std::unique_ptr<ISceneFactory>  pSceneFactory_              = nullptr;
     std::unique_ptr<ImGuiManager>   pImGuiManager_              = nullptr;
     std::unique_ptr<Viewport>       pViewport_                  = nullptr;
+    std::unique_ptr<Drawer>         pDrawer_                    = nullptr;
 
 
 protected: /// 他クラスのインスタンス
