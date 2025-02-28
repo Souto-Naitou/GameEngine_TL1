@@ -1,13 +1,13 @@
-#include "UI_Input.h"
+#include "NiUI_Input.h"
 
 #include <WinUser.h> // WM_LBUTTONDOWN, WM_LBUTTONUP, WM_RBUTTONDOWN, WM_RBUTTONUP, WM_MBUTTONDOWN, WM_MBUTTONUP
 
-void UI_Input::Initialize()
+void NiUI_Input::Initialize()
 {
     mouseData_ = {};
 }
 
-void UI_Input::Update()
+void NiUI_Input::Update()
 {
     /// 前フレームの状態を保存
     mouseData_.isLeftPre = mouseData_.isLeft;
@@ -32,7 +32,7 @@ void UI_Input::Update()
     mouseData_.pos = NiVec2(static_cast<float>(point.x), static_cast<float>(point.y));
 }
 
-void UI_Input::WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
+void NiUI_Input::WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
     hWnd_ = hWnd;
 

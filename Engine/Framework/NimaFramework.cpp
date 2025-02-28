@@ -1,7 +1,7 @@
 #include "NimaFramework.h"
 #include <clocale>
 
-#include <Features/UI/UI.h>
+#include <Features/NiUI/NiUI.h>
 
 void NimaFramework::Run()
 {
@@ -119,11 +119,11 @@ void NimaFramework::Initialize()
 
     /// UIの初期化
     auto vp = pDirectX_->GetViewport();
-    UI::Initialize({ vp.Width, vp.Height }, { vp.TopLeftX, vp.TopLeftY });
+    NiUI::Initialize({ vp.Width, vp.Height }, { vp.TopLeftX, vp.TopLeftY });
 
     /// Drawerの設定
     pDrawer_ = std::make_unique<Drawer>();
-    UI::SetDrawer(pDrawer_.get());
+    NiUI::SetDrawer(pDrawer_.get());
 }
 
 void NimaFramework::Finalize()
@@ -160,7 +160,7 @@ void NimaFramework::Update()
 
     #endif // _DEBUG
 
-    UI::BeginFrame();
+    NiUI::BeginFrame();
 
     /// マネージャ更新
     pInput_->Update();
@@ -208,7 +208,7 @@ void NimaFramework::Draw()
 
     /// UIの描画
     pSpriteSystem_->PresentDraw();
-    UI::DrawUI();
+    NiUI::DrawUI();
 
     /// レンダーターゲットからビューポート用リソースにコピー
     pDirectX_->CopyFromRTV(pDirectX_->GetCommandList());
@@ -243,7 +243,7 @@ void NimaFramework::DrawHighPerformance()
 
     /// 前景スプライトの描画
     pSceneManager_->SceneDraw2dForeground();
-    UI::DrawUI();
+    NiUI::DrawUI();
     pSpriteSystem_->DrawCall();
 
 

@@ -7,7 +7,7 @@
 
 #include <string> // string
 #include "../math/NiVec2.h" // NiVec2
-#include "UIEnum.h" // enums
+#include "NiUI_Enum.h" // enums
 
 
 // フレックスコンテナのデータ

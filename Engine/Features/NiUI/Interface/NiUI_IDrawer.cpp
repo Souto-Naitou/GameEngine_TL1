@@ -1,4 +1,4 @@
-#include "IDrawer.h"
+#include "NiUI_IDrawer.h"
 
 void IDrawer::DrawSetting()
 {
