@@ -330,7 +330,7 @@ void DebugManager::DrawGameWindow()
     uint32_t srvIndex = pDX12_->GetGameWndSRVIndex();
     auto gpuHnd = SRVManager::GetInstance()->GetGPUDescriptorHandle(srvIndex);
 
-    auto vp = pDX12_->GetGameWindowRect();
+    auto vp = pDX12_->GetViewport();
 
     uint32_t width = static_cast<uint32_t>(vp.Width);
     uint32_t height = static_cast<uint32_t>(vp.Height);

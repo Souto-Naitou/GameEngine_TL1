@@ -21,7 +21,7 @@ void Viewport::Initialize()
     includeHandler_ = pDx12_->GetIncludeHandler();
     commandList_ = pDx12_->GetCommandList();
 
-    viewport_ = pDx12_->GetGameWindowRect();
+    viewport_ = pDx12_->GetViewport();
 
     inputTexture_ = pDx12_->GetGameScreenResource();
     outputTexture_ = pDx12_->GetGameScreenComputed();
@@ -204,7 +204,7 @@ void Viewport::DrawWindow()
     #ifdef _DEBUG
 
     auto gpuHnd = SRVManager::GetInstance()->GetGPUDescriptorHandle(outputSRVIndex_);
-    auto vp = pDx12_->GetGameWindowRect();
+    auto vp = pDx12_->GetViewport();
 
     uint32_t width = static_cast<uint32_t>(vp.Width);
     uint32_t height = static_cast<uint32_t>(vp.Height);
@@ -214,7 +214,16 @@ void Viewport::DrawWindow()
 
     if(ImGui::Begin("Viewport", nullptr, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoBringToFrontOnFocus))
     {
+        auto pos = ImGui::GetWindowPos();
+        windowPos_ = { pos.x, pos.y };
+
+        auto wndSize = ImGui::GetWindowSize();
+        vpSize_ = { wndSize.x, wndSize.y };
+
         ImGui::Image((ImTextureID)gpuHnd.ptr, ImVec2(static_cast<float>(width), static_cast<float>(height)));
+
+        auto itempos = ImGui::GetItemRectMin();
+        vpPos_ = { itempos.x, itempos.y };
     }
     ImGui::End();
 

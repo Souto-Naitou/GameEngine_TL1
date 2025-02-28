@@ -76,7 +76,7 @@ void Text::SetPosition(const Vector2& _pos)
     }
     else
     {
-        auto vp = pDirectX12_->GetGameWindowRect();
+        auto vp = pDirectX12_->GetViewport();
 
         Vector2 anchorPos = ComputeStandardPosition(anchorPoint_);
         Vector2 pivotPos = ComputeStandardPosition(pivot_);

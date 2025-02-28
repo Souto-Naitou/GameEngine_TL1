@@ -20,6 +20,7 @@
 #include <Features/RandomGenerator/RandomGenerator.h>
 #include <Features/Text/TextSystem.h>
 #include <Features/Viewport/Viewport.h>
+#include <Features/UI/Derived/Drawer.h>
 
 #include <memory> /// std::unique_ptr
 
@@ -28,26 +29,28 @@
 class NimaFramework
 {
 public:
-    void Run();
+    void                            Run();
 
 
 public:
-    virtual ~NimaFramework() {}
+    virtual                         ~NimaFramework() {}
 
-    virtual void Initialize();
-    virtual void Finalize();
-    virtual void Update();
-    virtual void Draw();
-    virtual bool IsExitProgram() const { return isExitProgram_; }
+    virtual void                    Initialize();
+    virtual void                    Finalize();
+    virtual void                    Update();
+    virtual void                    Draw();
+    virtual void                    DrawHighPerformance();
+    virtual bool                    IsExitProgram() const { return isExitProgram_; }
 
-    void PreProcess();
-    void PostProcess();
+    void                            PreProcess();
+    void                            PostProcess();
 
 
 protected: /// システムクラスのインスタンス
     std::unique_ptr<ISceneFactory>  pSceneFactory_              = nullptr;
     std::unique_ptr<ImGuiManager>   pImGuiManager_              = nullptr;
     std::unique_ptr<Viewport>       pViewport_                  = nullptr;
+    std::unique_ptr<Drawer>         pDrawer_                    = nullptr;
 
 
 protected: /// 他クラスのインスタンス

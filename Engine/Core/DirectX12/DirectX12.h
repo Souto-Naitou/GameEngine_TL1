@@ -46,8 +46,8 @@ public:
     void CommandExecute();
     void DisplayFrame();
     void WaitForGPU();
-    void ChangeStateRTV(D3D12_RESOURCE_STATES _now, D3D12_RESOURCE_STATES _next);
-    void CopyFromRTV();
+    void ChangeStateRTV(ID3D12GraphicsCommandList* _commandList, D3D12_RESOURCE_STATES _now, D3D12_RESOURCE_STATES _next);
+    void CopyFromRTV(ID3D12GraphicsCommandList* _commandList);
 
     /// <summary>
     /// ゲーム画面リソースの生成
@@ -71,7 +71,9 @@ public: /// Getter
 
     int32_t                                                 GetNumUploadedTexture() const               { return numUploadedTexture; }
 
+    const D3D12_CPU_DESCRIPTOR_HANDLE*                      GetRTVHandle() const                        { return rtvHandles_; }
     const DXGI_SWAP_CHAIN_DESC1&                            GetSwapChainDesc() const                    { return swapChainDesc_; }
+    auto                                                    GetDSVDescriptorHeap() const                { return dsvDescriptorHeap_.Get(); }
 
     std::vector<D3D12_GPU_DESCRIPTOR_HANDLE>&               GetSRVHandlesGPUList()                      { return srvHandlesGPUList_; }
     std::vector<D3D12_CPU_DESCRIPTOR_HANDLE>&               GetSRVHandlesCPUList()                      { return srvHandlesCPUList_; }
@@ -80,7 +82,7 @@ public: /// Getter
     ID2D1Factory3*                                          GetD2D1Factory()                            { return d2dFactory_.Get(); }
     ID2D1Device2*                                           GetDirect2dDevice()                         { return d2dDevice_.Get(); }
     ID2D1DeviceContext2*                                    GetDirect2dDeviceContext()                  { return d2dDeviceContext_.Get(); }
-    D3D12_VIEWPORT                                          GetGameWindowRect() const                   { return viewport_; }
+    D3D12_VIEWPORT                                          GetViewport() const                         { return viewport_; }
     uint32_t                                                GetGameWndSRVIndex() const                  { return gameWndSrvIndex_; }
     uint32_t                                                GetBackBufferIndex() const                  { return backBufferIndex_; }
     ID3D11Resource*                                         GetD3D11WrappedBackBuffer(uint32_t _index)  { return d3d11WrappedBackBuffers_[_index].Get(); }
@@ -89,10 +91,12 @@ public: /// Getter
     ID3D11DeviceContext*                                    GetD3D11On12DeviceContext()                 { return d3d11On12DeviceContext_.Get(); }
     ID3D12Resource*                                         GetGameScreenResource()                     { return gameScreenResource_.Get(); }
     ID3D12Resource*                                         GetGameScreenComputed()                     { return gameScreenComputed_.Get(); }
+    D3D12_RECT                                              GetScissorRect() const                       { return scissorRect_; }
 
 public:
     void SetGameWindowRect(D3D12_VIEWPORT _viewport);
     void SetGameWndSRVIndex(uint32_t _index) { gameWndSrvIndexComputed_ = _index; }
+    void AddCommandList(ID3D12GraphicsCommandList* _commandList) { commandLists_.emplace_back(_commandList); }
 
 private:
     DirectX12() = default;
@@ -135,6 +139,7 @@ private:
 
     std::array<Microsoft::WRL::ComPtr<ID3D11Resource>, 2>   d3d11WrappedBackBuffers_        = {};           // D3D11のラップされたバックバッファ
     std::array<Microsoft::WRL::ComPtr<ID2D1Bitmap1>, 2>     d2dRenderTargets_               = {};           // D2D1のレンダーターゲット
+    std::list<ID3D12GraphicsCommandList*>                   commandLists_                   = {};           // コマンドリストのリスト
 
     D3D12_RESOURCE_BARRIER                                  barrier_                        = {};
     D3D12_COMMAND_QUEUE_DESC                                commandQueueDesc_               = {};           // コマンドキューの設定

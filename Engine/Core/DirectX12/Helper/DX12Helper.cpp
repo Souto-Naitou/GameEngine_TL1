@@ -7,6 +7,7 @@
 #include <Utility/ConvertString/ConvertString.h>
 #include <Core/DirectX12/DirectX12.h>
 #include <Common\structs.h>
+#include <Core/DirectX12/SRVManager.h>
 
 void DX12Helper::CreateDevice(Microsoft::WRL::ComPtr<ID3D12Device>& _device, Microsoft::WRL::ComPtr<IDXGIAdapter4>& _adapter)
 {
@@ -431,6 +432,27 @@ void DX12Helper::ChangeStateResource(const Microsoft::WRL::ComPtr<ID3D12Graphics
     barrier.Transition.StateAfter = _after;
     barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
     _commandList->ResourceBarrier(1, &barrier);
+}
+
+void DX12Helper::CommandListCommonSetting(ID3D12GraphicsCommandList* _commandList)
+{
+    /// 必要なデータを取得
+    DirectX12* pDx12 = DirectX12::GetInstance();
+    SRVManager* pSrvManager = SRVManager::GetInstance();
+    ID3D12DescriptorHeap* ppHeaps[] = { pSrvManager->GetDescriptorHeap() };
+    auto rtv = pDx12->GetRTVHandle();
+    auto backBufferIndex = pDx12->GetBackBufferIndex();
+    auto dsvHandle = pDx12->GetDSVDescriptorHeap()->GetCPUDescriptorHandleForHeapStart();
+    auto viewport = pDx12->GetViewport();
+    auto scissorRect = pDx12->GetScissorRect();
+
+    /// コマンドリストの設定
+    _commandList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
+    _commandList->OMSetRenderTargets(1, &rtv[backBufferIndex], FALSE, &dsvHandle);
+    _commandList->RSSetViewports(1, &viewport);
+    _commandList->RSSetScissorRects(1, &scissorRect);
+
+    return;
 }
 
 D3D12_CPU_DESCRIPTOR_HANDLE DX12Helper::GetCPUDescriptorHandle(const Microsoft::WRL::ComPtr<ID3D12DescriptorHeap>& _descriptorHeap, uint32_t _descriptorSize, uint32_t _index)

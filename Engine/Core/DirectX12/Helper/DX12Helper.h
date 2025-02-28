@@ -117,4 +117,6 @@ namespace DX12Helper
         D3D12_RESOURCE_STATES _before, 
         D3D12_RESOURCE_STATES _after
     );
+
+    void CommandListCommonSetting(ID3D12GraphicsCommandList* _commandList);
 }

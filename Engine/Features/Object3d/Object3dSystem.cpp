@@ -10,6 +10,8 @@ Object3dSystem::Object3dSystem()
 
 void Object3dSystem::Initialize()
 {
+    ObjectSystemBase::Initialize();
+
     CreateRootSignature();
     CreateMainPipelineState();
     CreateDepthPipelineState();
@@ -41,6 +43,67 @@ void Object3dSystem::MainDrawSetting()
 
     /// プリミティブトポロジーをセットする
     commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+}
+
+void Object3dSystem::DrawCall()
+{
+    auto record = [&](ID3D12GraphicsCommandList* _commandList)
+    {
+        _commandList->Reset(commandAllocator_.Get(), nullptr);
+
+        /// コマンドリストの設定
+        DX12Helper::CommandListCommonSetting(_commandList);
+
+        /// ルートシグネチャをセットする
+        _commandList->SetGraphicsRootSignature(rootSignature_.Get());
+
+        /// グラフィックスパイプラインステートをセットする
+        _commandList->SetPipelineState(psoEarlyZ_.Get());
+
+        /// プリミティブトポロジーをセットする
+        _commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+        for(auto& data : commandListDatas_)
+        {
+            for(auto& cbuffer : data.cbuffers)
+            {
+                auto& [key, value] = cbuffer;
+                _commandList->SetGraphicsRootConstantBufferView(key, value->GetGPUVirtualAddress());
+            }
+
+            data.model->Draw(_commandList);
+        }
+
+        /// ルートシグネチャをセットする
+        _commandList->SetGraphicsRootSignature(rootSignature_.Get());
+
+        /// グラフィックスパイプラインステートをセットする
+        _commandList->SetPipelineState(psoMain_.Get());
+
+        /// プリミティブトポロジーをセットする
+        _commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+        for(auto& data : commandListDatas_)
+        {
+            for(auto& cbuffer : data.cbuffers)
+            {
+                auto& [key, value] = cbuffer;
+                _commandList->SetGraphicsRootConstantBufferView(key, value->GetGPUVirtualAddress());
+            }
+
+            data.model->Draw(_commandList);
+        }
+
+        _commandList->Close();
+    };
+
+    worker_ = std::async(std::launch::async, record, commandList_.Get());
+}
+
+void Object3dSystem::Sync()
+{
+    worker_.get();
+    commandListDatas_.clear();
 }
 
 void Object3dSystem::CreateRootSignature()

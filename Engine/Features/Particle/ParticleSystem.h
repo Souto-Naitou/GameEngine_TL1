@@ -3,9 +3,21 @@
 #include <wrl.h>
 #include <Core/DirectX12/DirectX12.h>
 #include <Features/GameEye/GameEye.h>
+#include <BaseClasses/ObjectSystemBase.h>
+#include <list>
 
-class ParticleSystem
+class ParticleSystem : public ObjectSystemBase
 {
+public:
+    struct CommandListData
+    {
+        D3D12_VERTEX_BUFFER_VIEW* pVBV = nullptr;
+        D3D12_GPU_DESCRIPTOR_HANDLE srvHandle = {};
+        D3D12_GPU_DESCRIPTOR_HANDLE textureSrvHandle = {};
+        UINT vertexCount = 0;
+        UINT instanceCount = 0;
+    };
+
 public:
     ParticleSystem(const ParticleSystem&) = delete;
     ParticleSystem& operator=(const ParticleSystem&) = delete;
@@ -21,9 +33,13 @@ public:
     void Initialize();
     void PresentDraw();
 
+    void DrawCall() override;
+    void Sync() override;
+
 
 public: /// Setter
     void SetDefaultGameEye(GameEye* _pGameEye) { pDefaultGameEye_ = _pGameEye; }
+    void AddCommandListData(CommandListData& _pData) { commandListDatas_.emplace_back(_pData); }
 
 
 public: /// Getter
@@ -40,6 +56,8 @@ private: /// メンバ変数
     Microsoft::WRL::ComPtr<ID3D12RootSignature> rootSignature_ = nullptr;
     Microsoft::WRL::ComPtr<ID3D12PipelineState> graphicsPipelineState_ = nullptr;
     GameEye* pDefaultGameEye_ = nullptr;
+
+    std::list<CommandListData> commandListDatas_;
 
 
 private: /// 非公開関数

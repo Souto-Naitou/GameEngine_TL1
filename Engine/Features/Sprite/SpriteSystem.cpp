@@ -2,23 +2,13 @@
 #include <Core/DirectX12/Helper/DX12Helper.h>
 #include <DebugTools/Logger/Logger.h>
 
-SpriteSystem::SpriteSystem()
-{
-    pDx12_ = DirectX12::GetInstance();
-}
-
-SpriteSystem::~SpriteSystem()
-{
-}
 
 void SpriteSystem::Initialize()
 {
+    ObjectSystemBase::Initialize();
+
     CreateRootSignature();
     CreatePipelineState();
-}
-
-void SpriteSystem::Update()
-{
 }
 
 void SpriteSystem::PresentDraw()
@@ -33,6 +23,46 @@ void SpriteSystem::PresentDraw()
 
     /// プリミティブトポロジーをセットする
     commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+}
+
+void SpriteSystem::DrawCall()
+{
+    auto record = [&](ID3D12GraphicsCommandList* _commandList)
+    {
+        _commandList->Reset(commandAllocator_.Get(), nullptr);
+
+        /// コマンドリストの設定
+        DX12Helper::CommandListCommonSetting(_commandList);
+
+        /// ルートシグネチャをセットする
+        _commandList->SetGraphicsRootSignature(rootSignature_.Get());
+
+        /// グラフィックスパイプラインステートをセットする
+        _commandList->SetPipelineState(graphicsPipelineState_.Get());
+
+        /// プリミティブトポロジーをセットする
+        _commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+        
+        for(auto& data : commandListDatas_)
+        {
+            _commandList->SetGraphicsRootConstantBufferView(0, data.materialResource->GetGPUVirtualAddress());
+            _commandList->SetGraphicsRootConstantBufferView(1, data.transformationMatrixResource->GetGPUVirtualAddress());
+            _commandList->SetGraphicsRootDescriptorTable(2, data.srvHandleGPU);
+            _commandList->IASetVertexBuffers(0, 1, data.pVBV);
+            _commandList->IASetIndexBuffer(data.pIBV);
+            _commandList->DrawIndexedInstanced(6, 1, 0, 0, 0);
+        }
+
+        _commandList->Close();
+    };
+
+    worker_ = std::async(std::launch::async, record, commandList_.Get());
+}
+
+void SpriteSystem::Sync()
+{
+    worker_.get();
+    commandListDatas_.clear();
 }
 
 void SpriteSystem::CreateRootSignature()

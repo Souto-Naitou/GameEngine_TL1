@@ -1,6 +1,8 @@
 #include "NimaFramework.h"
 #include <clocale>
 
+#include <Features/UI/UI.h>
+
 void NimaFramework::Run()
 {
     setlocale(LC_ALL, "ja_JP.Utf-8");
@@ -20,7 +22,11 @@ void NimaFramework::Run()
         }
 
         /// 描画
+        #ifdef _DEBUG
         Draw();
+        #else
+        DrawHighPerformance();
+        #endif // _DEBUG
     }
 
     Finalize();
@@ -105,6 +111,19 @@ void NimaFramework::Initialize()
 
     /// シーンマネージャの初期化
     pSceneManager_->Initialize();
+
+    /// コマンドリストを追加
+    pDirectX_->AddCommandList(pObject3dSystem_->GetCommandList());
+    pDirectX_->AddCommandList(pSpriteSystem_->GetCommandList());
+    pDirectX_->AddCommandList(pParticleSystem_->GetCommandList());
+
+    /// UIの初期化
+    auto vp = pDirectX_->GetViewport();
+    UI::Initialize({ vp.Width, vp.Height }, { vp.TopLeftX, vp.TopLeftY });
+
+    /// Drawerの設定
+    pDrawer_ = std::make_unique<Drawer>();
+    UI::SetDrawer(pDrawer_.get());
 }
 
 void NimaFramework::Finalize()
@@ -131,6 +150,18 @@ void NimaFramework::Update()
         pImGuiManager_->Resize();
     }
 
+    /// UIの更新
+    #ifdef _DEBUG
+
+    UI::SetWindowInfo(
+        { pViewport_->GetViewportSize().x, pViewport_->GetViewportSize().y },
+        { pViewport_->GetViewportPos().x, pViewport_->GetViewportPos().y }
+    );
+
+    #endif // _DEBUG
+
+    UI::BeginFrame();
+
     /// マネージャ更新
     pInput_->Update();
     pModelManager_->Update();
@@ -153,19 +184,11 @@ void NimaFramework::Update()
 
 void NimaFramework::Draw()
 {
-    /// 背景スプライトの描画
-    pSpriteSystem_->PresentDraw();
-    pSceneManager_->SceneDraw2dBackGround();
-
     /// 3D描画
     pObject3dSystem_->DepthDrawSetting();
     pSceneManager_->SceneDraw3d();
     pObject3dSystem_->MainDrawSetting();
     pSceneManager_->SceneDraw3d();
-
-    /// 中景スプライトの描画
-    pSpriteSystem_->PresentDraw();
-    pSceneManager_->SceneDraw2dMidground();
 
     /// 中景3dオブジェクトの描画
     pObject3dSystem_->MainDrawSetting();
@@ -183,8 +206,12 @@ void NimaFramework::Draw()
     pSpriteSystem_->PresentDraw();
     pSceneManager_->SceneDraw2dForeground();
 
+    /// UIの描画
+    pSpriteSystem_->PresentDraw();
+    UI::DrawUI();
+
     /// レンダーターゲットからビューポート用リソースにコピー
-    pDirectX_->CopyFromRTV();
+    pDirectX_->CopyFromRTV(pDirectX_->GetCommandList());
     /// コンピュートシェーダーの実行
     pViewport_->Compute();
 
@@ -193,6 +220,48 @@ void NimaFramework::Draw()
 
     /// コマンドの実行
     pDirectX_->CommandExecute();
+
+    /// テキストの描画
+    pTextSystem_->PresentDraw();
+    pSceneManager_->SceneDrawText();
+    pTextSystem_->PostDraw();
+}
+
+void NimaFramework::DrawHighPerformance()
+{
+    /// 3D描画
+    pSceneManager_->SceneDraw3d();
+    pObject3dSystem_->DrawCall();
+
+    /// ライン描画
+    pLineSystem_->PresentDraw();
+    pSceneManager_->SceneDrawLine();
+
+    /// パーティクル描画
+    pParticleManager_->Draw();
+    pParticleSystem_->DrawCall();
+
+    /// 前景スプライトの描画
+    pSceneManager_->SceneDraw2dForeground();
+    UI::DrawUI();
+    pSpriteSystem_->DrawCall();
+
+
+    /// コンピュートシェーダーの実行
+    pViewport_->Compute();
+
+    /// ImGuiの描画
+    pImGuiManager_->EndFrame();
+
+    /// 同期
+    pObject3dSystem_->Sync();
+    pParticleSystem_->Sync();
+    pSpriteSystem_->Sync();
+
+
+    /// コマンドの実行
+    pDirectX_->CommandExecute();
+
 
     /// テキストの描画
     pTextSystem_->PresentDraw();

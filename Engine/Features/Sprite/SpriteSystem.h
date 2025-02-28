@@ -1,37 +1,47 @@
 #pragma once
 
-#include <Core/DirectX12/DirectX12.h>
 #include <wrl.h>
+#include <d3d12.h>
+#include <list>
 
-class SpriteSystem
+#include <ClassStyles/SingletonStyle.h>
+#include <BaseClasses/ObjectSystemBase.h>
+
+class SpriteSystem : 
+    public SingletonStyle<SpriteSystem>,
+    public ObjectSystemBase
 {
+    friend class SingletonStyle<SpriteSystem>;
+
 public:
-    ~SpriteSystem();
-
-    SpriteSystem(const SpriteSystem&) = delete;
-    SpriteSystem& operator=(const SpriteSystem&) = delete;
-    SpriteSystem(const SpriteSystem&&) = delete;
-    SpriteSystem& operator=(const SpriteSystem&&) = delete;
-
-    static SpriteSystem* GetInstance()
+    struct CommandListData
     {
-        static SpriteSystem instance;
-        return &instance;
-    }
+        ID3D12Resource* materialResource;
+        ID3D12Resource* transformationMatrixResource;
+        D3D12_GPU_DESCRIPTOR_HANDLE srvHandleGPU;
+        D3D12_VERTEX_BUFFER_VIEW* pVBV;
+        D3D12_INDEX_BUFFER_VIEW* pIBV;
+    };
+
+
+public:
 
     void Initialize();
-    void Update();
     void PresentDraw();
 
-    DirectX12* GetDx12() { return pDx12_; }
+    void DrawCall() override;
+    void Sync() override;
+
+    void AddCommandListData(const CommandListData& _data) { commandListDatas_.emplace_back(_data); }
 
 private:
-    DirectX12* pDx12_ = nullptr;
     Microsoft::WRL::ComPtr<ID3D12RootSignature> rootSignature_ = nullptr;
-    Microsoft::WRL::ComPtr<ID3D12PipelineState> graphicsPipelineState_;
+    Microsoft::WRL::ComPtr<ID3D12PipelineState> graphicsPipelineState_ = nullptr;
+
+
+    std::list<CommandListData> commandListDatas_;
 
 private:
-    SpriteSystem();
     void CreateRootSignature();
     void CreatePipelineState();
     static constexpr wchar_t kVertexShaderPath[] = L"EngineResources/Shaders/Sprite.VS.hlsl";

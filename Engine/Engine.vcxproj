@@ -128,6 +128,7 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="BaseClasses\ObjectSystemBase.cpp" />
     <ClCompile Include="Common\HRESULT_ASSERT.cpp" />
     <ClCompile Include="Core\DirectX12\BlendMode.cpp" />
     <ClCompile Include="Core\DirectX12\DirectX12.cpp" />
@@ -162,6 +163,11 @@
     <ClCompile Include="Features\Model\Helper\ModelHelper.cpp" />
     <ClCompile Include="Features\Model\Model.cpp" />
     <ClCompile Include="Features\Model\ModelManager.cpp" />
+    <ClCompile Include="Features\NiUI\Derived\Drawer.cpp" />
+    <ClCompile Include="Features\NiUI\Interface\NiUI_IDrawer.cpp" />
+    <ClCompile Include="Features\NiUI\Math\NiVec2.cpp" />
+    <ClCompile Include="Features\NiUI\NiUI.cpp" />
+    <ClCompile Include="Features\NiUI\NiUI_Input.cpp" />
     <ClCompile Include="Features\Object3d\Object3d.cpp" />
     <ClCompile Include="Features\Object3d\Object3dSystem.cpp" />
     <ClCompile Include="Features\Particle\Emitter\ParticleEmitter.cpp" />
@@ -184,6 +190,8 @@
     <ClCompile Include="Utility\FilePathSearcher\FilePathSearcher.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BaseClasses\ObjectSystemBase.h" />
+    <ClInclude Include="ClassStyles\SingletonStyle.h" />
     <ClInclude Include="Common\define.h" />
     <ClInclude Include="Common\HRESULT_ASSERT.h" />
     <ClInclude Include="Common\structs.h" />
@@ -224,6 +232,13 @@
     <ClInclude Include="Features\Model\Helper\ModelHelper.h" />
     <ClInclude Include="Features\Model\Model.h" />
     <ClInclude Include="Features\Model\ModelManager.h" />
+    <ClInclude Include="Features\NiUI\Derived\Drawer.h" />
+    <ClInclude Include="Features\NiUI\Interface\NiUI_IDrawer.h" />
+    <ClInclude Include="Features\NiUI\Math\NiVec2.h" />
+    <ClInclude Include="Features\NiUI\NiUI.h" />
+    <ClInclude Include="Features\NiUI\NiUI_Input.h" />
+    <ClInclude Include="Features\NiUI\Type\NiUI_ComponentData.h" />
+    <ClInclude Include="Features\NiUI\Type\NiUI_Enum.h" />
     <ClInclude Include="Features\Object3d\Object3d.h" />
     <ClInclude Include="Features\Object3d\Object3dSystem.h" />
     <ClInclude Include="Features\Particle\Emitter\ParticleEmitter.h" />

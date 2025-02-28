@@ -5,6 +5,7 @@
 #include <string>
 #include <tuple>
 #include <Core/DirectX12/DirectX12.h>
+#include <Features/Text/Text.h>
 
 #include <Timer/Timer.h>
 
@@ -65,6 +66,8 @@ public:
     void DefaultStyle();
     void SetDisplay(bool _isEnable) { onDisplay_ = _isEnable; }
     bool GetDisplay() const { return onDisplay_; }
+
+    double GetFPS() const { return fps_; }
 
     void PushLog(const std::string& _log)
     {
