@@ -153,7 +153,7 @@ void NimaFramework::Update()
     /// UIの更新
     #ifdef _DEBUG
 
-    UI::SetWindowInfo(
+    NiUI::SetWindowInfo(
         { pViewport_->GetViewportSize().x, pViewport_->GetViewportSize().y },
         { pViewport_->GetViewportPos().x, pViewport_->GetViewportPos().y }
     );
