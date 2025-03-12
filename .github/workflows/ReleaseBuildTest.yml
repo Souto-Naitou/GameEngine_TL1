@@ -1,8 +1,5 @@
 name: ReleaseBuild
-on:
-  push:
-    branches:
-      - main
+on: [pull_request]
 env:
   SOLUTION_FILE_PATH: Engine/GameEngine_DX12.sln
   CONFIGURATION: Release
