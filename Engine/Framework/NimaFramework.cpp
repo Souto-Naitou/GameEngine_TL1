@@ -1,7 +1,7 @@
 #include "NimaFramework.h"
 #include <clocale>
 
-#include <Features/NiUI/NiUI.h>
+#include <NiGui/NiGui.h>
 
 void NimaFramework::Run()
 {
@@ -119,11 +119,25 @@ void NimaFramework::Initialize()
 
     /// UIの初期化
     auto vp = pDirectX_->GetViewport();
-    NiUI::Initialize({ vp.Width, vp.Height }, { vp.TopLeftX, vp.TopLeftY });
+    NiGui::Initialize({ vp.Width, vp.Height }, { vp.TopLeftX, vp.TopLeftY });
+
+    NiGui::SetConfirmSound(pAudioManager_->GetNewAudio("ui_confirm.wav"));
+    NiGui::SetHoverSound(pAudioManager_->GetNewAudio("ui_hover.wav"));
 
     /// Drawerの設定
-    pDrawer_ = std::make_unique<Drawer>();
-    NiUI::SetDrawer(pDrawer_.get());
+    pDrawer_ = std::make_unique<NiGuiDrawer>();
+    NiGui::SetDrawer(pDrawer_.get());
+
+    /// デバッグUIの設定
+    auto& io = NiGui::GetIO();
+    auto& state = NiGui::GetState();
+    auto& setting = NiGui::GetSetting();
+    pNiGuiDebug_ = std::make_unique<NiGuiDebug>();
+    pNiGuiDebug_->SetIO(&io);
+    pNiGuiDebug_->SetState(&state);
+    pNiGuiDebug_->SetSetting(&setting);
+   
+    NiGui::SetDebug(pNiGuiDebug_.get());
 }
 
 void NimaFramework::Finalize()
@@ -153,14 +167,14 @@ void NimaFramework::Update()
     /// UIの更新
     #ifdef _DEBUG
 
-    NiUI::SetWindowInfo(
+    NiGui::SetWindowInfo(
         { pViewport_->GetViewportSize().x, pViewport_->GetViewportSize().y },
         { pViewport_->GetViewportPos().x, pViewport_->GetViewportPos().y }
     );
 
     #endif // _DEBUG
 
-    NiUI::BeginFrame();
+    NiGui::BeginFrame();
 
     /// マネージャ更新
     pInput_->Update();
@@ -174,6 +188,10 @@ void NimaFramework::Update()
 
     /// シーン更新
     pSceneManager_->Update();
+
+    #ifdef _DEBUG
+    NiGui::DrawDebug();
+    #endif // _DEBUG
 
     /// ImGui更新
     pImGuiManager_->Render();
@@ -208,7 +226,7 @@ void NimaFramework::Draw()
 
     /// UIの描画
     pSpriteSystem_->PresentDraw();
-    NiUI::DrawUI();
+    NiGui::DrawUI();
 
     /// レンダーターゲットからビューポート用リソースにコピー
     pDirectX_->CopyFromRTV(pDirectX_->GetCommandList());
@@ -243,7 +261,7 @@ void NimaFramework::DrawHighPerformance()
 
     /// 前景スプライトの描画
     pSceneManager_->SceneDraw2dForeground();
-    NiUI::DrawUI();
+    NiGui::DrawUI();
     pSpriteSystem_->DrawCall();
 
 

@@ -43,6 +43,7 @@ private:
     std::unique_ptr<Sprite> pGuideSprite_;
     Audio* pAudio_;
 
+
 private:
     Input* pInput_;
 
