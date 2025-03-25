@@ -105,7 +105,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>$(ProjectDir)Common\stdafx.h</PrecompiledHeaderFile>
       <ForcedIncludeFiles>%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <Optimization>MaxSpeed</Optimization>
+      <Optimization>MinSpace</Optimization>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
