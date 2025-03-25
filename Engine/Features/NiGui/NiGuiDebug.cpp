@@ -1,9 +1,13 @@
 #include "NiGuiDebug.h"
 
+#ifdef _DEBUG
 #include <imgui.h>
+#endif // _DEBUG
 
 void NiGuiDebug::DrawDebugUI()
 {
+    #ifdef _DEBUG
+
     ImGuiTreeNodeFlags parentFlags = ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed;
 
     bool isOpen = ImGui::Begin("NiUI_DebugInfo");
@@ -78,4 +82,6 @@ void NiGuiDebug::DrawDebugUI()
     }
 
     ImGui::End();
+
+    #endif // _DEBUG
 }
