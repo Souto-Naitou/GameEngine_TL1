@@ -1,7 +1,7 @@
 #include "WinSystem.h"
 #include <cassert>
 
-#include <Features/NiUI/NiUI.h>
+#include <NiGui/NiGui.h>
 
 #ifdef _DEBUG
 #include <imgui.h>
@@ -87,7 +87,7 @@ bool WinSystem::IsResized()
 
 LRESULT CALLBACK WinSystem::WindowProcedure(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    NiUI::NiUI_WndProcHandler(hwnd, msg, wparam, lparam);
+    NiGui::NiGui_WndProcHandler(hwnd, msg, wparam, lparam);
 
     #ifdef _DEBUG
     if(ImGui_ImplWin32_WndProcHandler(hwnd, msg, wparam, lparam))
