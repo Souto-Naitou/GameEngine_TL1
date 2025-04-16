@@ -44,7 +44,7 @@ void GameScene::Initialize()
     pSkydome_->SetName("Skydome");
     pSkydome_->SetEnableLighting(false);
 
-    pGrid_->Initialize("Grid_v3.obj");
+    pGrid_->Initialize("Grid_v4.obj");
     pGrid_->SetScale({ 1.0f, 1.0f, 1.0f });
     pGrid_->SetName("Grid");
     pGrid_->SetTilingMultiply({ 100.0f, 100.0f });

@@ -372,8 +372,12 @@
     <ClCompile Include="BaseClasses\ObjectSystemBase.cpp">
       <Filter>BaseClass</Filter>
     </ClCompile>
-    <ClCompile Include="Features\NiGui\NiGuiDrawer.cpp" />
-    <ClCompile Include="Features\NiGui\NiGuiDebug.cpp" />
+    <ClCompile Include="Features\NiGui\NiGuiDebug.cpp">
+      <Filter>Feature\NiGuiDerived</Filter>
+    </ClCompile>
+    <ClCompile Include="Features\NiGui\NiGuiDrawer.cpp">
+      <Filter>Feature\NiGuiDerived</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common\define.h">

@@ -14,15 +14,12 @@ const uint32_t ParticleEmitter::kDefaultReserveCount_;
 
 void ParticleEmitter::Initialize(const std::string& _modelPath, const std::string& _jsonPath, bool _manualMode)
 {
-    if (!emitterData_.name_.empty())
-    {
-        particleName_ = emitterData_.name_;
-    }
-
 #ifdef _DEBUG
     std::stringstream ss;
-    ss << particleName_ << "##0x" << std::hex << this;
-    name_ = ss.str();
+    ss << "0x" << std::hex << this;
+    ptrHex_ = ss.str();
+
+    name_ = particleName_ + "##" + ptrHex_;
     DebugManager::GetInstance()->SetComponent("ParticleEmitter", name_, std::bind(&ParticleEmitter::DebugWindow, this));
 #endif // _DEBUG
 
@@ -39,6 +36,11 @@ void ParticleEmitter::Initialize(const std::string& _modelPath, const std::strin
     fromJsonData_ = EmitterManager::GetInstance()->LoadFile(jsonPath_);
     emitterData_ = fromJsonData_;
 
+    if (!emitterData_.name_.empty())
+    {
+        particleName_ = emitterData_.name_;
+        name_ = particleName_ + "##" + ptrHex_;
+    }
 
     aabb_ = std::make_unique<AABB>();
     aabb_->Initialize();
@@ -176,6 +178,7 @@ void ParticleEmitter::DebugWindow()
                 if (!fromJsonData_.name_.empty())
                 {
                     name_ = fromJsonData_.name_;
+                    name_ = fromJsonData_.name_ + "##" + ptrHex_;
                 }
                 jsonFileExist_ = true;
             }
