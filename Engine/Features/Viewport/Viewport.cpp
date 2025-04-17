@@ -222,7 +222,11 @@ void Viewport::DrawWindow()
 
         auto cliSize = ImGui::GetContentRegionAvail();
 
-        float aspect = static_cast<float>(width) / static_cast<float>(height);
+        float aspect = 1.0f; // Default aspect ratio
+        if (height != 0)
+        {
+            aspect = static_cast<float>(width) / static_cast<float>(height);
+        }
 
         ImVec2 imageSizeAdjusted = cliSize;
         imageSizeAdjusted.x = imageSizeAdjusted.y * aspect;
