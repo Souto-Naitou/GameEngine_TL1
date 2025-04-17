@@ -5,12 +5,17 @@
 #include <DebugTools/DebugManager/DebugManager.h>
 #include <imgui.h>
 
+#ifdef _DEBUG
+#include <Features/Viewport/Viewport.h>
+#endif
+
 void Text::Initialize()
 {
     pDirectX12_ = DirectX12::GetInstance();
     pTextSystem_ = TextSystem::GetInstance();
     dwriteFactory_ = pTextSystem_->GetDWriteFactory();
     d2dDeviceContext_ = pTextSystem_->GetD2D1DeviceContext();
+    pViewport_ = pTextSystem_->GetViewport();
 
 #ifdef _DEBUG
     DebugManager::GetInstance()->SetComponent("Text", name_, BINDCOMPONENT(Text, DebugWindow));
@@ -26,6 +31,10 @@ void Text::Update()
         screenPosition_ = pParent_->screenPosition_ + position_;
         isChangedParent_ = false;
     }
+
+    #ifdef _DEBUG
+    UpdatePosition();
+    #endif // _DEBUG
 
     if (isChanged_)
     {
@@ -76,13 +85,24 @@ void Text::SetPosition(const Vector2& _pos)
     }
     else
     {
-        auto vp = pDirectX12_->GetViewport();
-
         Vector2 anchorPos = ComputeStandardPosition(anchorPoint_);
         Vector2 pivotPos = ComputeStandardPosition(pivot_);
 
+
+        #ifdef _DEBUG
+
+        auto vpos = pViewport_->GetViewportPos();
+        auto vsize = pViewport_->GetViewportSize();
+        screenPosition_ = position_ + anchorPos * vsize + vpos;
+        screenPosition_ -= pivotPos * Vector2(metrics_.width, metrics_.height);
+
+        #else
+
+        auto vp = pDirectX12_->GetViewport();
         screenPosition_ = position_ + anchorPos * Vector2(vp.Width, vp.Height) + Vector2(vp.TopLeftX, vp.TopLeftY);
         screenPosition_ -= pivotPos * Vector2(metrics_.width, metrics_.height);
+
+        #endif
     }
 
     if (child_)
@@ -153,6 +173,7 @@ void Text::DebugWindow()
     if (ImGui::InputText("Text", buffer, IM_ARRAYSIZE(buffer)))
     {
         text_ = buffer;
+        isChanged_ = true;
     }
 
     int fontSize = static_cast<int>(fontSize_);

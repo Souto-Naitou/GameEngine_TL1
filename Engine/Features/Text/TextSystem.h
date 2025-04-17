@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Core/DirectX12/DirectX12.h>
+#include <Features/Viewport/Viewport.h>
 
 #include <wrl.h>
 #include <dwrite.h>
@@ -28,6 +29,7 @@ public:
 
 public:
     void SetColorBrush(const std::string _key, const D2D1::ColorF& _color);
+    void SetViewport(Viewport* _viewport) { pViewport_ = _viewport; }
 
 
 public: /// Getter
@@ -35,6 +37,7 @@ public: /// Getter
     IDWriteTextFormat* GetTextFormat(const std::string& _fontFamily, float _fontSize);
     ID2D1SolidColorBrush* GetColorBrush(const std::string& _key);
     ID2D1DeviceContext2* GetD2D1DeviceContext() const { return d2dDeviceContext_; }
+    Viewport* GetViewport() const { return pViewport_; }
 
 
 private:
@@ -60,4 +63,5 @@ private: /// 借り物
     ID2D1DeviceContext2* d2dDeviceContext_ = nullptr;
     ID3D11On12Device* d3d11On12Device_ = nullptr;
     ID3D11DeviceContext* d3d11On12DeviceContext_ = nullptr;
+    Viewport* pViewport_ = nullptr;
 };
