@@ -1,6 +1,8 @@
 #include "NimaFramework.h"
 #include <clocale>
 
+#include <NiGui/NiGui.h>
+
 void NimaFramework::Run()
 {
     setlocale(LC_ALL, "ja_JP.Utf-8");
@@ -106,6 +108,7 @@ void NimaFramework::Initialize()
     /// ビューポートの初期化
     pViewport_ = std::make_unique<Viewport>();
     pViewport_->Initialize();
+    pTextSystem_->SetViewport(pViewport_.get());
 
     /// シーンマネージャの初期化
     pSceneManager_->Initialize();
@@ -114,6 +117,28 @@ void NimaFramework::Initialize()
     pDirectX_->AddCommandList(pObject3dSystem_->GetCommandList());
     pDirectX_->AddCommandList(pSpriteSystem_->GetCommandList());
     pDirectX_->AddCommandList(pParticleSystem_->GetCommandList());
+
+    /// UIの初期化
+    auto vp = pDirectX_->GetViewport();
+    NiGui::Initialize({ vp.Width, vp.Height }, { vp.TopLeftX, vp.TopLeftY });
+
+    NiGui::SetConfirmSound(pAudioManager_->GetNewAudio("ui_confirm.wav"));
+    NiGui::SetHoverSound(pAudioManager_->GetNewAudio("ui_hover.wav"));
+
+    /// Drawerの設定
+    pDrawer_ = std::make_unique<NiGuiDrawer>();
+    NiGui::SetDrawer(pDrawer_.get());
+
+    /// デバッグUIの設定
+    auto& io = NiGui::GetIO();
+    auto& state = NiGui::GetState();
+    auto& setting = NiGui::GetSetting();
+    pNiGuiDebug_ = std::make_unique<NiGuiDebug>();
+    pNiGuiDebug_->SetIO(&io);
+    pNiGuiDebug_->SetState(&state);
+    pNiGuiDebug_->SetSetting(&setting);
+   
+    NiGui::SetDebug(pNiGuiDebug_.get());
 }
 
 void NimaFramework::Finalize()
@@ -140,6 +165,18 @@ void NimaFramework::Update()
         pImGuiManager_->Resize();
     }
 
+    /// UIの更新
+    #ifdef _DEBUG
+
+    NiGui::SetWindowInfo(
+        { pViewport_->GetViewportSize().x, pViewport_->GetViewportSize().y },
+        { pViewport_->GetViewportPos().x, pViewport_->GetViewportPos().y }
+    );
+
+    #endif // _DEBUG
+
+    NiGui::BeginFrame();
+
     /// マネージャ更新
     pInput_->Update();
     pModelManager_->Update();
@@ -152,6 +189,10 @@ void NimaFramework::Update()
 
     /// シーン更新
     pSceneManager_->Update();
+
+    #ifdef _DEBUG
+    NiGui::DrawDebug();
+    #endif // _DEBUG
 
     /// ImGui更新
     pImGuiManager_->Render();
@@ -183,6 +224,10 @@ void NimaFramework::Draw()
     /// 前景スプライトの描画
     pSpriteSystem_->PresentDraw();
     pSceneManager_->SceneDraw2dForeground();
+
+    /// UIの描画
+    pSpriteSystem_->PresentDraw();
+    NiGui::DrawUI();
 
     /// レンダーターゲットからビューポート用リソースにコピー
     pDirectX_->CopyFromRTV(pDirectX_->GetCommandList());
@@ -217,6 +262,7 @@ void NimaFramework::DrawHighPerformance()
 
     /// 前景スプライトの描画
     pSceneManager_->SceneDraw2dForeground();
+    NiGui::DrawUI();
     pSpriteSystem_->DrawCall();
 
 

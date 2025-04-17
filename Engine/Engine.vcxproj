@@ -105,7 +105,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>$(ProjectDir)Common\stdafx.h</PrecompiledHeaderFile>
       <ForcedIncludeFiles>%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <Optimization>MaxSpeed</Optimization>
+      <Optimization>MinSpace</Optimization>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
@@ -163,6 +163,8 @@
     <ClCompile Include="Features\Model\Helper\ModelHelper.cpp" />
     <ClCompile Include="Features\Model\Model.cpp" />
     <ClCompile Include="Features\Model\ModelManager.cpp" />
+    <ClCompile Include="Features\NiGui\NiGuiDebug.cpp" />
+    <ClCompile Include="Features\NiGui\NiGuiDrawer.cpp" />
     <ClCompile Include="Features\Object3d\Object3d.cpp" />
     <ClCompile Include="Features\Object3d\Object3dSystem.cpp" />
     <ClCompile Include="Features\Particle\Emitter\ParticleEmitter.cpp" />
@@ -227,6 +229,8 @@
     <ClInclude Include="Features\Model\Helper\ModelHelper.h" />
     <ClInclude Include="Features\Model\Model.h" />
     <ClInclude Include="Features\Model\ModelManager.h" />
+    <ClInclude Include="Features\NiGui\NiGuiDebug.h" />
+    <ClInclude Include="Features\NiGui\NiGuiDrawer.h" />
     <ClInclude Include="Features\Object3d\Object3d.h" />
     <ClInclude Include="Features\Object3d\Object3dSystem.h" />
     <ClInclude Include="Features\Particle\Emitter\ParticleEmitter.h" />
@@ -320,6 +324,9 @@
     </ProjectReference>
     <ProjectReference Include="Externals\ImGui\ImGui.vcxproj">
       <Project>{f83f6c46-aee0-480c-95fc-2319e6feb02b}</Project>
+    </ProjectReference>
+    <ProjectReference Include="Externals\NiGui\NiGui.vcxproj">
+      <Project>{e3e0f431-57ab-47bd-9cad-db622644b99c}</Project>
     </ProjectReference>
     <ProjectReference Include="Externals\VectorMatrix\Project\VecMat.vcxproj">
       <Project>{a87ad77f-cc08-4788-8630-68470354fcd3}</Project>

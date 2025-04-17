@@ -4,3 +4,6 @@
 [submodule "Engine/Externals/Easing_ImGui"]
 	path = Engine/Externals/Easing_ImGui
 	url = https://github.com/Souto-Naitou/Easing_ImGui.git
+[submodule "Engine/Externals/NiGui"]
+	path = Engine/Externals/NiGui
+	url = https://github.com/Souto-Naitou/NiGui.git

@@ -20,6 +20,8 @@
 #include <Features/RandomGenerator/RandomGenerator.h>
 #include <Features/Text/TextSystem.h>
 #include <Features/Viewport/Viewport.h>
+#include <Features/NiGui/NiGuiDrawer.h>
+#include <Features/NiGui/NiGuiDebug.h>
 
 #include <memory> /// std::unique_ptr
 
@@ -49,6 +51,8 @@ protected: /// システムクラスのインスタンス
     std::unique_ptr<ISceneFactory>  pSceneFactory_              = nullptr;
     std::unique_ptr<ImGuiManager>   pImGuiManager_              = nullptr;
     std::unique_ptr<Viewport>       pViewport_                  = nullptr;
+    std::unique_ptr<NiGuiDrawer>    pDrawer_                    = nullptr;
+    std::unique_ptr<NiGuiDebug>     pNiGuiDebug_                 = nullptr;
 
 
 protected: /// 他クラスのインスタンス

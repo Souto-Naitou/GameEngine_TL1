@@ -6,6 +6,8 @@
 #include <Features/Line/LineSystem.h>
 #include <Core/Win32/WinSystem.h>
 #include <Features/GameEye/FreeLook/FreeLookEye.h>
+#include <NiGui/NiGui.h>
+#include <Features/Audio/AudioManager.h>
 
 
 void GameScene::Initialize()
@@ -52,6 +54,9 @@ void GameScene::Initialize()
     pFirework_->Initialize("Box/Box.obj", "Resources/Json/Box.json");
     pSmoke_->Initialize("Particle/ParticleSpark.obj", "Resources/Json/Smoke.json");
     pSpark_->Initialize("Particle/ParticleSpark.obj", "Resources/Json/Spark.json");
+
+    /// 音声の取得
+    pAudio_ = AudioManager::GetInstance()->GetNewAudio("pi.wav");
 }
 
 void GameScene::Finalize()
@@ -62,6 +67,7 @@ void GameScene::Finalize()
     pFirework_->Finalize();
     pSmoke_->Finalize();
     pSpark_->Finalize();
+    pAudio_->Finalize();
 }
 
 void GameScene::Update()
@@ -79,6 +85,22 @@ void GameScene::Update()
     pFirework_->Update();
     pSmoke_->Update();
     pSpark_->Update();
+
+    if (NiGui::Button("Button1", "white1x1.png", NiGui::BLUE,{ 100, 100 }, { 100, 30 }) == NiGui_ButtonState::Confirm)
+    {
+        /// Do anything...
+    }
+
+    if (NiGui::Button("Button2", "white1x1.png", NiGui::BLUE, { 100, 150 }, { 100, 30 }) == NiGui_ButtonState::Confirm)
+    {
+        /// Do anything...
+    }
+
+    if (NiGui::Button("Button3", "white1x1.png", NiGui::BLUE, { 100, 200 }, { 100, 30 }) == NiGui_ButtonState::Confirm)
+    {
+        /// Do anything...
+    }
+
 }
 
 void GameScene::Draw2dBackGround()

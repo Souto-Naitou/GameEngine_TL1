@@ -202,6 +202,9 @@
     <Filter Include="BaseClass">
       <UniqueIdentifier>{6eba742e-07c6-4355-a651-8ec2446a5ca1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Feature\NiGuiDerived">
+      <UniqueIdentifier>{f7836a96-3646-43b5-8d8a-6a7bb09b437c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DebugTools\DebugManager\DebugManager.cpp">
@@ -369,6 +372,8 @@
     <ClCompile Include="BaseClasses\ObjectSystemBase.cpp">
       <Filter>BaseClass</Filter>
     </ClCompile>
+    <ClCompile Include="Features\NiGui\NiGuiDrawer.cpp" />
+    <ClCompile Include="Features\NiGui\NiGuiDebug.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common\define.h">
@@ -571,6 +576,12 @@
     </ClInclude>
     <ClInclude Include="BaseClasses\ObjectSystemBase.h">
       <Filter>BaseClass</Filter>
+    </ClInclude>
+    <ClInclude Include="Features\NiGui\NiGuiDrawer.h">
+      <Filter>Feature\NiGuiDerived</Filter>
+    </ClInclude>
+    <ClInclude Include="Features\NiGui\NiGuiDebug.h">
+      <Filter>Feature\NiGuiDerived</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
