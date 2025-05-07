@@ -8,15 +8,18 @@
 #include <string>
 #include <DirectXTex/DirectXTex.h>
 #include <vector>
+#include <Vector4.h>
 
 namespace DX12Helper
 {
+    using Microsoft::WRL::ComPtr;
+
     /// <summary>
     /// デバイスを生成する
     /// </summary>
     /// <param name="_device">生成先</param>
     /// <param name="_adapter">使用するアダプタ</param>
-    void CreateDevice(Microsoft::WRL::ComPtr<ID3D12Device>& _device, Microsoft::WRL::ComPtr<IDXGIAdapter4>& _adapter);
+    void CreateDevice(ComPtr<ID3D12Device>& _device, ComPtr<IDXGIAdapter4>& _adapter);
 
 
     /// <summary>
@@ -24,7 +27,7 @@ namespace DX12Helper
     /// </summary>
     /// <param name="_device">デバイス</param>
     /// <param name="_infoQ">情報キュー</param>
-    void PauseError(Microsoft::WRL::ComPtr<ID3D12Device>& _device, Microsoft::WRL::ComPtr<ID3D12InfoQueue>& _infoQ);
+    void PauseError(ComPtr<ID3D12Device>& _device, ComPtr<ID3D12InfoQueue>& _infoQ);
 
 
     /// <summary>
@@ -35,8 +38,8 @@ namespace DX12Helper
     /// <param name="_numDescriptors">ディスクリプタの数</param>
     /// <param name="_shaderVisible">シェーダーが参照可能か</param>
     /// <returns></returns>
-    Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> CreateDescriptorHeap(
-        const Microsoft::WRL::ComPtr<ID3D12Device>& _device,
+    ComPtr<ID3D12DescriptorHeap> CreateDescriptorHeap(
+        const ComPtr<ID3D12Device>& _device,
         D3D12_DESCRIPTOR_HEAP_TYPE _heapType,
         UINT _numDescriptors,
         bool _shaderVisible);
@@ -49,7 +52,7 @@ namespace DX12Helper
     /// <param name="_width">幅</param>
     /// <param name="_height">高さ</param>
     /// <returns>リソース</returns>
-    Microsoft::WRL::ComPtr<ID3D12Resource> CreateDepthStencilTextureResource(const Microsoft::WRL::ComPtr<ID3D12Device>& _device, int32_t _width, int32_t _height);
+    ComPtr<ID3D12Resource> CreateDepthStencilTextureResource(const ComPtr<ID3D12Device>& _device, int32_t _width, int32_t _height);
 
 
     /// <summary>
@@ -61,12 +64,12 @@ namespace DX12Helper
     /// <param name="dxcCompiler">DXCコンパイラ</param>
     /// <param name="includeHandler">インクルードハンドラ</param>
     /// <returns>コンパイル結果</returns>
-    Microsoft::WRL::ComPtr<IDxcBlob> CompileShader(
+    ComPtr<IDxcBlob> CompileShader(
         const std::wstring& filePath,
         const wchar_t* profile,
-        const Microsoft::WRL::ComPtr<IDxcUtils>& dxcUtils,
-        const Microsoft::WRL::ComPtr<IDxcCompiler3>& dxcCompiler,
-        const Microsoft::WRL::ComPtr<IDxcIncludeHandler>& includeHandler);
+        const ComPtr<IDxcUtils>& dxcUtils,
+        const ComPtr<IDxcCompiler3>& dxcCompiler,
+        const ComPtr<IDxcIncludeHandler>& includeHandler);
 
 
     /// <summary>
@@ -75,7 +78,7 @@ namespace DX12Helper
     /// <param name="_device">デバイス</param>
     /// <param name="_sizeInBytes">バイト数</param>
     /// <returns>リソース</returns>
-    Microsoft::WRL::ComPtr<ID3D12Resource> CreateBufferResource(const Microsoft::WRL::ComPtr<ID3D12Device>& _device, size_t _sizeInBytes);
+    ComPtr<ID3D12Resource> CreateBufferResource(const ComPtr<ID3D12Device>& _device, size_t _sizeInBytes);
 
 
     /// <summary>
@@ -84,10 +87,10 @@ namespace DX12Helper
     /// <param name="_filePath">ファイルパス</param>
     DirectX::ScratchImage LoadTexture(const std::string _filePath);
 
-    Microsoft::WRL::ComPtr<ID3D12Resource> CreateTextureResource(const Microsoft::WRL::ComPtr<ID3D12Device>& _device, const DirectX::TexMetadata& _metadata);
-    void UploadTextureData(const Microsoft::WRL::ComPtr<ID3D12Resource>& _texture, const DirectX::ScratchImage& _mipImages);
-    D3D12_CPU_DESCRIPTOR_HANDLE GetCPUDescriptorHandle(const Microsoft::WRL::ComPtr<ID3D12DescriptorHeap>& _descriptorHeap, uint32_t _descriptorSize, uint32_t _index);
-    D3D12_GPU_DESCRIPTOR_HANDLE GetGPUDescriptorHandle(const Microsoft::WRL::ComPtr<ID3D12DescriptorHeap>& _descriptorHeap, uint32_t _descriptorSize, uint32_t _index);
+    ComPtr<ID3D12Resource> CreateTextureResource(const ComPtr<ID3D12Device>& _device, const DirectX::TexMetadata& _metadata);
+    void UploadTextureData(const ComPtr<ID3D12Resource>& _texture, const DirectX::ScratchImage& _mipImages);
+    D3D12_CPU_DESCRIPTOR_HANDLE GetCPUDescriptorHandle(const ComPtr<ID3D12DescriptorHeap>& _descriptorHeap, uint32_t _descriptorSize, uint32_t _index);
+    D3D12_GPU_DESCRIPTOR_HANDLE GetGPUDescriptorHandle(const ComPtr<ID3D12DescriptorHeap>& _descriptorHeap, uint32_t _descriptorSize, uint32_t _index);
 
 
     /// <summary>
@@ -99,24 +102,41 @@ namespace DX12Helper
     /// <param name="_path">ファイルパス</param>
     /// <param name="_textureResources">テクスチャリソース</param>
     /// <returns></returns>
-    void CreateNewTexture(const Microsoft::WRL::ComPtr<ID3D12Device>& _device,
-        const Microsoft::WRL::ComPtr<ID3D12DescriptorHeap>& _srvDescriptorHeap,
+    void CreateNewTexture(const ComPtr<ID3D12Device>& _device,
+        const ComPtr<ID3D12DescriptorHeap>& _srvDescriptorHeap,
         const uint32_t _kDescriptorSizeSRV,
         const char* _path,
-        std::vector<Microsoft::WRL::ComPtr<ID3D12Resource>>& _textureResources);
+        std::vector<ComPtr<ID3D12Resource>>& _textureResources);
 
     /// <summary>
     /// 頂点リソースを生成
     /// </summary>
     /// <param name="_device">デバイス</param>
-    Microsoft::WRL::ComPtr<ID3D12Resource> CreateVertexResource(const Microsoft::WRL::ComPtr<ID3D12Device>& _device, unsigned int _countVertex);
+    ComPtr<ID3D12Resource> CreateVertexResource(const ComPtr<ID3D12Device>& _device, unsigned int _countVertex);
 
     void ChangeStateResource(
-        const Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>& _commandList, 
-        const Microsoft::WRL::ComPtr<ID3D12Resource>& _resource, 
+        const ComPtr<ID3D12GraphicsCommandList>& _commandList, 
+        const ComPtr<ID3D12Resource>& _resource, 
         D3D12_RESOURCE_STATES _before, 
         D3D12_RESOURCE_STATES _after
     );
 
     void CommandListCommonSetting(ID3D12GraphicsCommandList* _commandList);
+
+    /// <summary>
+    /// レンダーターゲットテクスチャリソースを生成
+    /// </summary>
+    /// <param name="_device">デバイス</param>
+    /// <param name="_width">幅</param>
+    /// <param name="_height">高さ</param>
+    /// <param name="_format">フォーマット</param>
+    /// <param name="_clearColor">クリア色</param>
+    /// <returns>レンダーテクスチャリソース</returns>
+    ComPtr<ID3D12Resource> CreateRenderTextureResource(
+        const ComPtr<ID3D12Device>& _device,
+        int32_t _width,
+        int32_t _height,
+        DXGI_FORMAT _format,
+        const Vector4& _clearColor
+    );
 }

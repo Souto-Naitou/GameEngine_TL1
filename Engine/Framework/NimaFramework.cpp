@@ -138,6 +138,10 @@ void NimaFramework::Initialize()
     pNiGuiDebug_->SetSetting(&setting);
    
     NiGui::SetDebug(pNiGuiDebug_.get());
+
+    /// ポストエフェクト
+    pPostEffect_ = std::make_unique<PostEffect>();
+    pPostEffect_->Initialize();
 }
 
 void NimaFramework::Finalize()
@@ -202,6 +206,8 @@ void NimaFramework::Update()
 
 void NimaFramework::Draw()
 {
+    pPostEffect_->NewFrame();
+
     /// 3D描画
     pObject3dSystem_->DepthDrawSetting();
     pSceneManager_->SceneDraw3d();
@@ -227,6 +233,11 @@ void NimaFramework::Draw()
     /// UIの描画
     pSpriteSystem_->PresentDraw();
     NiGui::DrawUI();
+
+    /// レンダーターゲットの初期化
+    pDirectX_->NewFrame();
+
+    pPostEffect_->Draw();
 
     /// レンダーターゲットからビューポート用リソースにコピー
     pDirectX_->CopyFromRTV(pDirectX_->GetCommandList());
@@ -264,6 +275,8 @@ void NimaFramework::DrawHighPerformance()
     NiGui::DrawUI();
     pSpriteSystem_->DrawCall();
 
+    /// レンダーターゲットの初期化
+    pDirectX_->NewFrame();
 
     /// コンピュートシェーダーの実行
     pViewport_->Compute();
@@ -289,7 +302,7 @@ void NimaFramework::DrawHighPerformance()
 
 void NimaFramework::PreProcess()
 {
-    pDirectX_->NewFrame();
+    pPostEffect_->NewFrame();
     pSRVManager_->SetDescriptorHeaps();
 }
 

@@ -24,6 +24,7 @@
 #include <Features/NiGui/NiGuiDebug.h>
 
 #include <memory> /// std::unique_ptr
+#include <Core/DirectX12/PostEffect.h>
 
 
 /// ゲーム共通のフレームワーククラス
@@ -52,7 +53,8 @@ protected: /// システムクラスのインスタンス
     std::unique_ptr<ImGuiManager>   pImGuiManager_              = nullptr;
     std::unique_ptr<Viewport>       pViewport_                  = nullptr;
     std::unique_ptr<NiGuiDrawer>    pDrawer_                    = nullptr;
-    std::unique_ptr<NiGuiDebug>     pNiGuiDebug_                 = nullptr;
+    std::unique_ptr<NiGuiDebug>     pNiGuiDebug_                = nullptr;
+    std::unique_ptr<PostEffect>     pPostEffect_                = nullptr;
 
 
 protected: /// 他クラスのインスタンス

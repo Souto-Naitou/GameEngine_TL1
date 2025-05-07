@@ -199,9 +199,11 @@ void DirectX12::CreateSwapChainAndResource()
     kDescriptorSizeRTV = device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
     kDescriptorSizeDSV = device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
 
+    /// RTVHeapの生成
+    rtvHeapCounter_ = std::make_unique<RTVHeapCounter>();
 
     /// ディスクリプタヒープの生成も行う
-    rtvDescriptorHeap_ = DX12Helper::CreateDescriptorHeap(device_, D3D12_DESCRIPTOR_HEAP_TYPE_RTV, 2, false);
+    rtvHeapCounter_->Initialize(device_.Get(), 3);
     dsvDescriptorHeap_ = DX12Helper::CreateDescriptorHeap(device_, D3D12_DESCRIPTOR_HEAP_TYPE_DSV, 1, false);
 
 
@@ -238,17 +240,20 @@ void DirectX12::CreateSwapChainAndResource()
 
 
     /// RTVの設定
-    rtvDesc_.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+    rtvDesc_.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
     rtvDesc_.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
 
 
     /// RTVの生成
-    D3D12_CPU_DESCRIPTOR_HANDLE rtvStartHandle = rtvDescriptorHeap_->GetCPUDescriptorHandleForHeapStart();
-    // 1つ目のRTVを作成
-    rtvHandles_[0] = rtvStartHandle;
-    device_->CreateRenderTargetView(swapChainResources_[0].Get(), &rtvDesc_, rtvHandles_[0]);
+    rtvHeapIndex_[0] = rtvHeapCounter_->Allocate("BackBuffer0");
+    rtvHeapIndex_[1] = rtvHeapCounter_->Allocate("BackBuffer1");
+
+    // RTVハンドルの取得
+    rtvHandles_[0] = rtvHeapCounter_->GetRTVHandle(rtvHeapIndex_[0]);
+    rtvHandles_[1] = rtvHeapCounter_->GetRTVHandle(rtvHeapIndex_[1]);
+
     // 2つ目のRTVを作成
-    rtvHandles_[1].ptr = rtvHandles_[0].ptr + device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
+    device_->CreateRenderTargetView(swapChainResources_[0].Get(), &rtvDesc_, rtvHandles_[0]);
     device_->CreateRenderTargetView(swapChainResources_[1].Get(), &rtvDesc_, rtvHandles_[1]);
 }
 

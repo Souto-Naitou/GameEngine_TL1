@@ -455,6 +455,46 @@ void DX12Helper::CommandListCommonSetting(ID3D12GraphicsCommandList* _commandLis
     return;
 }
 
+Microsoft::WRL::ComPtr<ID3D12Resource> DX12Helper::CreateRenderTextureResource(const ComPtr<ID3D12Device>& _device, int32_t _width, int32_t _height, DXGI_FORMAT _format, const Vector4& _clearColor)
+{
+    Microsoft::WRL::ComPtr<ID3D12Resource> result = nullptr;
+    D3D12_HEAP_PROPERTIES heapProps = {};
+    heapProps.Type = D3D12_HEAP_TYPE_DEFAULT;
+    D3D12_RESOURCE_DESC resourceDesc = {};
+    resourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
+    resourceDesc.Width = _width;
+    resourceDesc.Height = _height;
+    resourceDesc.DepthOrArraySize = 1;
+    resourceDesc.MipLevels = 1;
+    resourceDesc.SampleDesc.Count = 1;
+    resourceDesc.Layout = D3D12_TEXTURE_LAYOUT_UNKNOWN;
+    resourceDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET;
+    resourceDesc.Format = _format;
+
+    D3D12_CLEAR_VALUE clearValue = {};
+    clearValue.Format = _format;
+    clearValue.Color[0] = _clearColor.x;
+    clearValue.Color[1] = _clearColor.y;
+    clearValue.Color[2] = _clearColor.z;
+    clearValue.Color[3] = _clearColor.w;
+
+    HRESULT hr = _device->CreateCommittedResource(
+        &heapProps,
+        D3D12_HEAP_FLAG_NONE,
+        &resourceDesc,
+        D3D12_RESOURCE_STATE_RENDER_TARGET,
+        &clearValue,
+        IID_PPV_ARGS(&result));
+
+    if (FAILED(hr))
+    {
+        Logger::GetInstance()->LogError("DX12Helper", __func__, "CreateCommittedResource failed");
+        assert(false && "Create committed resource failed");
+    }
+
+    return result;
+}
+
 D3D12_CPU_DESCRIPTOR_HANDLE DX12Helper::GetCPUDescriptorHandle(const Microsoft::WRL::ComPtr<ID3D12DescriptorHeap>& _descriptorHeap, uint32_t _descriptorSize, uint32_t _index)
 {
     D3D12_CPU_DESCRIPTOR_HANDLE handleCPU = _descriptorHeap->GetCPUDescriptorHandleForHeapStart();

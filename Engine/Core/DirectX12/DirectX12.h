@@ -1,10 +1,13 @@
 #pragma once
 
-#include <wrl.h>
-#include <stdint.h>
-#include <string>
-#include <memory>
 #include "Framerate.h"
+#include <Vector4.h>
+#include <DebugTools/ReakChecker.h>
+#include <DebugTools/Logger/Logger.h>
+#include "RTVHeapCounter.h"
+
+
+#include <wrl.h>
 #include <d3d12.h>
 #include <d3d11.h>
 #include <dxgi1_6.h>
@@ -12,17 +15,12 @@
 #include <d3d11on12.h>
 
 
-#include <Vector4.h>
-
 /// DirectWrite
 #include <d2d1_3.h>
 #include <dwrite_3.h>
 
-
 #include <vector>
 #include <array>
-#include <DebugTools/ReakChecker.h>
-#include <DebugTools/Logger/Logger.h>
 
 class SRVManager;
 
@@ -74,6 +72,8 @@ public: /// Getter
     const D3D12_CPU_DESCRIPTOR_HANDLE*                      GetRTVHandle() const                        { return rtvHandles_; }
     const DXGI_SWAP_CHAIN_DESC1&                            GetSwapChainDesc() const                    { return swapChainDesc_; }
     auto                                                    GetDSVDescriptorHeap() const                { return dsvDescriptorHeap_.Get(); }
+    auto                                                    GetRTVDescriptorHeap() const                { return rtvHeapCounter_->GetRTVDescriptorHeap(); }
+    RTVHeapCounter*                                         GetRTVHeapCounter() const                   { return rtvHeapCounter_.get(); }
 
     std::vector<D3D12_GPU_DESCRIPTOR_HANDLE>&               GetSRVHandlesGPUList()                      { return srvHandlesGPUList_; }
     std::vector<D3D12_CPU_DESCRIPTOR_HANDLE>&               GetSRVHandlesCPUList()                      { return srvHandlesCPUList_; }
@@ -91,7 +91,8 @@ public: /// Getter
     ID3D11DeviceContext*                                    GetD3D11On12DeviceContext()                 { return d3d11On12DeviceContext_.Get(); }
     ID3D12Resource*                                         GetGameScreenResource()                     { return gameScreenResource_.Get(); }
     ID3D12Resource*                                         GetGameScreenComputed()                     { return gameScreenComputed_.Get(); }
-    D3D12_RECT                                              GetScissorRect() const                       { return scissorRect_; }
+    D3D12_RECT                                              GetScissorRect() const                      { return scissorRect_; }
+    const Vector4&                                          GetEditorBGColor() const                    { return editorBG_; }
 
 public:
     void SetGameWindowRect(D3D12_VIEWPORT _viewport);
@@ -119,7 +120,7 @@ private:
     Microsoft::WRL::ComPtr<ID3D12Resource>                  swapChainResources_[2]          = {};           // スワップチェーンリソース
     //Microsoft::WRL::ComPtr<ID3D12Resource>                  gameScreenResource_             = nullptr;      // ゲーム画面リソース
     Microsoft::WRL::ComPtr<ID3D12Fence>                     fence_                          = nullptr;      // フェンス
-    Microsoft::WRL::ComPtr<ID3D12DescriptorHeap>            rtvDescriptorHeap_              = nullptr;
+    std::unique_ptr<RTVHeapCounter>                         rtvHeapCounter_                 = nullptr;      // RTVヒープカウンタ
     Microsoft::WRL::ComPtr<ID3D12DescriptorHeap>            dsvDescriptorHeap_              = nullptr;
     Microsoft::WRL::ComPtr<ID3D12DescriptorHeap>            descriptorHeaps_                = nullptr;
     Microsoft::WRL::ComPtr<ID3D12Resource>                  depthStencilResource_           = nullptr;      // 深度ステンシルリソース
@@ -150,6 +151,7 @@ private:
     D3D12_VIEWPORT                                          viewport_                       = {};           // ビューポート
     D3D12_RECT                                              scissorRect_                    = {};           // シザーレクト
     D3D12_CPU_DESCRIPTOR_HANDLE                             rtvHandles_[2]                  = {};           // RTVハンドル
+    uint32_t                                                rtvHeapIndex_[2]                = {};           // RTVヒープインデックス
     uint32_t                                                clientWidth_                    = 0;
     uint32_t                                                clientHeight_                   = 0;
     float                                                   clearColor_[4]                  = { 0.2f, 0.2f, 0.4f, 1.0f };

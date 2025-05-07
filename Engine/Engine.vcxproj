@@ -135,6 +135,8 @@
     <ClCompile Include="Core\DirectX12\DirectX12_Impl.cpp" />
     <ClCompile Include="Core\DirectX12\Framerate.cpp" />
     <ClCompile Include="Core\DirectX12\Helper\DX12Helper.cpp" />
+    <ClCompile Include="Core\DirectX12\PostEffect.cpp" />
+    <ClCompile Include="Core\DirectX12\RTVHeapCounter.cpp" />
     <ClCompile Include="Core\DirectX12\SRVManager.cpp" />
     <ClCompile Include="Core\DirectX12\TextureManager.cpp" />
     <ClCompile Include="Core\Win32\WinSystem.cpp" />
@@ -196,6 +198,8 @@
     <ClInclude Include="Core\DirectX12\DirectX12.h" />
     <ClInclude Include="Core\DirectX12\Framerate.h" />
     <ClInclude Include="Core\DirectX12\Helper\DX12Helper.h" />
+    <ClInclude Include="Core\DirectX12\PostEffect.h" />
+    <ClInclude Include="Core\DirectX12\RTVHeapCounter.h" />
     <ClInclude Include="Core\DirectX12\SRVManager.h" />
     <ClInclude Include="Core\DirectX12\TextureManager.h" />
     <ClInclude Include="Core\Win32\WinSystem.h" />
@@ -271,6 +275,10 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </None>
+    <None Include="EngineResources\Shaders\CopyImage.hlsli">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </None>
     <None Include="EngineResources\Shaders\Line.hlsli">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
@@ -294,6 +302,14 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="..\SampleProject\EngineResources\Shaders\Sprite.VS.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="EngineResources\Shaders\CopyImage.PS.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="EngineResources\Shaders\CopyImage.VS.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </FxCompile>

@@ -110,6 +110,7 @@ void DirectX12::Initialize()
     /// DXCの初期化
     CreateDirectXShaderCompiler();
 
+
     /// D3D11デバイス群の生成
     CreateD3D11Device();
 
@@ -136,13 +137,13 @@ void DirectX12::NewFrame()
 
 
     /// 描画先のRTV/DSVの設定
-    D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle = dsvDescriptorHeap_->GetCPUDescriptorHandleForHeapStart();
-    commandList_->OMSetRenderTargets(1, &rtvHandles_[backBufferIndex_], false, &dsvHandle);
+    commandList_->OMSetRenderTargets(1, &rtvHandles_[backBufferIndex_], false, nullptr);
 
     // 画面全体のクリア
     commandList_->ClearRenderTargetView(rtvHandles_[backBufferIndex_], &editorBG_.x, 0, nullptr);
-    // 指定した深度で画面全体をクリア
-    commandList_->ClearDepthStencilView(dsvHandle, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
+
+    // 指定した深度で画面全体をクリア (ポストエフェクト用リソースで行うため現在無効)
+    // commandList_->ClearDepthStencilView(dsvHandle, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 
     commandList_->RSSetViewports(1, &viewport_);            // Viewportを設定
     commandList_->RSSetScissorRects(1, &scissorRect_);      // Scissorを設定

@@ -205,6 +205,12 @@
     <Filter Include="Feature\NiGuiDerived">
       <UniqueIdentifier>{f7836a96-3646-43b5-8d8a-6a7bb09b437c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Core\DirectX12\PostEffect">
+      <UniqueIdentifier>{90230bf2-8149-42f4-9564-53f4343366d8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\DirectX12\RTVHeapCounter">
+      <UniqueIdentifier>{6c5ed3f0-48af-44cd-bbf9-d608ba01a0c9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DebugTools\DebugManager\DebugManager.cpp">
@@ -377,6 +383,12 @@
     </ClCompile>
     <ClCompile Include="Features\NiGui\NiGuiDrawer.cpp">
       <Filter>Feature\NiGuiDerived</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\DirectX12\PostEffect.cpp">
+      <Filter>Core\DirectX12\PostEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\DirectX12\RTVHeapCounter.cpp">
+      <Filter>Core\DirectX12\RTVHeapCounter</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -587,6 +599,12 @@
     <ClInclude Include="Features\NiGui\NiGuiDebug.h">
       <Filter>Feature\NiGuiDerived</Filter>
     </ClInclude>
+    <ClInclude Include="Core\DirectX12\PostEffect.h">
+      <Filter>Core\DirectX12\PostEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\DirectX12\RTVHeapCounter.h">
+      <Filter>Core\DirectX12\RTVHeapCounter</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
@@ -601,6 +619,9 @@
     </None>
     <None Include="..\ClassDiagram.md" />
     <None Include="EngineResources\Shaders\Line.hlsli">
+      <Filter>HLSL</Filter>
+    </None>
+    <None Include="EngineResources\Shaders\CopyImage.hlsli">
       <Filter>HLSL</Filter>
     </None>
   </ItemGroup>
@@ -630,6 +651,12 @@
       <Filter>HLSL</Filter>
     </FxCompile>
     <FxCompile Include="EngineResources\Shaders\WithoutAlpha.CS.hlsl">
+      <Filter>HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="EngineResources\Shaders\CopyImage.VS.hlsl">
+      <Filter>HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="EngineResources\Shaders\CopyImage.PS.hlsl">
       <Filter>HLSL</Filter>
     </FxCompile>
   </ItemGroup>
