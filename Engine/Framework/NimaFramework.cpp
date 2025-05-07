@@ -108,6 +108,7 @@ void NimaFramework::Initialize()
     /// ビューポートの初期化
     pViewport_ = std::make_unique<Viewport>();
     pViewport_->Initialize();
+    pTextSystem_->SetViewport(pViewport_.get());
 
     /// シーンマネージャの初期化
     pSceneManager_->Initialize();
