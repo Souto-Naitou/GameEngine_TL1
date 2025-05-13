@@ -22,12 +22,14 @@ namespace DX12Helper
     void CreateDevice(ComPtr<ID3D12Device>& _device, ComPtr<IDXGIAdapter4>& _adapter);
 
 
+    #ifdef _DEBUG
     /// <summary>
     /// エラー時に停止する
     /// </summary>
     /// <param name="_device">デバイス</param>
     /// <param name="_infoQ">情報キュー</param>
     void PauseError(ComPtr<ID3D12Device>& _device, ComPtr<ID3D12InfoQueue>& _infoQ);
+    #endif // _DEBUG
 
 
     /// <summary>
@@ -121,7 +123,7 @@ namespace DX12Helper
         D3D12_RESOURCE_STATES _after
     );
 
-    void CommandListCommonSetting(ID3D12GraphicsCommandList* _commandList);
+    void CommandListCommonSetting(ID3D12GraphicsCommandList* _commandList, const D3D12_CPU_DESCRIPTOR_HANDLE* rtvHandle);
 
     /// <summary>
     /// レンダーターゲットテクスチャリソースを生成

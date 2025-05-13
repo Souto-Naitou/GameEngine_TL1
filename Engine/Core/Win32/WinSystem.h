@@ -22,7 +22,7 @@ public:
     HINSTANCE GetHinstance() const { return wc_.hInstance; }
 
     void Initialize();
-    void Finalize();
+    void Finalize() const;
     void ShowWnd();
     UINT GetMsg();
 

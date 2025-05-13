@@ -54,7 +54,11 @@ void NimaFramework::Initialize()
     pRandomGenerator_ = RandomGenerator::GetInstance();
     pTextSystem_ = TextSystem::GetInstance();
     pAudioManager_ = AudioManager::GetInstance();
+    pEventTimer_ = EventTimer::GetInstance();
+
+    #ifdef _DEBUG
     pImGuiManager_ = std::make_unique<ImGuiManager>();
+    #endif // _DEBUG
 
     /// ロガーの初期化
     pLogger_->Initialize();
@@ -70,7 +74,9 @@ void NimaFramework::Initialize()
     pSRVManager_->Initialize(pDirectX_);
 
     /// ImGui基盤の初期化
+    #ifdef _DEBUG
     pImGuiManager_->Initialize(pDirectX_);
+    #endif // _DEBUG
 
     /// テクスチャマネージャの初期化
     pTextureManager_->Initialize(pSRVManager_);
@@ -113,14 +119,11 @@ void NimaFramework::Initialize()
     /// シーンマネージャの初期化
     pSceneManager_->Initialize();
 
-    /// コマンドリストを追加
-    pDirectX_->AddCommandList(pObject3dSystem_->GetCommandList());
-    pDirectX_->AddCommandList(pSpriteSystem_->GetCommandList());
-    pDirectX_->AddCommandList(pParticleSystem_->GetCommandList());
-
     /// UIの初期化
     auto vp = pDirectX_->GetViewport();
     NiGui::Initialize({ vp.Width, vp.Height }, { vp.TopLeftX, vp.TopLeftY });
+    NiGui::SetClientSize({WinSystem::clientWidth, WinSystem::clientHeight});
+    
 
     NiGui::SetConfirmSound(pAudioManager_->GetNewAudio("ui_confirm.wav"));
     NiGui::SetHoverSound(pAudioManager_->GetNewAudio("ui_hover.wav"));
@@ -143,16 +146,24 @@ void NimaFramework::Initialize()
     /// ポストエフェクト
     pPostEffect_ = std::make_unique<PostEffect>();
     pPostEffect_->Initialize();
+
+    /// コマンドリストを追加
+    pDirectX_->AddCommandList(pObject3dSystem_->GetCommandList());
+    pDirectX_->AddCommandList(pParticleSystem_->GetCommandList());
+    pDirectX_->AddCommandList(pSpriteSystem_->GetCommandList());
+    pDirectX_->AddCommandList(pPostEffect_->GetCommandList());
 }
 
 void NimaFramework::Finalize()
 {
     pAudioManager_->Finalize();
-    pImGuiManager_->Finalize();
     pWinSystem_->Finalize();
     pLogger_->Save();
-
     pSceneManager_->Finalize();
+
+    #ifdef _DEBUG
+    pImGuiManager_->Finalize();
+    #endif // _DEBUG
 }
 
 void NimaFramework::Update()
@@ -164,19 +175,27 @@ void NimaFramework::Update()
         return;
     }
 
+    #ifdef _DEBUG
     if(pWinSystem_->IsResized())
     {
         pImGuiManager_->Resize();
     }
+    #endif // _DEBUG
 
-    /// UIの更新
     #ifdef _DEBUG
 
+    /// UIの更新
     NiGui::SetWindowInfo(
         { pViewport_->GetViewportSize().x, pViewport_->GetViewportSize().y },
         { pViewport_->GetViewportPos().x, pViewport_->GetViewportPos().y }
     );
 
+    #endif // _DEBUG
+
+    /// イベント計測開始
+    #ifdef _DEBUG
+    pEventTimer_->NewFrame();
+    pEventTimer_->BeginEvent("Update");
     #endif // _DEBUG
 
     NiGui::BeginFrame();
@@ -185,7 +204,11 @@ void NimaFramework::Update()
     pInput_->Update();
     pModelManager_->Update();
     pAudioManager_->Update();
+
+    #ifdef _DEBUG
     pImGuiManager_->BeginFrame();
+    #endif // _DEBUG
+
     pDebugManager_->Update();
     pDebugManager_->DrawUI();
     pViewport_->DrawWindow();
@@ -194,12 +217,16 @@ void NimaFramework::Update()
     /// シーン更新
     pSceneManager_->Update();
 
+
+    /// イベント計測終了
+    #ifdef _DEBUG
+    pEventTimer_->EndEvent("Update");
+    #endif // _DEBUG
+
+
     #ifdef _DEBUG
     NiGui::DrawDebug();
     #endif // _DEBUG
-
-    /// ImGui更新
-    pImGuiManager_->Render();
 
     /// パーティクル更新
     pParticleManager_->Update();
@@ -207,7 +234,8 @@ void NimaFramework::Update()
 
 void NimaFramework::Draw()
 {
-    pPostEffect_->NewFrame();
+    /// イベント計測開始
+    pEventTimer_->BeginEvent("Draw");
 
     /// 3D描画
     pObject3dSystem_->DepthDrawSetting();
@@ -241,12 +269,21 @@ void NimaFramework::Draw()
     pPostEffect_->Draw();
 
     /// レンダーターゲットからビューポート用リソースにコピー
-    pDirectX_->CopyFromRTV(pDirectX_->GetCommandList());
+    pDirectX_->CopyFromRTV(pDirectX_->GetCommandListsLast());
     /// コンピュートシェーダーの実行
     pViewport_->Compute();
 
+    /// イベント計測終了と出力
+    pEventTimer_->EndEvent("Draw");
+    pEventTimer_->EndFrame();
+    pEventTimer_->ImGui();
+
+
     /// ImGuiの描画
+    #ifdef _DEBUG
+    pImGuiManager_->Render();
     pImGuiManager_->EndFrame();
+    #endif // _DEBUG
 
     /// コマンドの実行
     pDirectX_->CommandExecute();
@@ -279,17 +316,12 @@ void NimaFramework::DrawHighPerformance()
     /// レンダーターゲットの初期化
     pDirectX_->NewFrame();
 
-    /// コンピュートシェーダーの実行
-    pViewport_->Compute();
-
-    /// ImGuiの描画
-    pImGuiManager_->EndFrame();
-
     /// 同期
     pObject3dSystem_->Sync();
     pParticleSystem_->Sync();
     pSpriteSystem_->Sync();
 
+    pPostEffect_->Draw();
 
     /// コマンドの実行
     pDirectX_->CommandExecute();
@@ -305,9 +337,21 @@ void NimaFramework::PreProcess()
 {
     pPostEffect_->NewFrame();
     pSRVManager_->SetDescriptorHeaps();
+
+    #ifndef _DEBUG
+
+    pObject3dSystem_->SetRTVHandle(pPostEffect_->GetRTVHandle());
+    pSpriteSystem_->SetRTVHandle(pPostEffect_->GetRTVHandle());
+    pParticleSystem_->SetRTVHandle(pPostEffect_->GetRTVHandle());
+
+    #endif // _DEBUG
 }
 
 void NimaFramework::PostProcess()
 {
     pDirectX_->DisplayFrame();
+    pObject3dSystem_->PostDraw();
+    pSpriteSystem_->PostDraw();
+    pParticleSystem_->PostDraw();
+    pPostEffect_->PostDraw();
 }

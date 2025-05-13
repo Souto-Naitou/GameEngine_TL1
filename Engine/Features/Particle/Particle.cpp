@@ -91,7 +91,7 @@ void Particle::Update()
     {
         billboardMatrix_ = backToFrontMatrix_ * pGameEye_->GetWorldMatrix();
         /// 平行移動成分を除去
-        for (uint32_t index = 0; index < 3; index++) billboardMatrix_.m[3][index] = 0.0f;
+        for (uint32_t i = 0; i < 3; i++) billboardMatrix_.m[3][i] = 0.0f;
     }
     else
     {
@@ -240,7 +240,7 @@ void Particle::ParticleDataUpdate(std::vector<ParticleData>::iterator& _itr)
     }
 
     /// 経過時間の取得
-    currentLifeTime = lifeTime - static_cast<float>(timer.GetNow());
+    currentLifeTime = lifeTime - timer.GetNow<float>();
     if (currentLifeTime < 0.0f) currentLifeTime = 0.0f;
 
     float t = 0.0f;

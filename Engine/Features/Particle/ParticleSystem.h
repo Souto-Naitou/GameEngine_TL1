@@ -40,6 +40,7 @@ public:
 public: /// Setter
     void SetDefaultGameEye(GameEye* _pGameEye) { pDefaultGameEye_ = _pGameEye; }
     void AddCommandListData(CommandListData& _pData) { commandListDatas_.emplace_back(_pData); }
+    void SetRTVHandle(D3D12_CPU_DESCRIPTOR_HANDLE* _rtvHandle) { rtvHandle_ = _rtvHandle; }
 
 
 public: /// Getter
@@ -56,6 +57,7 @@ private: /// メンバ変数
     Microsoft::WRL::ComPtr<ID3D12RootSignature> rootSignature_ = nullptr;
     Microsoft::WRL::ComPtr<ID3D12PipelineState> graphicsPipelineState_ = nullptr;
     GameEye* pDefaultGameEye_ = nullptr;
+    D3D12_CPU_DESCRIPTOR_HANDLE* rtvHandle_ = nullptr;
 
     std::list<CommandListData> commandListDatas_;
 

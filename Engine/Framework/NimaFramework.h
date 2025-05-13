@@ -22,6 +22,7 @@
 #include <Features/Viewport/Viewport.h>
 #include <Features/NiGui/NiGuiDrawer.h>
 #include <Features/NiGui/NiGuiDebug.h>
+#include <DebugTools/EventTimer/EventTimer.h>
 
 #include <memory> /// std::unique_ptr
 #include <Core/DirectX12/PostEffect.h>
@@ -50,11 +51,14 @@ public:
 
 protected: /// システムクラスのインスタンス
     std::unique_ptr<ISceneFactory>  pSceneFactory_              = nullptr;
-    std::unique_ptr<ImGuiManager>   pImGuiManager_              = nullptr;
     std::unique_ptr<Viewport>       pViewport_                  = nullptr;
     std::unique_ptr<NiGuiDrawer>    pDrawer_                    = nullptr;
     std::unique_ptr<NiGuiDebug>     pNiGuiDebug_                = nullptr;
     std::unique_ptr<PostEffect>     pPostEffect_                = nullptr;
+
+    #ifdef _DEBUG
+    std::unique_ptr<ImGuiManager>   pImGuiManager_              = nullptr;
+    #endif // _DEBUG
 
 
 protected: /// 他クラスのインスタンス
@@ -75,6 +79,7 @@ protected: /// 他クラスのインスタンス
     Input*                          pInput_                     = nullptr;
     RandomGenerator*                pRandomGenerator_           = nullptr;
     AudioManager*                   pAudioManager_              = nullptr;
+    EventTimer*                     pEventTimer_                = nullptr;
 
 
 protected:

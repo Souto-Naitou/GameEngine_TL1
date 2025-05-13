@@ -38,10 +38,8 @@ void ParticleSystem::DrawCall()
 
     auto record = [&](ID3D12GraphicsCommandList* _commandList)
     {
-        _commandList->Reset(commandAllocator_.Get(), nullptr);
-
         /// コマンドリストの設定
-        DX12Helper::CommandListCommonSetting(_commandList);
+        DX12Helper::CommandListCommonSetting(_commandList, rtvHandle_);
 
         /// ルートシグネチャをセットする
         _commandList->SetGraphicsRootSignature(rootSignature_.Get());
@@ -59,8 +57,6 @@ void ParticleSystem::DrawCall()
             _commandList->SetGraphicsRootDescriptorTable(1, data.textureSrvHandle);
             _commandList->DrawInstanced(data.vertexCount, data.instanceCount, 0, 0);
         }
-
-        _commandList->Close();
     };
 
     worker_ = std::async(std::launch::async, record, commandList_.Get());
@@ -249,9 +245,17 @@ void ParticleSystem::CreatePipelineState()
     graphicsPipelineStateDesc.DepthStencilState = depthStencilDesc;
     graphicsPipelineStateDesc.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
     // 実際に生成
-    HRESULT hr = device->CreateGraphicsPipelineState(&graphicsPipelineStateDesc,
-        IID_PPV_ARGS(&graphicsPipelineState_));
-    assert(SUCCEEDED(hr));
+    HRESULT hr = device->CreateGraphicsPipelineState(&graphicsPipelineStateDesc, IID_PPV_ARGS(&graphicsPipelineState_));
+    if (FAILED(hr)) [[unlikely]]
+    {
+        Logger::GetInstance()->LogError(
+            "ParticleSystem",
+            __func__,
+            "Failed to create pipeline state"
+        );
+        assert(false);
+    }
+
     return;
 
 }

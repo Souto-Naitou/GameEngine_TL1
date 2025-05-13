@@ -11,6 +11,8 @@
 #include <d3d12.h>
 #include <dxgi1_6.h>
 
+#pragma warning(disable: 4324) // 構造体のメンバがアライメントのためにパディングされる
+
 
 enum class LightingType : int32_t
 {
@@ -42,6 +44,7 @@ struct VertexData
 struct MaterialData
 {
     std::string textureFilePath;
+    uint32_t padding[2];
     Vector4 diffuse;
 };
 

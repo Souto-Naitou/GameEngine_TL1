@@ -130,10 +130,10 @@ void Viewport::CreatePSO()
 void Viewport::CreateSRV()
 {
     inputSRVIndex_ = pSRVManager_->Allocate();
-    pSRVManager_->CreateForTexture2D(inputSRVIndex_, inputTexture_, DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, 1);
+    pSRVManager_->CreateForTexture2D(inputSRVIndex_, inputTexture_, DXGI_FORMAT_R8G8B8A8_UNORM, 1);
 
     outputSRVIndex_ = pSRVManager_->Allocate();
-    pSRVManager_->CreateForTexture2D(outputSRVIndex_, outputTexture_, DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, 1);
+    pSRVManager_->CreateForTexture2D(outputSRVIndex_, outputTexture_, DXGI_FORMAT_R8G8B8A8_UNORM, 1);
 }
 
 void Viewport::CreateUAV()

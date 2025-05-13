@@ -19,8 +19,8 @@ public:
         return &instance;
     }
 
-    const EmitterData& LoadFile(std::string _path);
-    const EmitterData& ReloadFile(std::string _path);
+    EmitterData LoadFile(std::string _path);
+    EmitterData ReloadFile(std::string _path);
     void SaveFile(const std::string& _path, const EmitterData& _data);
 
     static std::shared_ptr<Json::Value> ParseVector3(const Vector3& _vec);

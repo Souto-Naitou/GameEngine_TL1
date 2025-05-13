@@ -33,7 +33,7 @@ void TransFadeInOut::Update()
         isEnd_ = true;
         return;
     }
-    if (timer_->GetNow() > duration_)
+    if (timer_->GetNow<double>() > duration_)
     {
         timer_->Reset();
         timer_->Start();
@@ -47,11 +47,11 @@ void TransFadeInOut::Update()
 
     if (countPhase_ == 0)
     {
-        opacity_ = Math::Lerp(0.0f, 1.0f, static_cast<float>(timer_->GetNow() / duration_));
+        opacity_ = Math::Lerp(0.0f, 1.0f, static_cast<float>(timer_->GetNow<double>() / duration_));
     }
     else if (countPhase_ == 1)
     {
-        opacity_ = Math::Lerp(1.0f, 0.0f, static_cast<float>(timer_->GetNow() / duration_));
+        opacity_ = Math::Lerp(1.0f, 0.0f, static_cast<float>(timer_->GetNow<double>() / duration_));
     }
 
     sprite_->SetColor(Vector4(0, 0, 0, opacity_));
@@ -75,7 +75,7 @@ void TransFadeInOut::DebugWindow()
     auto pFunc = [&]()
     {
         ImGuiTemplate::VariableTableRow("Scene Name", sceneName_);
-        ImGuiTemplate::VariableTableRow("Timer", timer_->GetNow());
+        ImGuiTemplate::VariableTableRow("Timer", timer_->GetNow<double>());
         ImGuiTemplate::VariableTableRow("Phase", countPhase_);
         ImGuiTemplate::VariableTableRow("Opacity", opacity_);
     };

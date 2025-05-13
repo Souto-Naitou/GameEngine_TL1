@@ -1,10 +1,11 @@
 #include "ImGuiTemplates.h"
 
+#ifdef _DEBUG
+
 #include <string>
 
 void ImGuiTemplate::VariableTable(const std::string& _stringID, std::function<void()> _function)
 {
-#ifdef _DEBUG
     std::string id = _stringID + "_VARTABLE";
     ImGui::PushID(id.c_str());
     bool result = ImGui::BeginTable(_stringID.c_str(), 2, ImGuiTableFlags_Hideable | ImGuiTableFlags_Resizable | ImGuiTableFlags_Borders);
@@ -21,5 +22,6 @@ void ImGuiTemplate::VariableTable(const std::string& _stringID, std::function<vo
 
     ImGui::PopID();
     return;
-#endif // DEBUG
 }
+
+#endif // DEBUG

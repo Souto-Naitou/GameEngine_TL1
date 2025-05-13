@@ -129,7 +129,17 @@ void LineSystem::CreatePipelineState()
     // 実際に生成
     HRESULT hr = device_->CreateGraphicsPipelineState(&pipelineStateDesc,
         IID_PPV_ARGS(&pipelineState_));
-    assert(SUCCEEDED(hr));
+
+    if (FAILED(hr))
+    {
+        Logger::GetInstance()->LogError(
+            "LineSystem",
+            __func__,
+            "Failed to create pipeline state"
+        );
+        assert(false);
+    }
+
     return;
 
 }

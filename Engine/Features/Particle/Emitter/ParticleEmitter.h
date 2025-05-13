@@ -1,5 +1,7 @@
 #pragma once
 
+#pragma warning(disable: 4324) // 構造体のメンバがアライメントのためにパディングされる
+
 #include <Timer/Timer.h>
 #include <string>
 #include <Features/Particle/Particle.h>
@@ -10,7 +12,7 @@
 
 struct EmitterData
 {
-    std::string     name_;                          // 名前
+    std::string     name_ = {};                     // 名前
     Vector3         startScale_;                    // 開始スケール
     Vector3         endScale_;                      // 終了スケール
 
@@ -55,7 +57,7 @@ public: /// Setter
     void SetEnableBillboard(bool _enable) { particle_->SetEnableBillboard(_enable); }
 
 public: /// Getter
-    EmitterData& GetEmitterData() { return emitterData_; }
+    //EmitterData& GetEmitterData() { return emitterData_; }
 
 private:
     static constexpr uint32_t   kDefaultReserveCount_ = 6000u;

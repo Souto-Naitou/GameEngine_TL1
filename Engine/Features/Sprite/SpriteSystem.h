@@ -34,10 +34,18 @@ public:
 
     void AddCommandListData(const CommandListData& _data) { commandListDatas_.emplace_back(_data); }
 
+
+public:
+    void SetRTVHandle(D3D12_CPU_DESCRIPTOR_HANDLE* _rtvHandle)
+    {
+        rtvHandle_ = _rtvHandle;
+    }
+
+
 private:
     Microsoft::WRL::ComPtr<ID3D12RootSignature> rootSignature_ = nullptr;
     Microsoft::WRL::ComPtr<ID3D12PipelineState> graphicsPipelineState_ = nullptr;
-
+    D3D12_CPU_DESCRIPTOR_HANDLE* rtvHandle_ = nullptr;
 
     std::list<CommandListData> commandListDatas_;
 

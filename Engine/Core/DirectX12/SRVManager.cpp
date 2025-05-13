@@ -49,7 +49,7 @@ uint32_t SRVManager::Allocate()
 
     assert(false && "SRVの割り当てに失敗しました");
 
-    return -1;
+    return 0xffffffff;
 }
 
 void SRVManager::Deallocate(uint32_t _index)

@@ -58,6 +58,7 @@ public:
 public: /// Getter
     ID3D12Device*                                           GetDevice() const                           { return device_.Get(); }
     ID3D12GraphicsCommandList*                              GetCommandList() const                      { return commandList_.Get(); }
+    ID3D12GraphicsCommandList*                              GetCommandListsLast() const                 { return commandLists_.back(); }
     IDxcUtils*                                              GetDxcUtils() const                         { return dxcUtils_.Get(); }
     IDxcCompiler3*                                          GetDxcCompiler() const                      { return dxcCompiler_.Get(); }
     IDxcIncludeHandler*                                     GetIncludeHandler() const                   { return includeHandler_.Get(); }
@@ -154,6 +155,8 @@ private:
     uint32_t                                                rtvHeapIndex_[2]                = {};           // RTVヒープインデックス
     uint32_t                                                clientWidth_                    = 0;
     uint32_t                                                clientHeight_                   = 0;
+    uint32_t                                                gameWndSrvIndex_                = 0;
+    uint32_t                                                gameWndSrvIndexComputed_        = 0;
     float                                                   clearColor_[4]                  = { 0.2f, 0.2f, 0.4f, 1.0f };
     Vector4                                                 editorBG_                       = { 0.03f, 0.03f, 0.03f, 1.0f };
     uint32_t                                                backBufferIndex_                = 0u;
@@ -161,8 +164,7 @@ private:
     uint32_t                                                kDescriptorSizeRTV              = 0u;
     uint32_t                                                kDescriptorSizeDSV              = 0u;
     int32_t                                                 numUploadedTexture              = 0;
-    uint32_t                                                gameWndSrvIndex_                = 0;
-    uint32_t                                                gameWndSrvIndexComputed_        = 0;
+    int32_t                                                 padding = 0;
 
 private:
 

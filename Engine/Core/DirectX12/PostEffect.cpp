@@ -7,6 +7,9 @@ void PostEffect::Initialize()
     // インスタンスの取得
     ObtainInstances();
 
+    // 描画用コマンドリストの生成
+    CreateCommandList();
+
     // レンダーテクスチャの生成
     CreateRenderTexture();
 
@@ -24,41 +27,52 @@ void PostEffect::NewFrame()
 {
     /// 描画先のRTV/DSVの設定
     D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle = dsvHeap_->GetCPUDescriptorHandleForHeapStart();
-    commandList_->OMSetRenderTargets(1, &rtvHandle_, false, &dsvHandle);
+    commandListMain_->OMSetRenderTargets(1, &rtvHandle_, false, &dsvHandle);
 
     // 画面全体のクリア
-    commandList_->ClearRenderTargetView(rtvHandle_, &editorBG_.x, 0, nullptr);
+    commandListMain_->ClearRenderTargetView(rtvHandle_, &editorBG_.x, 0, nullptr);
 
-    // 指定した深度で画面全体をクリア (ポストエフェクト用リソースで行うため現在無効)
-    commandList_->ClearDepthStencilView(dsvHandle, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
+    // 指定した深度で画面全体をクリア
+    commandListMain_->ClearDepthStencilView(dsvHandle, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 
     // 描画先のビューを設定
-    commandList_->RSSetViewports(1, &viewport_);
-    commandList_->RSSetScissorRects(1, &scissorRect_);
-
+    commandListMain_->RSSetViewports(1, &viewport_);
+    commandListMain_->RSSetScissorRects(1, &scissorRect_);
 }
 
 void PostEffect::Draw()
 {
+    // コマンドリストの設定
+    rtvHandleSwapChain_ = pDx12_->GetRTVHandle()[pDx12_->GetBackBufferIndex()];
+    DX12Helper::CommandListCommonSetting(commandListForDraw_.Get(), &rtvHandleSwapChain_);
+
     DX12Helper::ChangeStateResource(
-        commandList_,
+        commandListForDraw_,
         renderTexture_.Get(),
         D3D12_RESOURCE_STATE_RENDER_TARGET,
         D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE
     );
 
-    commandList_->SetGraphicsRootSignature(rootSignature_.Get());
-    commandList_->SetPipelineState(pso_.Get());
-    commandList_->SetGraphicsRootDescriptorTable(0, rtvHandleGpu_);
+    commandListForDraw_->SetGraphicsRootSignature(rootSignature_.Get());
+    commandListForDraw_->SetPipelineState(pso_.Get());
+    commandListForDraw_->SetGraphicsRootDescriptorTable(0, rtvHandleGpu_);
 
-    commandList_->DrawInstanced(3, 1, 0, 0);
+    commandListForDraw_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+    commandListForDraw_->DrawInstanced(3, 1, 0, 0);
 
     DX12Helper::ChangeStateResource(
-        commandList_,
+        commandListForDraw_,
         renderTexture_.Get(),
         D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
         D3D12_RESOURCE_STATE_RENDER_TARGET
     );
+}
+
+void PostEffect::PostDraw()
+{
+    commandAllocator_->Reset();
+    commandListForDraw_->Reset(commandAllocator_.Get(), nullptr);
 }
 
 void PostEffect::CreateRenderTexture()
@@ -106,7 +120,7 @@ void PostEffect::ObtainInstances()
     rtvHeapCounter_ = pDx12_->GetRTVHeapCounter();
     pDevice_ = pDx12_->GetDevice();
     pSRVManager_ = SRVManager::GetInstance();
-    commandList_ = pDx12_->GetCommandList();
+    commandListMain_ = pDx12_->GetCommandList();
     viewport_ = pDx12_->GetViewport();
     scissorRect_ = pDx12_->GetScissorRect();
     dsvHeap_ = pDx12_->GetDSVDescriptorHeap();
@@ -182,8 +196,6 @@ void PostEffect::CreatePipelineState()
     IDxcUtils* dxcUtils = pDx12_->GetDxcUtils();
     IDxcCompiler3* dxcCompiler = pDx12_->GetDxcCompiler();
     IDxcIncludeHandler* includeHandler = pDx12_->GetIncludeHandler();
-    uint32_t clientWidth = pDx12_->GetClientWidth();
-    uint32_t clientHeight = pDx12_->GetClientHeight();
 
     inputLayoutDesc_.pInputElementDescs = nullptr;
     inputLayoutDesc_.NumElements = 0;
@@ -235,7 +247,21 @@ void PostEffect::CreatePipelineState()
     graphicsPipelineStateDesc.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
     // 実際に生成
     HRESULT hr = device->CreateGraphicsPipelineState(&graphicsPipelineStateDesc, IID_PPV_ARGS(&pso_));
-    assert(SUCCEEDED(hr));
-    return;
+    if (FAILED(hr))
+    {
+        Logger::GetInstance()->LogError(
+            "PostEffect",
+            "CreatePipelineState",
+            "Failed to create pipeline state"
+        );
+        assert(false);
+    }
 
+    return;
+}
+
+void PostEffect::CreateCommandList()
+{
+    pDevice_->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(commandAllocator_.GetAddressOf()));
+    pDevice_->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, commandAllocator_.Get(), nullptr, IID_PPV_ARGS(commandListForDraw_.GetAddressOf()));
 }

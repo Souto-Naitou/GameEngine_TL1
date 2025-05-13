@@ -77,6 +77,7 @@ public: /// Getter
 public: /// Setter
     void SetSharedGameEye(GameEye* _pGameEye)   { pDefaultGameEye_ = _pGameEye; }
     void AddCommandListData(CommandListData& _data) { commandListDatas_.emplace_back(_data); }
+    void SetRTVHandle(D3D12_CPU_DESCRIPTOR_HANDLE* _handle) { rtvHandle_ = _handle; }
 
 
 private:
@@ -99,6 +100,7 @@ private: /// メンバ変数
     D3D12_INPUT_ELEMENT_DESC inputElementDescs_[3] = {};
     D3D12_INPUT_LAYOUT_DESC inputLayoutDesc_ = {};
     D3D12_RASTERIZER_DESC rasterizerDesc_ = {};
+    D3D12_CPU_DESCRIPTOR_HANDLE* rtvHandle_ = {};
 
     std::list<CommandListData> commandListDatas_;
 

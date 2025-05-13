@@ -86,20 +86,14 @@ void GameScene::Update()
     pSmoke_->Update();
     pSpark_->Update();
 
-    if (NiGui::Button("Button1", "white1x1.png", NiGui::BLUE,{ 100, 100 }, { 100, 30 }) == NiGui_ButtonState::Confirm)
-    {
-        /// Do anything...
-    }
+    auto center = NiGui_StandardPoint::Center;
 
-    if (NiGui::Button("Button2", "white1x1.png", NiGui::BLUE, { 100, 150 }, { 100, 30 }) == NiGui_ButtonState::Confirm)
+    NiGui::BeginDivMovable("Div1", "white1x1.png", NiGui::YELLOW, { 0, -100 }, { 200, 200 }, center, center);
+    if (NiGui::Button("Button1", "white1x1.png", NiGui::BLUE, { 0, 0 }, { 100, 100 }, {}, center, center) == NiGui_ButtonState::Confirm)
     {
         /// Do anything...
     }
-
-    if (NiGui::Button("Button3", "white1x1.png", NiGui::BLUE, { 100, 200 }, { 100, 30 }) == NiGui_ButtonState::Confirm)
-    {
-        /// Do anything...
-    }
+    NiGui::EndDiv();
 
 }
 

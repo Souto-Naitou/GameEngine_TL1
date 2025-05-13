@@ -139,7 +139,11 @@ void Text::CreateTextLayout()
 
     UpdatePosition();
 
-    assert(SUCCEEDED(hr) && "テキストレイアウトの生成に失敗");
+    if (FAILED(hr)) [[unlikely]]
+    {
+        Logger::GetInstance()->LogError("Text", __func__, "CreateTextLayout failed");
+        assert(false && "CreateTextLayout failed");
+    }
 
     return;
 }

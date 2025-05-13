@@ -29,7 +29,6 @@
 void DirectX12::Initialize()
 {
     /// デバッグコントローラの設定
-#ifdef _DEBUG
     if (SUCCEEDED(D3D12GetDebugInterface(IID_PPV_ARGS(&debugController_))))
     {
         // デバッグレイヤーを有効化する
@@ -37,7 +36,6 @@ void DirectX12::Initialize()
         // GPU側もチェックする
         debugController_->SetEnableGPUBasedValidation(TRUE);
     }
-#endif // _DEBUG
 
     pSRVManager_ = SRVManager::GetInstance();
 
@@ -76,7 +74,9 @@ void DirectX12::Initialize()
 
 
     /// エラー時停止処理
+    #ifdef _DEBUG
     DX12Helper::PauseError(device_, infoQueue_);
+    #endif // _DEBUG
 
 
     /// 出力ウィンドウに初期化完了を出力
@@ -165,9 +165,10 @@ void DirectX12::CommandExecute()
 
 
     /// GPUにコマンドリストの実行を行わせる
-    std::vector<ID3D12CommandList*> commandLists = { commandList_.Get() };
+    std::vector<ID3D12CommandList*> commandLists = { commandList_.Get()};
     for(auto& cl : commandLists_)
     {
+        cl->Close();
         commandLists.push_back(cl);
     }
     commandQueue_->ExecuteCommandLists(static_cast<UINT>(commandLists.size()), commandLists.data());

@@ -56,11 +56,11 @@ void DebugManager::MeasureFPS()
         timer_.Start();
     }
     /// フレームレート計算
-    if (timer_.GetNow() - elapsedFrameCount_ >= 0.1)
+    if (timer_.GetNow<double>() - elapsedFrameCount_ >= 0.1)
     {
-        fps_ = frameCount_ * 1.0 / (timer_.GetNow() - elapsedFrameCount_);
+        fps_ = frameCount_ * 1.0 / (timer_.GetNow<double>() - elapsedFrameCount_);
         frameCount_ = 0;
-        elapsedFrameCount_ = timer_.GetNow();
+        elapsedFrameCount_ = timer_.GetNow<double>();
     }
     frameCount_++;
 
@@ -74,7 +74,7 @@ void DebugManager::MeasureFrameTime()
 {
 #ifdef _DEBUG
 
-    frameTime_ = frameTimer_.GetNow();
+    frameTime_ = frameTimer_.GetNow<double>();
     frameTimer_.Reset();
     frameTimer_.Start();
 
