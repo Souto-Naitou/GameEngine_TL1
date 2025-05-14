@@ -34,8 +34,8 @@ public:
 
 
 private:
-    static constexpr wchar_t kVertexShaderPath[] = L"EngineResources/Shaders/CopyImage.VS.hlsl";
-    static constexpr wchar_t kPixelShaderPath[] = L"EngineResources/Shaders/CopyImage.PS.hlsl";
+    static constexpr wchar_t kVertexShaderPath[] = L"EngineResources/Shaders/Fullscreen.VS.hlsl";
+    static constexpr wchar_t kPixelShaderPath[] = L"EngineResources/Shaders/Fullscreen.PS.hlsl";
     Microsoft::WRL::ComPtr<ID3D12Resource>              renderTexture_          = nullptr;
     uint32_t                                            renderSRVIndex_         = 0;
     uint32_t                                            rtvHeapIndex_           = 0;

@@ -45,7 +45,7 @@ void DX12Helper::CreateDevice(Microsoft::WRL::ComPtr<ID3D12Device>& _device, Mic
 }
 
 
-#ifdef _DEBUG
+//#ifdef _DEBUG
 void DX12Helper::PauseError(Microsoft::WRL::ComPtr<ID3D12Device>& _device, Microsoft::WRL::ComPtr<ID3D12InfoQueue>& _infoQ)
 {
 
@@ -77,7 +77,7 @@ void DX12Helper::PauseError(Microsoft::WRL::ComPtr<ID3D12Device>& _device, Micro
     }
 
 }
-#endif // _DEBUG
+//#endif // _DEBUG
 
 Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> DX12Helper::CreateDescriptorHeap(const Microsoft::WRL::ComPtr<ID3D12Device>& _device, D3D12_DESCRIPTOR_HEAP_TYPE _heapType, UINT _numDescriptors, bool _shaderVisible)
 {

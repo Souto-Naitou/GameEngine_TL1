@@ -627,7 +627,7 @@
     <None Include="EngineResources\Shaders\Line.hlsli">
       <Filter>HLSL</Filter>
     </None>
-    <None Include="EngineResources\Shaders\CopyImage.hlsli">
+    <None Include="EngineResources\Shaders\Fullscreen.hlsli">
       <Filter>HLSL</Filter>
     </None>
   </ItemGroup>
@@ -656,10 +656,10 @@
     <FxCompile Include="EngineResources\Shaders\WithoutAlpha.CS.hlsl">
       <Filter>HLSL</Filter>
     </FxCompile>
-    <FxCompile Include="EngineResources\Shaders\CopyImage.VS.hlsl">
+    <FxCompile Include="EngineResources\Shaders\Fullscreen.VS.hlsl">
       <Filter>HLSL</Filter>
     </FxCompile>
-    <FxCompile Include="EngineResources\Shaders\CopyImage.PS.hlsl">
+    <FxCompile Include="EngineResources\Shaders\Fullscreen.PS.hlsl">
       <Filter>HLSL</Filter>
     </FxCompile>
     <FxCompile Include="EngineResources\Shaders\Sprite.PS.hlsl">

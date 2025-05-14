@@ -4,6 +4,8 @@
 #include <unordered_map>
 #include <filesystem>
 #include <JsonParser/JsonLoader.h>
+#include <memory>
+#include <string>
 
 class EmitterManager
 {
@@ -19,8 +21,8 @@ public:
         return &instance;
     }
 
-    EmitterData LoadFile(std::string _path);
-    EmitterData ReloadFile(std::string _path);
+    EmitterData LoadFile(const std::string& _path);
+    EmitterData ReloadFile(const std::string& _path);
     void SaveFile(const std::string& _path, const EmitterData& _data);
 
     static std::shared_ptr<Json::Value> ParseVector3(const Vector3& _vec);

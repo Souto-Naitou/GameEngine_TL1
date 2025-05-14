@@ -22,14 +22,14 @@ namespace DX12Helper
     void CreateDevice(ComPtr<ID3D12Device>& _device, ComPtr<IDXGIAdapter4>& _adapter);
 
 
-    #ifdef _DEBUG
+    //#ifdef _DEBUG
     /// <summary>
     /// エラー時に停止する
     /// </summary>
     /// <param name="_device">デバイス</param>
     /// <param name="_infoQ">情報キュー</param>
     void PauseError(ComPtr<ID3D12Device>& _device, ComPtr<ID3D12InfoQueue>& _infoQ);
-    #endif // _DEBUG
+    //#endif // _DEBUG
 
 
     /// <summary>

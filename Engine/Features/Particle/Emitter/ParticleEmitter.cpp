@@ -34,7 +34,7 @@ void ParticleEmitter::Initialize(const std::string& _modelPath, const std::strin
     particle_->reserve(kDefaultReserveCount_);
 
     fromJsonData_ = EmitterManager::GetInstance()->LoadFile(jsonPath_);
-    std::memcpy(&emitterData_, &fromJsonData_, sizeof(EmitterData));
+    emitterData_ = fromJsonData_;
 
     if (!emitterData_.name_.empty())
     {

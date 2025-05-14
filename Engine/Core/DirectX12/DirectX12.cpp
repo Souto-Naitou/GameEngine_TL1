@@ -74,9 +74,9 @@ void DirectX12::Initialize()
 
 
     /// エラー時停止処理
-    #ifdef _DEBUG
+    //#ifdef _DEBUG
     DX12Helper::PauseError(device_, infoQueue_);
-    #endif // _DEBUG
+    //#endif // _DEBUG
 
 
     /// 出力ウィンドウに初期化完了を出力
