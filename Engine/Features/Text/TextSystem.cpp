@@ -79,8 +79,10 @@ IDWriteTextFormat* TextSystem::GetTextFormat(const std::string& _fontFamily, flo
             textFormat.GetAddressOf()
         );
 
-
-        assert(SUCCEEDED(hr) && "テキストフォーマットの生成に失敗");
+        if (FAILED(hr)) [[unlikely]]
+        {
+            assert(false && "フォントの生成に失敗");
+        }
 
         textFormats_[key] = textFormat;
     }

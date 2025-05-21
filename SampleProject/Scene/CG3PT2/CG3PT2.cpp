@@ -1,14 +1,18 @@
 #include "CG3PT2.h"
 #include <Features/Object3d/Object3dSystem.h>
 #include <imgui.h>
-#include <DebugTools/DebugManager/DebugManager.h>
 #include <Features/Audio/AudioManager.h>
-
 #include <Features/Input/Input.h>
+
+#ifdef _DEBUG
+#include <DebugTools/DebugManager/DebugManager.h>
+#endif // _DEBUG
 
 void CG3PT2::Initialize()
 {
+    #ifdef _DEBUG
     DebugManager::GetInstance()->SetComponent("Common", name_, std::bind(&CG3PT2::DebugWindow, this));
+    #endif // _DEBUG
 
     DirectX12* pDx12 = DirectX12::GetInstance();
 
@@ -78,7 +82,9 @@ void CG3PT2::Finalize()
     pointLight_.Finalize();
     pText_->Finalize();
 
+    #ifdef _DEBUG
     DebugManager::GetInstance()->DeleteComponent("Common", name_.c_str());
+    #endif // _DEBUG
 }
 
 void CG3PT2::Update()

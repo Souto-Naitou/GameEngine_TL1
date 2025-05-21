@@ -1,6 +1,7 @@
 #include "EmitterManager.h"
+#include <type_traits>
 
-const EmitterData& EmitterManager::LoadFile(std::string _path)
+EmitterData EmitterManager::LoadFile(const std::string& _path)
 {
     JsonLoader& loader = JsonLoader::GetInstance();
 
@@ -25,7 +26,7 @@ const EmitterData& EmitterManager::LoadFile(std::string _path)
     return emitterMap_[_path];
 }
 
-const EmitterData& EmitterManager::ReloadFile(std::string _path)
+EmitterData EmitterManager::ReloadFile(const std::string& _path)
 {
     JsonLoader& loader = JsonLoader::GetInstance();
 

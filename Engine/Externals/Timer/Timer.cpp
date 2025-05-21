@@ -1,4 +1,4 @@
-#include "Timer.h"
+#include "./Timer.h"
 
 Timer::Timer()
 {
@@ -7,23 +7,27 @@ Timer::Timer()
 
 void Timer::Start()
 {
-    isStart_ = true;
+    if (isRunning_) return;
+
     QueryPerformanceCounter(&mStart_);
+    isStart_ = true;
+    isRunning_ = true;
+}
+
+void Timer::Stop()
+{
+    if (!isRunning_) return;
+
+    GetNow<double>();
+    nowBeforeStop_ += now_;
+    isRunning_ = false;
 }
 
 void Timer::Reset()
 {
     mStart_ = {};
     now_ = 0.0;
+    nowBeforeStop_ = 0.0;
     isStart_ = false;
-}
-
-double Timer::GetNow()
-{
-    LARGE_INTEGER mNow = {};
-    QueryPerformanceCounter(&mNow);
-
-    now_ = static_cast<double>(mNow.QuadPart - mStart_.QuadPart) / static_cast<double>(mFreq_.QuadPart);
-
-    return now_;
+    isRunning_ = false;
 }

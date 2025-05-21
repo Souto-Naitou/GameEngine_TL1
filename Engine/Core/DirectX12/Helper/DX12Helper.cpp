@@ -1,5 +1,7 @@
 #include "DX12Helper.h"
 
+#pragma warning(disable: 6387) // 例外の可能性がある関数の警告を無視
+
 #include <cassert>
 #include <DebugTools/Logger/Logger.h>
 #include <format>
@@ -43,9 +45,9 @@ void DX12Helper::CreateDevice(Microsoft::WRL::ComPtr<ID3D12Device>& _device, Mic
 }
 
 
+//#ifdef _DEBUG
 void DX12Helper::PauseError(Microsoft::WRL::ComPtr<ID3D12Device>& _device, Microsoft::WRL::ComPtr<ID3D12InfoQueue>& _infoQ)
 {
-#ifdef _DEBUG
 
     if (SUCCEEDED(_device->QueryInterface(IID_PPV_ARGS(_infoQ.GetAddressOf()))))
     {
@@ -74,8 +76,8 @@ void DX12Helper::PauseError(Microsoft::WRL::ComPtr<ID3D12Device>& _device, Micro
         _infoQ->PushStorageFilter(&filter);
     }
 
-#endif // _DEBUG
 }
+//#endif // _DEBUG
 
 Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> DX12Helper::CreateDescriptorHeap(const Microsoft::WRL::ComPtr<ID3D12Device>& _device, D3D12_DESCRIPTOR_HEAP_TYPE _heapType, UINT _numDescriptors, bool _shaderVisible)
 {
@@ -85,6 +87,17 @@ Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> DX12Helper::CreateDescriptorHeap(co
     descriptorHeapDesc.NumDescriptors = _numDescriptors;
     descriptorHeapDesc.Flags = _shaderVisible ? D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE : D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
     HRESULT hr = _device->CreateDescriptorHeap(&descriptorHeapDesc, IID_PPV_ARGS(&descriptorHeap));
+
+    if (FAILED(hr))
+    {
+        Logger::GetInstance()->LogError(
+            "DX12Helper",
+            __func__,
+            "Failed to create descriptor heap."
+        );
+        assert(false && "Failed to create descriptor heap");
+    }
+
     return descriptorHeap;
 }
 
@@ -434,25 +447,63 @@ void DX12Helper::ChangeStateResource(const Microsoft::WRL::ComPtr<ID3D12Graphics
     _commandList->ResourceBarrier(1, &barrier);
 }
 
-void DX12Helper::CommandListCommonSetting(ID3D12GraphicsCommandList* _commandList)
+void DX12Helper::CommandListCommonSetting(ID3D12GraphicsCommandList* _commandList, const D3D12_CPU_DESCRIPTOR_HANDLE* rtvHandle)
 {
     /// 必要なデータを取得
     DirectX12* pDx12 = DirectX12::GetInstance();
     SRVManager* pSrvManager = SRVManager::GetInstance();
     ID3D12DescriptorHeap* ppHeaps[] = { pSrvManager->GetDescriptorHeap() };
-    auto rtv = pDx12->GetRTVHandle();
-    auto backBufferIndex = pDx12->GetBackBufferIndex();
     auto dsvHandle = pDx12->GetDSVDescriptorHeap()->GetCPUDescriptorHandleForHeapStart();
     auto viewport = pDx12->GetViewport();
     auto scissorRect = pDx12->GetScissorRect();
 
     /// コマンドリストの設定
     _commandList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
-    _commandList->OMSetRenderTargets(1, &rtv[backBufferIndex], FALSE, &dsvHandle);
+    _commandList->OMSetRenderTargets(1, rtvHandle, FALSE, &dsvHandle);
     _commandList->RSSetViewports(1, &viewport);
     _commandList->RSSetScissorRects(1, &scissorRect);
 
     return;
+}
+
+Microsoft::WRL::ComPtr<ID3D12Resource> DX12Helper::CreateRenderTextureResource(const ComPtr<ID3D12Device>& _device, int32_t _width, int32_t _height, DXGI_FORMAT _format, const Vector4& _clearColor)
+{
+    Microsoft::WRL::ComPtr<ID3D12Resource> result = nullptr;
+    D3D12_HEAP_PROPERTIES heapProps = {};
+    heapProps.Type = D3D12_HEAP_TYPE_DEFAULT;
+    D3D12_RESOURCE_DESC resourceDesc = {};
+    resourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
+    resourceDesc.Width = _width;
+    resourceDesc.Height = _height;
+    resourceDesc.DepthOrArraySize = 1;
+    resourceDesc.MipLevels = 1;
+    resourceDesc.SampleDesc.Count = 1;
+    resourceDesc.Layout = D3D12_TEXTURE_LAYOUT_UNKNOWN;
+    resourceDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET;
+    resourceDesc.Format = _format;
+
+    D3D12_CLEAR_VALUE clearValue = {};
+    clearValue.Format = _format;
+    clearValue.Color[0] = _clearColor.x;
+    clearValue.Color[1] = _clearColor.y;
+    clearValue.Color[2] = _clearColor.z;
+    clearValue.Color[3] = _clearColor.w;
+
+    HRESULT hr = _device->CreateCommittedResource(
+        &heapProps,
+        D3D12_HEAP_FLAG_NONE,
+        &resourceDesc,
+        D3D12_RESOURCE_STATE_RENDER_TARGET,
+        &clearValue,
+        IID_PPV_ARGS(&result));
+
+    if (FAILED(hr))
+    {
+        Logger::GetInstance()->LogError("DX12Helper", __func__, "CreateCommittedResource failed");
+        assert(false && "Create committed resource failed");
+    }
+
+    return result;
 }
 
 D3D12_CPU_DESCRIPTOR_HANDLE DX12Helper::GetCPUDescriptorHandle(const Microsoft::WRL::ComPtr<ID3D12DescriptorHeap>& _descriptorHeap, uint32_t _descriptorSize, uint32_t _index)

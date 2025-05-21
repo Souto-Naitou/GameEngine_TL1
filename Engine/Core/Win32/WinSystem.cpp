@@ -20,7 +20,7 @@ bool WinSystem::isResized_ = false;
 void WinSystem::Initialize()
 {
     HRESULT hr = CoInitializeEx(0, COINIT_MULTITHREADED);
-    assert(SUCCEEDED(hr) && "初期化失敗");
+    if (FAILED(hr)) assert(false && "COMの初期化失敗");
 
     wc_.lpfnWndProc = WinSystem::WindowProcedure;
     wc_.lpszClassName = L"DXWindowClass";
@@ -29,7 +29,7 @@ void WinSystem::Initialize()
     RegisterClass(&wc_);
 }
 
-void WinSystem::Finalize()
+void WinSystem::Finalize() const
 {
     CloseWindow(hwnd_);
     CoUninitialize();

@@ -29,7 +29,6 @@
 void DirectX12::Initialize()
 {
     /// デバッグコントローラの設定
-#ifdef _DEBUG
     if (SUCCEEDED(D3D12GetDebugInterface(IID_PPV_ARGS(&debugController_))))
     {
         // デバッグレイヤーを有効化する
@@ -37,7 +36,6 @@ void DirectX12::Initialize()
         // GPU側もチェックする
         debugController_->SetEnableGPUBasedValidation(TRUE);
     }
-#endif // _DEBUG
 
     pSRVManager_ = SRVManager::GetInstance();
 
@@ -76,7 +74,9 @@ void DirectX12::Initialize()
 
 
     /// エラー時停止処理
+    //#ifdef _DEBUG
     DX12Helper::PauseError(device_, infoQueue_);
+    //#endif // _DEBUG
 
 
     /// 出力ウィンドウに初期化完了を出力
@@ -110,6 +110,7 @@ void DirectX12::Initialize()
     /// DXCの初期化
     CreateDirectXShaderCompiler();
 
+
     /// D3D11デバイス群の生成
     CreateD3D11Device();
 
@@ -136,13 +137,13 @@ void DirectX12::NewFrame()
 
 
     /// 描画先のRTV/DSVの設定
-    D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle = dsvDescriptorHeap_->GetCPUDescriptorHandleForHeapStart();
-    commandList_->OMSetRenderTargets(1, &rtvHandles_[backBufferIndex_], false, &dsvHandle);
+    commandList_->OMSetRenderTargets(1, &rtvHandles_[backBufferIndex_], false, nullptr);
 
     // 画面全体のクリア
     commandList_->ClearRenderTargetView(rtvHandles_[backBufferIndex_], &editorBG_.x, 0, nullptr);
-    // 指定した深度で画面全体をクリア
-    commandList_->ClearDepthStencilView(dsvHandle, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
+
+    // 指定した深度で画面全体をクリア (ポストエフェクト用リソースで行うため現在無効)
+    // commandList_->ClearDepthStencilView(dsvHandle, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 
     commandList_->RSSetViewports(1, &viewport_);            // Viewportを設定
     commandList_->RSSetScissorRects(1, &scissorRect_);      // Scissorを設定
@@ -164,9 +165,10 @@ void DirectX12::CommandExecute()
 
 
     /// GPUにコマンドリストの実行を行わせる
-    std::vector<ID3D12CommandList*> commandLists = { commandList_.Get() };
+    std::vector<ID3D12CommandList*> commandLists = { commandList_.Get()};
     for(auto& cl : commandLists_)
     {
+        cl->Close();
         commandLists.push_back(cl);
     }
     commandQueue_->ExecuteCommandLists(static_cast<UINT>(commandLists.size()), commandLists.data());

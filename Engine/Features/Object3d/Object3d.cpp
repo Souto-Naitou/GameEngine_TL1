@@ -142,7 +142,6 @@ void Object3d::Draw()
     #ifdef _DEBUG
 
     ID3D12GraphicsCommandList* commandList = pDx12_->GetCommandList();
-    std::vector<D3D12_GPU_DESCRIPTOR_HANDLE> textureSrvHandleGPUs = pDx12_->GetSRVHandlesGPUList();
 
     // マテリアルCBufferの場所を設定
     commandList->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());

@@ -10,6 +10,7 @@
 #include "ParticleSystem.h"
 #include <Matrix4x4.h>
 #include <Timer/Timer.h>
+#include <vector>
 
 enum class ParticleDeleteCondition
 {
@@ -23,6 +24,7 @@ struct ParticleData
     Transform                               transform_          = {};
     Vector3                                 startScale_         = {};
     Vector3                                 endScale_           = {};
+    Vector3                                 acceleration_       = {};
     Vector4                                 currentColor_       = {};
     Vector4                                 beginColor_         = {};
     Vector4                                 endColor_           = {};
@@ -30,7 +32,6 @@ struct ParticleData
     float                                   alphaDeltaValue_    = 0.0f;
     float                                   lifeTime_           = 0.0f;
     float                                   currentLifeTime_    = 0.0f;
-    Vector3                                 acceleration_       = {};
     Vector3                                 accResistance_      = {};
     Vector3                                 accGravity_         = {};
     Vector3                                 velocity_           = {};

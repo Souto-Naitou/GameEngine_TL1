@@ -5,7 +5,7 @@ class Timer
 {
 public:
     Timer();
-    ~Timer() {};
+    ~Timer() = default;
 
     void Start();
     void Reset();

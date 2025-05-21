@@ -169,5 +169,5 @@ bool Input::TriggerMouse(MouseNum _mouseNum) const
 BYTE Input::GetKeyNumber(char _key) const
 {
     // キーの文字からキー番号を取得
-    return MapVirtualKey(_key, MAPVK_VK_TO_VSC);
+    return static_cast<BYTE>(MapVirtualKey(_key, MAPVK_VK_TO_VSC));
 }

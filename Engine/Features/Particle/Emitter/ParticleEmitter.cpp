@@ -12,17 +12,45 @@
 
 const uint32_t ParticleEmitter::kDefaultReserveCount_;
 
+EmitterData& EmitterData::operator=(const EmitterData & _rv)
+{
+    if (&_rv == this) return *this;
+    name_                           = _rv.name_;
+    startScale_                     = _rv.startScale_;
+    endScale_                       = _rv.endScale_;
+    emitInterval_                   = _rv.emitInterval_;
+    emitNum_                        = _rv.emitNum_;
+    emitterLifeTime_                = _rv.emitterLifeTime_;
+    particleLifeTime_               = _rv.particleLifeTime_;
+    scaleDelayTime_                 = _rv.scaleDelayTime_;
+    beginPosition_                  = _rv.beginPosition_;
+    endPosition_                    = _rv.endPosition_;
+    emitPositionFixed_              = _rv.emitPositionFixed_;
+    beginColor_                     = _rv.beginColor_;
+    endColor_                       = _rv.endColor_;
+    alphaDeltaValue_                = _rv.alphaDeltaValue_;
+    velocityRandomRangeBegin_       = _rv.velocityRandomRangeBegin_;
+    velocityRandomRangeEnd_         = _rv.velocityRandomRangeEnd_;
+    velocityFixed_                  = _rv.velocityFixed_;
+    gravity_                        = _rv.gravity_;
+    resistance_                     = _rv.resistance_;
+    enableRandomVelocity_           = _rv.enableRandomVelocity_;
+    enableRandomEmit_               = _rv.enableRandomEmit_;
+
+    return *this;
+}
+
 void ParticleEmitter::Initialize(const std::string& _modelPath, const std::string& _jsonPath, bool _manualMode)
 {
-    if (!emitterData_.name_.empty())
-    {
-        particleName_ = emitterData_.name_;
-    }
+    auto size = sizeof(ParticleEmitter);
+    size;
 
 #ifdef _DEBUG
     std::stringstream ss;
-    ss << particleName_ << "##0x" << std::hex << this;
-    name_ = ss.str();
+    ss << "0x" << std::hex << this;
+    ptrHex_ = ss.str();
+
+    name_ = particleName_ + "##" + ptrHex_;
     DebugManager::GetInstance()->SetComponent("ParticleEmitter", name_, std::bind(&ParticleEmitter::DebugWindow, this));
 #endif // _DEBUG
 
@@ -39,6 +67,16 @@ void ParticleEmitter::Initialize(const std::string& _modelPath, const std::strin
     fromJsonData_ = EmitterManager::GetInstance()->LoadFile(jsonPath_);
     emitterData_ = fromJsonData_;
 
+    auto addr = std::addressof(emitterData_);
+    auto addr2 = std::addressof(fromJsonData_);
+    addr;
+    addr2;
+
+    if (!emitterData_.name_.empty())
+    {
+        particleName_ = emitterData_.name_;
+        name_ = particleName_ + "##" + ptrHex_;
+    }
 
     aabb_ = std::make_unique<AABB>();
     aabb_->Initialize();
@@ -48,7 +86,7 @@ void ParticleEmitter::Initialize(const std::string& _modelPath, const std::strin
 
 void ParticleEmitter::Update()
 {
-    if (timer_.GetNow() > emitterData_.emitInterval_)
+    if (timer_.GetNow<float>() > emitterData_.emitInterval_)
     {
         if (emitterData_.emitNum_ < 0)
         {
@@ -176,6 +214,7 @@ void ParticleEmitter::DebugWindow()
                 if (!fromJsonData_.name_.empty())
                 {
                     name_ = fromJsonData_.name_;
+                    name_ = fromJsonData_.name_ + "##" + ptrHex_;
                 }
                 jsonFileExist_ = true;
             }

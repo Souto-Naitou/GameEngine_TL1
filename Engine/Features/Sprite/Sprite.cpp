@@ -265,7 +265,6 @@ void Sprite::CreateMaterialResource()
     materialResource_->Map(0, nullptr, reinterpret_cast<void**>(&materialData_));
 
     materialData_->color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
-    materialData_->enableLighting = false;
     materialData_->uvTransform = Matrix4x4::Identity();
 }
 

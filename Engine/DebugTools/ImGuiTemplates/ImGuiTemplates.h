@@ -1,5 +1,7 @@
 #pragma once
 
+#ifdef _DEBUG
+
 #include <string>
 #include <type_traits>
 
@@ -8,10 +10,7 @@
 #include <Vector3.h>
 #include <Vector4.h>
 
-#ifdef _DEBUG
 #include <imgui.h>
-#endif // _DEBUG
-
 
 namespace ImGuiTemplate
 {
@@ -20,7 +19,6 @@ namespace ImGuiTemplate
     template <typename T>
     void VariableTableRow(const std::string& _varName, const T _var)
     {
-#ifdef _DEBUG
         ImGui::TableNextRow();
         ImGui::TableNextColumn();
 
@@ -63,6 +61,7 @@ namespace ImGuiTemplate
         {
             ImGui::Text("ERROR TYPE!");
         }
-#endif // _DEBUG
     }
 }
+
+#endif // _DEBUG

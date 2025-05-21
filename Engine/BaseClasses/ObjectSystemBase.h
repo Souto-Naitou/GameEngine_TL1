@@ -13,6 +13,7 @@ public:
     virtual void    Initialize();
     virtual void    DrawCall() = 0;
     virtual void    Sync() = 0;
+    virtual void    PostDraw();
 
 
 public: /// Getter

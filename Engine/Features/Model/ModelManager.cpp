@@ -3,6 +3,7 @@
 #include <filesystem>
 #include <Features/Particle/Particle.h>
 #include <algorithm>
+#include <cctype>
 
 void ModelManager::Initialize()
 {
@@ -129,7 +130,10 @@ std::filesystem::path ModelManager::GetLowerPath(const std::string& _path)
     std::filesystem::path result = _path;
     std::string str = _path;
 
-    std::transform(str.begin(), str.end(), str.begin(), ::tolower);
+    std::transform(str.begin(), str.end(), str.begin(),
+        [](unsigned char c) -> char {
+        return static_cast<char>(std::tolower(c));
+    });
 
     result = str;
 

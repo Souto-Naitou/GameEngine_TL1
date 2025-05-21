@@ -23,9 +23,6 @@ void TextureManager::LoadTexture(const std::string& _filePath)
 
     assert(!srvManager_->IsFull() && "SRVがいっぱいです");
 
-    DirectX12* pDx12 = DirectX12::GetInstance();
-    ID3D12Device* device = pDx12->GetDevice();
-
     TextureData& textureData = textureDataMap_[fullPath];
 
     DirectX::ScratchImage image{};
@@ -46,7 +43,6 @@ void TextureManager::LoadTexture(const std::string& _filePath)
     textureData.resource = DX12Helper::CreateTextureResource(DirectX12::GetInstance()->GetDevice(), textureData.metadata);
     DX12Helper::UploadTextureData(textureData.resource, image);
 
-    uint32_t kDescriptorSizeSRV = DirectX12::GetInstance()->GetDescriptorSizeSRV();
     textureData.srvIndex = srvManager_->Allocate();
     textureData.srvHandleCPU = srvManager_->GetCPUDescriptorHandle(textureData.srvIndex);
     textureData.srvHandleGPU = srvManager_->GetGPUDescriptorHandle(textureData.srvIndex);
