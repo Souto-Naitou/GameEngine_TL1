@@ -10,6 +10,7 @@
 #include "ParticleSystem.h"
 #include <Matrix4x4.h>
 #include <Timer/Timer.h>
+#include <vector>
 
 enum class ParticleDeleteCondition
 {

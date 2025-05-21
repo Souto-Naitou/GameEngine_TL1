@@ -144,6 +144,8 @@ void Particle::Draw()
 
 void Particle::reserve(size_t _size, bool _isInit)
 {
+    auto size = sizeof(ParticleData);
+    size;
     particleData_.reserve(_size);
     CreateParticleForGPUResource();
     if (!_isInit) SRVManager::GetInstance()->Deallocate(srvIndex_);
