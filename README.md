@@ -6,7 +6,7 @@
 ## Drawing with DirectX 12!
 ![image](https://github.com/user-attachments/assets/f29ccb5d-5841-4c7c-b0f3-bef61f794683)
 
-## Installi
+## Install
 - As submodule
 ```bash
 git submodule add https://github.com/Souto-Naitou/GameEngine_DX12.git ./Externals
