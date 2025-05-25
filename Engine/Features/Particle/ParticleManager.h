@@ -1,7 +1,9 @@
 #pragma once
 
-#include <list>
 #include <Features/Particle/Particle.h>
+
+#include <list>
+#include <memory>
 
 class ParticleManager
 {
@@ -24,7 +26,7 @@ public:
 
 
 public:
-    Particle& CreateParticle();
+    Particle* CreateParticle();
     void ReleaseParticle(Particle* _particle);
     void ReserveDeleteParticle(Particle* _particle);
     void ReleaseAllParticle();
@@ -36,7 +38,7 @@ private:
 
 
 public:
-    std::list<Particle> particles_;
+    std::list<std::unique_ptr<Particle>> particles_;
     std::list<Particle*> deleteParticles_;
 
 };

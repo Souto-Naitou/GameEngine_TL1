@@ -301,7 +301,7 @@ Microsoft::WRL::ComPtr<ID3D12Resource> DX12Helper::CreateBufferResource(const Mi
     return result;
 }
 
-DirectX::ScratchImage DX12Helper::LoadTexture(const std::string _filePath)
+DirectX::ScratchImage DX12Helper::LoadTexture(const std::string& _filePath)
 {
     DirectX::ScratchImage image{};
     std::wstring filePathW = ConvertString(_filePath);
@@ -450,8 +450,8 @@ void DX12Helper::ChangeStateResource(const Microsoft::WRL::ComPtr<ID3D12Graphics
 void DX12Helper::CommandListCommonSetting(ID3D12GraphicsCommandList* _commandList, const D3D12_CPU_DESCRIPTOR_HANDLE* rtvHandle)
 {
     /// 必要なデータを取得
-    DirectX12* pDx12 = DirectX12::GetInstance();
-    SRVManager* pSrvManager = SRVManager::GetInstance();
+    const DirectX12* pDx12 = DirectX12::GetInstance();
+    const SRVManager* pSrvManager = SRVManager::GetInstance();
     ID3D12DescriptorHeap* ppHeaps[] = { pSrvManager->GetDescriptorHeap() };
     auto dsvHandle = pDx12->GetDSVDescriptorHeap()->GetCPUDescriptorHandleForHeapStart();
     auto viewport = pDx12->GetViewport();

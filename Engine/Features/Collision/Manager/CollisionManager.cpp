@@ -153,10 +153,12 @@ void CollisionManager::CheckCollisionPair(Collider* _colA, Collider* _colB)
             Sphere sphereB = { _colB->GetPosition(), static_cast<float>(_colB->GetRadius()) };
             isCollide = IsCollision(&sphereA, &sphereB);
         }
-        ++countCheckCollision_;
-
-
-        isCollide = IsCollision(_colA->GetOBB(), _colB->GetOBB());
+        
+        if (isCollide)
+        {
+            ++countCheckCollision_;
+            isCollide = IsCollision(_colA->GetOBB(), _colB->GetOBB());
+        }
     }
 
     if (isCollide)

@@ -17,15 +17,13 @@ void Log(const std::string& _message)
 
 void Logger::Initialize()
 {
-    pJsonLoader_ = &JsonLoader::GetInstance();
+    pJsonio_ = JSONIO::GetInstance();
 
     /// ルートを作成
-    jsonValue_.type = Json::Value::Type::Object;
-    jsonValue_.value = Json::Object();
+    jsonValue_ = json::object();
 
     /// Logs配列を作成
-    Json::Array logs = {};
-    std::get<Json::Object>(jsonValue_.value)["Logs"] = Json::NewValue(logs);
+    jsonValue_["Logs"] = json::array();
 
 
     /// ファイル名を設定
@@ -43,7 +41,7 @@ void Logger::Save()
     auto now = std::chrono::system_clock::now();
 
     std::string filepath = folderPath_ + fileName_;
-    pJsonLoader_->SaveFile(filepath + ".json", jsonValue_);
+    pJsonio_->Save(filepath + ".json", jsonValue_);
 
     std::string filePayload;
     for (auto& log : logData_)
@@ -152,17 +150,15 @@ void Logger::Log(const std::string& _status, const std::string& _className, cons
 
 void Logger::LogJson(const std::string& _date, const std::string& _time, const std::string& _status, const std::string& _className, const std::string& _action, const std::string& _message)
 {
-    Json::Array logs = jsonValue_["Logs"];
-    Json::Object data = {};
-    data["Date"] = Json::NewValue(_date);
-    data["Time"] = Json::NewValue(_time);
-    data["Status"] = Json::NewValue(_status);
-    data["ClassName"] = Json::NewValue(_className);
-    data["Action"] = Json::NewValue(_action);
-    data["Message"] = Json::NewValue(_message);
+    auto object = json::object();
+    object["Date"] = _date;
+    object["Time"] = _time;
+    object["Status"] = _status;
+    object["ClassName"] = _className;
+    object["Action"] = _action;
+    object["Message"] = _message;
 
-    logs.push_back(Json::NewValue(data));
-    jsonValue_["Logs"] = Json::NewValue(logs);
+    jsonValue_["Logs"].push_back(object);
 
     return;
 }

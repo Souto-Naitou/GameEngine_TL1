@@ -47,7 +47,7 @@ void TextSystem::PostDraw()
     d3d11On12DeviceContext_->Flush();
 }
 
-void TextSystem::SetColorBrush(const std::string _key, const D2D1::ColorF& _color)
+void TextSystem::SetColorBrush(const std::string& _key, const D2D1::ColorF& _color)
 {
     if (colorBrushes_.find(_key) != colorBrushes_.end())
     {

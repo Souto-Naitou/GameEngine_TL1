@@ -1,6 +1,6 @@
 {
     "emitterLifeTime" : 2.000000,
-    "emitterName" : "Spark",
+    "name" : "Spark",
     "emitInterval" : 0.050000,
     "velocityRandomRangeBegin" : {
         "x" : -0.500000,

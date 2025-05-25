@@ -16,7 +16,7 @@ void InstancingScene::Initialize()
     pGuideSprite_->SetPosition(Vector2(1280.0f - 40.0f, 720.0f - 40.0f));
     pGuideSprite_->SetAnchorPoint({ 1,1 });
 
-    particle_ = &ParticleManager::GetInstance()->CreateParticle();
+    particle_ = ParticleManager::GetInstance()->CreateParticle();
     particle_->Initialize("plane.obj");
     particle_->SetGameEye(pGameEye_.get());
     particle_->reserve(10);

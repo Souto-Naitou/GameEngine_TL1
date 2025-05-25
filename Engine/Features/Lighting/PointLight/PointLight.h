@@ -19,11 +19,11 @@ public:
     void Draw();
     void Finalize();
 
-    int enablePointLight; //!< ポイントライトの有効無効
-    float padding[3];
-    Vector4 color; //!< ライトの色
-    Vector3 position; //!< ライトの位置
-    float intensity; //!< 輝度
+    int enablePointLight = 0; //!< ポイントライトの有効無効
+    float padding[3] = {};
+    Vector4 color = {}; //!< ライトの色
+    Vector3 position = {}; //!< ライトの位置
+    float intensity = 0.0f; //!< 輝度
 private:
     std::unique_ptr<Object3d> pIcon_ = nullptr;
 };

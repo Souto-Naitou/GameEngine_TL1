@@ -335,7 +335,6 @@ void DirectX12::CreateDSVAndSettingState()
     depthStencilDesc.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;   // 深度書き込み
     depthStencilDesc.DepthFunc = D3D12_COMPARISON_FUNC_LESS_EQUAL;  // 深度テストの比較条件式（近ければ描画）
     depthStencilDesc.StencilEnable = true;                          // ステンシルテストを有効
-    depthStencilDesc.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;   // ステンシル書き込みを有効
 }
 
 void DirectX12::CreateFenceAndEvent()
