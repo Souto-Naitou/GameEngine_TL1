@@ -28,7 +28,7 @@ public:
     void PostDraw();
 
 public:
-    void SetColorBrush(const std::string _key, const D2D1::ColorF& _color);
+    void SetColorBrush(const std::string& _key, const D2D1::ColorF& _color);
     void SetViewport(Viewport* _viewport) { pViewport_ = _viewport; }
 
 

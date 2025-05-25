@@ -53,20 +53,20 @@ void TextureManager::LoadTexture(const std::string& _filePath)
 D3D12_GPU_DESCRIPTOR_HANDLE TextureManager::GetSrvHandleGPU(const std::string& _filePath)
 {
     std::string fullPath = filePathSearcher_.GetFilePath(_filePath);
-    TextureData& textureData = textureDataMap_[fullPath];
+    const TextureData& textureData = textureDataMap_[fullPath];
     return textureData.srvHandleGPU;
 }
 
 const DirectX::TexMetadata& TextureManager::GetMetaData(const std::string& _filePath)
 {
     std::string fullPath = filePathSearcher_.GetFilePath(_filePath);
-    TextureData& textureData = textureDataMap_[fullPath];
+    const TextureData& textureData = textureDataMap_[fullPath];
     return textureData.metadata;
 }
 
 uint32_t TextureManager::GetSrvIndex(const std::string& _filePath)
 {
     std::string fullPath = filePathSearcher_.GetFilePath(_filePath);
-    TextureData& textureData = textureDataMap_[fullPath];
+    const TextureData& textureData = textureDataMap_[fullPath];
     return textureData.srvIndex;
 }

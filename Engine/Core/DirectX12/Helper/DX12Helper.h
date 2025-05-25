@@ -87,7 +87,7 @@ namespace DX12Helper
     /// テクスチャリソースを生成
     /// </summary>
     /// <param name="_filePath">ファイルパス</param>
-    DirectX::ScratchImage LoadTexture(const std::string _filePath);
+    DirectX::ScratchImage LoadTexture(const std::string& _filePath);
 
     ComPtr<ID3D12Resource> CreateTextureResource(const ComPtr<ID3D12Device>& _device, const DirectX::TexMetadata& _metadata);
     void UploadTextureData(const ComPtr<ID3D12Resource>& _texture, const DirectX::ScratchImage& _mipImages);

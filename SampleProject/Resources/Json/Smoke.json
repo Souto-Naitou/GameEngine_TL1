@@ -19,7 +19,7 @@
         "z" : 0.000000
     },
     "emitterLifeTime" : 0.000000,
-    "emitterName" : "Smoke",
+    "name" : "Smoke",
     "enableRandomEmit" : false,
     "enableRandomVelocity" : true,
     "endColor" : {

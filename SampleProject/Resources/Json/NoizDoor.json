@@ -1,6 +1,6 @@
 {
     "emitterLifeTime" : 1.500000,
-    "emitterName" : "Firework",
+    "name" : "NoizDoor",
     "emitInterval" : 0.020000,
     "velocityRandomRangeBegin" : {
         "x" : -1.000000,

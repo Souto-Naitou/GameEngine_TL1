@@ -88,7 +88,6 @@ ModelData ModelHelper::LoadObjFile(const std::string& _directoryPath, const std:
                 // 頂点の要素へのIndexは「位置 / UV / 法線」で格納される
                 std::istringstream v(vertexDefinition);
                 uint32_t elementIndices[3];
-                std::string indexLine;
                 for (int32_t element = 0; element < 3; ++element)
                 {
                     std::string index;

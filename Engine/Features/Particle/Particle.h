@@ -15,7 +15,7 @@
 #include <Vector3.h>
 #include <cstdint>
 
-enum class ParticleDeleteCondition : int
+enum class ParticleDeleteCondition
 {
     LifeTime,
     ZeroAlpha,

@@ -30,7 +30,7 @@ public:
         return &instance;
     }
 
-    void Initialize();
+    void Initialize() override;
     void PresentDraw();
 
     void DrawCall() override;
@@ -66,8 +66,4 @@ private: /// 非公開関数
     ParticleSystem() = default;
     void CreateRootSignature();
     void CreatePipelineState();
-
-
-private:
-    DirectX12* pDx12_ = nullptr;
 };

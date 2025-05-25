@@ -2,7 +2,7 @@
 
 
 #include <string>
-#include <JsonParser/JsonLoader.h>
+#include <Utility/JSONIO/JSONIO.h>
 #include <list>
 #include <mutex>
 
@@ -86,7 +86,8 @@ private:
 
 
 private:
-    Json::Value jsonValue_ = {};
+    using json = nlohmann::json;
+    json jsonValue_ = {};
     std::list<LogData> logData_ = {};
     const std::string folderPath_ = "Log/";
     std::string fileName_ = "";
@@ -95,7 +96,7 @@ private:
     bool enableAutoScroll_ = true;
 
 private:
-    JsonLoader* pJsonLoader_ = nullptr;
+    JSONIO* pJsonio_ = nullptr;
 
     mutable std::mutex mutex_ = {};
 

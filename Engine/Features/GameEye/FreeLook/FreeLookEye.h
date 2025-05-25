@@ -8,7 +8,7 @@ class FreeLookEye : public GameEye
 {
 public:
     FreeLookEye();
-    ~FreeLookEye();
+    ~FreeLookEye() override;
 
     void Update() override;
 

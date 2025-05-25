@@ -80,7 +80,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <WarningLevel>Level4</WarningLevel>
+      <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);_AMD64_</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
@@ -111,12 +111,12 @@
       <AdditionalIncludeDirectories>$(ProjectDir)Resources\Shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </FxCompile>
     <Lib>
-      <AdditionalDependencies>$(ProjectDir)Externals\JsonParser\$(Configuration)\JsonParser.lib;$(ProjectDir)Externals\WinTools\$(Configuration)\WinTools.lib;$(ProjectDir)Externals\Network\$(Configuration)\Network.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(ProjectDir)Externals\WinTools\$(Configuration)\WinTools.lib;$(ProjectDir)Externals\Network\$(Configuration)\Network.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_ASAN|x64'">
     <ClCompile>
-      <WarningLevel>Level4</WarningLevel>
+      <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);_AMD64_</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
@@ -146,7 +146,7 @@
       <AdditionalIncludeDirectories>$(ProjectDir)Resources\Shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </FxCompile>
     <Lib>
-      <AdditionalDependencies>$(ProjectDir)Externals\JsonParser\$(Configuration)\JsonParser.lib;$(ProjectDir)Externals\WinTools\$(Configuration)\WinTools.lib;$(ProjectDir)Externals\Network\$(Configuration)\Network.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(ProjectDir)Externals\WinTools\$(Configuration)\WinTools.lib;$(ProjectDir)Externals\Network\$(Configuration)\Network.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -184,7 +184,7 @@
       <AdditionalIncludeDirectories>$(ProjectDir)Resources\Shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </FxCompile>
     <Lib>
-      <AdditionalDependencies>$(ProjectDir)Externals\JsonParser\$(Configuration)\JsonParser.lib;$(ProjectDir)Externals\WinTools\$(Configuration)\WinTools.lib;$(ProjectDir)Externals\Network\$(Configuration)\Network.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(ProjectDir)Externals\WinTools\$(Configuration)\WinTools.lib;$(ProjectDir)Externals\Network\$(Configuration)\Network.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -230,6 +230,7 @@
     <ClCompile Include="Features\NiGui\NiGuiDrawer.cpp" />
     <ClCompile Include="Features\Object3d\Object3d.cpp" />
     <ClCompile Include="Features\Object3d\Object3dSystem.cpp" />
+    <ClCompile Include="Features\Particle\Emitter\EmitterData.cpp" />
     <ClCompile Include="Features\Particle\Emitter\ParticleEmitter.cpp" />
     <ClCompile Include="Features\Particle\Manager\EmitterManager.cpp" />
     <ClCompile Include="Features\Particle\Particle.cpp" />
@@ -247,7 +248,9 @@
     <ClCompile Include="Features\Text\TextSystem.cpp" />
     <ClCompile Include="Features\Viewport\Viewport.cpp" />
     <ClCompile Include="Framework\NimaFramework.cpp" />
+    <ClCompile Include="Type\Color.cpp" />
     <ClCompile Include="Utility\FilePathSearcher\FilePathSearcher.cpp" />
+    <ClCompile Include="Utility\JSONIO\JSONIO.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BaseClasses\ObjectSystemBase.h" />
@@ -299,6 +302,7 @@
     <ClInclude Include="Features\NiGui\NiGuiDrawer.h" />
     <ClInclude Include="Features\Object3d\Object3d.h" />
     <ClInclude Include="Features\Object3d\Object3dSystem.h" />
+    <ClInclude Include="Features\Particle\Emitter\EmitterData.h" />
     <ClInclude Include="Features\Particle\Emitter\ParticleEmitter.h" />
     <ClInclude Include="Features\Particle\Manager\EmitterManager.h" />
     <ClInclude Include="Features\Particle\Particle.h" />
@@ -319,9 +323,12 @@
     <ClInclude Include="Framework\NimaFramework.h" />
     <ClInclude Include="Interfaces\IScene.h" />
     <ClInclude Include="Interfaces\ISceneFactory.h" />
+    <ClInclude Include="Type\Color.h" />
     <ClInclude Include="Utility\ConvertString\ConvertString.h" />
     <ClInclude Include="Utility\DIContainer\DIContainer.h" />
     <ClInclude Include="Utility\FilePathSearcher\FilePathSearcher.h" />
+    <ClInclude Include="Utility\JSONConvTypeFuncs\JSONConvTypeFuncs.h" />
+    <ClInclude Include="Utility\JSONIO\JSONIO.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\ClassDiagram.md" />

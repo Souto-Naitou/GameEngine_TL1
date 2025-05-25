@@ -50,8 +50,8 @@ struct MaterialData
 
 struct ModelData
 {
-    std::vector<VertexData> vertices;
-    MaterialData materialData;
+    std::vector<VertexData> vertices = {};
+    MaterialData materialData = {};
 };
 
 struct TransformationMatrix

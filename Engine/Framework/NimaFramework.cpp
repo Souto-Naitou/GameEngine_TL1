@@ -2,6 +2,7 @@
 #include <clocale>
 
 #include <NiGui/NiGui.h>
+#include <crtdbg.h>
 
 void NimaFramework::Run()
 {

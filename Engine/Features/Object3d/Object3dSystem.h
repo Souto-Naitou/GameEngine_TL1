@@ -59,19 +59,17 @@ public:
     /// <summary>
     /// 初期化
     /// </summary>
-    void Initialize();
+    void Initialize() override;
 
     void DepthDrawSetting();
     void MainDrawSetting();
 
-    void DrawCall();
-    void Sync();
+    void DrawCall() override;
+    void Sync() override;
 
 
 public: /// Getter
-    DirectX12*  GetDx12()                       { return pDx12_; }
     GameEye**   GetSharedGameEye()              { return &pDefaultGameEye_; }
-    ID3D12GraphicsCommandList* GetCommandList() { return commandList_.Get(); }
 
 
 public: /// Setter

@@ -19,7 +19,7 @@
         "z" : 0.000000
     },
     "emitterLifeTime" : 1.500000,
-    "emitterName" : "Firework",
+    "name" : "green",
     "enableRandomEmit" : true,
     "enableRandomVelocity" : true,
     "endColor" : {
