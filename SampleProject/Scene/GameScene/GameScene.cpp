@@ -15,8 +15,8 @@ void GameScene::Initialize()
     pInput_ = Input::GetInstance();
 
     pFirework_ = std::make_unique<ParticleEmitter>();
-    //pSmoke_ = std::make_unique<ParticleEmitter>();
-    //pSpark_ = std::make_unique<ParticleEmitter>();
+    pSmoke_ = std::make_unique<ParticleEmitter>();
+    pSpark_ = std::make_unique<ParticleEmitter>();
 
 
     pGameEye_ = std::make_unique<FreeLookEye>();
@@ -52,8 +52,8 @@ void GameScene::Initialize()
 
     /// エミッタの初期化
     pFirework_->Initialize("Box/Box.obj", "Resources/Json/Box.json");
-    //pSmoke_->Initialize("Particle/ParticleSpark.obj", "Resources/Json/Smoke.json");
-    //pSpark_->Initialize("Particle/ParticleSpark.obj", "Resources/Json/Spark.json");
+    pSmoke_->Initialize("Particle/ParticleSpark.obj", "Resources/Json/Smoke.json");
+    pSpark_->Initialize("Particle/ParticleSpark.obj", "Resources/Json/Spark.json");
 
     /// 音声の取得
     pAudio_ = AudioManager::GetInstance()->GetNewAudio("pi.wav");
@@ -65,8 +65,8 @@ void GameScene::Finalize()
     pGrid_->Finalize();
     pGuideSprite_->Finalize();
     pFirework_->Finalize();
-    //pSmoke_->Finalize();
-    //pSpark_->Finalize();
+    pSmoke_->Finalize();
+    pSpark_->Finalize();
     pAudio_->Finalize();
 }
 
@@ -83,8 +83,8 @@ void GameScene::Update()
     pSkydome_->Update();
     pGrid_->Update();
     pFirework_->Update();
-    //pSmoke_->Update();
-    //pSpark_->Update();
+    pSmoke_->Update();
+    pSpark_->Update();
 }
 
 void GameScene::Draw2dBackGround()
