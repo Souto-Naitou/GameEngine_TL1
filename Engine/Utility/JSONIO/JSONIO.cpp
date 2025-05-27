@@ -54,7 +54,7 @@ using json = nlohmann::json;
         /// 絶対パスに変換してから小文字に変換する
         std::filesystem::path path(_filepath);
         std::string lowerPath = std::filesystem::absolute(path).string();
-        std::transform(lowerPath.begin(), lowerPath.end(), lowerPath.begin(), ::tolower);
+        std::transform(lowerPath.begin(), lowerPath.end(), lowerPath.begin(), [](unsigned char c) { return std::tolower(c); });
         return lowerPath;
     }
 
