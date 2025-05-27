@@ -1,12 +1,18 @@
 #include "ModelManager.h"
-#include <Features/Model/Helper/ModelHelper.h>
+
+#include <Core/ConfigManager/ConfigManager.h>
 #include <filesystem>
-#include <Features/Particle/Particle.h>
 #include <algorithm>
 #include <cctype>
 
 void ModelManager::Initialize()
 {
+    // Configに記述されているフォルダの追加
+    auto& cfgData = ConfigManager::GetInstance()->GetConfigData();
+    for (auto& path : cfgData.model_paths)
+    {
+        this->AddAutoLoadPath(path);
+    }
 }
 
 void ModelManager::AddSearchPath(const std::string& _path)

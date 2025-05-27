@@ -226,6 +226,9 @@
     <Filter Include="Utility\JSON">
       <UniqueIdentifier>{e3866255-e1bd-474c-adaa-9fa7dec28d9c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Core\ConfigManager">
+      <UniqueIdentifier>{fafd37d8-141a-4074-80f2-64b9aa3be79f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DebugTools\DebugManager\DebugManager.cpp">
@@ -417,6 +420,10 @@
     <ClCompile Include="Type\Color.cpp">
       <Filter>Type</Filter>
     </ClCompile>
+    <ClCompile Include="Core\ConfigManager\ConfigManager.cpp">
+      <Filter>Core\ConfigManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\ConfigManager\ConfigType.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common\define.h">
@@ -652,6 +659,12 @@
     </ClInclude>
     <ClInclude Include="Utility\JSON\jsonutl.h">
       <Filter>Utility\JSON</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\ConfigManager\ConfigManager.h">
+      <Filter>Core\ConfigManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\ConfigManager\ConfigType.h">
+      <Filter>Core\ConfigManager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

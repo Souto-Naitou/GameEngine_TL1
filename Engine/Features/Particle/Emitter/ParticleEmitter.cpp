@@ -203,10 +203,8 @@ void ParticleEmitter::DebugWindow()
 
     char path[512] = "";
     char name[128] = "";
-    strncpy_s(path, jsonPath_.c_str(), sizeof(path) - 1);
-    path[sizeof(path) - 1] = '\0'; // Ensure null termination
-    strncpy_s(name, fromJsonData_.name_.c_str(), sizeof(name) - 1);
-    name[sizeof(name) - 1] = '\0'; // Ensure null termination
+    memcpy_s(path, sizeof(name), jsonPath_.c_str(), jsonPath_.size());
+    memcpy_s(name, sizeof(name), fromJsonData_.name_.c_str(), fromJsonData_.name_.size());
 
     ImGui::Text("Name : %s", particleName_.c_str());
     if (ImGui::CollapsingHeader("一般"))

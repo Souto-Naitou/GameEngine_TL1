@@ -2,6 +2,7 @@
 
 #include <imgui.h>
 #include <DebugTools/DebugManager/DebugManager.h>
+#include <Core/ConfigManager/ConfigManager.h>
 
 #include <cassert>
 
@@ -13,9 +14,16 @@ void SceneManager::ReserveScene(const std::string& _name)
     return;
 }
 
+void SceneManager::ReserveStartupScene()
+{
+    auto& cfgData = ConfigManager::GetInstance()->GetConfigData();
+    this->ReserveScene(cfgData.start_scene);
+}
+
 void SceneManager::Initialize()
 {
     DebugManager::GetInstance()->SetComponent("#Window", name_, std::bind(&SceneManager::DebugWindow, this));
+    ReserveStartupScene();
 }
 
 void SceneManager::Update()

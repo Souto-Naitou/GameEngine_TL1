@@ -8,24 +8,12 @@ void SampleProgram::Initialize()
     /// 基底クラスの初期化処理
     NimaFramework::Initialize();
 
-
     /// シーンファクトリの設定
     pSceneFactory_ = std::make_unique<SceneFactory>();
     pSceneManager_->SetSceneFactory(pSceneFactory_.get());
 
-
-    /// 自動ロードパスの追加
-    pModelManager_->AddAutoLoadPath("resources/models");
-    pModelManager_->AddAutoLoadPath("resources/temp");
-    pTextureManager_->AddSearchPath("resources/images");
-
-
     /// モデルを全てロード
     pModelManager_->LoadAllModel();
-
-
-    /// シーンの生成
-    pSceneManager_->ReserveScene("GameScene");
 }
 
 void SampleProgram::Finalize()

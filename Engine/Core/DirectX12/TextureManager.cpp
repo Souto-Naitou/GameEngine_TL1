@@ -2,13 +2,19 @@
 #include "DirectX12.h"
 #include <Core/DirectX12/Helper/DX12Helper.h>
 #include <Utility/ConvertString/ConvertString.h>
-
+#include <Core/ConfigManager/ConfigManager.h>
 
 
 void TextureManager::Initialize(SRVManager* _srvManager)
 {
     srvManager_ = _srvManager;
     textureDataMap_.reserve(DirectX12::kMaxSRVCount_);
+
+    auto& cfgData = ConfigManager::GetInstance()->GetConfigData();
+    for (auto& path : cfgData.texture_paths)
+    {
+        this->AddSearchPath(path);
+    }
 }
 
 void TextureManager::LoadTexture(const std::string& _filePath)
