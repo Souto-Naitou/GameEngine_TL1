@@ -20,7 +20,9 @@ public:
     ParticleEmitter() = default;
     ~ParticleEmitter() = default;
 
-    void Initialize(const std::string& _modelPath, const std::string& _jsonPath, bool _manualMode = false);
+    void Initialize(const std::string& _modelPath, const std::string& _texturePath = {}, const std::string& _jsonPath = {});
+    void EnableManualMode();
+    void DisableManualMode();
     void Update();
     void Draw();
     void Finalize();

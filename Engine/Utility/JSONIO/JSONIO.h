@@ -25,6 +25,7 @@ public:
     json& operator[](const std::string& _key);
     Iterator begin();
     Iterator end();
+    size_t erase(const std::string& _key);
 
 public:
     json& at(const std::string& _key);
@@ -61,7 +62,7 @@ private:
     ~JSONIO() = default;
 
     using json = nlohmann::json;
-    JSONStorage jsonDataKeeper_;
+    JSONStorage jsonDataStorage_;
 
 public:
     JSONIO(const JSONIO&) = delete;
@@ -78,5 +79,6 @@ public:
 
     json& Load(const std::string& _path);
     void Save(const std::string& _path, const json& _jsonData);
+    bool Unload(const std::string& _path);
 
 };

@@ -10,7 +10,7 @@
 #include <cassert>
 #include <filesystem>
 
-ModelData ModelHelper::LoadObjFile(const std::string& _directoryPath, const std::string& _filename)
+ModelData ModelHelper::LoadObjFile(const std::string& _directoryPath, const std::string& _filename, const std::string& _texturePath)
 {
     // 1 Decleare variable
     ModelData modelData;
@@ -117,7 +117,7 @@ ModelData ModelHelper::LoadObjFile(const std::string& _directoryPath, const std:
             modelData.vertices.push_back(triangle[1]);
             modelData.vertices.push_back(triangle[0]);
         }
-        else if (identifier == "mtllib")
+        else if (identifier == "mtllib" && _texturePath.empty())
         {
             // materialTemplateLibraryファイルの名前を取得
             std::string materialFilename;
@@ -125,12 +125,18 @@ ModelData ModelHelper::LoadObjFile(const std::string& _directoryPath, const std:
             // 基本的にobjファイルと同一階層にmtlを配置するためディレクトリ名とファイル名を渡す
             modelData.materialData = LoadMaterialTemplateFile(directoryPath, materialFilename);
         }
+        else if (identifier == "mtllib" && !_texturePath.empty())
+        {
+            std::string materialFilename;
+            s >> materialFilename;
+            LoadMaterialTemplateFile(directoryPath, materialFilename, _texturePath);
+        }
     }
     // 4 Return ModelData
     return modelData;
 }
 
-MaterialData ModelHelper::LoadMaterialTemplateFile(const std::string& _directoryPath, const std::string& _filename)
+MaterialData ModelHelper::LoadMaterialTemplateFile(const std::string& _directoryPath, const std::string& _filename, const std::string& _texturePath)
 {
     // 1 Decleare variable
     MaterialData materialData;
@@ -146,12 +152,16 @@ MaterialData ModelHelper::LoadMaterialTemplateFile(const std::string& _directory
         s >> identifier;
 
         // identifierに応じた処理
-        if (identifier == "map_Kd")
+        if (identifier == "map_Kd" && _texturePath.empty())
         {
             std::string textureFilename;
             s >> textureFilename;
             // 連結してファイルパスに
             materialData.textureFilePath = _directoryPath + "/" + textureFilename;
+        }
+        else if (identifier == "map_Kd" && !_texturePath.empty())
+        {
+            materialData.textureFilePath = _texturePath;
         }
         else if (identifier == "Kd")
         {

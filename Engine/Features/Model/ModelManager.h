@@ -52,10 +52,11 @@ public:
     std::string GetDirectoryPath(std::string _fileName);
 
     /// <summary>
-    /// モデルデータを読み込む
+    /// モデルとテクスチャを指定されたファイルパスから読み込みます
     /// </summary>
-    /// <param name="_filePath">ファイルパス</param>
-    void LoadModel(const std::string& _filePath);
+    /// <param name="_filePath">モデルファイルのパス</param>
+    /// <param name="_texturePath">テクスチャファイルのパス</param>
+    void LoadModel(const std::string& _filePath, const std::string& _texturePath = {});
 
     /// <summary>
     /// モデルデータを取得

@@ -173,6 +173,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="main.cpp" />
     <ClCompile Include="SampleProgram\SampleProgram.cpp" />
     <ClCompile Include="Scene\CG3PT2\CG3PT2.cpp" />
+    <ClCompile Include="Scene\CG4Task1\CG4Task1.cpp" />
     <ClCompile Include="Scene\DepthScene\DepthScene.cpp" />
     <ClCompile Include="Scene\Empty\EmptyScene.cpp" />
     <ClCompile Include="Scene\Factory\SceneFactory.cpp" />
@@ -194,6 +195,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
   <ItemGroup>
     <ClInclude Include="SampleProgram\SampleProgram.h" />
     <ClInclude Include="Scene\CG3PT2\CG3PT2.h" />
+    <ClInclude Include="Scene\CG4Task1\CG4Task1.h" />
     <ClInclude Include="Scene\DepthScene\DepthScene.h" />
     <ClInclude Include="Scene\Empty\EmptyScene.h" />
     <ClInclude Include="Scene\Factory\SceneFactory.h" />

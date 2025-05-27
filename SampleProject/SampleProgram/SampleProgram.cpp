@@ -17,7 +17,7 @@ void SampleProgram::Initialize()
     /// 自動ロードパスの追加
     pModelManager_->AddAutoLoadPath("resources/models");
     pModelManager_->AddAutoLoadPath("resources/temp");
-    pTextureManager_->AddSearchPath("resources");
+    pTextureManager_->AddSearchPath("resources/images");
 
 
     /// モデルを全てロード

@@ -1,7 +1,7 @@
 #include "SpriteSystem.h"
 #include <Core/DirectX12/Helper/DX12Helper.h>
 #include <DebugTools/Logger/Logger.h>
-
+#include <Core/DirectX12/DirectX12.h>
 
 void SpriteSystem::Initialize()
 {
@@ -59,6 +59,11 @@ void SpriteSystem::Sync()
 {
     worker_.get();
     commandListDatas_.clear();
+}
+
+void SpriteSystem::AddCommandListData(const CommandListData& _data)
+{
+    commandListDatas_.emplace_back(_data);
 }
 
 void SpriteSystem::CreateRootSignature()

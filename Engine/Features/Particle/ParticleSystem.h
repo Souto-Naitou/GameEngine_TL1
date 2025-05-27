@@ -38,7 +38,7 @@ public:
 
 
 public: /// Setter
-    void SetDefaultGameEye(GameEye* _pGameEye) { pDefaultGameEye_ = _pGameEye; }
+    void SetGlobalEye(GameEye* _pGameEye) { pDefaultGameEye_ = _pGameEye; }
     void AddCommandListData(CommandListData& _pData) { commandListDatas_.emplace_back(_pData); }
     void SetRTVHandle(D3D12_CPU_DESCRIPTOR_HANDLE* _rtvHandle) { rtvHandle_ = _rtvHandle; }
 

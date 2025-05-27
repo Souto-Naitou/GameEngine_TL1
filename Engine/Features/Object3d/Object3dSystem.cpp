@@ -102,6 +102,11 @@ void Object3dSystem::Sync()
     commandListDatas_.clear();
 }
 
+void Object3dSystem::AddCommandListData(CommandListData& _data)
+{
+    commandListDatas_.emplace_back(_data);
+}
+
 void Object3dSystem::CreateRootSignature()
 {
     ID3D12Device* device = pDx12_->GetDevice();

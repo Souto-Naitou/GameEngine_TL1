@@ -14,19 +14,23 @@ struct VertexData;
 
 class Model
 {
-public: /// 公開メンバ関数
-    void Initialize(const std::string& _filePath);
-    void Update();
-    void Draw(ID3D12GraphicsCommandList* _commandList);
-    void Upload();
+public:
+    // Common functions
     ~Model();
+    void    Initialize(const std::string& _filePath);
+    void    Initialize(const std::string& _modelPath, const std::string& _texturePath);
+    void    Update();
+    void    Draw(ID3D12GraphicsCommandList* _commandList);
+    void    Upload();
 
+    // Getter
+    ModelData*                  GetModelData();
+    D3D12_VERTEX_BUFFER_VIEW    GetVertexBufferView() const;
+    bool                        IsUploaded() const;
+    D3D12_GPU_DESCRIPTOR_HANDLE GetTextureSrvHandleGPU() const;
 
-public: /// Getter
-    ModelData* GetModelData() { return &modelData_; }
-    D3D12_VERTEX_BUFFER_VIEW GetVertexBufferView() const { return vertexBufferView_; }
-    bool IsUploaded() const { return isUploaded_; }
-    D3D12_GPU_DESCRIPTOR_HANDLE GetTextureSrvHandleGPU() const { return textureSrvHandleGPU_; }
+    // Setter
+    int ChangeTexture(const std::string& _filepath);
 
 
 private: /// メンバ変数
@@ -37,6 +41,7 @@ private: /// メンバ変数
     D3D12_VERTEX_BUFFER_VIEW                vertexBufferView_           = {};
     VertexData*                             vertexData_                 = nullptr;
     D3D12_GPU_DESCRIPTOR_HANDLE             textureSrvHandleGPU_        = {};
+    std::string                             texturePath_                = {};
 
     bool                                    isUploaded_                 = false;
 

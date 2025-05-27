@@ -220,6 +220,12 @@
     <Filter Include="Type">
       <UniqueIdentifier>{716e7ea7-33a6-41be-84dc-73a74d4d0079}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Utility\String">
+      <UniqueIdentifier>{92bf5668-a1ed-46fd-bc3e-cb0c886e6d58}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utility\JSON">
+      <UniqueIdentifier>{e3866255-e1bd-474c-adaa-9fa7dec28d9c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DebugTools\DebugManager\DebugManager.cpp">
@@ -640,6 +646,12 @@
     </ClInclude>
     <ClInclude Include="Type\Color.h">
       <Filter>Type</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility\String\strutl.h">
+      <Filter>Utility\String</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility\JSON\jsonutl.h">
+      <Filter>Utility\JSON</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

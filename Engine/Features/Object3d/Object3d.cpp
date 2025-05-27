@@ -21,7 +21,7 @@ void Object3d::Initialize(const std::string& _filePath)
     pSystem_ = Object3dSystem::GetInstance();
     pDx12_ = pSystem_->GetDx12();
     device_ = pDx12_->GetDevice();
-    ppSystemGameEye_ = pSystem_->GetSharedGameEye();
+    ppSystemGameEye_ = pSystem_->GetGlobalEye();
 
 #if defined (DEBUG_ENGINE) && (_DEBUG)
     pDebugManager_ = DebugManager::GetInstance();

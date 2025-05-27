@@ -17,6 +17,8 @@ const EmitterData& EmitterManager::LoadFile(const std::string& _path)
 
 const EmitterData& EmitterManager::ReloadFile(const std::string& _path)
 {
+    if (!pjsonio_) pjsonio_ = JSONIO::GetInstance();
+    pjsonio_->Unload(_path);
     return LoadFile(_path);
 }
 
