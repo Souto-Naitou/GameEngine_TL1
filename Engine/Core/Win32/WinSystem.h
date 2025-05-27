@@ -2,6 +2,7 @@
 
 #include <Windows.h>
 #include <cstdint>
+#include <string>
 
 class WinSystem
 {
@@ -34,10 +35,11 @@ private:
 
     static LRESULT __stdcall WindowProcedure(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
 
-    WNDCLASS    wc_         = {};
-    HWND        hwnd_       = {};
-    MSG         msg_        = {};
-    RECT        wndSize_    = {};
+    WNDCLASS        wc_         = {};
+    HWND            hwnd_       = {};
+    MSG             msg_        = {};
+    RECT            wndSize_    = {};
+    std::wstring    title_      = {};
     static bool isMoving_;
     static bool isResized_;
 };

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <Core/ConfigManager/ConfigManager.h>
 #include <DebugTools/Logger/Logger.h>
 #include <Features/Audio/AudioManager.h>
 #include <Features/Input/Input.h>
@@ -62,6 +63,7 @@ protected: /// システムクラスのインスタンス
 
 
 protected: /// 他クラスのインスタンス
+    ConfigManager*                  pConfigManager_             = nullptr;
     Logger*                         pLogger_                    = nullptr;
     DirectX12*                      pDirectX_                   = nullptr;
     DebugManager*                   pDebugManager_              = nullptr;

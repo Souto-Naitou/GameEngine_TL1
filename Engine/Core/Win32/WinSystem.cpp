@@ -2,6 +2,8 @@
 #include <cassert>
 
 #include <NiGui/NiGui.h>
+#include <Core/ConfigManager/ConfigManager.h>
+#include <Utility/ConvertString/ConvertString.h>
 
 #ifdef _DEBUG
 #include <imgui.h>
@@ -27,6 +29,11 @@ void WinSystem::Initialize()
     wc_.hInstance = GetModuleHandle(nullptr);
     wc_.hCursor = LoadCursor(nullptr, IDC_ARROW);
     RegisterClass(&wc_);
+
+    auto& cfgData = ConfigManager::GetInstance()->GetConfigData();
+    clientWidth = cfgData.screen_width;
+    clientHeight = cfgData.screen_height;
+    title_ = ConvertString(cfgData.window_title);
 }
 
 void WinSystem::Finalize() const
@@ -41,7 +48,7 @@ void WinSystem::ShowWnd()
     AdjustWindowRect(&wrc, WS_OVERLAPPEDWINDOW, false);
     hwnd_ = CreateWindow(
         wc_.lpszClassName,          // 利用するクラス名
-        L"LE2B_17_ナイトウ_ソウト",    // タイトルバーの文字
+        title_.c_str(),             // タイトルバーの文字
         WS_OVERLAPPEDWINDOW,        // よく見るウィンドウスタイル
         CW_USEDEFAULT,              // 表示X座標(ウィンドウ出現位置？)
         CW_USEDEFAULT,              // 表示Y座標

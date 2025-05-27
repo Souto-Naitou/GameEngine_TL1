@@ -38,6 +38,7 @@ void NimaFramework::Run()
 void NimaFramework::Initialize()
 {
     /// システムクラスの初期化
+    pConfigManager_ = ConfigManager::GetInstance();
     pLogger_ = Logger::GetInstance();
     pDirectX_ = DirectX12::GetInstance();
 
@@ -61,6 +62,9 @@ void NimaFramework::Initialize()
     #ifdef _DEBUG
     pImGuiManager_ = std::make_unique<ImGuiManager>();
     #endif // _DEBUG
+
+    // 設定ファイルの読み込み
+    pConfigManager_->Initialize("resources/json/.engine/config.json");
 
     /// ロガーの初期化
     pLogger_->Initialize();
