@@ -61,6 +61,11 @@ void SpriteSystem::Sync()
     commandListDatas_.clear();
 }
 
+void SpriteSystem::AddCommandListData(const CommandListData& _data)
+{
+    commandListDatas_.emplace_back(_data);
+}
+
 void SpriteSystem::CreateRootSignature()
 {
     ID3D12Device* device = pDx12_->GetDevice();
