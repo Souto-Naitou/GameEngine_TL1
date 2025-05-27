@@ -34,9 +34,9 @@ void GameScene::Initialize()
     pGameEye_->SetName("MainCamera");
 
     /// システムにデフォルトのゲームカメラを設定
-    Object3dSystem::GetInstance()->SetSharedGameEye(pGameEye_.get());
-    ParticleSystem::GetInstance()->SetDefaultGameEye(pGameEye_.get());
-    LineSystem::GetInstance()->SetDefaultGameEye(pGameEye_.get());
+    Object3dSystem::GetInstance()->SetGlobalEye(pGameEye_.get());
+    ParticleSystem::GetInstance()->SetGlobalEye(pGameEye_.get());
+    LineSystem::GetInstance()->SetGlobalEye(pGameEye_.get());
 
 
     pSkydome_->Initialize("Skydome.obj");
@@ -51,9 +51,9 @@ void GameScene::Initialize()
     pGrid_->SetEnableLighting(false);
 
     /// エミッタの初期化
-    pFirework_->Initialize("Box/Box.obj", "Resources/Json/Box.json");
-    pSmoke_->Initialize("Particle/ParticleSpark.obj", "Resources/Json/Smoke.json");
-    pSpark_->Initialize("Particle/ParticleSpark.obj", "Resources/Json/Spark.json");
+    pFirework_->Initialize("Box/Box.obj", "", "Resources/Json/Box.json");
+    pSmoke_->Initialize("Particle/ParticleSpark.obj", "", "Resources/Json/Smoke.json");
+    pSpark_->Initialize("Particle/ParticleSpark.obj", "", "Resources/Json/Spark.json");
 
     /// 音声の取得
     pAudio_ = AudioManager::GetInstance()->GetNewAudio("pi.wav");

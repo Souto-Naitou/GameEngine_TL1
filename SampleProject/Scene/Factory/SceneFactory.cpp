@@ -5,6 +5,7 @@
 #include <Scene/CG3PT2/CG3PT2.h>
 #include <Scene/DepthScene/DepthScene.h>
 #include <Scene/PG3PT1/PG3PT1.h>
+#include <Scene/CG4Task1/CG4Task1.h>
 
 #include <cassert>
 
@@ -17,6 +18,7 @@ std::unique_ptr<IScene> SceneFactory::CreateScene(const std::string & _sceneName
     else JUDGE_SCENE(CG3PT2)
     else JUDGE_SCENE(DepthScene)
     else JUDGE_SCENE(PG3PT1)
+    else JUDGE_SCENE(CG4Task1)
 
     assert(false && "シーンの生成に失敗しました");
 

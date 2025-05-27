@@ -79,7 +79,7 @@ std::string ModelManager::GetDirectoryPath(std::string _fileName)
     return directoryPath;
 }
 
-void ModelManager::LoadModel(const std::string& _filePath)
+void ModelManager::LoadModel(const std::string& _filePath, const std::string& _texturePath)
 {
     std::filesystem::path fullpath = GetDirectoryPath(_filePath);
     if (fullpath.empty()) fullpath = _filePath;
@@ -98,7 +98,7 @@ void ModelManager::LoadModel(const std::string& _filePath)
 
     std::unique_ptr<Model> model = std::make_unique<Model>();
 
-    model->Initialize(fullpath.string());
+    model->Initialize(fullpath.string(), _texturePath);
     models_.emplace(fullpath, std::move(model));
 }
 

@@ -14,6 +14,7 @@
 #include <Vector4.h>
 #include <Vector3.h>
 #include <cstdint>
+#include <Range.h>
 
 enum class ParticleDeleteCondition
 {
@@ -25,12 +26,10 @@ struct ParticleData
 {
     Timer                                   timer_              = {};
     Transform                               transform_          = {};
-    Vector3                                 startScale_         = {};
-    Vector3                                 endScale_           = {};
+    Range<Vector3>                          scaleRange_         = {};
     Vector3                                 acceleration_       = {};
     Vector4                                 currentColor_       = {};
-    Vector4                                 beginColor_         = {};
-    Vector4                                 endColor_           = {};
+    Range<Vector4>                          colorRange_         = {};
     float                                   scaleDelayTime_     = 0.0f;
     float                                   alphaDeltaValue_    = 0.0f;
     float                                   lifeTime_           = 0.0f;
@@ -46,7 +45,7 @@ class Particle
 public:
     Particle() = default;
 
-    void Initialize(const std::string& _filepath);
+    void Initialize(const std::string& _filepath, const std::string& _texturePath = {});
     void Draw();
     void Update();
     void Finalize();

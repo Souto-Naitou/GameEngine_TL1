@@ -119,7 +119,7 @@ using json = nlohmann::json;
             throw std::runtime_error("Failed to open JSON file for writing: " + _path);
         }
 
-        ofs << _jsonData << std::endl;
+        ofs << _jsonData.dump(4) << std::endl;
         ofs.close();
     }
 

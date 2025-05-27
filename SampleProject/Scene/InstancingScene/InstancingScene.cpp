@@ -2,6 +2,7 @@
 
 #include <Features/Particle/ParticleManager.h>
 #include <Features/SceneManager/SceneManager.h>
+#include <Range.h>
 
 void InstancingScene::Initialize()
 {
@@ -83,10 +84,9 @@ void InstancingScene::InitializeParticle()
         ParticleData data;
         data.transform_.translate = Vector3(i * 0.1f, i * 0.1f, i * 0.1f);
         data.transform_.scale = Vector3(1.0f, 1.0f, 1.0f);
-        data.startScale_ = Vector3(1.0f, 1.0f, 1.0f);
+        data.scaleRange_.start() = Vector3(1.0f, 1.0f, 1.0f);
         data.transform_.rotate = Vector3(0.0f, 0.0f, 0.0f);
-        data.beginColor_ = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
-        data.endColor_ = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
+        data.colorRange_ = Range(Vector4(1.0f, 1.0f, 1.0f, 1.0f), Vector4(1.0f, 1.0f, 1.0f, 1.0f));
         data.velocity_ = Vector3(0.0f, 0.0f, 0.0f);
         data.acceleration_ = Vector3(0.0f, 0.0f, 0.0f);
         data.alphaDeltaValue_ = 0.0f;

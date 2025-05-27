@@ -1,4 +1,5 @@
 #include "ObjectSystemBase.h"
+#include <Core/DirectX12/DirectX12.h>
 
 void ObjectSystemBase::Initialize()
 {
@@ -10,6 +11,31 @@ void ObjectSystemBase::PostDraw()
 {
     commandAllocator_->Reset();
     commandList_->Reset(commandAllocator_.Get(), nullptr);
+}
+
+DirectX12* ObjectSystemBase::GetDx12()
+{
+    return pDx12_;
+}
+
+ID3D12GraphicsCommandList* ObjectSystemBase::GetCommandList()
+{
+    return commandList_.Get();
+}
+
+GameEye** ObjectSystemBase::GetGlobalEye()
+{
+    return &pGlobalEye_;
+}
+
+void ObjectSystemBase::SetGlobalEye(GameEye* _pGameEye)
+{
+    pGlobalEye_ = _pGameEye;
+}
+
+void ObjectSystemBase::SetRTVHandle(D3D12_CPU_DESCRIPTOR_HANDLE* _handle)
+{
+    rtvHandle_ = _handle;
 }
 
 void ObjectSystemBase::CreateCommandList()

@@ -329,6 +329,8 @@
     <ClInclude Include="Utility\FilePathSearcher\FilePathSearcher.h" />
     <ClInclude Include="Utility\JSONConvTypeFuncs\JSONConvTypeFuncs.h" />
     <ClInclude Include="Utility\JSONIO\JSONIO.h" />
+    <ClInclude Include="Utility\JSON\jsonutl.h" />
+    <ClInclude Include="Utility\String\strutl.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\ClassDiagram.md" />

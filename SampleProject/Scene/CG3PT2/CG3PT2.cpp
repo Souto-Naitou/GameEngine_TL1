@@ -25,7 +25,7 @@ void CG3PT2::Initialize()
     pGameEye_->SetTranslate({ 0.0f, 2.f, -7.f });
 
     /// オブジェクト共有にカメラをセット
-    Object3dSystem::GetInstance()->SetSharedGameEye(pGameEye_.get());
+    Object3dSystem::GetInstance()->SetGlobalEye(pGameEye_.get());
 
     pMonsterBall_ = std::make_unique<Object3d>();
     pMonsterBall_->Initialize("Sphere1m/Sphere1m.obj");

@@ -20,7 +20,7 @@ void Model::Initialize(const std::string& _filePath)
     th_LoadObjectFile_ = std::make_unique<std::thread>([&]()
     {
         directoryPath_ = ModelManager::GetInstance()->GetDirectoryPath(filePath_);
-        modelData_ = ModelHelper::LoadObjFile(directoryPath_, filePath_);
+        modelData_ = ModelHelper::LoadObjFile(directoryPath_, filePath_, texturePath_);
         ModelManager::GetInstance()->InqueueUpload(this);
         Logger::GetInstance()->LogInfo(
             "Model",
@@ -28,6 +28,12 @@ void Model::Initialize(const std::string& _filePath)
             "Succeed : " + directoryPath_ + filePath_
         );
     });
+}
+
+void Model::Initialize(const std::string& _modelPath, const std::string& _texturePath)
+{
+    texturePath_ = _texturePath;
+    Initialize(_modelPath);
 }
 
 void Model::Update()
@@ -67,7 +73,6 @@ void Model::CreateVertexResource()
     vertexBufferView_.StrideInBytes = sizeof(VertexData);
 }
 
-
 void Model::LoadModelTexture()
 {
     std::string filePath = modelData_.materialData.textureFilePath;
@@ -86,7 +91,7 @@ void Model::LoadModelTexture()
 
     TextureManager* textureManager = TextureManager::GetInstance();
     textureManager->LoadTexture(filePath);
-    textureSrvHandleGPU_ = TextureManager::GetInstance()->GetSrvHandleGPU(filePath);
+    textureSrvHandleGPU_ = textureManager->GetSrvHandleGPU(filePath);
 }
 
 void Model::Upload()
@@ -103,4 +108,37 @@ void Model::Upload()
     LoadModelTexture();
 
     isUploaded_ = true;
+}
+
+ModelData* Model::GetModelData()
+{
+    return &modelData_;
+}
+
+D3D12_VERTEX_BUFFER_VIEW Model::GetVertexBufferView() const
+{
+    return vertexBufferView_;
+}
+
+bool Model::IsUploaded() const
+{
+    return isUploaded_; 
+}
+
+D3D12_GPU_DESCRIPTOR_HANDLE Model::GetTextureSrvHandleGPU() const
+{
+    return textureSrvHandleGPU_; 
+}
+
+int Model::ChangeTexture(const std::string& _filepath)
+{
+    // Note: もしUpload関数が呼ばれる前にこの関数を呼ぶとここで変更したテクスチャハンドルが
+    //       mtlファイルに記述されるテクスチャのハンドルに置き換えられてしまうため
+    if (!isUploaded_) return -1;
+
+    auto tm = TextureManager::GetInstance();
+    tm->LoadTexture(_filepath);
+    textureSrvHandleGPU_ = tm->GetSrvHandleGPU(_filepath);
+
+    return 0;
 }
