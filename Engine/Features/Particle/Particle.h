@@ -1,44 +1,16 @@
 #pragma once
 
-#include <string>
-
+#include "./Type/ParticleType.h"
 #include <Core/DirectX12/DirectX12.h>
 #include <Common/structs.h>
-#include <wrl/client.h>
-#include <d3d12.h>
 #include <Features/Model/Model.h>
 #include "ParticleSystem.h"
-#include <Matrix4x4.h>
-#include <Timer/Timer.h>
+#include <wrl/client.h>
 #include <vector>
-#include <Vector4.h>
-#include <Vector3.h>
 #include <cstdint>
-#include <Range.h>
-
-enum class ParticleDeleteCondition
-{
-    LifeTime,
-    ZeroAlpha,
-};
-
-struct ParticleData
-{
-    Timer                                   timer_              = {};
-    Transform                               transform_          = {};
-    Range<Vector3>                          scaleRange_         = {};
-    Vector3                                 acceleration_       = {};
-    Vector4                                 currentColor_       = {};
-    Range<Vector4>                          colorRange_         = {};
-    float                                   scaleDelayTime_     = 0.0f;
-    float                                   alphaDeltaValue_    = 0.0f;
-    float                                   lifeTime_           = 0.0f;
-    float                                   currentLifeTime_    = 0.0f;
-    Vector3                                 accResistance_      = {};
-    Vector3                                 accGravity_         = {};
-    Vector3                                 velocity_           = {};
-    ParticleDeleteCondition                 deleteCondition_    = ParticleDeleteCondition::LifeTime;
-};
+#include <string>
+#include <d3d12.h>
+#include <Matrix4x4.h>
 
 class Particle
 {

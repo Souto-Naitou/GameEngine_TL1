@@ -14,6 +14,7 @@
 #include <cstdint>
 #include <Features/Particle/Emitter/EmitterData.h>
 
+
 class ParticleEmitter
 {
 public:
@@ -38,6 +39,8 @@ public: /// Getter
     //EmitterData& GetEmitterData() { return emitterData_; }
 
 private:
+    using EmitterData = Type::ParticleEmitter::v2::Data;
+
     static constexpr uint32_t   kDefaultReserveCount_   = 6000u;
     std::string                 name_                   = {};               // 名前
     std::string                 ptrHex_                 = {};               // ポインタの16進数表記

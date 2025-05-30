@@ -8,6 +8,11 @@ void SampleProgram::Initialize()
     /// 基底クラスの初期化処理
     NimaFramework::Initialize();
 
+    #ifdef _DEBUG
+    pImGuiManager_->EnableDocking();
+    //pImGuiManager_->EnableMultiViewport();
+    #endif // _DEBUG
+    
     /// シーンファクトリの設定
     pSceneFactory_ = std::make_unique<SceneFactory>();
     pSceneManager_->SetSceneFactory(pSceneFactory_.get());

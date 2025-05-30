@@ -295,13 +295,6 @@ void DebugManager::ChangeFont()
 #endif // _DEBUG
 }
 
-void DebugManager::EnableDocking()
-{
-#ifdef _DEBUG
-    ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-#endif
-}
-
 void DebugManager::ShowDockSpace()
 {
 #ifdef _DEBUG
@@ -323,12 +316,13 @@ void DebugManager::DefaultStyle()
 #ifdef _DEBUG
     ImGui::GetIO().ConfigWindowsMoveFromTitleBarOnly = true;
     ImGuiStyle& style = ImGui::GetStyle();
-    style.WindowRounding = 6.0f;
+    style.WindowRounding = 1.0f;
     style.TabRounding = 0.0f;
     style.WindowTitleAlign = ImVec2(0.5f, 0.5f);
     style.Colors[ImGuiCol_WindowBg] = ImVec4(0.02f, 0.03f, 0.1f, 1.0f);
     style.Colors[ImGuiCol_TitleBgActive] = ImVec4(0.8f, 0.1f, 0.1f, 0.75f);
     style.Colors[ImGuiCol_TitleBg] = ImVec4(0.0f, 0.0f, 0.0f, 0.90f);
+
 #endif // _DEBUG
 }
 

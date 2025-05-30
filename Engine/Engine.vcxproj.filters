@@ -229,6 +229,9 @@
     <Filter Include="Core\ConfigManager">
       <UniqueIdentifier>{fafd37d8-141a-4074-80f2-64b9aa3be79f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Feature\Particle\Type">
+      <UniqueIdentifier>{5eaa0b5f-e515-4ae0-944e-7374dbf4ac5d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DebugTools\DebugManager\DebugManager.cpp">
@@ -665,6 +668,9 @@
     </ClInclude>
     <ClInclude Include="Core\ConfigManager\ConfigType.h">
       <Filter>Core\ConfigManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Features\Particle\Type\ParticleType.h">
+      <Filter>Feature\Particle\Type</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

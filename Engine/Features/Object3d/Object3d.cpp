@@ -158,7 +158,7 @@ void Object3d::Draw()
     // PointLightCBufferの場所を設定
     commandList->SetGraphicsRootConstantBufferView(7, pointLightResource_->GetGPUVirtualAddress());
 
-    if (pModel_) pModel_->Draw(pDx12_->GetCommandList());
+    if (pModel_) pModel_->Draw(commandList);
 
     #else
 

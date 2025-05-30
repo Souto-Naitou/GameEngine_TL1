@@ -34,6 +34,8 @@ void ImGuiManager::Initialize(DirectX12* _pDx12)
         srvDescHeap_->GetGPUDescriptorHandleForHeapStart()
     );
     ImGui_ImplWin32_Init(pWin32App->GetHwnd());
+
+    io_ = &ImGui::GetIO();
 }
 
 void ImGuiManager::Finalize()
@@ -45,21 +47,34 @@ void ImGuiManager::Finalize()
 
 void ImGuiManager::Resize()
 {
-    auto& io = ImGui::GetIO();
-    io.DisplaySize.x = static_cast<float>(WinSystem::clientWidth);
-    io.DisplaySize.y = static_cast<float>(WinSystem::clientHeight);
+    io_->DisplaySize.x = static_cast<float>(WinSystem::clientWidth);
+    io_->DisplaySize.y = static_cast<float>(WinSystem::clientHeight);
 
     float scaleX = static_cast<float>(WinSystem::clientWidth) / static_cast<float>(WinSystem::preClientWidth);
     float scaleY = static_cast<float>(WinSystem::clientHeight) / static_cast<float>(WinSystem::preClientHeight);
 
-    io.DisplayFramebufferScale = ImVec2(scaleX, scaleY);
+    io_->DisplayFramebufferScale = ImVec2(scaleX, scaleY);
 
     auto* drawData = ImGui::GetDrawData();
     if(drawData)
     {
         drawData->DisplayPos = ImVec2(0.0f, 0.0f);
-        drawData->DisplaySize = ImVec2(io.DisplaySize.x, io.DisplaySize.y);
+        drawData->DisplaySize = ImVec2(io_->DisplaySize.x, io_->DisplaySize.y);
     }
+}
+
+void ImGuiManager::EnableDocking()
+{
+    #ifdef _DEBUG
+    io_->ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+    #endif
+}
+
+void ImGuiManager::EnableMultiViewport()
+{
+    #ifdef _DEBUG
+    io_->ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+    #endif
 }
 
 void ImGuiManager::BeginFrame()
@@ -69,7 +84,6 @@ void ImGuiManager::BeginFrame()
         DebugManager* debugManager = DebugManager::GetInstance();
         debugManager->ChangeFont();
         debugManager->DefaultStyle();
-        debugManager->EnableDocking();
 
         isChangedFont_ = true;
     }
@@ -88,11 +102,18 @@ void ImGuiManager::Render()
 void ImGuiManager::EndFrame()
 {
     ID3D12GraphicsCommandList* commandList = DirectX12::GetInstance()->GetCommandListsLast();
-
-    //ID3D12DescriptorHeap* descriptorHeaps[] = { srvDescHeap_ };
-    //commandList->SetDescriptorHeaps(1, descriptorHeaps);
-
     ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), commandList);
+}
+
+void ImGuiManager::RenderMultiViewport()
+{
+    ID3D12GraphicsCommandList* commandList = DirectX12::GetInstance()->GetCommandListsLast();
+
+    if (ImGui::GetIO().ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+    {
+        ImGui::UpdatePlatformWindows();
+        ImGui::RenderPlatformWindowsDefault(nullptr, (void*)commandList);
+    }
 }
 
 #endif // _DEBUG

@@ -284,7 +284,6 @@ void NimaFramework::Draw()
     pEventTimer_->EndFrame();
     pEventTimer_->ImGui();
 
-
     /// ImGuiの描画
     #ifdef _DEBUG
     pImGuiManager_->Render();

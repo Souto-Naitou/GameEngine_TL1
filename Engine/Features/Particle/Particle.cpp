@@ -232,6 +232,7 @@ void Particle::ParticleDataUpdate(std::vector<ParticleData>::iterator& _itr)
     const float         scaleDelayTime = _itr->scaleDelayTime_;
     float&              currentLifeTime = _itr->currentLifeTime_;
     float&              alphaDeltaValue = _itr->alphaDeltaValue_;
+    bool&               enableDirectionByVelocity = _itr->enableDirectionByVelocity;
 
     /// タイマーの更新
     if (!timer.GetIsStart())
@@ -251,6 +252,10 @@ void Particle::ParticleDataUpdate(std::vector<ParticleData>::iterator& _itr)
     velocity += acceleration * deltaTime;
     velocity += gravity * deltaTime;
     velocity -= resistance * deltaTime;
+    if (enableDirectionByVelocity)
+    {
+        transform.rotate = velocity.Normalize();
+    }
     transform.translate += velocity * deltaTime;
 
     /// 色の更新

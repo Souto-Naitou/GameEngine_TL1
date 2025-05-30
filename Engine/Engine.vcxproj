@@ -312,6 +312,7 @@
     <ClInclude Include="Features\Particle\Particle.h" />
     <ClInclude Include="Features\Particle\ParticleManager.h" />
     <ClInclude Include="Features\Particle\ParticleSystem.h" />
+    <ClInclude Include="Features\Particle\Type\ParticleType.h" />
     <ClInclude Include="Features\Primitive\AABB.h" />
     <ClInclude Include="Features\Primitive\OBB.h" />
     <ClInclude Include="Features\RandomGenerator\RandomGenerator.h" />

@@ -61,7 +61,6 @@ public:
     void Update();
     void DrawUI();
     void ChangeFont();
-    void EnableDocking();
     void DefaultStyle();
     void SetDisplay(bool _isEnable) { onDisplay_ = _isEnable; }
     bool GetDisplay() const { return onDisplay_; }
