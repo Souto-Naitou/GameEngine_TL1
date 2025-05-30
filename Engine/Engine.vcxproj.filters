@@ -232,6 +232,9 @@
     <Filter Include="Feature\Particle\Type">
       <UniqueIdentifier>{5eaa0b5f-e515-4ae0-944e-7374dbf4ac5d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Core\Localization">
+      <UniqueIdentifier>{6c680fa0-6d21-4b03-ade3-32265ba472ae}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DebugTools\DebugManager\DebugManager.cpp">
@@ -427,6 +430,9 @@
       <Filter>Core\ConfigManager</Filter>
     </ClCompile>
     <ClCompile Include="Core\ConfigManager\ConfigType.cpp" />
+    <ClCompile Include="DebugTools\ImGuiManager\ImGuiThemes.cpp">
+      <Filter>DebugTools\ImGuiManager</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common\define.h">
@@ -671,6 +677,9 @@
     </ClInclude>
     <ClInclude Include="Features\Particle\Type\ParticleType.h">
       <Filter>Feature\Particle\Type</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Localization\LanguageData.h">
+      <Filter>Core\Localization</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

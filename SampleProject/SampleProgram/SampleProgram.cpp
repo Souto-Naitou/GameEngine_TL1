@@ -11,6 +11,7 @@ void SampleProgram::Initialize()
     #ifdef _DEBUG
     pImGuiManager_->EnableDocking();
     //pImGuiManager_->EnableMultiViewport();
+    pImGuiManager_->StyleMaterialFlat();
     #endif // _DEBUG
     
     /// シーンファクトリの設定

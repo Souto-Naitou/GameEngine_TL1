@@ -12,6 +12,8 @@
 
 void ImGuiManager::Initialize(DirectX12* _pDx12)
 {
+    InitializeStyleNameArray();
+
     SRVManager* srvManager = SRVManager::GetInstance();
     srvIndex_ = srvManager->Allocate();
 
@@ -30,16 +32,19 @@ void ImGuiManager::Initialize(DirectX12* _pDx12)
         swapChainDesc.BufferCount,
         DXGI_FORMAT_R8G8B8A8_UNORM,
         srvDescHeap_,
-        srvDescHeap_->GetCPUDescriptorHandleForHeapStart(),
-        srvDescHeap_->GetGPUDescriptorHandleForHeapStart()
+        cpuHandle,
+        gpuHandle
     );
     ImGui_ImplWin32_Init(pWin32App->GetHwnd());
 
     io_ = &ImGui::GetIO();
+
+    DebugManager::GetInstance()->SetComponent("Core", "ImGui", std::bind(&ImGuiManager::DebugWindow, this));
 }
 
 void ImGuiManager::Finalize()
 {
+    DebugManager::GetInstance()->DeleteComponent("Core", "ImGui");
     ImGui_ImplDX12_Shutdown();
     ImGui_ImplWin32_Shutdown();
     ImGui::DestroyContext();
@@ -56,7 +61,7 @@ void ImGuiManager::Resize()
     io_->DisplayFramebufferScale = ImVec2(scaleX, scaleY);
 
     auto* drawData = ImGui::GetDrawData();
-    if(drawData)
+    if (drawData)
     {
         drawData->DisplayPos = ImVec2(0.0f, 0.0f);
         drawData->DisplaySize = ImVec2(io_->DisplaySize.x, io_->DisplaySize.y);
@@ -79,11 +84,10 @@ void ImGuiManager::EnableMultiViewport()
 
 void ImGuiManager::BeginFrame()
 {
-    if(!isChangedFont_)
+    if (!isChangedFont_)
     {
         DebugManager* debugManager = DebugManager::GetInstance();
         debugManager->ChangeFont();
-        debugManager->DefaultStyle();
 
         isChangedFont_ = true;
     }
@@ -105,15 +109,55 @@ void ImGuiManager::EndFrame()
     ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), commandList);
 }
 
-void ImGuiManager::RenderMultiViewport()
+void ImGuiManager::DebugWindow()
 {
-    ID3D12GraphicsCommandList* commandList = DirectX12::GetInstance()->GetCommandListsLast();
-
-    if (ImGui::GetIO().ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+    bool isChange = false;
+    if (ImGui::BeginCombo("Style", styleNameArray_[idx_currentStyle_].c_str()))
     {
-        ImGui::UpdatePlatformWindows();
-        ImGui::RenderPlatformWindowsDefault(nullptr, (void*)commandList);
+        for (size_t i = 0; i < styleNameArray_.size(); ++i)
+        {
+            const bool isSelected = i == idx_currentStyle_;
+            if (ImGui::Selectable(styleNameArray_[i].c_str(), isSelected))
+            {
+                idx_currentStyle_ = i;
+                isChange = true;
+            }
+        }
+        ImGui::EndCombo();
     }
+
+    if (isChange)
+    {
+        switch (idx_currentStyle_)
+        {
+        case 0:
+            this->StyleOriginal();
+            break;
+        case 1:
+            this->StylePhotoshop();
+            break;
+        case 2:
+            this->StyleMaterialFlat();
+            break;
+        case 3:
+            this->StyleFutureDark();
+            break;
+        case 4:
+            this->StyleComfortableDarkCyan();
+            break;
+        default:
+            break;
+        }
+    }
+}
+
+void ImGuiManager::InitializeStyleNameArray()
+{
+    styleNameArray_.push_back("Original");
+    styleNameArray_.push_back("Photoshop");
+    styleNameArray_.push_back("Material Flat");
+    styleNameArray_.push_back("Future Dark");
+    styleNameArray_.push_back("Comfortable Dark Cyan");
 }
 
 #endif // _DEBUG

@@ -27,6 +27,11 @@ void ParticleManager::Draw()
     }
 }
 
+void ParticleManager::Finalize()
+{
+    ReleaseAllParticle();
+}
+
 Particle* ParticleManager::CreateParticle()
 {
     auto& ref = particles_.emplace_back(std::make_unique<Particle>());

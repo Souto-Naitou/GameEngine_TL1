@@ -6,6 +6,8 @@
 #include <cstdint>
 
 #include <imgui.h>
+#include <string>
+#include <vector>
 
 class DirectX12;
 
@@ -17,19 +19,35 @@ public:
     void BeginFrame();
     void Render();                          // 描画
     void EndFrame();                        // フレーム終了
-    void RenderMultiViewport();             // Draw multiple viewports. Call this after executing the command list, before presenting the swapchain.
     void Finalize();
     void Resize();
 
     // Switch options
     void EnableDocking();
     void EnableMultiViewport();
+    
+    // Style changes
+    void StyleOriginal();
+    void StylePhotoshop();
+    void StyleMaterialFlat();
+    void StyleFutureDark();
+    void StyleComfortableDarkCyan();
 
 private:
-    ImGuiIO* io_ = nullptr;
-    bool isChangedFont_ = false;
-    ID3D12DescriptorHeap* srvDescHeap_ = nullptr;
-    uint32_t srvIndex_ = 0u;
+    // For debug
+    void DebugWindow();
+
+    // Internal functions
+    void InitializeStyleNameArray();
+
+    ImGuiIO*                io_             = nullptr;
+    bool                    isChangedFont_  = false;
+    uint32_t                srvIndex_       = 0u;
+    ID3D12DescriptorHeap*   srvDescHeap_    = nullptr;
+
+    // For debug window
+    std::vector<std::string>    styleNameArray_     = {};
+    size_t                      idx_currentStyle_   = 0u;
 };
 
 #endif // _DEBUG

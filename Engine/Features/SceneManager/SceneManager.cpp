@@ -22,7 +22,7 @@ void SceneManager::ReserveStartupScene()
 
 void SceneManager::Initialize()
 {
-    DebugManager::GetInstance()->SetComponent("#Window", name_, std::bind(&SceneManager::DebugWindow, this));
+    DebugManager::GetInstance()->SetComponent("Core", name_, std::bind(&SceneManager::DebugWindow, this), true);
     ReserveStartupScene();
 }
 

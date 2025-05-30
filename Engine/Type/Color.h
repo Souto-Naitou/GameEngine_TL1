@@ -67,10 +67,10 @@ public:
 
     ~RGB() = default;
 
-    RGBA toRGBA(uint8_t _a = 255) const;
-    Vector4 toVector4(uint8_t _a) const { return Vector4(r_ / 255.0f, g_ / 255.0f, b_ / 255.0f, _a / 255.0f); }
-    Vector4 toVector4(float _a) const { return Vector4(r_ / 255.0f, g_ / 255.0f, b_ / 255.0f, _a); }
-    Vector3 toVector3() const { return Vector3(r_ / 255.0f, g_ / 255.0f, b_ / 255.0f); }
+    RGBA to_RGBA(uint8_t _a = 255) const;
+    Vector4 to_Vector4(uint8_t _a) const { return Vector4(r_ / 255.0f, g_ / 255.0f, b_ / 255.0f, _a / 255.0f); }
+    Vector4 to_Vector4(float _a) const { return Vector4(r_ / 255.0f, g_ / 255.0f, b_ / 255.0f, _a); }
+    Vector3 to_Vector3() const { return Vector3(r_ / 255.0f, g_ / 255.0f, b_ / 255.0f); }
 
 
 private:
@@ -78,7 +78,6 @@ private:
     uint8_t g_ = 255;
     uint8_t b_ = 255;
 };
-
 
 class RGBA : public IColor
 {
@@ -132,8 +131,8 @@ public:
 
     RGB rgb() const { return RGB(r_, g_, b_); }
 
-    Vector4 toVector4() const { return Vector4(r_ / 255.0f, g_ / 255.0f, b_ / 255.0f, a_ / 255.0f); }
-    Vector3 toVector3() const { return Vector3(r_ / 255.0f, g_ / 255.0f, b_ / 255.0f); }
+    Vector4 to_Vector4() const { return Vector4(r_ / 255.0f, g_ / 255.0f, b_ / 255.0f, a_ / 255.0f); }
+    Vector3 to_Vector3() const { return Vector3(r_ / 255.0f, g_ / 255.0f, b_ / 255.0f); }
 
 
 private:
@@ -141,6 +140,31 @@ private:
     uint8_t g_ = 255;
     uint8_t b_ = 255;
     uint8_t a_ = 255;
+};
+
+class HSV : public IColor
+{
+    public:
+
+    HSV() = default;
+    HSV(float _h, float _s, float _v) : h_(_h), s_(_s), v_(_v) {}
+    HSV(const HSV& _other) : h_(_other.h_), s_(_other.s_), v_(_other.v_) {}
+    HSV(HSV&& _other) noexcept : h_(_other.h_), s_(_other.s_), v_(_other.v_) {}
+
+    float& h() { return h_; }
+    float& s() { return s_; }
+    float& v() { return v_; }
+
+    const float& h() const { return h_; }
+    const float& s() const { return s_; }
+    const float& v() const { return v_; }
+
+    RGB to_RGB() const;
+
+private:
+    float h_ = 0.0f; // Hue [0, 360)
+    float s_ = 1.0f; // Saturation [0, 1]
+    float v_ = 1.0f; // Value [0, 1]
 };
 
 namespace color

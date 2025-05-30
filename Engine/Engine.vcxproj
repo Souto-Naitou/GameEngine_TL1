@@ -205,6 +205,7 @@
     <ClCompile Include="DebugTools\DebugManager\DebugManager.cpp" />
     <ClCompile Include="DebugTools\EventTimer\EventTimer.cpp" />
     <ClCompile Include="DebugTools\ImGuiManager\ImGuiManager.cpp" />
+    <ClCompile Include="DebugTools\ImGuiManager\ImGuiThemes.cpp" />
     <ClCompile Include="DebugTools\ImGuiTemplates\ImGuiTemplates.cpp" />
     <ClCompile Include="DebugTools\Logger\Logger.cpp" />
     <ClCompile Include="Externals\Timer\Timer.cpp" />
@@ -270,6 +271,7 @@
     <ClInclude Include="Core\DirectX12\RTVHeapCounter.h" />
     <ClInclude Include="Core\DirectX12\SRVManager.h" />
     <ClInclude Include="Core\DirectX12\TextureManager.h" />
+    <ClInclude Include="Core\Localization\LanguageData.h" />
     <ClInclude Include="Core\Win32\WinSystem.h" />
     <ClInclude Include="DebugTools\DebugManager\DebugManager.h" />
     <ClInclude Include="DebugTools\EventTimer\EventTimer.h" />

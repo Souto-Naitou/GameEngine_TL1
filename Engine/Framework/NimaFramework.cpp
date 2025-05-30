@@ -165,6 +165,7 @@ void NimaFramework::Finalize()
     pAudioManager_->Finalize();
     pWinSystem_->Finalize();
     pLogger_->Save();
+    pParticleManager_->Finalize();
     pSceneManager_->Finalize();
 
     #ifdef _DEBUG
