@@ -32,7 +32,7 @@ public:
 
 public: /// Setter
     void SetPosition(const Vector3& _position) { position_ = _position; }
-    void SetGameEye(GameEye* _eye) { this->ModifyGameEye(_eye); }
+    void SetGameEye(GameEye** _eye) { this->ModifyGameEye(_eye); }
     void SetEnableBillboard(bool _enable) { particle_->SetEnableBillboard(_enable); }
 
 public: /// Getter
@@ -66,5 +66,5 @@ private:
 
 private:
     void DebugWindow();
-    void ModifyGameEye(GameEye* _eye);
+    void ModifyGameEye(GameEye** _eye);
 };

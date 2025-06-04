@@ -25,7 +25,7 @@ public: /// Setter
         min_ = _min;
         max_ = _max;
     }
-    void SetGameEye(GameEye* _eye) { pGameEye = _eye; ModifyGameEye(_eye); }
+    void SetGameEye(GameEye** _eye) { pGameEye = _eye; ModifyGameEye(_eye); }
 
 
 public: /// Getter
@@ -40,10 +40,10 @@ private:
 
 
 private:
-    void ModifyGameEye(GameEye* _eye);
+    void ModifyGameEye(GameEye** _eye);
 
 
 private:
     LineSystem* pLineSystem = nullptr;
-    GameEye* pGameEye = nullptr;
+    GameEye** pGameEye = nullptr;
 };

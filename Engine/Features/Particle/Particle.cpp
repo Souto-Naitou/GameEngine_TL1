@@ -28,7 +28,7 @@ void Particle::Initialize(const std::string& _filepath, const std::string& _text
     pSystem_ = ParticleSystem::GetInstance();
 
     /// デフォルトのGameEyeを取得
-    pGameEye_ = pSystem_->GetDefaultGameEye();
+    pGameEye_ = pSystem_->GetGlobalEye();
 
     if (!particleData_.capacity()) reserve(1, true);
 
@@ -79,7 +79,7 @@ void Particle::Update()
         else wMatrix = Matrix4x4::AffineMatrix(transform.scale, transform.rotate, transform.translate);
 
         instancingData_[index].world = wMatrix;
-        instancingData_[index].wvp = wMatrix * pGameEye_->GetViewProjectionMatrix();
+        instancingData_[index].wvp = wMatrix * (*pGameEye_)->GetViewProjectionMatrix();
         instancingData_[index].color = currentColor;
 
         ++itr;
@@ -89,7 +89,7 @@ void Particle::Update()
     /// ビルボード
     if (enableBillboard_)
     {
-        billboardMatrix_ = backToFrontMatrix_ * pGameEye_->GetWorldMatrix();
+        billboardMatrix_ = backToFrontMatrix_ * (*pGameEye_)->GetWorldMatrix();
         /// 平行移動成分を除去
         for (uint32_t i = 0; i < 3; i++) billboardMatrix_.m[3][i] = 0.0f;
     }

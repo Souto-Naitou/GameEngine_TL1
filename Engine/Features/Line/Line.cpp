@@ -13,7 +13,7 @@ void Line::Initialize()
     pDx12_ = pLineSystem_->GetDx12();
     device_ = pDx12_->GetDevice();
 
-    pGameEye_ = pLineSystem_->GetDefaultGameEye();
+    pGameEye_ = pLineSystem_->GetSharedGameEye();
 
     if (vertices_.size() == 0)
     {
@@ -33,7 +33,7 @@ void Line::Finalize()
 void Line::Update()
 {
     Matrix4x4 wMatrix = Matrix4x4::Identity();
-    Matrix4x4 vpMatrix = pGameEye_->GetViewProjectionMatrix();
+    Matrix4x4 vpMatrix = (*pGameEye_)->GetViewProjectionMatrix();
 
     pWVPMatrixData_[0] = wMatrix * vpMatrix;
 

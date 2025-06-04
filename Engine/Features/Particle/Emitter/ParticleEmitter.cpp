@@ -389,7 +389,7 @@ void ParticleEmitter::DebugWindow()
 #endif // _DEBUG
 }
 
-void ParticleEmitter::ModifyGameEye(GameEye* _eye)
+void ParticleEmitter::ModifyGameEye(GameEye** _eye)
 {
     particle_->SetGameEye(_eye);
     aabb_->SetGameEye(_eye);

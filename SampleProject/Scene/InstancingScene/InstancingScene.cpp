@@ -10,6 +10,7 @@ void InstancingScene::Initialize()
     pGameEye_ = std::make_unique<GameEye>();
     pGameEye_->SetName("InstancingScene_Camera");
     pGameEye_->SetTranslate(Vector3(0.0f, 0.0f, -10.0f));
+    ParticleSystem::GetInstance()->SetGlobalEye(pGameEye_.get());
 
     pGuideSprite_ = std::make_unique<Sprite>();
     pGuideSprite_->Initialize("Text/SceneChangeGuide.png");
@@ -19,7 +20,6 @@ void InstancingScene::Initialize()
 
     particle_ = ParticleManager::GetInstance()->CreateParticle();
     particle_->Initialize("plane.obj");
-    particle_->SetGameEye(pGameEye_.get());
     particle_->reserve(10);
     InitializeParticle();
 }
