@@ -25,7 +25,7 @@ public:
 public:
     void Resize(size_t _size);
     void SetColor(const Vector4& _color) { color_ = _color; }
-    void SetGameEye(GameEye* _eye) { pGameEye_ = _eye; }
+    void SetGameEye(GameEye** _eye) { pGameEye_ = _eye; }
 
 
 public: /// Getter
@@ -58,5 +58,5 @@ private:
     LineSystem* pLineSystem_ = nullptr;
     DirectX12* pDx12_ = nullptr;
     ID3D12Device* device_ = nullptr;
-    GameEye* pGameEye_ = nullptr;
+    GameEye** pGameEye_ = nullptr;
 };

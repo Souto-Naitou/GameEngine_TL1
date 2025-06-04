@@ -51,7 +51,7 @@ public:
 public: /// Setter
     void SetName(const std::string& _name) { name_ = _name; }
     void SetEnableBillboard(bool _enable) { enableBillboard_ = _enable; }
-    void SetGameEye(GameEye* _pGameEye) { pGameEye_ = _pGameEye; }
+    void SetGameEye(GameEye** _pGameEye) { pGameEye_ = _pGameEye; }
 
 
 public: /// Getter
@@ -71,7 +71,7 @@ private:
     std::string                             name_                               = {};
 
     /// GameEye
-    GameEye*                                pGameEye_                           = nullptr;
+    GameEye**                               pGameEye_                           = nullptr;
 
     /// Instancing
     Microsoft::WRL::ComPtr<ID3D12Resource>  instancingResource_                 = nullptr;

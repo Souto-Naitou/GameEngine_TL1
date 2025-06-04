@@ -38,12 +38,12 @@ public:
 
 
 public: /// Setter
-    void SetDefaultGameEye(GameEye* _pGameEye) { pDefaultGameEye_ = _pGameEye; }
+    void SetSharedGameEye(GameEye* _pGameEye) { pSharedGameEye_ = _pGameEye; }
     void AddCommandListData(CommandListData& _pData) { commandListDatas_.emplace_back(_pData); }
 
 
 public: /// Getter
-    GameEye* GetDefaultGameEye() const { return pDefaultGameEye_; }
+    GameEye** GetSharedGameEye() { return &pSharedGameEye_; }
 
 
 public: /// 公開定数
@@ -55,7 +55,7 @@ private: /// メンバ変数
     static constexpr wchar_t kPixelShaderPath[] = L"EngineResources/Shaders/Particle.PS.hlsl";
     Microsoft::WRL::ComPtr<ID3D12RootSignature> rootSignature_ = nullptr;
     Microsoft::WRL::ComPtr<ID3D12PipelineState> graphicsPipelineState_ = nullptr;
-    GameEye* pDefaultGameEye_ = nullptr;
+    GameEye* pSharedGameEye_ = nullptr;
 
     std::list<CommandListData> commandListDatas_;
 

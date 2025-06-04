@@ -586,46 +586,46 @@
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
+    <None Include="..\ClassDiagram.md" />
     <None Include="EngineResources\Shaders\Object3d.hlsli">
       <Filter>HLSL</Filter>
     </None>
-    <None Include="..\SampleProject\EngineResources\Shaders\Sprite.hlsli">
+    <None Include="EngineResources\Shaders\Particle.hlsli">
       <Filter>HLSL</Filter>
     </None>
-    <None Include="..\SampleProject\EngineResources\Shaders\Particle.hlsli">
+    <None Include="EngineResources\Shaders\Sprite.hlsli">
       <Filter>HLSL</Filter>
     </None>
-    <None Include="..\ClassDiagram.md" />
     <None Include="EngineResources\Shaders\Line.hlsli">
       <Filter>HLSL</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="EngineResources\Shaders\Line.VS.hlsl">
+      <Filter>HLSL</Filter>
+    </FxCompile>
     <FxCompile Include="EngineResources\Shaders\Object3d.PS.hlsl">
       <Filter>HLSL</Filter>
     </FxCompile>
     <FxCompile Include="EngineResources\Shaders\Object3d.VS.hlsl">
       <Filter>HLSL</Filter>
     </FxCompile>
-    <FxCompile Include="..\SampleProject\EngineResources\Shaders\Sprite.VS.hlsl">
+    <FxCompile Include="EngineResources\Shaders\Sprite.PS.hlsl">
       <Filter>HLSL</Filter>
     </FxCompile>
-    <FxCompile Include="..\SampleProject\EngineResources\Shaders\Sprite.PS.hlsl">
-      <Filter>HLSL</Filter>
-    </FxCompile>
-    <FxCompile Include="..\SampleProject\EngineResources\Shaders\Particle.VS.hlsl">
-      <Filter>HLSL</Filter>
-    </FxCompile>
-    <FxCompile Include="..\SampleProject\EngineResources\Shaders\Particle.PS.hlsl">
-      <Filter>HLSL</Filter>
-    </FxCompile>
-    <FxCompile Include="EngineResources\Shaders\Line.VS.hlsl">
-      <Filter>HLSL</Filter>
-    </FxCompile>
-    <FxCompile Include="EngineResources\Shaders\Line.PS.hlsl">
+    <FxCompile Include="EngineResources\Shaders\Sprite.VS.hlsl">
       <Filter>HLSL</Filter>
     </FxCompile>
     <FxCompile Include="EngineResources\Shaders\WithoutAlpha.CS.hlsl">
+      <Filter>HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="EngineResources\Shaders\Particle.VS.hlsl">
+      <Filter>HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="EngineResources\Shaders\Particle.PS.hlsl">
+      <Filter>HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="EngineResources\Shaders\Line.PS.hlsl">
       <Filter>HLSL</Filter>
     </FxCompile>
   </ItemGroup>
