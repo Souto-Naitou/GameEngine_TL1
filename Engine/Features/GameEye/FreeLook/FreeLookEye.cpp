@@ -1,4 +1,5 @@
 #include "FreeLookEye.h"
+#include <imgui.h>
 
 FreeLookEye::FreeLookEye()
 {
@@ -33,6 +34,11 @@ void FreeLookEye::CatchMoveCommands()
 
     Vector3 forward = FMath::RotateVector({ 0.0f, 0.0f, 1.0f }, rotate_);
     Vector3 right = FMath::RotateVector({ 1.0f, 0.0f, 0.0f }, rotate_);
+
+    moveSpeed_ += static_cast<float>(pInput_->GetWheelDelta()) * 0.0001f;
+
+    if (moveSpeed_ > 2.0f) moveSpeed_ = 2.0f;
+    else if (moveSpeed_ < -2.0f) moveSpeed_ = -2.0f;
 
     /// 向いている方向に移動
     if(pInput_->PushKeyC('W'))
@@ -73,4 +79,11 @@ void FreeLookEye::CatchRotateCommands()
     transform.rotate.y += diff.x * 0.003f;
 
     SetTransform(transform);
+}
+
+void FreeLookEye::DebugWindow()
+{
+    #ifdef _DEBUG
+    ImGui::Text("MoveSpeed: %.3f", moveSpeed_);
+    #endif //_DEBUG
 }

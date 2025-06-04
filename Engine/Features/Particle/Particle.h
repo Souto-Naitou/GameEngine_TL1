@@ -1,48 +1,23 @@
 #pragma once
 
-#include <string>
-
+#include "./Type/ParticleType.h"
 #include <Core/DirectX12/DirectX12.h>
 #include <Common/structs.h>
-#include <wrl.h>
-#include <d3d12.h>
 #include <Features/Model/Model.h>
 #include "ParticleSystem.h"
+#include <wrl/client.h>
+#include <vector>
+#include <cstdint>
+#include <string>
+#include <d3d12.h>
 #include <Matrix4x4.h>
-#include <Timer/Timer.h>
-
-enum class ParticleDeleteCondition
-{
-    LifeTime,
-    ZeroAlpha,
-};
-
-struct ParticleData
-{
-    Timer                                   timer_              = {};
-    Transform                               transform_          = {};
-    Vector3                                 startScale_         = {};
-    Vector3                                 endScale_           = {};
-    Vector4                                 currentColor_       = {};
-    Vector4                                 beginColor_         = {};
-    Vector4                                 endColor_           = {};
-    float                                   scaleDelayTime_     = 0.0f;
-    float                                   alphaDeltaValue_    = 0.0f;
-    float                                   lifeTime_           = 0.0f;
-    float                                   currentLifeTime_    = 0.0f;
-    Vector3                                 acceleration_       = {};
-    Vector3                                 accResistance_      = {};
-    Vector3                                 accGravity_         = {};
-    Vector3                                 velocity_           = {};
-    ParticleDeleteCondition                 deleteCondition_    = ParticleDeleteCondition::LifeTime;
-};
 
 class Particle
 {
 public:
     Particle() = default;
 
-    void Initialize(const std::string& _filepath);
+    void Initialize(const std::string& _filepath, const std::string& _texturePath = {});
     void Draw();
     void Update();
     void Finalize();
@@ -81,7 +56,7 @@ private:
     /// Model
     std::string                             modelPath_                          = {};
     Model*                                  pModel_                             = nullptr;
-    ModelData*                              pModelData_;
+    ModelData*                              pModelData_                         = nullptr;
     D3D12_VERTEX_BUFFER_VIEW                vertexBufferView_                   = {};
 
     /// SRV

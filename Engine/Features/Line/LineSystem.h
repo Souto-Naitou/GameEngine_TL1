@@ -35,7 +35,7 @@ public: /// Getter
 
 
 public: /// Setter
-    void SetSharedGameEye(GameEye* _pGameEye) { pDefaultGameEye_ = _pGameEye; }
+    void SetGlobalEye(GameEye* _pGameEye) { pDefaultGameEye_ = _pGameEye; }
 
 
 private: /// メンバ変数

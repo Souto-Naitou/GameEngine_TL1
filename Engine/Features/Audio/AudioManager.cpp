@@ -1,5 +1,7 @@
 #include "AudioManager.h"
 
+#include <Core/ConfigManager/ConfigManager.h>
+
 #include <cassert>
 
 void AudioManager::Initialize()
@@ -9,7 +11,13 @@ void AudioManager::Initialize()
 
     pFilePathSearcher_ = std::make_unique<FilePathSearcher>();
     pFilePathSearcher_->Initialize();
-    pFilePathSearcher_->AddSearchPath("Resources/Sounds/");
+
+    // 設定ファイルからパスを取得して登録
+    auto& cfgData = ConfigManager::GetInstance()->GetConfigData();
+    for (auto& path : cfgData.audio_paths)
+    {
+        this->AddSearchPath(path);
+    }
 }
 
 void AudioManager::Update()
@@ -38,6 +46,11 @@ void AudioManager::Update()
 void AudioManager::Finalize()
 {
     pXAudio2_.Reset();
+}
+
+void AudioManager::AddSearchPath(const std::string& _path)
+{
+    pFilePathSearcher_->AddSearchPath(_path);
 }
 
 Audio* AudioManager::GetNewAudio(const std::string& _filename)

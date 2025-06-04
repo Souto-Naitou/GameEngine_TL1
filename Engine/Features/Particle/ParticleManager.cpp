@@ -5,7 +5,7 @@ void ParticleManager::Update()
 {
     for (auto& particle : particles_)
     {
-        particle.Update();
+        particle->Update();
     }
 
     deleteParticles_.remove_if([&](Particle* _particle)
@@ -23,23 +23,29 @@ void ParticleManager::Draw()
 {
     for (auto& particle : particles_)
     {
-        particle.Draw();
+        particle->Draw();
     }
 }
 
-Particle& ParticleManager::CreateParticle()
+void ParticleManager::Finalize()
 {
-    particles_.emplace_back();
-    return particles_.back();
+    ReleaseAllParticle();
+}
+
+Particle* ParticleManager::CreateParticle()
+{
+    auto& ref = particles_.emplace_back(std::make_unique<Particle>());
+    return ref.get();
 }
 
 void ParticleManager::ReleaseParticle(Particle* _particle)
 {
     for (auto itr = particles_.begin(); itr != particles_.end(); ++itr)
     {
-        if (&(*itr) == _particle)
+        auto ptr = itr->get();
+        if (ptr == _particle)
         {
-            itr->Finalize();
+            ptr->Finalize();
             particles_.erase(itr);
             return;
         }
@@ -60,8 +66,9 @@ void ParticleManager::ReleaseAllParticle()
 {
     for (auto& particle : particles_)
     {
-        particle.Finalize();
+        particle->Finalize();
     }
+
     particles_.clear();
     deleteParticles_.clear();
     return;

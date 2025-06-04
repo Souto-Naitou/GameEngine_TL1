@@ -21,7 +21,7 @@ void Object3d::Initialize(const std::string& _filePath)
     pSystem_ = Object3dSystem::GetInstance();
     pDx12_ = pSystem_->GetDx12();
     device_ = pDx12_->GetDevice();
-    ppSystemGameEye_ = pSystem_->GetSharedGameEye();
+    ppSystemGameEye_ = pSystem_->GetGlobalEye();
 
 #if defined (DEBUG_ENGINE) && (_DEBUG)
     pDebugManager_ = DebugManager::GetInstance();
@@ -139,30 +139,6 @@ void Object3d::Draw()
 {
     if (!isDraw_) return;
 
-    #ifdef _DEBUG
-
-    ID3D12GraphicsCommandList* commandList = pDx12_->GetCommandList();
-    std::vector<D3D12_GPU_DESCRIPTOR_HANDLE> textureSrvHandleGPUs = pDx12_->GetSRVHandlesGPUList();
-
-    // マテリアルCBufferの場所を設定
-    commandList->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());
-    // TransformationMatrixCBufferの場所を設定
-    commandList->SetGraphicsRootConstantBufferView(1, transformationMatrixResource_->GetGPUVirtualAddress());
-    // 平行光源CBufferの場所を設定
-    commandList->SetGraphicsRootConstantBufferView(3, directionalLightResource_->GetGPUVirtualAddress());
-    // TilingCBufferの場所を設定
-    commandList->SetGraphicsRootConstantBufferView(4, tilingResource_->GetGPUVirtualAddress());
-    // CameraForGPUCBufferの場所を設定
-    commandList->SetGraphicsRootConstantBufferView(5, cameraForGPUResource_->GetGPUVirtualAddress());
-    // LightingCBufferの場所を設定
-    commandList->SetGraphicsRootConstantBufferView(6, lightingResource_->GetGPUVirtualAddress());
-    // PointLightCBufferの場所を設定
-    commandList->SetGraphicsRootConstantBufferView(7, pointLightResource_->GetGPUVirtualAddress());
-
-    if (pModel_) pModel_->Draw(pDx12_->GetCommandList());
-
-    #else
-
     Object3dSystem::CommandListData data;
     data.cbuffers[0] = materialResource_.Get();
     data.cbuffers[1] = transformationMatrixResource_.Get();
@@ -174,8 +150,6 @@ void Object3d::Draw()
     data.model = pModel_;
 
     pSystem_->AddCommandListData(data);
-
-    #endif // _DEBUG
 }
 
 void Object3d::Finalize()

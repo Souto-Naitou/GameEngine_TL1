@@ -1,73 +1,122 @@
 {
-    "emitterLifeTime" : 2.000000,
-    "emitterName" : "Spark",
-    "emitInterval" : 0.050000,
-    "velocityRandomRangeBegin" : {
-        "x" : -0.500000,
-        "y" : -0.500000,
-        "z" : -0.500000
+    "common": {
+        "alphaDeltaValue": 0.0,
+        "emitInterval": 0.019999999552965164,
+        "emitNum": 29,
+        "emitPositionFixed": {
+            "x": 6.070000171661377,
+            "y": 1.4800000190734863,
+            "z": 11.300000190734863
+        },
+        "emitterLifeTime": 0.0,
+        "particleLifeTime": 3.5999999046325684,
+        "scaleDelayTime": 0.0,
+        "scaleFixed": {
+            "x": 0.4300000071525574,
+            "y": 0.5199999809265137,
+            "z": 1.0
+        },
+        "velocityFixed": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+        }
     },
-    "startScale" : {
-        "x" : 0.050000,
-        "y" : 0.050000,
-        "z" : 0.050000
+    "flags": {
+        "enableRandomEmit": false,
+        "enableRandomRotation": false,
+        "enableRandomScale": false,
+        "enableRandomVelocity": true,
+        "enableScaleTransition": true
     },
-    "resistance" : {
-        "x" : 0.000000,
-        "y" : 0.000000,
-        "z" : 0.000000
+    "name": "Spark",
+    "physics": {
+        "gravity": {
+            "x": 0.0,
+            "y": -6.460000038146973,
+            "z": 0.0
+        },
+        "resistance": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+        }
     },
-    "endScale" : {
-        "x" : 0.200000,
-        "y" : 0.200000,
-        "z" : 0.200000
+    "ranges": {
+        "color": {
+            "end": {
+                "w": 1.0,
+                "x": 0.9578059315681458,
+                "y": 0.32796525955200195,
+                "z": 0.0848688930273056
+            },
+            "start": {
+                "w": 1.0,
+                "x": 1.0,
+                "y": 0.8579287528991699,
+                "z": 0.6793248653411865
+            }
+        },
+        "position": {
+            "end": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "start": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            }
+        },
+        "rotationRandom": {
+            "end": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "start": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            }
+        },
+        "scale": {
+            "end": {
+                "x": 0.10000000149011612,
+                "y": 0.10000000149011612,
+                "z": 1.0
+            },
+            "start": {
+                "x": 0.05000000074505806,
+                "y": 0.05000000074505806,
+                "z": 1.0
+            }
+        },
+        "scaleRandom": {
+            "end": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "start": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            }
+        },
+        "velocityRandom": {
+            "end": {
+                "x": 2.4200000762939453,
+                "y": 2.5799999237060547,
+                "z": 2.009999990463257
+            },
+            "start": {
+                "x": 4.71999979019165,
+                "y": 4.400000095367432,
+                "z": -2.6600000858306885
+            }
+        }
     },
-    "gravity" : {
-        "x" : 0.000000,
-        "y" : 0.000000,
-        "z" : 0.000000
-    },
-    "scaleDelayTime" : 0.000000,
-    "particleLifeTime" : 2.500000,
-    "emitNum" : 7,
-    "enableRandomEmit" : false,
-    "beginPosition" : {
-        "x" : 0.000000,
-        "y" : 0.000000,
-        "z" : 0.000000
-    },
-    "endPosition" : {
-        "x" : 0.000000,
-        "y" : 0.000000,
-        "z" : 0.000000
-    },
-    "emitPositionFixed" : {
-        "x" : 1.000000,
-        "y" : 0.000000,
-        "z" : 0.000000
-    },
-    "enableRandomVelocity" : true,
-    "velocityRandomRangeEnd" : {
-        "x" : 0.500000,
-        "y" : 0.500000,
-        "z" : 0.500000
-    },
-    "velocityFixed" : {
-        "x" : 0.000000,
-        "y" : 1.000000,
-        "z" : 0.000000
-    },
-    "beginColor" : {
-        "r" : 0.976471,
-        "b" : 0.749020,
-        "g" : 0.976471,
-        "a" : 1.000000
-    },
-    "endColor" : {
-        "r" : 0.976471,
-        "b" : 0.149020,
-        "g" : 0.474510,
-        "a" : 0.000000
-    },
-    "alphaDeltaValue" : 0.000000
+    "version": 2
 }

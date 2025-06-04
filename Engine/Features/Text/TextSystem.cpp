@@ -47,7 +47,17 @@ void TextSystem::PostDraw()
     d3d11On12DeviceContext_->Flush();
 }
 
-void TextSystem::SetColorBrush(const std::string _key, const D2D1::ColorF& _color)
+void TextSystem::OnResized()
+{
+    d2dFactory_ = pDirectX12_->GetD2D1Factory();
+    dxgiDevice_ = pDirectX12_->GetDXGIDevice();
+    d2dDevice_ = pDirectX12_->GetDirect2dDevice();
+    d2dDeviceContext_ = pDirectX12_->GetDirect2dDeviceContext();
+    d3d11On12Device_ = pDirectX12_->GetD3D11On12Device();
+    d3d11On12DeviceContext_ = pDirectX12_->GetD3D11On12DeviceContext();
+}
+
+void TextSystem::SetColorBrush(const std::string& _key, const D2D1::ColorF& _color)
 {
     if (colorBrushes_.find(_key) != colorBrushes_.end())
     {
@@ -79,8 +89,10 @@ IDWriteTextFormat* TextSystem::GetTextFormat(const std::string& _fontFamily, flo
             textFormat.GetAddressOf()
         );
 
-
-        assert(SUCCEEDED(hr) && "テキストフォーマットの生成に失敗");
+        if (FAILED(hr)) [[unlikely]]
+        {
+            assert(false && "フォントの生成に失敗");
+        }
 
         textFormats_[key] = textFormat;
     }

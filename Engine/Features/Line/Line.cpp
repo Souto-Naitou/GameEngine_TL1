@@ -1,13 +1,9 @@
 #include "Line.h"
-#include "Line.h"
 
 #include <Core/DirectX12/Helper/DX12Helper.h>
 
 Line::~Line()
 {
-    vertexResource_.Reset();
-    wvpMatrixResource_.Reset();
-    colorResource_.Reset();
 }
 
 void Line::Initialize()

@@ -26,7 +26,6 @@ private:
     float opacity_ = 0.0f;
     bool isChangedScene_ = false;
 
-    std::unique_ptr<Timer> timer_;
     double duration_ = 1.0;
 
     uint32_t countPhase_ = 0;

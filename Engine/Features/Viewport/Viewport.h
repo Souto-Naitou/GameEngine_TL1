@@ -5,6 +5,9 @@
 #include <Core/DirectX12/SRVManager.h>
 #include <d3d12.h>
 #include <wrl.h>
+#ifdef _DEBUG
+#include <imgui.h>
+#endif //_DEBUG
 
 class Viewport
 {
@@ -15,7 +18,7 @@ public:
 
     void Initialize();
     void Compute();
-
+    void OnResizedBuffers();
     void DrawWindow();
 
 
@@ -50,6 +53,9 @@ private:
     Vector2 windowPos_ = { 0, 0 };
     Vector2 vpPos_ = { 0, 0 };
     Vector2 vpSize_ = { 0, 0 };
+    #ifdef _DEBUG
+    ImVec2  nextContentRegionSize_ = {};
+    #endif 
 
 
 private: /// 借り物
@@ -59,7 +65,7 @@ private: /// 借り物
     IDxcCompiler3* dxcCompiler_ = nullptr;
     IDxcIncludeHandler* includeHandler_ = nullptr;
     ID3D12GraphicsCommandList* commandList_ = nullptr;
-    ID3D12Resource* inputTexture_ = nullptr;
-    ID3D12Resource* outputTexture_ = nullptr;
+    ResourceStateTracker* inputTexture_ = nullptr;
+    ResourceStateTracker* outputTexture_ = nullptr;
     SRVManager* pSRVManager_ = nullptr;
 };

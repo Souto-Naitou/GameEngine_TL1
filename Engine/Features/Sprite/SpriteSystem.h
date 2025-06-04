@@ -23,27 +23,23 @@ public:
         D3D12_INDEX_BUFFER_VIEW* pIBV;
     };
 
-
-public:
-
-    void Initialize();
+    // Common functions
+    void Initialize() override;
     void PresentDraw();
-
     void DrawCall() override;
     void Sync() override;
 
-    void AddCommandListData(const CommandListData& _data) { commandListDatas_.emplace_back(_data); }
-
-private:
-    Microsoft::WRL::ComPtr<ID3D12RootSignature> rootSignature_ = nullptr;
-    Microsoft::WRL::ComPtr<ID3D12PipelineState> graphicsPipelineState_ = nullptr;
-
-
-    std::list<CommandListData> commandListDatas_;
+    // Setter
+    void AddCommandListData(const CommandListData& _data);
 
 private:
     void CreateRootSignature();
     void CreatePipelineState();
-    static constexpr wchar_t kVertexShaderPath[] = L"EngineResources/Shaders/Sprite.VS.hlsl";
-    static constexpr wchar_t kPixelShaderPath[] = L"EngineResources/Shaders/Sprite.PS.hlsl";
+
+    // DirectX objects and paths
+    static constexpr wchar_t                    kVertexShaderPath[]     = L"EngineResources/Shaders/Sprite.VS.hlsl";
+    static constexpr wchar_t                    kPixelShaderPath[]      = L"EngineResources/Shaders/Sprite.PS.hlsl";
+    Microsoft::WRL::ComPtr<ID3D12RootSignature> rootSignature_          = nullptr;
+    Microsoft::WRL::ComPtr<ID3D12PipelineState> graphicsPipelineState_  = nullptr;
+    std::list<CommandListData>                  commandListDatas_       = {};
 };

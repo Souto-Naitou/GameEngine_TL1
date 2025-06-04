@@ -30,7 +30,7 @@ public:
         return &instance;
     }
 
-    void Initialize();
+    void Initialize() override;
     void PresentDraw();
 
     void DrawCall() override;
@@ -38,12 +38,13 @@ public:
 
 
 public: /// Setter
-    void SetSharedGameEye(GameEye* _pGameEye) { pSharedGameEye_ = _pGameEye; }
+    void SetGlobalEye(GameEye* _pGameEye) { pGlobalEye_ = _pGameEye; }
     void AddCommandListData(CommandListData& _pData) { commandListDatas_.emplace_back(_pData); }
+    void SetRTVHandle(D3D12_CPU_DESCRIPTOR_HANDLE* _rtvHandle) { rtvHandle_ = _rtvHandle; }
 
 
 public: /// Getter
-    GameEye** GetSharedGameEye() { return &pSharedGameEye_; }
+    GameEye** GetGlobalEye() { return &pGlobalEye_; }
 
 
 public: /// 公開定数
@@ -55,7 +56,8 @@ private: /// メンバ変数
     static constexpr wchar_t kPixelShaderPath[] = L"EngineResources/Shaders/Particle.PS.hlsl";
     Microsoft::WRL::ComPtr<ID3D12RootSignature> rootSignature_ = nullptr;
     Microsoft::WRL::ComPtr<ID3D12PipelineState> graphicsPipelineState_ = nullptr;
-    GameEye* pSharedGameEye_ = nullptr;
+    GameEye* pGlobalEye_ = nullptr;
+    D3D12_CPU_DESCRIPTOR_HANDLE* rtvHandle_ = nullptr;
 
     std::list<CommandListData> commandListDatas_;
 
@@ -64,8 +66,4 @@ private: /// 非公開関数
     ParticleSystem() = default;
     void CreateRootSignature();
     void CreatePipelineState();
-
-
-private:
-    DirectX12* pDx12_ = nullptr;
 };

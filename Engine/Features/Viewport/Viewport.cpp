@@ -2,9 +2,8 @@
 
 #include <DebugTools/Logger/Logger.h>
 #include <Core/DirectX12/Helper/DX12Helper.h>
-
+#include <Features/Input/Input.h>
 #include <d3dcompiler.h>
-#include <imgui.h>
 
 #include <cassert>
 
@@ -130,16 +129,16 @@ void Viewport::CreatePSO()
 void Viewport::CreateSRV()
 {
     inputSRVIndex_ = pSRVManager_->Allocate();
-    pSRVManager_->CreateForTexture2D(inputSRVIndex_, inputTexture_, DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, 1);
+    pSRVManager_->CreateForTexture2D(inputSRVIndex_, inputTexture_->resource.Get(), DXGI_FORMAT_R8G8B8A8_UNORM, 1);
 
     outputSRVIndex_ = pSRVManager_->Allocate();
-    pSRVManager_->CreateForTexture2D(outputSRVIndex_, outputTexture_, DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, 1);
+    pSRVManager_->CreateForTexture2D(outputSRVIndex_, outputTexture_->resource.Get(), DXGI_FORMAT_R8G8B8A8_UNORM, 1);
 }
 
 void Viewport::CreateUAV()
 {
     outputUAVIndex_ = pSRVManager_->Allocate();
-    pSRVManager_->CreateForUAV(outputUAVIndex_, outputTexture_, DXGI_FORMAT_R8G8B8A8_UNORM);
+    pSRVManager_->CreateForUAV(outputUAVIndex_, outputTexture_->resource.Get(), DXGI_FORMAT_R8G8B8A8_UNORM);
 }
 
 void Viewport::Compute()
@@ -149,15 +148,13 @@ void Viewport::Compute()
     /// ステートの変更
     DX12Helper::ChangeStateResource(
         commandList_, 
-        outputTexture_, 
-        D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
+        *outputTexture_, 
         D3D12_RESOURCE_STATE_UNORDERED_ACCESS
     );
 
     DX12Helper::ChangeStateResource(
         commandList_,
-        inputTexture_,
-        D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
+        *inputTexture_,
         D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE
     );
 
@@ -183,20 +180,30 @@ void Viewport::Compute()
 
     DX12Helper::ChangeStateResource(
         commandList_,
-        inputTexture_,
-        D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE,
+        *inputTexture_,
         D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE
     );
 
     /// ステートの変更
     DX12Helper::ChangeStateResource(
         commandList_,
-        outputTexture_,
-        D3D12_RESOURCE_STATE_UNORDERED_ACCESS,
+        *outputTexture_,
         D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE
     );
 
     #endif // _DEBUG
+}
+
+void Viewport::OnResizedBuffers()
+{
+    viewport_ = pDx12_->GetViewport();
+
+    pSRVManager_->Deallocate(inputSRVIndex_);
+    pSRVManager_->Deallocate(outputSRVIndex_);
+    pSRVManager_->Deallocate(outputUAVIndex_);
+
+    CreateSRV();
+    CreateUAV();
 }
 
 void Viewport::DrawWindow()
@@ -212,13 +219,22 @@ void Viewport::DrawWindow()
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
     ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0, 0, 0, 0));
 
-    if(ImGui::Begin("Viewport", nullptr, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoBringToFrontOnFocus))
-    {
-        //auto pos = ImGui::GetWindowPos();
-        //windowPos_ = { pos.x, pos.y };
+    auto flags = ImGuiWindowFlags_NoBringToFrontOnFocus;
 
-        //auto wndSize = ImGui::GetWindowSize();
-        //vpSize_ = { wndSize.x, wndSize.y };
+    ImVec2 pad = ImGui::GetStyle().FramePadding;
+    float fontsize = ImGui::GetFontSize();
+    float titleHeight = fontsize + pad.y * 2;
+
+    ImVec2 windowsize = nextContentRegionSize_;
+    windowsize.y += titleHeight;
+
+    if (windowsize.x && windowsize.y) ImGui::SetNextWindowSize(windowsize);
+
+    bool isHover = false;
+    if(ImGui::Begin("Viewport", nullptr, flags))
+    {
+        isHover |= ImGui::IsWindowHovered();
+        isHover |= ImGui::IsAnyItemHovered();
 
         auto cliSize = ImGui::GetContentRegionAvail();
 
@@ -229,10 +245,12 @@ void Viewport::DrawWindow()
         }
 
         ImVec2 imageSizeAdjusted = cliSize;
-        imageSizeAdjusted.x = imageSizeAdjusted.y * aspect;
+        imageSizeAdjusted.x = cliSize.y * aspect;
 
         ImGui::Image((ImTextureID)gpuHnd.ptr, imageSizeAdjusted);
 
+        nextContentRegionSize_ = imageSizeAdjusted;
+        
         auto itempos = ImGui::GetItemRectMin();
         vpPos_ = { itempos.x, itempos.y };
         auto itemsize = ImGui::GetItemRectSize();
@@ -242,6 +260,8 @@ void Viewport::DrawWindow()
 
     ImGui::PopStyleVar();
     ImGui::PopStyleColor();
+
+    Input::GetInstance()->Enable(isHover);
 
     #endif // _DEBUG
 }

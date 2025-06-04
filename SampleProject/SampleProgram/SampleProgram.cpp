@@ -8,24 +8,18 @@ void SampleProgram::Initialize()
     /// 基底クラスの初期化処理
     NimaFramework::Initialize();
 
-
+    #ifdef _DEBUG
+    pImGuiManager_->EnableDocking();
+    //pImGuiManager_->EnableMultiViewport();
+    pImGuiManager_->StyleMaterialFlat();
+    #endif // _DEBUG
+    
     /// シーンファクトリの設定
     pSceneFactory_ = std::make_unique<SceneFactory>();
     pSceneManager_->SetSceneFactory(pSceneFactory_.get());
 
-
-    /// 自動ロードパスの追加
-    pModelManager_->AddAutoLoadPath("resources/models");
-    pModelManager_->AddAutoLoadPath("resources/temp");
-    pTextureManager_->AddSearchPath("resources");
-
-
     /// モデルを全てロード
     pModelManager_->LoadAllModel();
-
-
-    /// シーンの生成
-    pSceneManager_->ReserveScene("GameScene");
 }
 
 void SampleProgram::Finalize()
@@ -48,20 +42,6 @@ void SampleProgram::Draw()
 
     /// バックバッファ書き込み
     NimaFramework::Draw();
-
-
-    /// 描画後処理
-    NimaFramework::PostProcess();
-}
-
-void SampleProgram::DrawHighPerformance()
-{
-    /// 描画前処理
-    NimaFramework::PreProcess();
-
-
-    /// 高パフォーマンス描画
-    NimaFramework::DrawHighPerformance();
 
 
     /// 描画後処理

@@ -12,7 +12,7 @@ public:
     ~NiGuiDrawer() = default;
 
     void Draw() override;
-    void PlayAudio(uint32_t _handle) override {};
+    void PlayAudio([[maybe_unused]]uint32_t _handle) override {};
     void PlayAudio(void* _audioHandler) override;
 
 private:

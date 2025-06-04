@@ -1,11 +1,18 @@
 #include "ModelManager.h"
-#include <Features/Model/Helper/ModelHelper.h>
+
+#include <Core/ConfigManager/ConfigManager.h>
 #include <filesystem>
-#include <Features/Particle/Particle.h>
 #include <algorithm>
+#include <cctype>
 
 void ModelManager::Initialize()
 {
+    // Configに記述されているフォルダの追加
+    auto& cfgData = ConfigManager::GetInstance()->GetConfigData();
+    for (auto& path : cfgData.model_paths)
+    {
+        this->AddAutoLoadPath(path);
+    }
 }
 
 void ModelManager::AddSearchPath(const std::string& _path)
@@ -78,7 +85,7 @@ std::string ModelManager::GetDirectoryPath(std::string _fileName)
     return directoryPath;
 }
 
-void ModelManager::LoadModel(const std::string& _filePath)
+void ModelManager::LoadModel(const std::string& _filePath, const std::string& _texturePath)
 {
     std::filesystem::path fullpath = GetDirectoryPath(_filePath);
     if (fullpath.empty()) fullpath = _filePath;
@@ -97,7 +104,7 @@ void ModelManager::LoadModel(const std::string& _filePath)
 
     std::unique_ptr<Model> model = std::make_unique<Model>();
 
-    model->Initialize(fullpath.string());
+    model->Initialize(fullpath.string(), _texturePath);
     models_.emplace(fullpath, std::move(model));
 }
 
@@ -129,7 +136,10 @@ std::filesystem::path ModelManager::GetLowerPath(const std::string& _path)
     std::filesystem::path result = _path;
     std::string str = _path;
 
-    std::transform(str.begin(), str.end(), str.begin(), ::tolower);
+    std::transform(str.begin(), str.end(), str.begin(),
+        [](unsigned char c) -> char {
+        return static_cast<char>(std::tolower(c));
+    });
 
     result = str;
 
