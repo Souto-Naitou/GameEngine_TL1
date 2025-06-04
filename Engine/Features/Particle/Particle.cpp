@@ -28,7 +28,7 @@ void Particle::Initialize(const std::string& _filepath, const std::string& _text
     pSystem_ = ParticleSystem::GetInstance();
 
     /// デフォルトのGameEyeを取得
-    pGameEye_ = pSystem_->GetSharedGameEye();
+    pGameEye_ = pSystem_->GetGlobalEye();
 
     if (!particleData_.capacity()) reserve(1, true);
 

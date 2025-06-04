@@ -432,9 +432,11 @@
     <ClCompile Include="Core\ConfigManager\ConfigManager.cpp">
       <Filter>Core\ConfigManager</Filter>
     </ClCompile>
-    <ClCompile Include="Core\ConfigManager\ConfigType.cpp" />
     <ClCompile Include="DebugTools\ImGuiManager\ImGuiThemes.cpp">
       <Filter>DebugTools\ImGuiManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\ConfigManager\ConfigType.cpp">
+      <Filter>Core\ConfigManager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -726,9 +728,6 @@
     <FxCompile Include="EngineResources\Shaders\WithoutAlpha.CS.hlsl">
       <Filter>HLSL</Filter>
     </FxCompile>
-    <FxCompile Include="..\SampleProject\EngineResources\Shaders\Particle.VS.hlsl">
-      <Filter>HLSL</Filter>
-    </FxCompile>
     <FxCompile Include="EngineResources\Shaders\Particle.VS.hlsl">
       <Filter>HLSL</Filter>
     </FxCompile>
@@ -742,6 +741,9 @@
       <Filter>HLSL</Filter>
     </FxCompile>
     <FxCompile Include="EngineResources\Shaders\Fullscreen.PS.hlsl">
+      <Filter>HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="..\SampleProject\EngineResources\Shaders\Sprite.VS.hlsl">
       <Filter>HLSL</Filter>
     </FxCompile>
   </ItemGroup>

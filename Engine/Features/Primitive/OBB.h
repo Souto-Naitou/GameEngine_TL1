@@ -63,5 +63,5 @@ private:
 
 private:
     LineSystem* pLineSystem = nullptr;
-    GameEye* pGameEye = nullptr;
+    GameEye** pGameEye = nullptr;
 };
