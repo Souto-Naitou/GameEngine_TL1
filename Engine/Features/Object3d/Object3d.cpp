@@ -139,29 +139,6 @@ void Object3d::Draw()
 {
     if (!isDraw_) return;
 
-    #ifdef _DEBUG
-
-    ID3D12GraphicsCommandList* commandList = pDx12_->GetCommandList();
-
-    // マテリアルCBufferの場所を設定
-    commandList->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());
-    // TransformationMatrixCBufferの場所を設定
-    commandList->SetGraphicsRootConstantBufferView(1, transformationMatrixResource_->GetGPUVirtualAddress());
-    // 平行光源CBufferの場所を設定
-    commandList->SetGraphicsRootConstantBufferView(3, directionalLightResource_->GetGPUVirtualAddress());
-    // TilingCBufferの場所を設定
-    commandList->SetGraphicsRootConstantBufferView(4, tilingResource_->GetGPUVirtualAddress());
-    // CameraForGPUCBufferの場所を設定
-    commandList->SetGraphicsRootConstantBufferView(5, cameraForGPUResource_->GetGPUVirtualAddress());
-    // LightingCBufferの場所を設定
-    commandList->SetGraphicsRootConstantBufferView(6, lightingResource_->GetGPUVirtualAddress());
-    // PointLightCBufferの場所を設定
-    commandList->SetGraphicsRootConstantBufferView(7, pointLightResource_->GetGPUVirtualAddress());
-
-    if (pModel_) pModel_->Draw(commandList);
-
-    #else
-
     Object3dSystem::CommandListData data;
     data.cbuffers[0] = materialResource_.Get();
     data.cbuffers[1] = transformationMatrixResource_.Get();
@@ -173,8 +150,6 @@ void Object3d::Draw()
     data.model = pModel_;
 
     pSystem_->AddCommandListData(data);
-
-    #endif // _DEBUG
 }
 
 void Object3d::Finalize()

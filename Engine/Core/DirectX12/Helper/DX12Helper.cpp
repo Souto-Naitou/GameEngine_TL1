@@ -429,15 +429,6 @@ Microsoft::WRL::ComPtr<ID3D12Resource> DX12Helper::CreateVertexResource(const Mi
 
 void DX12Helper::ChangeStateResource(const Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>& _commandList, const Microsoft::WRL::ComPtr<ID3D12Resource>& _resource, D3D12_RESOURCE_STATES _before, D3D12_RESOURCE_STATES _after)
 {
-    //Logger::GetInstance()->LogForOutput(
-    //    std::format(
-    //        "[DEBUG] Changing resource state: {:p} from {} to {}",
-    //        reinterpret_cast<void*>(_resource.Get()),
-    //        static_cast<int>(_before),
-    //        static_cast<int>(_after)
-    //    )
-    //);
-
     D3D12_RESOURCE_BARRIER barrier{};
     barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
     barrier.Transition.pResource = _resource.Get();
@@ -445,6 +436,18 @@ void DX12Helper::ChangeStateResource(const Microsoft::WRL::ComPtr<ID3D12Graphics
     barrier.Transition.StateAfter = _after;
     barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
     _commandList->ResourceBarrier(1, &barrier);
+}
+
+void DX12Helper::ChangeStateResource(const ComPtr<ID3D12GraphicsCommandList>& _commandList, ResourceStateTracker& _resource, D3D12_RESOURCE_STATES _after)
+{
+    D3D12_RESOURCE_BARRIER barrier{};
+    barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+    barrier.Transition.pResource = _resource.resource.Get();
+    barrier.Transition.StateBefore = _resource.state;
+    barrier.Transition.StateAfter = _after;
+    barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
+    _commandList->ResourceBarrier(1, &barrier);
+    _resource.state = _after;
 }
 
 void DX12Helper::CommandListCommonSetting(ID3D12GraphicsCommandList* _commandList, const D3D12_CPU_DESCRIPTOR_HANDLE* rtvHandle)

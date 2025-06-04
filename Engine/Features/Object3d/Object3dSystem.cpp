@@ -2,6 +2,7 @@
 #include <DebugTools/Logger/Logger.h>
 #include <cassert>
 #include <Core/DirectX12/Helper/DX12Helper.h>
+#include <Core/Win32/WinSystem.h>
 
 Object3dSystem::Object3dSystem()
 {
@@ -98,7 +99,7 @@ void Object3dSystem::DrawCall()
 
 void Object3dSystem::Sync()
 {
-    worker_.get();
+    if (worker_.valid()) worker_.get();
     commandListDatas_.clear();
 }
 
@@ -208,8 +209,8 @@ void Object3dSystem::CreateMainPipelineState()
     IDxcUtils* dxcUtils = pDx12_->GetDxcUtils();
     IDxcCompiler3* dxcCompiler = pDx12_->GetDxcCompiler();
     IDxcIncludeHandler* includeHandler = pDx12_->GetIncludeHandler();
-    uint32_t clientWidth = pDx12_->GetClientWidth();
-    uint32_t clientHeight = pDx12_->GetClientHeight();
+    uint32_t clientWidth = WinSystem::clientWidth;
+    uint32_t clientHeight = WinSystem::clientWidth;
 
     /// InputLayout
     inputElementDescs_[0].SemanticName = "POSITION";
@@ -310,8 +311,8 @@ void Object3dSystem::CreateMainPipelineState()
 void Object3dSystem::CreateDepthPipelineState()
 {
     ID3D12Device* device = pDx12_->GetDevice();
-    uint32_t clientWidth = pDx12_->GetClientWidth();
-    uint32_t clientHeight = pDx12_->GetClientHeight();
+    uint32_t clientWidth = WinSystem::clientWidth;
+    uint32_t clientHeight = WinSystem::clientHeight;
 
 
     /// BlendDesc

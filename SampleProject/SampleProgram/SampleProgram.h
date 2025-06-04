@@ -26,11 +26,6 @@ public:
     void Draw() override;
 
     /// <summary>
-    /// 高パフォーマンス描画 (Alpha)
-    /// </summary>
-    void DrawHighPerformance() override;
-
-    /// <summary>
     /// プログラム終了判定
     /// </summary>
     bool IsExitProgram() { return isExitProgram_; }

@@ -16,6 +16,7 @@
 #endif // _DEBUG
 
 #include <dxcapi.h>
+#include <Core/Win32/WinSystem.h>
 #pragma comment(lib, "dxcompiler.lib")
 
 const uint32_t DirectX12::kMaxSRVCount_ = 512ui32;
@@ -163,13 +164,13 @@ void DirectX12::CreateSwapChainAndResource()
 {
     /// スワップチェーンの設定
     swapChainDesc_ = {};
-    swapChainDesc_.Width                = clientWidth_;                         // 画面の幅。ウィンドウのクライアント領域を同じものにしておく
-    swapChainDesc_.Height               = clientHeight_;                        // 画面の高さ。ウィンドウのクライアント領域を同じものにしておく
-    swapChainDesc_.Format               = DXGI_FORMAT_R8G8B8A8_UNORM;           // 色の形式
-    swapChainDesc_.SampleDesc.Count     = 1;                                    // マルチサンプルしない
-    swapChainDesc_.BufferUsage          = DXGI_USAGE_RENDER_TARGET_OUTPUT;      // 描画のターゲットとして利用する
-    swapChainDesc_.BufferCount          = 2;                                    // ダブルバッファ
-    swapChainDesc_.SwapEffect           = DXGI_SWAP_EFFECT_FLIP_DISCARD;        // モニタにうつしたら、中身を破棄
+    swapChainDesc_.Width = WinSystem::clientWidth;                         // 画面の幅。ウィンドウのクライアント領域を同じものにしておく
+    swapChainDesc_.Height = WinSystem::clientHeight;                        // 画面の高さ。ウィンドウのクライアント領域を同じものにしておく
+    swapChainDesc_.Format = DXGI_FORMAT_R8G8B8A8_UNORM;           // 色の形式
+    swapChainDesc_.SampleDesc.Count = 1;                                    // マルチサンプルしない
+    swapChainDesc_.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;      // 描画のターゲットとして利用する
+    swapChainDesc_.BufferCount = 2;                                    // ダブルバッファ
+    swapChainDesc_.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;        // モニタにうつしたら、中身を破棄
 
 
     /// 生成
@@ -208,7 +209,7 @@ void DirectX12::CreateSwapChainAndResource()
 
 
     /// SwapChainからResourceを引っ張ってくる
-    hr_ = swapChain_->GetBuffer(0, IID_PPV_ARGS(&swapChainResources_[0]));
+    hr_ = swapChain_->GetBuffer(0, IID_PPV_ARGS(&swapChainResources_[0].resource));
     if (FAILED(hr_))
     {
         pLogger_->LogError(
@@ -219,7 +220,7 @@ void DirectX12::CreateSwapChainAndResource()
         assert(false && "Failed to get resource from swap chain [0]");
         return;
     }
-    hr_ = swapChain_->GetBuffer(1, IID_PPV_ARGS(&swapChainResources_[1]));
+    hr_ = swapChain_->GetBuffer(1, IID_PPV_ARGS(&swapChainResources_[1].resource));
     if (FAILED(hr_))
     {
         pLogger_->LogError(
@@ -235,7 +236,7 @@ void DirectX12::CreateSwapChainAndResource()
         "CreateSwapChainAndResource",
         "Resource acquisition from swap chain completed"
     );
-    
+
     swapChain_->SetColorSpace1(DXGI_COLOR_SPACE_RGB_FULL_G22_NONE_P709);
 
 
@@ -252,9 +253,12 @@ void DirectX12::CreateSwapChainAndResource()
     rtvHandles_[0] = rtvHeapCounter_->GetRTVHandle(rtvHeapIndex_[0]);
     rtvHandles_[1] = rtvHeapCounter_->GetRTVHandle(rtvHeapIndex_[1]);
 
-    // 2つ目のRTVを作成
-    device_->CreateRenderTargetView(swapChainResources_[0].Get(), &rtvDesc_, rtvHandles_[0]);
-    device_->CreateRenderTargetView(swapChainResources_[1].Get(), &rtvDesc_, rtvHandles_[1]);
+    // 2つのRTVを作成
+    device_->CreateRenderTargetView(swapChainResources_[0].resource.Get(), &rtvDesc_, rtvHandles_[0]);
+    device_->CreateRenderTargetView(swapChainResources_[1].resource.Get(), &rtvDesc_, rtvHandles_[1]);
+
+    swapChainResources_[0].resource->SetName(L"SwapchainResource0");
+    swapChainResources_[1].resource->SetName(L"SwapchainResource1");
 }
 
 void DirectX12::CreateGameScreenResource()
@@ -280,14 +284,16 @@ void DirectX12::CreateGameScreenResource()
         &resourceDesc,
         D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
         nullptr,
-        IID_PPV_ARGS(&gameScreenResource_)
+        IID_PPV_ARGS(&gameScreenResource_.resource)
     );
+    gameScreenResource_.state = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
+    gameScreenResource_.resource->SetName(L"GameScreenResource");
 
 
     /// SRVの生成
     SRVManager* psrvm = SRVManager::GetInstance();
     gameWndSrvIndex_ = psrvm->Allocate();
-    psrvm->CreateForTexture2D(gameWndSrvIndex_, gameScreenResource_.Get(), DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, 1);
+    psrvm->CreateForTexture2D(gameWndSrvIndex_, gameScreenResource_.resource.Get(), DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, 1);
 
     /// UAVの生成
     D3D12_RESOURCE_DESC textureDesc = {};
@@ -312,14 +318,17 @@ void DirectX12::CreateGameScreenResource()
         &textureDesc,
         D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
         nullptr,
-        IID_PPV_ARGS(&gameScreenComputed_)
+        IID_PPV_ARGS(&gameScreenComputed_.resource)
     );
+    gameScreenComputed_.state = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
+    gameScreenComputed_.resource->SetName(L"GameScreenComputed");
+
 }
 
 void DirectX12::CreateDSVAndSettingState()
 {
     /// リソースの生成
-    depthStencilResource_ = DX12Helper::CreateDepthStencilTextureResource(device_, clientWidth_, clientHeight_);
+    depthStencilResource_ = DX12Helper::CreateDepthStencilTextureResource(device_, WinSystem::clientWidth, WinSystem::clientHeight);
 
 
     /// DSVの生成
@@ -350,7 +359,7 @@ void DirectX12::CreateFenceAndEvent()
         );
         assert(false && "Failed to create fence");
     }
-    else 
+    else
     {
         pLogger_->LogInfo(
             "DirectX12",
@@ -368,8 +377,8 @@ void DirectX12::CreateFenceAndEvent()
 void DirectX12::SetViewportAndScissorRect()
 {
     /// ビューポート
-    viewport_.Width = static_cast<FLOAT>(clientWidth_);
-    viewport_.Height = static_cast<FLOAT>(clientHeight_);
+    viewport_.Width = static_cast<FLOAT>(WinSystem::clientWidth);
+    viewport_.Height = static_cast<FLOAT>(WinSystem::clientHeight);
     viewport_.TopLeftX = 0;
     viewport_.TopLeftY = 0;
     viewport_.MinDepth = 0.0f;
@@ -378,9 +387,9 @@ void DirectX12::SetViewportAndScissorRect()
     /// シザー矩形
     // 基本的にビューポートと同じ矩形が構成されるようにする
     scissorRect_.left = 0;
-    scissorRect_.right = clientWidth_;
+    scissorRect_.right = WinSystem::clientWidth;
     scissorRect_.top = 0;
-    scissorRect_.bottom = clientHeight_;
+    scissorRect_.bottom = WinSystem::clientHeight;
 }
 
 void DirectX12::CreateDirectXShaderCompiler()
@@ -451,11 +460,11 @@ void DirectX12::CreateD2D1Factory()
 
 void DirectX12::CreateD3D11Device()
 {
-#ifdef _DEBUG
+    #ifdef _DEBUG
     UINT d3d11flags = D3D11_CREATE_DEVICE_DEBUG | D3D11_CREATE_DEVICE_BGRA_SUPPORT;
-#else
+    #else
     UINT d3d11flags = D3D11_CREATE_DEVICE_BGRA_SUPPORT;
-#endif // _DEBUG
+    #endif // _DEBUG
 
     hr_ = D3D11On12CreateDevice(device_.Get(), d3d11flags, nullptr, 0, reinterpret_cast<IUnknown**>(commandQueue_.GetAddressOf()), 1, 0, &d3d11Device_, &d3d11On12DeviceContext_, nullptr);
     if (FAILED(hr_))
@@ -554,12 +563,13 @@ void DirectX12::CreateD2DRenderTarget()
     {
         Microsoft::WRL::ComPtr<ID3D11Resource> wrappedBackBuffer = nullptr;
         hr_ = d3d11On12Device_->CreateWrappedResource(
-            swapChainResources_[i].Get(),
+            swapChainResources_[i].resource.Get(),
             &d3d11Flags,
-            D3D12_RESOURCE_STATE_RENDER_TARGET,
+            swapChainResources_[i].state,
             D3D12_RESOURCE_STATE_PRESENT,
             IID_PPV_ARGS(wrappedBackBuffer.ReleaseAndGetAddressOf())
         );
+
         if (FAILED(hr_))
         {
             pLogger_->LogError(
@@ -615,21 +625,79 @@ void DirectX12::CreateD2DRenderTarget()
     );
 }
 
-void DirectX12::SetResourceBarrier(
-    D3D12_RESOURCE_BARRIER_TYPE _type, D3D12_RESOURCE_BARRIER_FLAGS _flag,
-    ID3D12Resource* _resource,
-    D3D12_RESOURCE_STATES _before, D3D12_RESOURCE_STATES _after)
+void DirectX12::ResizeBuffers()
 {
-    /// ResourceBarrierの設定
-    barrier_.Type = _type;                      // Transitionに設定
-    barrier_.Flags = _flag;                     // フラグ
-    barrier_.Transition.pResource = _resource;  // リソース
-    barrier_.Transition.StateBefore = _before;  // 遷移前の状態
-    barrier_.Transition.StateAfter = _after;    // 遷移後の状態
+    WaitForGPU();
 
+    for (auto& [key, func] : map_func_onResize_)
+    {
+        func();
+    }
 
-    /// Barrierを張る
-    commandList_->ResourceBarrier(1, &barrier_);
+    pSRVManager_->Deallocate(gameWndSrvIndex_);
+
+    d3d11Device_.Reset();
+    d3d11On12DeviceContext_.Reset();
+    d3d11On12Device_.Reset();
+    d2dFactory_.Reset();
+    dxgiDevice_.Reset();
+    d2dDevice_.Reset();
+    d2dDeviceContext_.Reset();
+
+    for (UINT i = 0; i < 2; ++i)
+    {
+        d2dRenderTargets_[i].Reset();
+        d3d11WrappedBackBuffers_[i].Reset();
+        swapChainResources_[i].resource.Reset();
+    }
+
+    depthStencilResource_.Reset();
+
+    gameScreenResource_.resource.Reset();
+    gameScreenResource_.state = D3D12_RESOURCE_STATE_PRESENT;
+    gameScreenComputed_.resource.Reset();
+    gameScreenComputed_.state = D3D12_RESOURCE_STATE_PRESENT;
+
+    DXGI_SWAP_CHAIN_DESC1 desc = {};
+    swapChain_->GetDesc1(&desc);
+    hr_ = swapChain_->ResizeBuffers(
+        2,
+        WinSystem::clientWidth,
+        WinSystem::clientHeight,
+        desc.Format,
+        desc.Flags
+    );
+
+    if (FAILED(hr_))
+    {
+        pLogger_->LogError("DirectX12", __func__, "Failed to resizing buffers");
+        assert(false);
+    }
+    else
+    {
+        pLogger_->LogInfo("DirectX12", __func__, "Success resizing buffers");
+    }
+
+    for (UINT i = 0; i < 2; ++i)
+    {
+        swapChain_->GetBuffer(i, IID_PPV_ARGS(&swapChainResources_[i].resource));
+        device_->CreateRenderTargetView(swapChainResources_[i].resource.Get(), nullptr, rtvHandles_[i]);
+        swapChainResources_[i].resource->SetName(ConvertString("SwapchainResource" + std::to_string(i)).c_str());
+        swapChainResources_[i].state = D3D12_RESOURCE_STATE_PRESENT;
+    }
+
+    // ビューポート・シザーも更新
+    viewport_.Width = static_cast<float>(WinSystem::clientWidth);
+    viewport_.Height = static_cast<float>(WinSystem::clientHeight);
+    scissorRect_.right = static_cast<LONG>(WinSystem::clientWidth);
+    scissorRect_.bottom = static_cast<LONG>(WinSystem::clientHeight);
+
+    CreateDSVAndSettingState();
+    CreateD3D11Device();
+    CreateD2D1Factory();
+    CreateID2D1DeviceContext();
+    CreateD2DRenderTarget();
+    CreateGameScreenResource();
 }
 
 void DirectX12::WaitForGPU()

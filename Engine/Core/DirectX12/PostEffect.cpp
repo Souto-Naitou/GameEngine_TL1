@@ -1,6 +1,7 @@
 #include "PostEffect.h"
 
 #include <Core/DirectX12/Helper/DX12Helper.h>
+#include <Core/Win32/WinSystem.h>
 
 void PostEffect::Initialize()
 {
@@ -48,8 +49,7 @@ void PostEffect::Draw()
 
     DX12Helper::ChangeStateResource(
         commandListForDraw_,
-        renderTexture_.Get(),
-        D3D12_RESOURCE_STATE_RENDER_TARGET,
+        renderTexture_,
         D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE
     );
 
@@ -63,8 +63,7 @@ void PostEffect::Draw()
 
     DX12Helper::ChangeStateResource(
         commandListForDraw_,
-        renderTexture_.Get(),
-        D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
+        renderTexture_,
         D3D12_RESOURCE_STATE_RENDER_TARGET
     );
 }
@@ -75,28 +74,46 @@ void PostEffect::PostDraw()
     commandListForDraw_->Reset(commandAllocator_.Get(), nullptr);
 }
 
+void PostEffect::OnResize()
+{
+    pSRVManager_->Deallocate(renderSRVIndex_);
+    renderTexture_.resource.Reset();
+    renderTexture_.state = D3D12_RESOURCE_STATE_PRESENT;
+}
+
+void PostEffect::OnResizedBuffers()
+{
+    CreateRenderTexture();
+    CreateSRV();
+}
+
 void PostEffect::CreateRenderTexture()
 {
-    renderTexture_ = DX12Helper::CreateRenderTextureResource(
+    renderTexture_.resource = DX12Helper::CreateRenderTextureResource(
         pDevice_,
-        pDx12_->GetClientWidth(),
-        pDx12_->GetClientHeight(),
+        WinSystem::clientWidth,
+        WinSystem::clientHeight,
         DXGI_FORMAT_R8G8B8A8_UNORM,
         pDx12_->GetEditorBGColor()
     );
+    renderTexture_.state = D3D12_RESOURCE_STATE_RENDER_TARGET;
 
     D3D12_RENDER_TARGET_VIEW_DESC rtvDesc{};
     rtvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
     rtvDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
 
-    rtvHeapIndex_ = rtvHeapCounter_->Allocate("PostEffectRTV");
-    rtvHandle_ = rtvHeapCounter_->GetRTVHandle(rtvHeapIndex_);
+    if (rtvHandle_.ptr == 0)
+    {
+        rtvHeapIndex_ = rtvHeapCounter_->Allocate("PostEffectRTV");
+        rtvHandle_ = rtvHeapCounter_->GetRTVHandle(rtvHeapIndex_);
+    }
 
     pDevice_->CreateRenderTargetView(
-        renderTexture_.Get(),
+        renderTexture_.resource.Get(),
         &rtvDesc,
         rtvHandle_
     );
+    renderTexture_.resource->SetName(L"RenderTexture");
 }
 
 void PostEffect::CreateSRV()
@@ -105,7 +122,7 @@ void PostEffect::CreateSRV()
 
     pSRVManager_->CreateForTexture2D(
         renderSRVIndex_,
-        renderTexture_.Get(),
+        renderTexture_.resource.Get(),
         DXGI_FORMAT_R8G8B8A8_UNORM,
         1
     );

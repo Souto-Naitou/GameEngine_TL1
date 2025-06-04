@@ -26,6 +26,7 @@ public:
     void Finalize() const;
     void ShowWnd();
     UINT GetMsg();
+    void ToggleFullScreen();
 
     bool IsResized();
 
@@ -42,4 +43,5 @@ private:
     std::wstring    title_      = {};
     static bool isMoving_;
     static bool isResized_;
+    static bool isFullScreen_;
 };

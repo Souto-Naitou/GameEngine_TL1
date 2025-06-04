@@ -4,6 +4,7 @@
 #include "SRVManager.h"
 
 #include <wrl/client.h>
+#include "ResourceStateTracker/ResourceStateTracker.h"
 
 class PostEffect
 {
@@ -14,12 +15,14 @@ public:
     void NewFrame();
     void Draw();
     void PostDraw();
+    void OnResize();
+    void OnResizedBuffers();
 
 
 public:
     ID3D12Resource* GetRenderTexture() const
     {
-        return renderTexture_.Get();
+        return renderTexture_.resource.Get();
     }
 
     D3D12_CPU_DESCRIPTOR_HANDLE* GetRTVHandle()
@@ -36,7 +39,7 @@ public:
 private:
     static constexpr wchar_t kVertexShaderPath[] = L"EngineResources/Shaders/Fullscreen.VS.hlsl";
     static constexpr wchar_t kPixelShaderPath[] = L"EngineResources/Shaders/Fullscreen.PS.hlsl";
-    Microsoft::WRL::ComPtr<ID3D12Resource>              renderTexture_          = nullptr;
+    ResourceStateTracker                                renderTexture_          = {};
     uint32_t                                            renderSRVIndex_         = 0;
     uint32_t                                            rtvHeapIndex_           = 0;
     D3D12_CPU_DESCRIPTOR_HANDLE                         rtvHandle_              = {};

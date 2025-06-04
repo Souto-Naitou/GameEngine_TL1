@@ -235,6 +235,9 @@
     <Filter Include="Core\Localization">
       <UniqueIdentifier>{6c680fa0-6d21-4b03-ade3-32265ba472ae}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Core\DirectX12\ResourceStateTracker">
+      <UniqueIdentifier>{589394c6-80ed-4d6d-8187-894120671dce}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DebugTools\DebugManager\DebugManager.cpp">
@@ -680,6 +683,9 @@
     </ClInclude>
     <ClInclude Include="Core\Localization\LanguageData.h">
       <Filter>Core\Localization</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\DirectX12\ResourceStateTracker\ResourceStateTracker.h">
+      <Filter>Core\DirectX12\ResourceStateTracker</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

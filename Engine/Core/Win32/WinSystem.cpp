@@ -18,6 +18,7 @@ uint32_t WinSystem::preClientHeight = 900;
 
 bool WinSystem::isMoving_ = false;
 bool WinSystem::isResized_ = false;
+bool WinSystem::isFullScreen_ = false;
 
 void WinSystem::Initialize()
 {
@@ -71,6 +72,23 @@ UINT WinSystem::GetMsg()
         DispatchMessage(&msg_);    // デキュー的な？
     }
     return msg_.message;
+}
+
+void WinSystem::ToggleFullScreen()
+{
+    isFullScreen_ = !isFullScreen_;
+    if(isFullScreen_)
+    {
+        // フルスクリーンモードにする
+        SetWindowLong(hwnd_, GWL_STYLE, WS_POPUP);
+        SetWindowPos(hwnd_, HWND_TOP, 0, 0, GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN), SWP_NOOWNERZORDER | SWP_FRAMECHANGED);
+    }
+    else
+    {
+        // ウィンドウモードに戻す
+        SetWindowLong(hwnd_, GWL_STYLE, WS_OVERLAPPEDWINDOW);
+        SetWindowPos(hwnd_, HWND_TOP, 100, 100, clientWidth, clientHeight, SWP_NOOWNERZORDER | SWP_FRAMECHANGED);
+    }
 }
 
 bool WinSystem::IsResized()

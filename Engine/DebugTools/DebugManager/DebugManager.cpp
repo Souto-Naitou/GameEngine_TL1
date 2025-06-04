@@ -17,7 +17,6 @@ DebugManager* DebugManager::GetInstance()
 void DebugManager::PushLog(const std::string& _log)
 {
     textLog_ += _log;
-    OutputDebugStringA(_log.c_str());
 }
 
 DebugManager::DebugManager()

@@ -2,6 +2,7 @@
 
 #include <DebugTools/Logger/Logger.h>
 #include <Core/DirectX12/Helper/DX12Helper.h>
+#include <Core/Win32/WinSystem.h>
 
 void LineSystem::Initialize()
 {
@@ -176,8 +177,8 @@ void LineSystem::SetBlendDesc()
 
 void LineSystem::SetDSVDesc()
 {
-    uint32_t clientWidth = pDx12_->GetClientWidth();
-    uint32_t clientHeight = pDx12_->GetClientHeight();
+    uint32_t clientWidth = WinSystem::clientWidth;
+    uint32_t clientHeight = WinSystem::clientHeight;
 
     // DespStencilResource
     depthStencilResource_ = DX12Helper::CreateDepthStencilTextureResource(device_, clientWidth, clientHeight);

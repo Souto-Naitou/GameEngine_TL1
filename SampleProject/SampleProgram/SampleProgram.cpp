@@ -47,17 +47,3 @@ void SampleProgram::Draw()
     /// 描画後処理
     NimaFramework::PostProcess();
 }
-
-void SampleProgram::DrawHighPerformance()
-{
-    /// 描画前処理
-    NimaFramework::PreProcess();
-
-
-    /// 高パフォーマンス描画
-    NimaFramework::DrawHighPerformance();
-
-
-    /// 描画後処理
-    NimaFramework::PostProcess();
-}

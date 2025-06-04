@@ -79,7 +79,7 @@ void Model::LoadModelTexture()
 
     if (!std::filesystem::exists(modelData_.materialData.textureFilePath))
     {
-        DebugManager::GetInstance()->PushLog("[Warning] The model's texture could not be loaded so white1x1.png is loaded instead.\n\t path: " + modelData_.materialData.textureFilePath + "\n");
+        DebugManager::GetInstance()->PushLog("[Warning] The model's texture could not be loaded so white1x1.png is loaded instead : " + modelData_.materialData.textureFilePath + "\n");
         Logger::GetInstance()->LogWarning(
             "Model",
             "LoadModelTexture",

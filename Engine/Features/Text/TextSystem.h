@@ -26,6 +26,7 @@ public:
     void Initialize();
     void PresentDraw();
     void PostDraw();
+    void OnResized();
 
 public:
     void SetColorBrush(const std::string& _key, const D2D1::ColorF& _color);

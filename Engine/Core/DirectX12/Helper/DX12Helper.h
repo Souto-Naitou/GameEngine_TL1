@@ -9,6 +9,7 @@
 #include <DirectXTex/DirectXTex.h>
 #include <vector>
 #include <Vector4.h>
+#include "../ResourceStateTracker/ResourceStateTracker.h"
 
 namespace DX12Helper
 {
@@ -120,6 +121,12 @@ namespace DX12Helper
         const ComPtr<ID3D12GraphicsCommandList>& _commandList, 
         const ComPtr<ID3D12Resource>& _resource, 
         D3D12_RESOURCE_STATES _before, 
+        D3D12_RESOURCE_STATES _after
+    );
+
+    void ChangeStateResource(
+        const ComPtr<ID3D12GraphicsCommandList>& _commandList, 
+        ResourceStateTracker& _resource,
         D3D12_RESOURCE_STATES _after
     );
 
