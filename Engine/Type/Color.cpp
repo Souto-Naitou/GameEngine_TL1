@@ -1,8 +1,9 @@
 #include "Color.h"
 #include <array>
 #include <sstream>
+#include <algorithm>
 
-RGBA RGB::toRGBA(uint8_t _a) const
+RGBA RGB::to_RGBA(uint8_t _a) const
 {
     return RGBA{ r_, g_, b_, _a };
 }
@@ -116,4 +117,41 @@ RGBA color::_RGBAToRGBA(const std::string& _rgbastr)
     result.a() = rgba[3];
 
     return result;
+}
+
+RGB HSV::to_RGB() const
+{
+    float r, g, b;
+    float h = h_ / 360.0f;
+    float s = s_ / 100.0f;
+    float v = v_ / 100.0f;
+
+    if (s == 0.0f)
+    {
+        r = g = b = v; // achromatic
+    }
+    else
+    {
+        int i = static_cast<int>(h * 6);
+        float f = h * 6 - i;
+        float p = v * (1 - s);
+        float q = v * (1 - f * s);
+        float t = v * (1 - (1 - f) * s);
+        i %= 6;
+        switch (i)
+        {
+            case 0: r = v; g = t; b = p; break;
+            case 1: r = q; g = v; b = p; break;
+            case 2: r = p; g = v; b = t; break;
+            case 3: r = p; g = q; b = v; break;
+            case 4: r = t; g = p; b = v; break;
+            case 5: r = v; g = p; b = q; break;
+        }
+    }
+
+    r = std::clamp(r, 0.0f, 1.0f);
+    g = std::clamp(g, 0.0f, 1.0f);
+    b = std::clamp(b, 0.0f, 1.0f);
+
+    return RGB{ static_cast<uint8_t>(r * 255), static_cast<uint8_t>(g * 255), static_cast<uint8_t>(b * 255) };
 }

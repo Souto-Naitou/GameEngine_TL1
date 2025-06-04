@@ -229,6 +229,15 @@
     <Filter Include="Core\ConfigManager">
       <UniqueIdentifier>{fafd37d8-141a-4074-80f2-64b9aa3be79f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Feature\Particle\Type">
+      <UniqueIdentifier>{5eaa0b5f-e515-4ae0-944e-7374dbf4ac5d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Localization">
+      <UniqueIdentifier>{6c680fa0-6d21-4b03-ade3-32265ba472ae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\DirectX12\ResourceStateTracker">
+      <UniqueIdentifier>{589394c6-80ed-4d6d-8187-894120671dce}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DebugTools\DebugManager\DebugManager.cpp">
@@ -424,6 +433,9 @@
       <Filter>Core\ConfigManager</Filter>
     </ClCompile>
     <ClCompile Include="Core\ConfigManager\ConfigType.cpp" />
+    <ClCompile Include="DebugTools\ImGuiManager\ImGuiThemes.cpp">
+      <Filter>DebugTools\ImGuiManager</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common\define.h">
@@ -665,6 +677,15 @@
     </ClInclude>
     <ClInclude Include="Core\ConfigManager\ConfigType.h">
       <Filter>Core\ConfigManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Features\Particle\Type\ParticleType.h">
+      <Filter>Feature\Particle\Type</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Localization\LanguageData.h">
+      <Filter>Core\Localization</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\DirectX12\ResourceStateTracker\ResourceStateTracker.h">
+      <Filter>Core\DirectX12\ResourceStateTracker</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

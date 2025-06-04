@@ -1,10 +1,13 @@
 #include "Input.h"
-#include "Input.h"
 
 #include <cassert>
 
 #pragma comment(lib, "dinput8.lib")
 #pragma comment(lib, "dxguid.lib")
+
+#ifdef _DEBUG
+#include <imgui.h>
+#endif 
 
 void Input::Initialize(HINSTANCE _hInstance, HWND _hwnd)
 {
@@ -32,7 +35,7 @@ void Input::Initialize(HINSTANCE _hInstance, HWND _hwnd)
     assert(SUCCEEDED(hr));
 
     // 入力データ形式のセット
-    hr = mouse_->SetDataFormat(&c_dfDIMouse);
+    hr = mouse_->SetDataFormat(&c_dfDIMouse2);
     assert(SUCCEEDED(hr));
 
     // 排他制御レベルのセット
@@ -57,29 +60,15 @@ void Input::Update()
     mouse_->Acquire();
 
     // マウスの入力情報を取得
-    mouse_->GetDeviceState(sizeof(DIMOUSESTATE), &mouseState_);
+    mouse_->GetDeviceState(sizeof(DIMOUSESTATE2), &mouseState_);
 
-    // 左クリックの入力情報を取得
-    leftClickPre_ = leftClick_;
-    if (mouseState_.rgbButtons[0] & 0x80)
-    {
-        leftClick_ = true;
-    }
-    else
-    {
-        leftClick_ = false;
-    }
+    // デシリアライズ
+    this->MapInputData();
+}
 
-    // 右クリックの入力情報を取得
-    rightClickPre_ = rightClick_;
-    if (mouseState_.rgbButtons[1] & 0x80)
-    {
-        rightClick_ = true;
-    }
-    else
-    {
-        rightClick_ = false;
-    }
+void Input::Enable(bool _flag)
+{
+    isEnable_ = _flag;
 }
 
 bool Input::PushKey(BYTE _keyNumber) const
@@ -166,8 +155,49 @@ bool Input::TriggerMouse(MouseNum _mouseNum) const
     return false;
 }
 
+int32_t Input::GetWheelDelta() const
+{
+    return wheelDelta_;
+}
+
 BYTE Input::GetKeyNumber(char _key) const
 {
     // キーの文字からキー番号を取得
     return static_cast<BYTE>(MapVirtualKey(_key, MAPVK_VK_TO_VSC));
+}
+
+void Input::MapInputData()
+{
+    leftClickPre_ = leftClick_;
+    rightClickPre_ = rightClick_;
+
+    if (!isEnable_ && !leftClick_ && !rightClick_)
+    {
+        leftClick_ = false;
+        rightClick_ = false;
+        wheelDelta_ = 0;
+        return;
+    }
+
+    // 左クリックの入力情報を取得
+    if (mouseState_.rgbButtons[0] & 0x80)
+    {
+        leftClick_ = true;
+    }
+    else
+    {
+        leftClick_ = false;
+    }
+
+    // 右クリックの入力情報を取得
+    if (mouseState_.rgbButtons[1] & 0x80)
+    {
+        rightClick_ = true;
+    }
+    else
+    {
+        rightClick_ = false;
+    }
+
+    wheelDelta_ = mouseState_.lZ;
 }

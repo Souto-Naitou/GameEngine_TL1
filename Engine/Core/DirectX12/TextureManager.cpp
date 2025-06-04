@@ -36,11 +36,19 @@ void TextureManager::LoadTexture(const std::string& _filePath)
     HRESULT hr = DirectX::LoadFromWICFile(filePathW.c_str(), DirectX::WIC_FLAGS_FORCE_SRGB, nullptr, image);
     assert(SUCCEEDED(hr));
 
-
     DirectX::TexMetadata metadata = image.GetMetadata();
-    if (metadata.width > 32 && metadata.height > 32 && false)
+
+    if (DirectX::IsCompressed(metadata.format)) {
+        DirectX::ScratchImage decompressed;
+        DirectX::Decompress(image.GetImages(), image.GetImageCount(), metadata, DXGI_FORMAT_R8G8B8A8_UNORM, decompressed);
+        image = std::move(decompressed);
+    }
+
+    if (metadata.width > 32 && metadata.height > 32)
     {
-        hr = DirectX::GenerateMipMaps(image.GetImages(), image.GetImageCount(), image.GetMetadata(), DirectX::TEX_FILTER_SRGB, 0, image);
+        DirectX::ScratchImage mipChain = {};
+        hr = DirectX::GenerateMipMaps(image.GetImages(), image.GetImageCount(), image.GetMetadata(), DirectX::TEX_FILTER_SRGB, 0, mipChain);
+        image = std::move(mipChain);
         metadata = image.GetMetadata();
         assert(SUCCEEDED(hr));
     }

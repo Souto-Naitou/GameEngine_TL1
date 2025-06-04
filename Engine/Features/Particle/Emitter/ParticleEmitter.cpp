@@ -48,9 +48,9 @@ void ParticleEmitter::Initialize(const std::string& _modelPath, const std::strin
     }
 
 
-    if (!emitterData_.name_.empty())
+    if (!emitterData_.name.empty())
     {
-        particleName_ = emitterData_.name_;
+        particleName_ = emitterData_.name;
         name_ = particleName_ + "##" + ptrHex_;
     }
 
@@ -70,13 +70,13 @@ void ParticleEmitter::DisableManualMode()
 
 void ParticleEmitter::Update()
 {
-    if (timer_.GetNow<float>() > emitterData_.emitInterval_)
+    if (timer_.GetNow<float>() > emitterData_.common.emitInterval)
     {
-        if (emitterData_.emitNum_ < 0)
+        if (emitterData_.common.emitNum < 0)
         {
-            emitterData_.emitNum_ = 0;
+            emitterData_.common.emitNum = 0;
         }
-        for (int32_t i = 0; i < emitterData_.emitNum_; ++i)
+        for (int32_t i = 0; i < emitterData_.common.emitNum; ++i)
         {
             if (!isManualMode_)
             {
@@ -89,17 +89,17 @@ void ParticleEmitter::Update()
     }
 
     emitterData_ = fromJsonData_;
-    emitterData_.emitPositionFixed_ = fromJsonData_.emitPositionFixed_ + position_;
-    emitterData_.positionRange_.start() = fromJsonData_.positionRange_.start() + position_;
-    emitterData_.positionRange_.end() = fromJsonData_.positionRange_.end() + position_;
+    emitterData_.common.emitPositionFixed = fromJsonData_.common.emitPositionFixed + position_;
+    emitterData_.ranges.position.start() = fromJsonData_.ranges.position.start() + position_;
+    emitterData_.ranges.position.end() = fromJsonData_.ranges.position.end() + position_;
 
-    aabb_->SetMinMax(emitterData_.positionRange_.start(), emitterData_.positionRange_.end());
+    aabb_->SetMinMax(emitterData_.ranges.position.start(), emitterData_.ranges.position.end());
 }
 
 void ParticleEmitter::Draw()
 {
 #ifdef _DEBUG
-    if (emitterData_.enableRandomEmit_)
+    if (emitterData_.flags.enableRandomEmit)
     {
         aabb_->Draw();
     }
@@ -115,68 +115,68 @@ void ParticleEmitter::EmitParticle()
     auto& datum = parameter.back();
 
     /// 初期トランスフォーム
-    if (emitterData_.enableRandomEmit_)
+    if (emitterData_.flags.enableRandomEmit)
     {
         datum.transform_.translate = Vector3(
-            random->Generate(emitterData_.positionRange_.start().x, emitterData_.positionRange_.end().x),
-            random->Generate(emitterData_.positionRange_.start().y, emitterData_.positionRange_.end().y),
-            random->Generate(emitterData_.positionRange_.start().z, emitterData_.positionRange_.end().z));
+            random->Generate(emitterData_.ranges.position.start().x, emitterData_.ranges.position.end().x),
+            random->Generate(emitterData_.ranges.position.start().y, emitterData_.ranges.position.end().y),
+            random->Generate(emitterData_.ranges.position.start().z, emitterData_.ranges.position.end().z));
     }
     else
     {
-        datum.transform_.translate = emitterData_.emitPositionFixed_;
+        datum.transform_.translate = emitterData_.common.emitPositionFixed;
     }
 
     /// スケール
-    if (emitterData_.enableRandomScale_)
+    if (emitterData_.flags.enableRandomScale)
     {
         datum.transform_.scale = Vector3(
-            random->Generate(emitterData_.scaleRandomRange_.start().x, emitterData_.scaleRandomRange_.end().x),
-            random->Generate(emitterData_.scaleRandomRange_.start().y, emitterData_.scaleRandomRange_.end().y),
-            random->Generate(emitterData_.scaleRandomRange_.start().z, emitterData_.scaleRandomRange_.end().z)
+            random->Generate(emitterData_.ranges.scaleRandom.start().x, emitterData_.ranges.scaleRandom.end().x),
+            random->Generate(emitterData_.ranges.scaleRandom.start().y, emitterData_.ranges.scaleRandom.end().y),
+            random->Generate(emitterData_.ranges.scaleRandom.start().z, emitterData_.ranges.scaleRandom.end().z)
         );
         datum.scaleRange_.start() = datum.transform_.scale;
-        if (!emitterData_.enableScaleTransition_)
+        if (!emitterData_.flags.enableScaleTransition)
         {
             datum.scaleRange_.end() = datum.transform_.scale;
         }
     }
-    else if (emitterData_.enableScaleTransition_)
+    else if (emitterData_.flags.enableScaleTransition)
     {
-        datum.transform_.scale = emitterData_.scaleRange_.start();
-        datum.scaleRange_ = emitterData_.scaleRange_;
+        datum.transform_.scale = emitterData_.ranges.scale.start();
+        datum.scaleRange_ = emitterData_.ranges.scale;
     }
     else
     {
-        datum.transform_.scale = emitterData_.scaleFixed_;
-        datum.scaleRange_ = Range(emitterData_.scaleFixed_, emitterData_.scaleFixed_);
+        datum.transform_.scale = emitterData_.common.scaleFixed;
+        datum.scaleRange_ = Range(emitterData_.common.scaleFixed, emitterData_.common.scaleFixed);
     }
-    datum.scaleDelayTime_ = emitterData_.scaleDelayTime_;
+    datum.scaleDelayTime_ = emitterData_.common.scaleDelayTime;
 
     /// ライフタイム
-    datum.lifeTime_ = emitterData_.particleLifeTime_;
+    datum.lifeTime_ = emitterData_.common.particleLifeTime;
 
     /// 速度
-    if (emitterData_.enableRandomVelocity_)
+    if (emitterData_.flags.enableRandomVelocity)
     {
         datum.velocity_ = Vector3(
-            random->Generate(emitterData_.velocityRandomRange_.start().x, emitterData_.velocityRandomRange_.end().x),
-            random->Generate(emitterData_.velocityRandomRange_.start().y, emitterData_.velocityRandomRange_.end().y),
-            random->Generate(emitterData_.velocityRandomRange_.start().z, emitterData_.velocityRandomRange_.end().z)
+            random->Generate(emitterData_.ranges.velocityRandom.start().x, emitterData_.ranges.velocityRandom.end().x),
+            random->Generate(emitterData_.ranges.velocityRandom.start().y, emitterData_.ranges.velocityRandom.end().y),
+            random->Generate(emitterData_.ranges.velocityRandom.start().z, emitterData_.ranges.velocityRandom.end().z)
         );
     }
     else
     {
-        datum.velocity_ = emitterData_.velocityFixed_;
+        datum.velocity_ = emitterData_.common.velocityFixed;
     }
 
     // 回転
-    if (emitterData_.enableRandomRotation_)
+    if (emitterData_.flags.enableRandomRotation)
     {
         datum.transform_.rotate = Vector3(
-            random->Generate(emitterData_.rotationRandomRange_.start().x, emitterData_.rotationRandomRange_.end().x),
-            random->Generate(emitterData_.rotationRandomRange_.start().y, emitterData_.rotationRandomRange_.end().y),
-            random->Generate(emitterData_.rotationRandomRange_.start().z, emitterData_.rotationRandomRange_.end().z)
+            random->Generate(emitterData_.ranges.rotationRandom.start().x, emitterData_.ranges.rotationRandom.end().x),
+            random->Generate(emitterData_.ranges.rotationRandom.start().y, emitterData_.ranges.rotationRandom.end().y),
+            random->Generate(emitterData_.ranges.rotationRandom.start().z, emitterData_.ranges.rotationRandom.end().z)
         );
     }
     else
@@ -185,16 +185,16 @@ void ParticleEmitter::EmitParticle()
     }
 
     // 色範囲
-    datum.colorRange_ = emitterData_.colorRange_;
+    datum.colorRange_ = emitterData_.ranges.color;
 
     // アルファ値の変化量
-    datum.alphaDeltaValue_ = emitterData_.alphaDeltaValue_;
+    datum.alphaDeltaValue_ = emitterData_.common.alphaDeltaValue;
     // 消去条件
     datum.deleteCondition_ = ParticleDeleteCondition::LifeTime;
-    datum.accGravity_ = emitterData_.gravity_;
-    datum.accResistance_ = emitterData_.resistance_;
+    datum.accGravity_ = emitterData_.physics.gravity;
+    datum.accResistance_ = emitterData_.physics.resistance;
 
-    aabb_->SetMinMax(emitterData_.positionRange_.start(), emitterData_.positionRange_.end());
+    aabb_->SetMinMax(emitterData_.ranges.position.start(), emitterData_.ranges.position.end());
 }
 
 void ParticleEmitter::DebugWindow()
@@ -204,7 +204,7 @@ void ParticleEmitter::DebugWindow()
     char path[512] = "";
     char name[128] = "";
     memcpy_s(path, sizeof(name), jsonPath_.c_str(), jsonPath_.size());
-    memcpy_s(name, sizeof(name), fromJsonData_.name_.c_str(), fromJsonData_.name_.size());
+    memcpy_s(name, sizeof(name), fromJsonData_.name.c_str(), fromJsonData_.name.size());
 
     ImGui::Text("Name : %s", particleName_.c_str());
     if (ImGui::CollapsingHeader("一般"))
@@ -213,7 +213,7 @@ void ParticleEmitter::DebugWindow()
         {
             particleName_ = name;
             name_ = particleName_ + "##" + ptrHex_;
-            fromJsonData_.name_ = name;
+            fromJsonData_.name = name;
         }
         if (ImGui::Button("マニュアル発生"))
         {
@@ -235,10 +235,10 @@ void ParticleEmitter::DebugWindow()
             {
                 fromJsonData_ = EmitterManager::GetInstance()->ReloadFile(path);
                 /// 名前が空でないなら
-                if (!fromJsonData_.name_.empty())
+                if (!fromJsonData_.name.empty())
                 {
-                    name_ = fromJsonData_.name_;
-                    name_ = fromJsonData_.name_ + "##" + ptrHex_;
+                    name_ = fromJsonData_.name;
+                    name_ = fromJsonData_.name + "##" + ptrHex_;
                 }
                 jsonFileExist_ = true;
             }
@@ -265,34 +265,34 @@ void ParticleEmitter::DebugWindow()
             ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), "ファイルが存在しないか、拡張子がjsonではありません。");
         }
 
-        ImGui::DragFloat("パーティクル寿命", &fromJsonData_.particleLifeTime_, 0.1f, 0.0f, FLT_MAX);
+        ImGui::DragFloat("パーティクル寿命", &fromJsonData_.common.particleLifeTime, 0.1f, 0.0f, FLT_MAX);
 
-        ImGui::DragFloat("発生間隔", &fromJsonData_.emitInterval_, 0.02f, 0.02f, FLT_MAX);
+        ImGui::DragFloat("発生間隔", &fromJsonData_.common.emitInterval, 0.02f, 0.02f, FLT_MAX);
 
-        ImGui::InputInt("発生数", (int*)&fromJsonData_.emitNum_);
+        ImGui::InputInt("発生数", (int*)&fromJsonData_.common.emitNum);
 
         ImGui::Spacing();
     }
 
     if (ImGui::CollapsingHeader("色の変化"))
     {
-        ImGui::ColorEdit4("開始色", &fromJsonData_.colorRange_.start().x);
+        ImGui::ColorEdit4("開始色", &fromJsonData_.ranges.color.start().x);
         ImGui::SameLine();
         if (ImGui::Button("入れ替え##Color"))
         {
-            Vector4 temp = fromJsonData_.colorRange_.start();
-            fromJsonData_.colorRange_.start() = fromJsonData_.colorRange_.end();
-            fromJsonData_.colorRange_.end() = temp;
+            Vector4 temp = fromJsonData_.ranges.color.start();
+            fromJsonData_.ranges.color.start() = fromJsonData_.ranges.color.end();
+            fromJsonData_.ranges.color.end() = temp;
         }
 
-        ImGui::ColorEdit4("終了色", &fromJsonData_.colorRange_.end().x);
+        ImGui::ColorEdit4("終了色", &fromJsonData_.ranges.color.end().x);
         ImGui::SameLine();
         if (ImGui::Button("同期##Color"))
         {
-            fromJsonData_.colorRange_.end() = fromJsonData_.colorRange_.start();
+            fromJsonData_.ranges.color.end() = fromJsonData_.ranges.color.start();
         }
 
-        ImGui::SliderFloat("透明度の変化量", &fromJsonData_.alphaDeltaValue_, -0.2f, 0.0f);
+        ImGui::SliderFloat("透明度の変化量", &fromJsonData_.common.alphaDeltaValue, -0.2f, 0.0f);
 
 
         ImGui::Spacing();
@@ -300,47 +300,47 @@ void ParticleEmitter::DebugWindow()
     
     if (ImGui::CollapsingHeader("変形"))
     {
-        if (!fromJsonData_.enableRandomScale_ && !fromJsonData_.enableScaleTransition_)
+        if (!fromJsonData_.flags.enableRandomScale && !fromJsonData_.flags.enableScaleTransition)
         {
-            ImGui::DragFloat3("スケール", &fromJsonData_.scaleFixed_.x, 0.01f);
+            ImGui::DragFloat3("スケール", &fromJsonData_.common.scaleFixed.x, 0.01f);
         }
 
-        ImGui::Checkbox("スケールのランダマイズ", &fromJsonData_.enableRandomScale_);
-        if (fromJsonData_.enableRandomScale_)
+        ImGui::Checkbox("スケールのランダマイズ", &fromJsonData_.flags.enableRandomScale);
+        if (fromJsonData_.flags.enableRandomScale)
         {
-            ImGui::DragFloat3("スケールランダム範囲-開始", &fromJsonData_.scaleRandomRange_.start().x, 0.01f);
-            ImGui::DragFloat3("スケールランダム範囲-終了", &fromJsonData_.scaleRandomRange_.end().x, 0.01f);
+            ImGui::DragFloat3("スケールランダム範囲-開始", &fromJsonData_.ranges.scaleRandom.start().x, 0.01f);
+            ImGui::DragFloat3("スケールランダム範囲-終了", &fromJsonData_.ranges.scaleRandom.end().x, 0.01f);
         }
 
-        ImGui::Checkbox("スケール遷移", &fromJsonData_.enableScaleTransition_);
-        if (fromJsonData_.enableScaleTransition_)
+        ImGui::Checkbox("スケール遷移", &fromJsonData_.flags.enableScaleTransition);
+        if (fromJsonData_.flags.enableScaleTransition)
         {
-            if (fromJsonData_.enableRandomScale_) ImGui::BeginDisabled();
-            ImGui::DragFloat3("開始スケール", &fromJsonData_.scaleRange_.start().x, 0.01f);
-            if (fromJsonData_.enableRandomScale_) ImGui::EndDisabled();
+            if (fromJsonData_.flags.enableRandomScale) ImGui::BeginDisabled();
+            ImGui::DragFloat3("開始スケール", &fromJsonData_.ranges.scale.start().x, 0.01f);
+            if (fromJsonData_.flags.enableRandomScale) ImGui::EndDisabled();
 
             ImGui::SameLine();
             if (ImGui::Button("入れ替え##Scale"))
             {
-                Vector3 temp = fromJsonData_.scaleRange_.start();
-                fromJsonData_.scaleRange_.start() = fromJsonData_.scaleRange_.end();
-                fromJsonData_.scaleRange_.end() = temp;
+                Vector3 temp = fromJsonData_.ranges.scale.start();
+                fromJsonData_.ranges.scale.start() = fromJsonData_.ranges.scale.end();
+                fromJsonData_.ranges.scale.end() = temp;
             }
 
-            ImGui::DragFloat3("終了スケール", &fromJsonData_.scaleRange_.end().x, 0.01f);
+            ImGui::DragFloat3("終了スケール", &fromJsonData_.ranges.scale.end().x, 0.01f);
             ImGui::SameLine();
             if (ImGui::Button("同期##Scale"))
             {
-                fromJsonData_.scaleRange_.end() = fromJsonData_.scaleRange_.start();
+                fromJsonData_.ranges.scale.end() = fromJsonData_.ranges.scale.start();
             }
-            ImGui::DragFloat("スケール遅延時間", &fromJsonData_.scaleDelayTime_, 0.01f);
+            ImGui::DragFloat("スケール遅延時間", &fromJsonData_.common.scaleDelayTime, 0.01f);
         }
 
-        ImGui::Checkbox("姿勢のランダマイズ", &fromJsonData_.enableRandomRotation_);
-        if (fromJsonData_.enableRandomRotation_)
+        ImGui::Checkbox("姿勢のランダマイズ", &fromJsonData_.flags.enableRandomRotation);
+        if (fromJsonData_.flags.enableRandomRotation)
         {
-            ImGui::DragFloat3("姿勢ランダム範囲-開始", &fromJsonData_.rotationRandomRange_.start().x, 0.01f);
-            ImGui::DragFloat3("姿勢ランダム範囲-終了", &fromJsonData_.rotationRandomRange_.end().x, 0.01f);
+            ImGui::DragFloat3("姿勢ランダム範囲-開始", &fromJsonData_.ranges.rotationRandom.start().x, 0.01f);
+            ImGui::DragFloat3("姿勢ランダム範囲-終了", &fromJsonData_.ranges.rotationRandom.end().x, 0.01f);
         }
 
         ImGui::Spacing();
@@ -348,15 +348,15 @@ void ParticleEmitter::DebugWindow()
 
     if (ImGui::CollapsingHeader("生成場所"))
     {
-        ImGui::Checkbox("ランダム範囲生成", &fromJsonData_.enableRandomEmit_);
-        if (fromJsonData_.enableRandomEmit_)
+        ImGui::Checkbox("ランダム範囲生成", &fromJsonData_.flags.enableRandomEmit);
+        if (fromJsonData_.flags.enableRandomEmit)
         {
-            ImGui::DragFloat3("発生開始地点", &fromJsonData_.positionRange_.start().x, 0.01f);
-            ImGui::DragFloat3("発生終了地点", &fromJsonData_.positionRange_.end().x, 0.01f);
+            ImGui::DragFloat3("発生開始地点", &fromJsonData_.ranges.position.start().x, 0.01f);
+            ImGui::DragFloat3("発生終了地点", &fromJsonData_.ranges.position.end().x, 0.01f);
         }
         else
         {
-            ImGui::DragFloat3("発生位置", &fromJsonData_.emitPositionFixed_.x, 0.01f);
+            ImGui::DragFloat3("発生位置", &fromJsonData_.common.emitPositionFixed.x, 0.01f);
         }
 
         ImGui::Spacing();
@@ -364,15 +364,15 @@ void ParticleEmitter::DebugWindow()
 
     if (ImGui::CollapsingHeader("速度"))
     {
-        ImGui::Checkbox("速度のランダマイズ", &fromJsonData_.enableRandomVelocity_);
-        if (fromJsonData_.enableRandomVelocity_)
+        ImGui::Checkbox("速度のランダマイズ", &fromJsonData_.flags.enableRandomVelocity);
+        if (fromJsonData_.flags.enableRandomVelocity)
         {
-            ImGui::DragFloat3("速度ランダム範囲-開始", &fromJsonData_.velocityRandomRange_.start().x, 0.01f);
-            ImGui::DragFloat3("速度ランダム範囲-終了", &fromJsonData_.velocityRandomRange_.end().x, 0.01f);
+            ImGui::DragFloat3("速度ランダム範囲-開始", &fromJsonData_.ranges.velocityRandom.start().x, 0.01f);
+            ImGui::DragFloat3("速度ランダム範囲-終了", &fromJsonData_.ranges.velocityRandom.end().x, 0.01f);
         }
         else
         {
-            ImGui::DragFloat3("速度", &fromJsonData_.velocityFixed_.x, 0.01f);
+            ImGui::DragFloat3("速度", &fromJsonData_.common.velocityFixed.x, 0.01f);
         }
 
         ImGui::Spacing();
@@ -380,8 +380,8 @@ void ParticleEmitter::DebugWindow()
 
     if (ImGui::CollapsingHeader("物理"))
     {
-        ImGui::DragFloat3("重力", &fromJsonData_.gravity_.x, 0.01f);
-        ImGui::DragFloat3("抵抗", &fromJsonData_.resistance_.x, 0.01f);
+        ImGui::DragFloat3("重力", &fromJsonData_.physics.gravity.x, 0.01f);
+        ImGui::DragFloat3("抵抗", &fromJsonData_.physics.resistance.x, 0.01f);
 
     }
 
@@ -410,7 +410,7 @@ void ParticleEmitter::Emit()
     if (isManualMode_)
     {
         this->Update();
-        for (int32_t i = 0; i < emitterData_.emitNum_; ++i)
+        for (int32_t i = 0; i < emitterData_.common.emitNum; ++i)
         {
             EmitParticle();
         }

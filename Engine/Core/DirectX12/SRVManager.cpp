@@ -9,7 +9,7 @@
 void SRVManager::Initialize(DirectX12* _pDx12)
 {
 #ifdef _DEBUG
-    DebugManager::GetInstance()->SetComponent("#Window", name_, std::bind(&SRVManager::DebugWindow, this));
+    DebugManager::GetInstance()->SetComponent("Core", name_, std::bind(&SRVManager::DebugWindow, this), true);
 #endif // _DEBUG
 
     name_ = "SRVManager";
@@ -119,14 +119,12 @@ void SRVManager::DebugWindow()
 {
 #ifdef _DEBUG
 
-
     auto pFunc = [&]()
     {
         ImGuiTemplate::VariableTableRow("SRV許容数", kMaxSRVCount_);
         ImGuiTemplate::VariableTableRow("現在のSRV数", currentSize_);
     };
     ImGuiTemplate::VariableTable("SRVManager", pFunc);
-
 
 #endif // _DEBUG
 }

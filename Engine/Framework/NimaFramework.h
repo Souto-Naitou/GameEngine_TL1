@@ -43,7 +43,6 @@ public:
     virtual void                    Finalize();
     virtual void                    Update();
     virtual void                    Draw();
-    virtual void                    DrawHighPerformance();
     virtual bool                    IsExitProgram() const { return isExitProgram_; }
 
     void                            PreProcess();

@@ -48,8 +48,8 @@ private: /// メンバ変数
     float               farClip_        = 0.0f;
     Vector3             shakePositon_   = {};
 
-private:
-    void DebugWindow();
+protected:
+    virtual void DebugWindow();
 
 
 private:

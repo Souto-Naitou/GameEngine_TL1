@@ -2,7 +2,6 @@
 #include <clocale>
 
 #include <NiGui/NiGui.h>
-#include <crtdbg.h>
 
 void NimaFramework::Run()
 {
@@ -23,11 +22,7 @@ void NimaFramework::Run()
         }
 
         /// 描画
-        #ifdef _DEBUG
         Draw();
-        #else
-        DrawHighPerformance();
-        #endif // _DEBUG
     }
 
     Finalize();
@@ -158,13 +153,17 @@ void NimaFramework::Initialize()
     pDirectX_->AddCommandList(pParticleSystem_->GetCommandList());
     pDirectX_->AddCommandList(pSpriteSystem_->GetCommandList());
     pDirectX_->AddCommandList(pPostEffect_->GetCommandList());
+
+    pDirectX_->AddOnResize("PostEffect", std::bind(&PostEffect::OnResize, pPostEffect_.get()));
 }
 
 void NimaFramework::Finalize()
 {
+    pDirectX_->DeleteOnResize("PostEffect");
     pAudioManager_->Finalize();
     pWinSystem_->Finalize();
     pLogger_->Save();
+    pParticleManager_->Finalize();
     pSceneManager_->Finalize();
 
     #ifdef _DEBUG
@@ -181,12 +180,16 @@ void NimaFramework::Update()
         return;
     }
 
-    #ifdef _DEBUG
     if(pWinSystem_->IsResized())
     {
+        pDirectX_->OnResized();
+        pPostEffect_->OnResizedBuffers();
+        pViewport_->OnResizedBuffers();
+        #ifdef _DEBUG
         pImGuiManager_->Resize();
+        #endif // _DEBUG
+        pTextSystem_->OnResized();
     }
-    #endif // _DEBUG
 
     #ifdef _DEBUG
 
@@ -244,65 +247,6 @@ void NimaFramework::Draw()
     pEventTimer_->BeginEvent("Draw");
 
     /// 3D描画
-    pObject3dSystem_->DepthDrawSetting();
-    pSceneManager_->SceneDraw3d();
-    pObject3dSystem_->MainDrawSetting();
-    pSceneManager_->SceneDraw3d();
-
-    /// 中景3dオブジェクトの描画
-    pObject3dSystem_->MainDrawSetting();
-    pSceneManager_->SceneDraw3dMidground();
-
-    /// ライン描画
-    pLineSystem_->PresentDraw();
-    pSceneManager_->SceneDrawLine();
-
-    /// パーティクル描画
-    pParticleSystem_->PresentDraw();
-    pParticleManager_->Draw();
-
-    /// 前景スプライトの描画
-    pSpriteSystem_->PresentDraw();
-    pSceneManager_->SceneDraw2dForeground();
-
-    /// UIの描画
-    pSpriteSystem_->PresentDraw();
-    NiGui::DrawUI();
-
-    /// レンダーターゲットの初期化
-    pDirectX_->NewFrame();
-
-    pPostEffect_->Draw();
-
-    /// レンダーターゲットからビューポート用リソースにコピー
-    pDirectX_->CopyFromRTV(pDirectX_->GetCommandListsLast());
-    /// コンピュートシェーダーの実行
-    pViewport_->Compute();
-
-    /// イベント計測終了と出力
-    pEventTimer_->EndEvent("Draw");
-    pEventTimer_->EndFrame();
-    pEventTimer_->ImGui();
-
-
-    /// ImGuiの描画
-    #ifdef _DEBUG
-    pImGuiManager_->Render();
-    pImGuiManager_->EndFrame();
-    #endif // _DEBUG
-
-    /// コマンドの実行
-    pDirectX_->CommandExecute();
-
-    /// テキストの描画
-    pTextSystem_->PresentDraw();
-    pSceneManager_->SceneDrawText();
-    pTextSystem_->PostDraw();
-}
-
-void NimaFramework::DrawHighPerformance()
-{
-    /// 3D描画
     pSceneManager_->SceneDraw3d();
     pObject3dSystem_->DrawCall();
 
@@ -322,16 +266,31 @@ void NimaFramework::DrawHighPerformance()
     /// レンダーターゲットの初期化
     pDirectX_->NewFrame();
 
-    /// 同期
+    // 同期待ち
     pObject3dSystem_->Sync();
     pParticleSystem_->Sync();
     pSpriteSystem_->Sync();
 
     pPostEffect_->Draw();
 
+    /// レンダーターゲットからビューポート用リソースにコピー
+    pDirectX_->CopyFromRTV(pDirectX_->GetCommandListsLast());
+    /// コンピュートシェーダーの実行
+    pViewport_->Compute();
+
+    /// イベント計測終了と出力
+    pEventTimer_->EndEvent("Draw");
+    pEventTimer_->EndFrame();
+    pEventTimer_->ImGui();
+
+    /// ImGuiの描画
+    #ifdef _DEBUG
+    pImGuiManager_->Render();
+    pImGuiManager_->EndFrame();
+    #endif // _DEBUG
+
     /// コマンドの実行
     pDirectX_->CommandExecute();
-
 
     /// テキストの描画
     pTextSystem_->PresentDraw();
@@ -344,13 +303,9 @@ void NimaFramework::PreProcess()
     pPostEffect_->NewFrame();
     pSRVManager_->SetDescriptorHeaps();
 
-    #ifndef _DEBUG
-
     pObject3dSystem_->SetRTVHandle(pPostEffect_->GetRTVHandle());
     pSpriteSystem_->SetRTVHandle(pPostEffect_->GetRTVHandle());
     pParticleSystem_->SetRTVHandle(pPostEffect_->GetRTVHandle());
-
-    #endif // _DEBUG
 }
 
 void NimaFramework::PostProcess()

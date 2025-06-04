@@ -23,6 +23,7 @@ private:
 private:
     void CatchMoveCommands();
     void CatchRotateCommands();
+    void DebugWindow() override;
 
 
 private:

@@ -1,10 +1,11 @@
 #pragma once
 
-#include "Framerate.h"
+#include "./Framerate.h"
 #include <Vector4.h>
 #include <DebugTools/ReakChecker.h>
 #include <DebugTools/Logger/Logger.h>
-#include "RTVHeapCounter.h"
+#include "./RTVHeapCounter.h"
+#include "./ResourceStateTracker/ResourceStateTracker.h"
 
 
 #include <wrl.h>
@@ -21,6 +22,9 @@
 
 #include <vector>
 #include <array>
+#include <functional>
+#include <string>
+#include <unordered_map>
 
 class SRVManager;
 
@@ -40,11 +44,12 @@ public:
 
     void Initialize();
 
+    void OnResized();
+
     void NewFrame();
     void CommandExecute();
     void DisplayFrame();
     void WaitForGPU();
-    void ChangeStateRTV(ID3D12GraphicsCommandList* _commandList, D3D12_RESOURCE_STATES _now, D3D12_RESOURCE_STATES _next);
     void CopyFromRTV(ID3D12GraphicsCommandList* _commandList);
 
     /// <summary>
@@ -58,13 +63,10 @@ public:
 public: /// Getter
     ID3D12Device*                                           GetDevice() const                           { return device_.Get(); }
     ID3D12GraphicsCommandList*                              GetCommandList() const                      { return commandList_.Get(); }
-    ID3D12GraphicsCommandList*                              GetCommandListsLast() const                 { return commandLists_.back(); }
+    ID3D12GraphicsCommandList*                              GetCommandListsLast() const                 { if (commandLists_.size()) return commandLists_.back(); else return commandList_.Get(); }
     IDxcUtils*                                              GetDxcUtils() const                         { return dxcUtils_.Get(); }
     IDxcCompiler3*                                          GetDxcCompiler() const                      { return dxcCompiler_.Get(); }
     IDxcIncludeHandler*                                     GetIncludeHandler() const                   { return includeHandler_.Get(); }
-
-    uint32_t                                                GetClientWidth() const                      { return clientWidth_; }
-    uint32_t                                                GetClientHeight() const                     { return clientHeight_; }
 
     uint32_t                                                GetDescriptorSizeSRV() const                { return kDescriptorSizeSRV; }
 
@@ -90,8 +92,8 @@ public: /// Getter
     ID2D1Bitmap1*                                           GetD2D1RenderTarget(uint32_t _index)        { return d2dRenderTargets_[_index].Get(); }
     ID3D11On12Device*                                       GetD3D11On12Device()                        { return d3d11On12Device_.Get(); }
     ID3D11DeviceContext*                                    GetD3D11On12DeviceContext()                 { return d3d11On12DeviceContext_.Get(); }
-    ID3D12Resource*                                         GetGameScreenResource()                     { return gameScreenResource_.Get(); }
-    ID3D12Resource*                                         GetGameScreenComputed()                     { return gameScreenComputed_.Get(); }
+    ResourceStateTracker*                                   GetGameScreenResource()                     { return &gameScreenResource_; }
+    ResourceStateTracker*                                   GetGameScreenComputed()                     { return &gameScreenComputed_; }
     D3D12_RECT                                              GetScissorRect() const                      { return scissorRect_; }
     const Vector4&                                          GetEditorBGColor() const                    { return editorBG_; }
 
@@ -99,6 +101,8 @@ public:
     void SetGameWindowRect(D3D12_VIEWPORT _viewport);
     void SetGameWndSRVIndex(uint32_t _index) { gameWndSrvIndexComputed_ = _index; }
     void AddCommandList(ID3D12GraphicsCommandList* _commandList) { commandLists_.emplace_back(_commandList); }
+    void AddOnResize(const std::string& _key, std::function<void()> _func) { map_func_onResize_[_key] = _func; }
+    void DeleteOnResize(const std::string& _key) { map_func_onResize_.erase(_key); }
 
 private:
     DirectX12() = default;
@@ -118,18 +122,20 @@ private:
     Microsoft::WRL::ComPtr<ID3D12CommandAllocator>          commandAllocator_               = nullptr;      // コマンドアロケータ
     Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>       commandList_                    = nullptr;      // コマンドアロケータ
     Microsoft::WRL::ComPtr<IDXGISwapChain4>                 swapChain_                      = nullptr;      // スワップチェーン
-    Microsoft::WRL::ComPtr<ID3D12Resource>                  swapChainResources_[2]          = {};           // スワップチェーンリソース
-    //Microsoft::WRL::ComPtr<ID3D12Resource>                  gameScreenResource_             = nullptr;      // ゲーム画面リソース
+    ResourceStateTracker                                    swapChainResources_[2]          = {};           // スワップチェーンリソース
     Microsoft::WRL::ComPtr<ID3D12Fence>                     fence_                          = nullptr;      // フェンス
     std::unique_ptr<RTVHeapCounter>                         rtvHeapCounter_                 = nullptr;      // RTVヒープカウンタ
     Microsoft::WRL::ComPtr<ID3D12DescriptorHeap>            dsvDescriptorHeap_              = nullptr;
     Microsoft::WRL::ComPtr<ID3D12DescriptorHeap>            descriptorHeaps_                = nullptr;
     Microsoft::WRL::ComPtr<ID3D12Resource>                  depthStencilResource_           = nullptr;      // 深度ステンシルリソース
-    Microsoft::WRL::ComPtr<ID3D12Resource>                  gameScreenResource_             = nullptr;      // ゲーム画面(ImGuiを含まない)リソース
-    Microsoft::WRL::ComPtr<ID3D12Resource>                  gameScreenComputed_             = nullptr;      // ゲーム画面(コンピュートシェーダー後)リソース
+    ResourceStateTracker                                    gameScreenResource_             = {};           // ゲーム画面(ImGuiを含まない)リソース
+    ResourceStateTracker                                    gameScreenComputed_             = {};           // ゲーム画面(コンピュートシェーダー後)リソース
     Microsoft::WRL::ComPtr<IDxcUtils>                       dxcUtils_                       = nullptr;
     Microsoft::WRL::ComPtr<IDxcCompiler3>                   dxcCompiler_                    = nullptr;
     Microsoft::WRL::ComPtr<IDxcIncludeHandler>              includeHandler_                 = nullptr;
+    Microsoft::WRL::ComPtr<ID3D12Device>                    device_                         = nullptr;      // デバイス
+
+    // directwrite用
     Microsoft::WRL::ComPtr<ID3D11Device>                    d3d11Device_                    = nullptr;      // D3D11デバイス
     Microsoft::WRL::ComPtr<ID3D11DeviceContext>             d3d11On12DeviceContext_         = nullptr;      // D3D11デバイスコンテキスト
     Microsoft::WRL::ComPtr<ID3D11On12Device>                d3d11On12Device_                = nullptr;      // D3D11On12デバイス
@@ -137,10 +143,9 @@ private:
     Microsoft::WRL::ComPtr<IDXGIDevice>                     dxgiDevice_                     = nullptr;      // DXGIデバイス
     Microsoft::WRL::ComPtr<ID2D1Device2>                    d2dDevice_                      = nullptr;      // d2d1デバイス
     Microsoft::WRL::ComPtr<ID2D1DeviceContext2>             d2dDeviceContext_               = nullptr;      // d2d1デバイスコンテキスト
-    Microsoft::WRL::ComPtr<ID3D12Device>                    device_                         = nullptr;      // デバイス
-
     std::array<Microsoft::WRL::ComPtr<ID3D11Resource>, 2>   d3d11WrappedBackBuffers_        = {};           // D3D11のラップされたバックバッファ
     std::array<Microsoft::WRL::ComPtr<ID2D1Bitmap1>, 2>     d2dRenderTargets_               = {};           // D2D1のレンダーターゲット
+
     std::list<ID3D12GraphicsCommandList*>                   commandLists_                   = {};           // コマンドリストのリスト
 
     D3D12_RESOURCE_BARRIER                                  barrier_                        = {};
@@ -153,8 +158,6 @@ private:
     D3D12_RECT                                              scissorRect_                    = {};           // シザーレクト
     D3D12_CPU_DESCRIPTOR_HANDLE                             rtvHandles_[2]                  = {};           // RTVハンドル
     uint32_t                                                rtvHeapIndex_[2]                = {};           // RTVヒープインデックス
-    uint32_t                                                clientWidth_                    = 0;
-    uint32_t                                                clientHeight_                   = 0;
     uint32_t                                                gameWndSrvIndex_                = 0;
     uint32_t                                                gameWndSrvIndexComputed_        = 0;
     float                                                   clearColor_[4]                  = { 0.2f, 0.2f, 0.4f, 1.0f };
@@ -164,7 +167,10 @@ private:
     uint32_t                                                kDescriptorSizeRTV              = 0u;
     uint32_t                                                kDescriptorSizeDSV              = 0u;
     int32_t                                                 numUploadedTexture              = 0;
-    int32_t                                                 padding = 0;
+    int32_t                                                 padding                         = 0;
+    bool                                                    isResized_                      = false;
+    std::unordered_map<std::string, std::function<void()>>  map_func_onResize_              = {};
+
 
 private:
 
@@ -234,21 +240,7 @@ private:
     void CreateD2DRenderTarget();
 
 
-    /// <summary>
-    /// リソースバリアの設定
-    /// </summary>
-    /// <param name="_type">バリアの種類</param>
-    /// <param name="_flag">フラグ</param>
-    /// <param name="_resource">リソース</param>
-    /// <param name="_before">変更前のステート</param>
-    /// <param name="_after">変更後のステート</param>
-    void SetResourceBarrier(
-        D3D12_RESOURCE_BARRIER_TYPE _type,
-        D3D12_RESOURCE_BARRIER_FLAGS _flag,
-        ID3D12Resource* _resource,
-        D3D12_RESOURCE_STATES _before,
-        D3D12_RESOURCE_STATES _after
-    );
+    void ResizeBuffers();
 
 private: /// 他クラスのインスタンス(シングルトンなど)
     FrameRate* pFramerate_ = nullptr;

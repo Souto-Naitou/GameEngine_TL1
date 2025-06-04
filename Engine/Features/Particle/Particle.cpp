@@ -119,17 +119,6 @@ void Particle::Draw()
     /// モデルのテクスチャがアップロードされていない場合は描画しない
     if (!pModel_->IsUploaded()) return;
 
-    #ifdef _DEBUG
-
-    auto commandList = pDx12_->GetCommandList();
-    /// 描画設定と実行
-    commandList->IASetVertexBuffers(0, 1, &vertexBufferView_);
-    commandList->SetGraphicsRootDescriptorTable(0, srvGpuHandle_);
-    commandList->SetGraphicsRootDescriptorTable(1, textureSRVHandleGPU_);
-    commandList->DrawInstanced(static_cast<UINT>(pModelData_->vertices.size()), static_cast<UINT>(particleData_.size()), 0, 0);
-
-    #else
-
     ParticleSystem::CommandListData data = {};
     data.pVBV = &vertexBufferView_;
     data.srvHandle = srvGpuHandle_;
@@ -138,8 +127,6 @@ void Particle::Draw()
     data.instanceCount = static_cast<UINT>(particleData_.size());
 
     pSystem_->AddCommandListData(data);
-
-    #endif // _DEBUG
 }
 
 void Particle::reserve(size_t _size, bool _isInit)
@@ -232,6 +219,7 @@ void Particle::ParticleDataUpdate(std::vector<ParticleData>::iterator& _itr)
     const float         scaleDelayTime = _itr->scaleDelayTime_;
     float&              currentLifeTime = _itr->currentLifeTime_;
     float&              alphaDeltaValue = _itr->alphaDeltaValue_;
+    bool&               enableDirectionByVelocity = _itr->enableDirectionByVelocity;
 
     /// タイマーの更新
     if (!timer.GetIsStart())
@@ -251,6 +239,10 @@ void Particle::ParticleDataUpdate(std::vector<ParticleData>::iterator& _itr)
     velocity += acceleration * deltaTime;
     velocity += gravity * deltaTime;
     velocity -= resistance * deltaTime;
+    if (enableDirectionByVelocity)
+    {
+        transform.rotate = velocity.Normalize();
+    }
     transform.translate += velocity * deltaTime;
 
     /// 色の更新

@@ -10,6 +10,7 @@
 #ifdef _DEBUG
 #include <imgui.h>
 #endif // _DEBUG
+#include <Core/Win32/WinSystem.h>
 
 Sprite::Sprite()
 {
@@ -79,8 +80,8 @@ void Sprite::Initialize(std::string _filepath)
 void Sprite::Update()
 {
     if (!isUpdate_) return;
-    uint32_t clientWidth = pDx12_->GetClientWidth();
-    uint32_t clientHeight = pDx12_->GetClientHeight();
+    uint32_t clientWidth = WinSystem::clientWidth;
+    uint32_t clientHeight = WinSystem::clientHeight;
     const DirectX::TexMetadata& metadata = TextureManager::GetInstance()->GetMetaData(texturePath_);
 
 
@@ -151,31 +152,6 @@ void Sprite::Draw()
 {
     if (!isDraw_) return;
 
-
-    #ifdef _DEBUG
-
-
-    ID3D12GraphicsCommandList* commandList = pDx12_->GetCommandList();
-
-    // VBVの設定
-    commandList->IASetVertexBuffers(0, 1, &vertexBufferView_);
-    // IBVの設定
-    commandList->IASetIndexBuffer(&indexBufferView_);
-
-    // マテリアルリソースの設定
-    commandList->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());
-    // TransformationMatrixCBufferの場所を設定
-    commandList->SetGraphicsRootConstantBufferView(1, transformationMatrixResource_->GetGPUVirtualAddress());
-    // SRVの設定
-    commandList->SetGraphicsRootDescriptorTable(2, TextureManager::GetInstance()->GetSrvHandleGPU(texturePath_));
-
-    // 描画！（DrawCall/ドローコール）
-    commandList->DrawIndexedInstanced(6, 1, 0, 0, 0);
-
-
-    #else
-
-
     SpriteSystem::CommandListData data;
     data.materialResource = materialResource_.Get();
     data.transformationMatrixResource = transformationMatrixResource_.Get();
@@ -184,9 +160,6 @@ void Sprite::Draw()
     data.pIBV = &indexBufferView_;
 
     SpriteSystem::GetInstance()->AddCommandListData(data);
-
-
-    #endif // _DEBUG
 }
 
 void Sprite::Finalize()
