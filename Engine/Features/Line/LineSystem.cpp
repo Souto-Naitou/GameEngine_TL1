@@ -2,6 +2,7 @@
 
 #include <DebugTools/Logger/Logger.h>
 #include <Core/DirectX12/Helper/DX12Helper.h>
+#include <Core/Win32/WinSystem.h>
 
 void LineSystem::Initialize()
 {
@@ -117,7 +118,7 @@ void LineSystem::CreatePipelineState()
     pipelineStateDesc.RasterizerState = rasterizerDesc; // RasterizerState
     // 書き込むRTVの情報
     pipelineStateDesc.NumRenderTargets = 1;
-    pipelineStateDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+    pipelineStateDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;
     // 利用するトポロジ（形状）のタイプ。ライン
     pipelineStateDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_LINE;
     // どのように画面に色を打ち込むかの設定
@@ -129,7 +130,17 @@ void LineSystem::CreatePipelineState()
     // 実際に生成
     HRESULT hr = device_->CreateGraphicsPipelineState(&pipelineStateDesc,
         IID_PPV_ARGS(&pipelineState_));
-    assert(SUCCEEDED(hr));
+
+    if (FAILED(hr))
+    {
+        Logger::GetInstance()->LogError(
+            "LineSystem",
+            __func__,
+            "Failed to create pipeline state"
+        );
+        assert(false);
+    }
+
     return;
 
 }
@@ -166,8 +177,8 @@ void LineSystem::SetBlendDesc()
 
 void LineSystem::SetDSVDesc()
 {
-    uint32_t clientWidth = pDx12_->GetClientWidth();
-    uint32_t clientHeight = pDx12_->GetClientHeight();
+    uint32_t clientWidth = WinSystem::clientWidth;
+    uint32_t clientHeight = WinSystem::clientHeight;
 
     // DespStencilResource
     depthStencilResource_ = DX12Helper::CreateDepthStencilTextureResource(device_, clientWidth, clientHeight);

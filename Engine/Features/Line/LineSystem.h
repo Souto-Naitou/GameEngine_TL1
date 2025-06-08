@@ -31,11 +31,11 @@ private:
 
 public: /// Getter
     DirectX12* GetDx12() { return pDx12_; }
-    GameEye* GetDefaultGameEye() { return pDefaultGameEye_; }
+    GameEye** GetSharedGameEye() { return &pDefaultGameEye_; }
 
 
 public: /// Setter
-    void SetDefaultGameEye(GameEye* _pGameEye) { pDefaultGameEye_ = _pGameEye; }
+    void SetGlobalEye(GameEye* _pGameEye) { pDefaultGameEye_ = _pGameEye; }
 
 
 private: /// メンバ変数

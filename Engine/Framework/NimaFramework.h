@@ -1,5 +1,6 @@
 #pragma once
 
+#include <Core/ConfigManager/ConfigManager.h>
 #include <DebugTools/Logger/Logger.h>
 #include <Features/Audio/AudioManager.h>
 #include <Features/Input/Input.h>
@@ -22,8 +23,10 @@
 #include <Features/Viewport/Viewport.h>
 #include <Features/NiGui/NiGuiDrawer.h>
 #include <Features/NiGui/NiGuiDebug.h>
+#include <DebugTools/EventTimer/EventTimer.h>
 
 #include <memory> /// std::unique_ptr
+#include <Core/DirectX12/PostEffect.h>
 
 
 /// ゲーム共通のフレームワーククラス
@@ -40,7 +43,6 @@ public:
     virtual void                    Finalize();
     virtual void                    Update();
     virtual void                    Draw();
-    virtual void                    DrawHighPerformance();
     virtual bool                    IsExitProgram() const { return isExitProgram_; }
 
     void                            PreProcess();
@@ -49,13 +51,18 @@ public:
 
 protected: /// システムクラスのインスタンス
     std::unique_ptr<ISceneFactory>  pSceneFactory_              = nullptr;
-    std::unique_ptr<ImGuiManager>   pImGuiManager_              = nullptr;
     std::unique_ptr<Viewport>       pViewport_                  = nullptr;
     std::unique_ptr<NiGuiDrawer>    pDrawer_                    = nullptr;
-    std::unique_ptr<NiGuiDebug>     pNiGuiDebug_                 = nullptr;
+    std::unique_ptr<NiGuiDebug>     pNiGuiDebug_                = nullptr;
+    std::unique_ptr<PostEffect>     pPostEffect_                = nullptr;
+
+    #ifdef _DEBUG
+    std::unique_ptr<ImGuiManager>   pImGuiManager_              = nullptr;
+    #endif // _DEBUG
 
 
 protected: /// 他クラスのインスタンス
+    ConfigManager*                  pConfigManager_             = nullptr;
     Logger*                         pLogger_                    = nullptr;
     DirectX12*                      pDirectX_                   = nullptr;
     DebugManager*                   pDebugManager_              = nullptr;
@@ -73,6 +80,7 @@ protected: /// 他クラスのインスタンス
     Input*                          pInput_                     = nullptr;
     RandomGenerator*                pRandomGenerator_           = nullptr;
     AudioManager*                   pAudioManager_              = nullptr;
+    EventTimer*                     pEventTimer_                = nullptr;
 
 
 protected:

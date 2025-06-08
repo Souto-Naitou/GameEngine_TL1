@@ -121,9 +121,6 @@
     <Filter Include="Core\WinSystem">
       <UniqueIdentifier>{5c7e8f14-1bd4-48f2-80b9-2ad2124c12e5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="DebugTools\PrimitiveDrawer">
-      <UniqueIdentifier>{676fa4eb-91d9-4e1f-af5e-23aa2575b1f6}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Feature\Lighting">
       <UniqueIdentifier>{2128e531-19f2-4691-bd96-69fd85443bf2}</UniqueIdentifier>
     </Filter>
@@ -204,6 +201,42 @@
     </Filter>
     <Filter Include="Feature\NiGuiDerived">
       <UniqueIdentifier>{f7836a96-3646-43b5-8d8a-6a7bb09b437c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\DirectX12\PostEffect">
+      <UniqueIdentifier>{90230bf2-8149-42f4-9564-53f4343366d8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\DirectX12\RTVHeapCounter">
+      <UniqueIdentifier>{6c5ed3f0-48af-44cd-bbf9-d608ba01a0c9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DebugTools\EventTimer">
+      <UniqueIdentifier>{df5f5a1a-502e-4329-9008-38543f810d61}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utility\JSONConvTypeFuncs">
+      <UniqueIdentifier>{0429575c-34a2-4428-96e4-79495d83d875}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utility\JSONIO">
+      <UniqueIdentifier>{158aa26d-4868-4d7d-a32e-aea18848c56f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Type">
+      <UniqueIdentifier>{716e7ea7-33a6-41be-84dc-73a74d4d0079}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utility\String">
+      <UniqueIdentifier>{92bf5668-a1ed-46fd-bc3e-cb0c886e6d58}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utility\JSON">
+      <UniqueIdentifier>{e3866255-e1bd-474c-adaa-9fa7dec28d9c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\ConfigManager">
+      <UniqueIdentifier>{fafd37d8-141a-4074-80f2-64b9aa3be79f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Feature\Particle\Type">
+      <UniqueIdentifier>{5eaa0b5f-e515-4ae0-944e-7374dbf4ac5d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Localization">
+      <UniqueIdentifier>{6c680fa0-6d21-4b03-ade3-32265ba472ae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\DirectX12\ResourceStateTracker">
+      <UniqueIdentifier>{589394c6-80ed-4d6d-8187-894120671dce}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -372,8 +405,39 @@
     <ClCompile Include="BaseClasses\ObjectSystemBase.cpp">
       <Filter>BaseClass</Filter>
     </ClCompile>
-    <ClCompile Include="Features\NiGui\NiGuiDrawer.cpp" />
-    <ClCompile Include="Features\NiGui\NiGuiDebug.cpp" />
+    <ClCompile Include="Features\NiGui\NiGuiDebug.cpp">
+      <Filter>Feature\NiGuiDerived</Filter>
+    </ClCompile>
+    <ClCompile Include="Features\NiGui\NiGuiDrawer.cpp">
+      <Filter>Feature\NiGuiDerived</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\DirectX12\PostEffect.cpp">
+      <Filter>Core\DirectX12\PostEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\DirectX12\RTVHeapCounter.cpp">
+      <Filter>Core\DirectX12\RTVHeapCounter</Filter>
+    </ClCompile>
+    <ClCompile Include="DebugTools\EventTimer\EventTimer.cpp">
+      <Filter>DebugTools\EventTimer</Filter>
+    </ClCompile>
+    <ClCompile Include="Utility\JSONIO\JSONIO.cpp">
+      <Filter>Utility\JSONIO</Filter>
+    </ClCompile>
+    <ClCompile Include="Type\Color.cpp">
+      <Filter>Type</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\ConfigManager\ConfigManager.cpp">
+      <Filter>Core\ConfigManager</Filter>
+    </ClCompile>
+    <ClCompile Include="DebugTools\ImGuiManager\ImGuiThemes.cpp">
+      <Filter>DebugTools\ImGuiManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\ConfigManager\ConfigType.cpp">
+      <Filter>Core\ConfigManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Features\Particle\Emitter\EmitterData.cpp">
+      <Filter>Feature\Particle\Emitter</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common\define.h">
@@ -583,49 +647,103 @@
     <ClInclude Include="Features\NiGui\NiGuiDebug.h">
       <Filter>Feature\NiGuiDerived</Filter>
     </ClInclude>
+    <ClInclude Include="Core\DirectX12\PostEffect.h">
+      <Filter>Core\DirectX12\PostEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\DirectX12\RTVHeapCounter.h">
+      <Filter>Core\DirectX12\RTVHeapCounter</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugTools\EventTimer\EventTimer.h">
+      <Filter>DebugTools\EventTimer</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility\JSONConvTypeFuncs\JSONConvTypeFuncs.h">
+      <Filter>Utility\JSONConvTypeFuncs</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility\JSONIO\JSONIO.h">
+      <Filter>Utility\JSONIO</Filter>
+    </ClInclude>
+    <ClInclude Include="Type\Color.h">
+      <Filter>Type</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility\String\strutl.h">
+      <Filter>Utility\String</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility\JSON\jsonutl.h">
+      <Filter>Utility\JSON</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\ConfigManager\ConfigManager.h">
+      <Filter>Core\ConfigManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\ConfigManager\ConfigType.h">
+      <Filter>Core\ConfigManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Features\Particle\Type\ParticleType.h">
+      <Filter>Feature\Particle\Type</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Localization\LanguageData.h">
+      <Filter>Core\Localization</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\DirectX12\ResourceStateTracker\ResourceStateTracker.h">
+      <Filter>Core\DirectX12\ResourceStateTracker</Filter>
+    </ClInclude>
+    <ClInclude Include="Features\Particle\Emitter\EmitterData.h">
+      <Filter>Feature\Particle\Emitter</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
+    <None Include="..\ClassDiagram.md" />
     <None Include="EngineResources\Shaders\Object3d.hlsli">
       <Filter>HLSL</Filter>
     </None>
-    <None Include="..\SampleProject\EngineResources\Shaders\Sprite.hlsli">
+    <None Include="EngineResources\Shaders\Particle.hlsli">
       <Filter>HLSL</Filter>
     </None>
-    <None Include="..\SampleProject\EngineResources\Shaders\Particle.hlsli">
+    <None Include="EngineResources\Shaders\Sprite.hlsli">
       <Filter>HLSL</Filter>
     </None>
-    <None Include="..\ClassDiagram.md" />
     <None Include="EngineResources\Shaders\Line.hlsli">
+      <Filter>HLSL</Filter>
+    </None>
+    <None Include="EngineResources\Shaders\Fullscreen.hlsli">
       <Filter>HLSL</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="EngineResources\Shaders\Line.VS.hlsl">
+      <Filter>HLSL</Filter>
+    </FxCompile>
     <FxCompile Include="EngineResources\Shaders\Object3d.PS.hlsl">
       <Filter>HLSL</Filter>
     </FxCompile>
     <FxCompile Include="EngineResources\Shaders\Object3d.VS.hlsl">
       <Filter>HLSL</Filter>
     </FxCompile>
-    <FxCompile Include="..\SampleProject\EngineResources\Shaders\Sprite.VS.hlsl">
+    <FxCompile Include="EngineResources\Shaders\Sprite.PS.hlsl">
       <Filter>HLSL</Filter>
     </FxCompile>
-    <FxCompile Include="..\SampleProject\EngineResources\Shaders\Sprite.PS.hlsl">
+    <FxCompile Include="EngineResources\Shaders\Sprite.VS.hlsl">
       <Filter>HLSL</Filter>
     </FxCompile>
-    <FxCompile Include="..\SampleProject\EngineResources\Shaders\Particle.VS.hlsl">
+    <FxCompile Include="EngineResources\Shaders\WithoutAlpha.CS.hlsl">
       <Filter>HLSL</Filter>
     </FxCompile>
-    <FxCompile Include="..\SampleProject\EngineResources\Shaders\Particle.PS.hlsl">
+    <FxCompile Include="EngineResources\Shaders\Particle.VS.hlsl">
       <Filter>HLSL</Filter>
     </FxCompile>
-    <FxCompile Include="EngineResources\Shaders\Line.VS.hlsl">
+    <FxCompile Include="EngineResources\Shaders\Particle.PS.hlsl">
       <Filter>HLSL</Filter>
     </FxCompile>
     <FxCompile Include="EngineResources\Shaders\Line.PS.hlsl">
       <Filter>HLSL</Filter>
     </FxCompile>
-    <FxCompile Include="EngineResources\Shaders\WithoutAlpha.CS.hlsl">
+    <FxCompile Include="EngineResources\Shaders\Fullscreen.VS.hlsl">
+      <Filter>HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="EngineResources\Shaders\Fullscreen.PS.hlsl">
+      <Filter>HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="..\SampleProject\EngineResources\Shaders\Sprite.VS.hlsl">
       <Filter>HLSL</Filter>
     </FxCompile>
   </ItemGroup>

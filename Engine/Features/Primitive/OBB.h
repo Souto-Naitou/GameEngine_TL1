@@ -37,7 +37,7 @@ public: /// Setter
         rotateMatrix_ = _rotateMatrix;
     }
     void SetSize(const Vector3& _size) { size_ = _size; }
-    void SetGameEye(GameEye* _eye) { pGameEye = _eye; ModifyGameEye(_eye); }
+    void SetGameEye(GameEye** _eye) { pGameEye = _eye; ModifyGameEye(_eye); }
 
 
 public: /// Getter
@@ -48,9 +48,9 @@ public: /// Getter
 
 
 private:
-    Vector3 center_; // 中心点
-    Vector3 orientations_[3]; // 座標軸。正規化・直交必須
-    Vector3 size_; // 座標軸方向の長さの半分。中心から面までの距離
+    Vector3 center_ = {}; // 中心点
+    Vector3 orientations_[3] = {}; // 座標軸。正規化・直交必須
+    Vector3 size_ = {}; // 座標軸方向の長さの半分。中心から面までの距離
 
     Matrix4x4 rotateMatrix_ = {};
 
@@ -58,10 +58,10 @@ private:
 
 
 private:
-    void ModifyGameEye(GameEye* _eye);
+    void ModifyGameEye(GameEye** _eye);
 
 
 private:
-    LineSystem* pLineSystem;
-    GameEye* pGameEye;
+    LineSystem* pLineSystem = nullptr;
+    GameEye** pGameEye = nullptr;
 };

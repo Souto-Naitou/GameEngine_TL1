@@ -14,7 +14,6 @@ void SceneTransitionManager::Update()
     if (pTransition_->IsEnd())
     {
         pTransition_->Finalize();
-        pTransition_.reset();
         pTransition_ = nullptr;
     }
 }

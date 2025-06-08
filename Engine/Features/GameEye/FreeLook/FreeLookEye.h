@@ -8,7 +8,7 @@ class FreeLookEye : public GameEye
 {
 public:
     FreeLookEye();
-    ~FreeLookEye();
+    ~FreeLookEye() override;
 
     void Update() override;
 
@@ -23,6 +23,7 @@ private:
 private:
     void CatchMoveCommands();
     void CatchRotateCommands();
+    void DebugWindow() override;
 
 
 private:

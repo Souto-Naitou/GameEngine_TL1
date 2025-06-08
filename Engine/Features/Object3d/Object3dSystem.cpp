@@ -2,6 +2,7 @@
 #include <DebugTools/Logger/Logger.h>
 #include <cassert>
 #include <Core/DirectX12/Helper/DX12Helper.h>
+#include <Core/Win32/WinSystem.h>
 
 Object3dSystem::Object3dSystem()
 {
@@ -49,10 +50,8 @@ void Object3dSystem::DrawCall()
 {
     auto record = [&](ID3D12GraphicsCommandList* _commandList)
     {
-        _commandList->Reset(commandAllocator_.Get(), nullptr);
-
         /// コマンドリストの設定
-        DX12Helper::CommandListCommonSetting(_commandList);
+        DX12Helper::CommandListCommonSetting(_commandList, rtvHandle_);
 
         /// ルートシグネチャをセットする
         _commandList->SetGraphicsRootSignature(rootSignature_.Get());
@@ -93,8 +92,6 @@ void Object3dSystem::DrawCall()
 
             data.model->Draw(_commandList);
         }
-
-        _commandList->Close();
     };
 
     worker_ = std::async(std::launch::async, record, commandList_.Get());
@@ -102,8 +99,13 @@ void Object3dSystem::DrawCall()
 
 void Object3dSystem::Sync()
 {
-    worker_.get();
+    if (worker_.valid()) worker_.get();
     commandListDatas_.clear();
+}
+
+void Object3dSystem::AddCommandListData(CommandListData& _data)
+{
+    commandListDatas_.emplace_back(_data);
 }
 
 void Object3dSystem::CreateRootSignature()
@@ -163,7 +165,7 @@ void Object3dSystem::CreateRootSignature()
     descriptionRootSignature.NumParameters = _countof(rootParameters);                  // 配列の長さ
 
     D3D12_STATIC_SAMPLER_DESC staticSamplers[1] = {};
-    staticSamplers[0].Filter = D3D12_FILTER_MIN_MAG_MIP_POINT;              // 異方性フィルタリング
+    staticSamplers[0].Filter = D3D12_FILTER_MAXIMUM_ANISOTROPIC;            // 異方性フィルタリング
     staticSamplers[0].AddressU = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
     staticSamplers[0].AddressV = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
     staticSamplers[0].AddressW = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
@@ -207,8 +209,8 @@ void Object3dSystem::CreateMainPipelineState()
     IDxcUtils* dxcUtils = pDx12_->GetDxcUtils();
     IDxcCompiler3* dxcCompiler = pDx12_->GetDxcCompiler();
     IDxcIncludeHandler* includeHandler = pDx12_->GetIncludeHandler();
-    uint32_t clientWidth = pDx12_->GetClientWidth();
-    uint32_t clientHeight = pDx12_->GetClientHeight();
+    uint32_t clientWidth = WinSystem::clientWidth;
+    uint32_t clientHeight = WinSystem::clientWidth;
 
     /// InputLayout
     inputElementDescs_[0].SemanticName = "POSITION";
@@ -282,7 +284,7 @@ void Object3dSystem::CreateMainPipelineState()
     graphicsPipelineStateDesc.RasterizerState = rasterizerDesc_;    // RasterizerState
     // 書き込むRTVの情報
     graphicsPipelineStateDesc.NumRenderTargets = 1;
-    graphicsPipelineStateDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+    graphicsPipelineStateDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;
     // 利用するトポロジ（形状）のタイプ。三角形
     graphicsPipelineStateDesc.PrimitiveTopologyType =
         D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
@@ -293,20 +295,24 @@ void Object3dSystem::CreateMainPipelineState()
     graphicsPipelineStateDesc.DepthStencilState = depthStencilDesc;
     graphicsPipelineStateDesc.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
     // 実際に生成
-    HRESULT hr = device->CreateGraphicsPipelineState(&graphicsPipelineStateDesc,
-        IID_PPV_ARGS(&psoMain_));
-    assert(SUCCEEDED(hr));
+    HRESULT hr = device->CreateGraphicsPipelineState(&graphicsPipelineStateDesc, IID_PPV_ARGS(&psoMain_));
+    if (FAILED(hr)) [[unlikely]]
+    {
+        Logger::GetInstance()->LogError(
+            "Object3dSystem",
+            __func__,
+            "Failed to create pipeline state"
+        );
+        assert(false);
+    }
     return;
 }
 
 void Object3dSystem::CreateDepthPipelineState()
 {
     ID3D12Device* device = pDx12_->GetDevice();
-    IDxcUtils* dxcUtils = pDx12_->GetDxcUtils();
-    IDxcCompiler3* dxcCompiler = pDx12_->GetDxcCompiler();
-    IDxcIncludeHandler* includeHandler = pDx12_->GetIncludeHandler();
-    uint32_t clientWidth = pDx12_->GetClientWidth();
-    uint32_t clientHeight = pDx12_->GetClientHeight();
+    uint32_t clientWidth = WinSystem::clientWidth;
+    uint32_t clientHeight = WinSystem::clientHeight;
 
 
     /// BlendDesc
@@ -357,8 +363,15 @@ void Object3dSystem::CreateDepthPipelineState()
 
     /// 生成
     HRESULT hr = device->CreateGraphicsPipelineState(&graphicsPipelineStateDesc, IID_PPV_ARGS(&psoEarlyZ_));
-    assert(SUCCEEDED(hr));
-
+    if (FAILED(hr)) [[unlikely]]
+    {
+        Logger::GetInstance()->LogError(
+            "Object3dSystem",
+            __func__,
+            "Failed to create pipeline state"
+        );
+        assert(false);
+    }
 
     return;
 }

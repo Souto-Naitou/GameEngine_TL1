@@ -1,7 +1,6 @@
 #include "Particle.h"
 #include <Core/DirectX12/Helper/DX12Helper.h>
 #include <Features/Model/ModelManager.h>
-#include <Features/Model/Helper/ModelHelper.h>
 #include <Core/DirectX12/SRVManager.h>
 #include <numbers>
 #include <Common/define.h>
@@ -12,8 +11,9 @@
 #include <DebugTools/ImGuiTemplates/ImGuiTemplates.h>
 #endif
 
+using namespace Type::ParticleEmitter;
 
-void Particle::Initialize(const std::string& _filepath)
+void Particle::Initialize(const std::string& _filepath, const std::string& _texturePath)
 {
 #if defined(_DEBUG) && defined(DEBUG_ENGINE)
     std::stringstream ss;
@@ -28,13 +28,13 @@ void Particle::Initialize(const std::string& _filepath)
     pSystem_ = ParticleSystem::GetInstance();
 
     /// デフォルトのGameEyeを取得
-    pGameEye_ = pSystem_->GetDefaultGameEye();
+    pGameEye_ = pSystem_->GetGlobalEye();
 
     if (!particleData_.capacity()) reserve(1, true);
 
     /// モデルを読み込む
     modelPath_ = _filepath;
-    ModelManager::GetInstance()->LoadModel(_filepath);
+    ModelManager::GetInstance()->LoadModel(_filepath, _texturePath);
     pModel_ = ModelManager::GetInstance()->FindModel(_filepath);
     if (pModel_->IsUploaded()) GetModelData();
 
@@ -79,7 +79,7 @@ void Particle::Update()
         else wMatrix = Matrix4x4::AffineMatrix(transform.scale, transform.rotate, transform.translate);
 
         instancingData_[index].world = wMatrix;
-        instancingData_[index].wvp = wMatrix * pGameEye_->GetViewProjectionMatrix();
+        instancingData_[index].wvp = wMatrix * (*pGameEye_)->GetViewProjectionMatrix();
         instancingData_[index].color = currentColor;
 
         ++itr;
@@ -89,9 +89,9 @@ void Particle::Update()
     /// ビルボード
     if (enableBillboard_)
     {
-        billboardMatrix_ = backToFrontMatrix_ * pGameEye_->GetWorldMatrix();
+        billboardMatrix_ = backToFrontMatrix_ * (*pGameEye_)->GetWorldMatrix();
         /// 平行移動成分を除去
-        for (uint32_t index = 0; index < 3; index++) billboardMatrix_.m[3][index] = 0.0f;
+        for (uint32_t i = 0; i < 3; i++) billboardMatrix_.m[3][i] = 0.0f;
     }
     else
     {
@@ -119,17 +119,6 @@ void Particle::Draw()
     /// モデルのテクスチャがアップロードされていない場合は描画しない
     if (!pModel_->IsUploaded()) return;
 
-    #ifdef _DEBUG
-
-    auto commandList = pDx12_->GetCommandList();
-    /// 描画設定と実行
-    commandList->IASetVertexBuffers(0, 1, &vertexBufferView_);
-    commandList->SetGraphicsRootDescriptorTable(0, srvGpuHandle_);
-    commandList->SetGraphicsRootDescriptorTable(1, textureSRVHandleGPU_);
-    commandList->DrawInstanced(static_cast<UINT>(pModelData_->vertices.size()), static_cast<UINT>(particleData_.size()), 0, 0);
-
-    #else
-
     ParticleSystem::CommandListData data = {};
     data.pVBV = &vertexBufferView_;
     data.srvHandle = srvGpuHandle_;
@@ -138,12 +127,13 @@ void Particle::Draw()
     data.instanceCount = static_cast<UINT>(particleData_.size());
 
     pSystem_->AddCommandListData(data);
-
-    #endif // _DEBUG
 }
 
 void Particle::reserve(size_t _size, bool _isInit)
 {
+    auto size = sizeof(ParticleData);
+    size;
+
     particleData_.reserve(_size);
     CreateParticleForGPUResource();
     if (!_isInit) SRVManager::GetInstance()->Deallocate(srvIndex_);
@@ -211,6 +201,7 @@ void Particle::InitializeTransform()
 
 void Particle::ParticleDataUpdate(std::vector<ParticleData>::iterator& _itr)
 {
+    bool isGround = false;
     float deltaTime = 1.0f / 60.0f;
 
     Timer&              timer = _itr->timer_;
@@ -220,27 +211,31 @@ void Particle::ParticleDataUpdate(std::vector<ParticleData>::iterator& _itr)
     Vector3&            acceleration = _itr->acceleration_;
     Vector3&            gravity = _itr->accGravity_;
     Vector3&            resistance = _itr->accResistance_;
+    float               frictionCoef = _itr->frictionCoef_;
 
     Vector4&            currentColor = _itr->currentColor_;
-    const Vector4&      beginColor = _itr->beginColor_;
-    const Vector4&      endColor = _itr->endColor_;
+    const auto&         colorRange = _itr->colorRange_;
 
-    const Vector3&      startScale = _itr->startScale_;
-    const Vector3&      endScale = _itr->endScale_;
+    const auto&         scaleRange = _itr->scaleRange_;
     const float         lifeTime = _itr->lifeTime_;
     const float         scaleDelayTime = _itr->scaleDelayTime_;
     float&              currentLifeTime = _itr->currentLifeTime_;
     float&              alphaDeltaValue = _itr->alphaDeltaValue_;
+    bool&               enableDirectionByVelocity = _itr->enableDirectionByVelocity;
+    bool&               enableCollisionFloor = _itr->enableCollisionFloor;
+    float               radius = _itr->radius;
+    v3::CollisionFloor& collisionFloor = _itr->collisionFloor_;
+    
 
     /// タイマーの更新
     if (!timer.GetIsStart())
     {
         timer.Start();
-        currentColor = beginColor;
+        currentColor = colorRange.start();
     }
 
     /// 経過時間の取得
-    currentLifeTime = lifeTime - static_cast<float>(timer.GetNow());
+    currentLifeTime = lifeTime - timer.GetNow<float>();
     if (currentLifeTime < 0.0f) currentLifeTime = 0.0f;
 
     float t = 0.0f;
@@ -250,18 +245,25 @@ void Particle::ParticleDataUpdate(std::vector<ParticleData>::iterator& _itr)
     velocity += acceleration * deltaTime;
     velocity += gravity * deltaTime;
     velocity -= resistance * deltaTime;
+    if (enableDirectionByVelocity)
+    {
+        transform.rotate = velocity.Normalize();
+    }
     transform.translate += velocity * deltaTime;
+
+    /// 加速度のリセット
+    acceleration = {};
 
     /// 色の更新
     {
         if (alphaDeltaValue == 0)
         {
-            currentColor.Lerp(beginColor, endColor, EaseOutCubic(t));
+            currentColor.Lerp(colorRange.start(), colorRange.end(), EaseOutCubic(t));
         }
         else
         {
             Vector3 rgb = currentColor.xyz();
-            rgb.Lerp(beginColor.xyz(), endColor.xyz(), EaseOutCubic(t));
+            rgb.Lerp(colorRange.start().xyz(), colorRange.end().xyz(), EaseOutCubic(t));
             currentColor.w += alphaDeltaValue;
             currentColor = { rgb.x, rgb.y, rgb.z, currentColor.w };
         }
@@ -276,20 +278,27 @@ void Particle::ParticleDataUpdate(std::vector<ParticleData>::iterator& _itr)
     {
         if (currentLifeTime > lifeTime - scaleDelayTime)
         {
-            transform.scale = startScale;
+            transform.scale = scaleRange.start();
         }
         else
         {
-            transform.scale.Lerp(startScale, endScale, 1.0f - currentLifeTime / (lifeTime - scaleDelayTime));
+            transform.scale.Lerp(scaleRange.start(), scaleRange.end(), 1.0f - currentLifeTime / (lifeTime - scaleDelayTime));
         }
     }
     else
     {
-        transform.scale = startScale;
+        transform.scale = scaleRange.start();
     }
 
-    /// 加速度のリセット
-    acceleration = {};
+    // 当たり判定(座標計算後に実行する)
+    if (enableCollisionFloor)
+    {
+        radius *= transform.scale.y;
+        isGround = UpdateByCollisionFloor(transform.translate, velocity, collisionFloor, radius);
+    }
+
+    // 摩擦を適用
+    ApplyFriction(velocity, isGround, frictionCoef, deltaTime);
 
     return;
 }
@@ -319,6 +328,26 @@ float Particle::EaseOutCubic(float t)
 float Particle::EaseOutQuad(float t)
 {
     return 1.0f - std::powf(1.0f - t, 2.0f);
+}
+
+bool Particle::UpdateByCollisionFloor(Vector3& _position, Vector3& _velocity, const v3::CollisionFloor& _floor, float _radius)
+{
+    if (_position.y - _radius < _floor.elevation && _velocity.y < 0.0f)
+    {
+        _position.y = _floor.elevation + _radius / 2.0f;
+        _velocity.y = -_velocity.y * _floor.bounce_power;
+        return true;
+    }
+    return false;
+}
+
+void Particle::ApplyFriction(Vector3& _velocity, bool _isGround, float _frictionCoef, float _deltaTime)
+{
+    if (!_isGround) return;
+
+    // XZ 平面に摩擦を適用（Y方向の速度はジャンプや重力のため残す）
+    _velocity.x *= std::pow(1.0f - _frictionCoef, _deltaTime);
+    _velocity.z *= std::pow(1.0f - _frictionCoef, _deltaTime);
 }
 
 bool Particle::ParticleDeleteByCondition(std::vector<ParticleData>::iterator& _itr)

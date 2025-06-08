@@ -1,48 +1,25 @@
 #pragma once
 
-#include <string>
-
 #include <Core/DirectX12/DirectX12.h>
 #include <Common/structs.h>
-#include <wrl.h>
-#include <d3d12.h>
 #include <Features/Model/Model.h>
 #include "ParticleSystem.h"
+#include <wrl/client.h>
+#include <vector>
+#include <cstdint>
+#include <string>
+#include <d3d12.h>
 #include <Matrix4x4.h>
-#include <Timer/Timer.h>
-
-enum class ParticleDeleteCondition
-{
-    LifeTime,
-    ZeroAlpha,
-};
-
-struct ParticleData
-{
-    Timer                                   timer_              = {};
-    Transform                               transform_          = {};
-    Vector3                                 startScale_         = {};
-    Vector3                                 endScale_           = {};
-    Vector4                                 currentColor_       = {};
-    Vector4                                 beginColor_         = {};
-    Vector4                                 endColor_           = {};
-    float                                   scaleDelayTime_     = 0.0f;
-    float                                   alphaDeltaValue_    = 0.0f;
-    float                                   lifeTime_           = 0.0f;
-    float                                   currentLifeTime_    = 0.0f;
-    Vector3                                 acceleration_       = {};
-    Vector3                                 accResistance_      = {};
-    Vector3                                 accGravity_         = {};
-    Vector3                                 velocity_           = {};
-    ParticleDeleteCondition                 deleteCondition_    = ParticleDeleteCondition::LifeTime;
-};
+#include <Vector3.h>
+#include "./Type/ParticleType.h"
+#include "./Emitter/EmitterData.h"
 
 class Particle
 {
 public:
     Particle() = default;
 
-    void Initialize(const std::string& _filepath);
+    void Initialize(const std::string& _filepath, const std::string& _texturePath = {});
     void Draw();
     void Update();
     void Finalize();
@@ -51,7 +28,7 @@ public:
 public: /// Setter
     void SetName(const std::string& _name) { name_ = _name; }
     void SetEnableBillboard(bool _enable) { enableBillboard_ = _enable; }
-    void SetGameEye(GameEye* _pGameEye) { pGameEye_ = _pGameEye; }
+    void SetGameEye(GameEye** _pGameEye) { pGameEye_ = _pGameEye; }
 
 
 public: /// Getter
@@ -71,7 +48,7 @@ private:
     std::string                             name_                               = {};
 
     /// GameEye
-    GameEye*                                pGameEye_                           = nullptr;
+    GameEye**                               pGameEye_                           = nullptr;
 
     /// Instancing
     Microsoft::WRL::ComPtr<ID3D12Resource>  instancingResource_                 = nullptr;
@@ -81,7 +58,7 @@ private:
     /// Model
     std::string                             modelPath_                          = {};
     Model*                                  pModel_                             = nullptr;
-    ModelData*                              pModelData_;
+    ModelData*                              pModelData_                         = nullptr;
     D3D12_VERTEX_BUFFER_VIEW                vertexBufferView_                   = {};
 
     /// SRV
@@ -114,10 +91,11 @@ private:
     void DebugWindow();
     float EaseOutCubic(float t);
     float EaseOutQuad(float t);
+    bool UpdateByCollisionFloor(Vector3& _position, Vector3& _velocity, const v3::CollisionFloor& _floor, float _radius);
+    void ApplyFriction(Vector3& _velocity, bool _isGround, float _frictionCoef, float _deltaTime);
 
 private: /// delete condition
     bool ParticleDeleteByCondition(std::vector<ParticleData>::iterator& _itr);
     bool DeleteByLifeTime(std::vector<ParticleData>::iterator& _itr);
     bool DeleteByZeroAlpha(std::vector<ParticleData>::iterator& _itr);
-
 };

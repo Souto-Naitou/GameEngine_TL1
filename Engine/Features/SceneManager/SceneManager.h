@@ -26,6 +26,7 @@ public: /// Setter
 
 public:
     void ReserveScene(const std::string& _sceneName);
+    void ReserveStartupScene();
 
 
 public: /// シーン動作

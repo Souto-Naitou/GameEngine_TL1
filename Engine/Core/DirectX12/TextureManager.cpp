@@ -2,13 +2,19 @@
 #include "DirectX12.h"
 #include <Core/DirectX12/Helper/DX12Helper.h>
 #include <Utility/ConvertString/ConvertString.h>
-
+#include <Core/ConfigManager/ConfigManager.h>
 
 
 void TextureManager::Initialize(SRVManager* _srvManager)
 {
     srvManager_ = _srvManager;
     textureDataMap_.reserve(DirectX12::kMaxSRVCount_);
+
+    auto& cfgData = ConfigManager::GetInstance()->GetConfigData();
+    for (auto& path : cfgData.texture_paths)
+    {
+        this->AddSearchPath(path);
+    }
 }
 
 void TextureManager::LoadTexture(const std::string& _filePath)
@@ -23,9 +29,6 @@ void TextureManager::LoadTexture(const std::string& _filePath)
 
     assert(!srvManager_->IsFull() && "SRVがいっぱいです");
 
-    DirectX12* pDx12 = DirectX12::GetInstance();
-    ID3D12Device* device = pDx12->GetDevice();
-
     TextureData& textureData = textureDataMap_[fullPath];
 
     DirectX::ScratchImage image{};
@@ -33,11 +36,19 @@ void TextureManager::LoadTexture(const std::string& _filePath)
     HRESULT hr = DirectX::LoadFromWICFile(filePathW.c_str(), DirectX::WIC_FLAGS_FORCE_SRGB, nullptr, image);
     assert(SUCCEEDED(hr));
 
-
     DirectX::TexMetadata metadata = image.GetMetadata();
-    if (metadata.width > 32 && metadata.height > 32 && false)
+
+    if (DirectX::IsCompressed(metadata.format)) {
+        DirectX::ScratchImage decompressed;
+        DirectX::Decompress(image.GetImages(), image.GetImageCount(), metadata, DXGI_FORMAT_R8G8B8A8_UNORM, decompressed);
+        image = std::move(decompressed);
+    }
+
+    if (metadata.width > 32 && metadata.height > 32)
     {
-        hr = DirectX::GenerateMipMaps(image.GetImages(), image.GetImageCount(), image.GetMetadata(), DirectX::TEX_FILTER_SRGB, 0, image);
+        DirectX::ScratchImage mipChain = {};
+        hr = DirectX::GenerateMipMaps(image.GetImages(), image.GetImageCount(), image.GetMetadata(), DirectX::TEX_FILTER_SRGB, 0, mipChain);
+        image = std::move(mipChain);
         metadata = image.GetMetadata();
         assert(SUCCEEDED(hr));
     }
@@ -46,7 +57,6 @@ void TextureManager::LoadTexture(const std::string& _filePath)
     textureData.resource = DX12Helper::CreateTextureResource(DirectX12::GetInstance()->GetDevice(), textureData.metadata);
     DX12Helper::UploadTextureData(textureData.resource, image);
 
-    uint32_t kDescriptorSizeSRV = DirectX12::GetInstance()->GetDescriptorSizeSRV();
     textureData.srvIndex = srvManager_->Allocate();
     textureData.srvHandleCPU = srvManager_->GetCPUDescriptorHandle(textureData.srvIndex);
     textureData.srvHandleGPU = srvManager_->GetGPUDescriptorHandle(textureData.srvIndex);
@@ -57,20 +67,20 @@ void TextureManager::LoadTexture(const std::string& _filePath)
 D3D12_GPU_DESCRIPTOR_HANDLE TextureManager::GetSrvHandleGPU(const std::string& _filePath)
 {
     std::string fullPath = filePathSearcher_.GetFilePath(_filePath);
-    TextureData& textureData = textureDataMap_[fullPath];
+    const TextureData& textureData = textureDataMap_[fullPath];
     return textureData.srvHandleGPU;
 }
 
 const DirectX::TexMetadata& TextureManager::GetMetaData(const std::string& _filePath)
 {
     std::string fullPath = filePathSearcher_.GetFilePath(_filePath);
-    TextureData& textureData = textureDataMap_[fullPath];
+    const TextureData& textureData = textureDataMap_[fullPath];
     return textureData.metadata;
 }
 
 uint32_t TextureManager::GetSrvIndex(const std::string& _filePath)
 {
     std::string fullPath = filePathSearcher_.GetFilePath(_filePath);
-    TextureData& textureData = textureDataMap_[fullPath];
+    const TextureData& textureData = textureDataMap_[fullPath];
     return textureData.srvIndex;
 }

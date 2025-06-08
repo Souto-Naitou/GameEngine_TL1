@@ -29,7 +29,6 @@
 void DirectX12::Initialize()
 {
     /// デバッグコントローラの設定
-#ifdef _DEBUG
     if (SUCCEEDED(D3D12GetDebugInterface(IID_PPV_ARGS(&debugController_))))
     {
         // デバッグレイヤーを有効化する
@@ -37,7 +36,6 @@ void DirectX12::Initialize()
         // GPU側もチェックする
         debugController_->SetEnableGPUBasedValidation(TRUE);
     }
-#endif // _DEBUG
 
     pSRVManager_ = SRVManager::GetInstance();
 
@@ -48,10 +46,6 @@ void DirectX12::Initialize()
 
     // ウィンドウハンドルを取得
     hwnd_ = WinSystem::GetInstance()->GetHwnd();
-
-    // ウィンドウのクライアントサイズを取得
-    clientWidth_ = WinSystem::clientWidth;
-    clientHeight_ = WinSystem::clientHeight;
 
     hr_ = CreateDXGIFactory(IID_PPV_ARGS(&dxgiFactory_));
 
@@ -76,7 +70,9 @@ void DirectX12::Initialize()
 
 
     /// エラー時停止処理
+    //#ifdef _DEBUG
     DX12Helper::PauseError(device_, infoQueue_);
+    //#endif // _DEBUG
 
 
     /// 出力ウィンドウに初期化完了を出力
@@ -110,6 +106,7 @@ void DirectX12::Initialize()
     /// DXCの初期化
     CreateDirectXShaderCompiler();
 
+
     /// D3D11デバイス群の生成
     CreateD3D11Device();
 
@@ -126,23 +123,29 @@ void DirectX12::Initialize()
     CreateD2DRenderTarget();
 }
 
+void DirectX12::OnResized()
+{
+    this->ResizeBuffers();
+    isResized_ = false;
+}
+
 void DirectX12::NewFrame()
 {
     // バックバッファのインデックスを取得
     backBufferIndex_ = swapChain_->GetCurrentBackBufferIndex();
 
     // リソースバリアの設定
-    DX12Helper::ChangeStateResource(commandList_, swapChainResources_[backBufferIndex_].Get(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET);
+    DX12Helper::ChangeStateResource(commandList_, swapChainResources_[backBufferIndex_], D3D12_RESOURCE_STATE_RENDER_TARGET);
 
 
     /// 描画先のRTV/DSVの設定
-    D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle = dsvDescriptorHeap_->GetCPUDescriptorHandleForHeapStart();
-    commandList_->OMSetRenderTargets(1, &rtvHandles_[backBufferIndex_], false, &dsvHandle);
+    commandList_->OMSetRenderTargets(1, &rtvHandles_[backBufferIndex_], false, nullptr);
 
     // 画面全体のクリア
     commandList_->ClearRenderTargetView(rtvHandles_[backBufferIndex_], &editorBG_.x, 0, nullptr);
-    // 指定した深度で画面全体をクリア
-    commandList_->ClearDepthStencilView(dsvHandle, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
+
+    // 指定した深度で画面全体をクリア (ポストエフェクト用リソースで行うため現在無効)
+    // commandList_->ClearDepthStencilView(dsvHandle, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 
     commandList_->RSSetViewports(1, &viewport_);            // Viewportを設定
     commandList_->RSSetScissorRects(1, &scissorRect_);      // Scissorを設定
@@ -150,6 +153,17 @@ void DirectX12::NewFrame()
 
 void DirectX12::CommandExecute()
 {
+    ID3D12GraphicsCommandList* commandList_end = commandList_.Get();
+    if (!commandLists_.empty())
+    {
+        commandList_end = commandLists_.back();
+    }
+    DX12Helper::ChangeStateResource(
+        commandList_end,
+        swapChainResources_[backBufferIndex_],
+        D3D12_RESOURCE_STATE_PRESENT
+    );
+
     /// コマンドリストの内容を確定させる。すべてのコマンドを積んでからCloseする
     hr_ = commandList_->Close();
     if (FAILED(hr_))
@@ -164,9 +178,10 @@ void DirectX12::CommandExecute()
 
 
     /// GPUにコマンドリストの実行を行わせる
-    std::vector<ID3D12CommandList*> commandLists = { commandList_.Get() };
+    std::vector<ID3D12CommandList*> commandLists = { commandList_.Get()};
     for(auto& cl : commandLists_)
     {
+        cl->Close();
         commandLists.push_back(cl);
     }
     commandQueue_->ExecuteCommandLists(static_cast<UINT>(commandLists.size()), commandLists.data());
@@ -212,18 +227,18 @@ void DirectX12::DisplayFrame()
 void DirectX12::CopyFromRTV(ID3D12GraphicsCommandList* _commandList)
 {
     /// レンダーターゲットからコピー元状態にする
-    ChangeStateRTV(_commandList, D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_COPY_SOURCE);
+    DX12Helper::ChangeStateResource(_commandList, swapChainResources_[backBufferIndex_], D3D12_RESOURCE_STATE_COPY_SOURCE);
 
-    DX12Helper::ChangeStateResource(_commandList, gameScreenResource_, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, D3D12_RESOURCE_STATE_COPY_DEST);
+    DX12Helper::ChangeStateResource(_commandList, gameScreenResource_, D3D12_RESOURCE_STATE_COPY_DEST);
 
 
     D3D12_TEXTURE_COPY_LOCATION srcLocation = {};
-    srcLocation.pResource = swapChainResources_[backBufferIndex_].Get();
+    srcLocation.pResource = swapChainResources_[backBufferIndex_].resource.Get();
     srcLocation.Type = D3D12_TEXTURE_COPY_TYPE_SUBRESOURCE_INDEX;
     srcLocation.SubresourceIndex = 0; // コピーするサブリソースインデックス
 
     D3D12_TEXTURE_COPY_LOCATION dstLocation = {};
-    dstLocation.pResource = gameScreenResource_.Get();
+    dstLocation.pResource = gameScreenResource_.resource.Get();
     dstLocation.Type = D3D12_TEXTURE_COPY_TYPE_SUBRESOURCE_INDEX;
     dstLocation.SubresourceIndex = 0;
 
@@ -239,12 +254,11 @@ void DirectX12::CopyFromRTV(ID3D12GraphicsCommandList* _commandList)
     _commandList->CopyTextureRegion(&dstLocation, 0, 0, 0, &srcLocation, &srcBox);
 
     /// バリアを戻す
-    ChangeStateRTV(_commandList, D3D12_RESOURCE_STATE_COPY_SOURCE, D3D12_RESOURCE_STATE_RENDER_TARGET);
+    DX12Helper::ChangeStateResource(_commandList, swapChainResources_[backBufferIndex_], D3D12_RESOURCE_STATE_RENDER_TARGET);
 
     DX12Helper::ChangeStateResource(
         _commandList, 
         gameScreenResource_, 
-        D3D12_RESOURCE_STATE_COPY_DEST, 
         D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE
     );
 
@@ -254,19 +268,6 @@ void DirectX12::CopyFromRTV(ID3D12GraphicsCommandList* _commandList)
     _commandList->ClearRenderTargetView(rtvHandles_[backBufferIndex_], &editorBG_.x, 0, nullptr);
 
     #endif // _DEBUG
-}
-
-void DirectX12::ChangeStateRTV(ID3D12GraphicsCommandList* _commandList, D3D12_RESOURCE_STATES _now, D3D12_RESOURCE_STATES _next)
-{
-    /// リソースステートの設定
-    D3D12_RESOURCE_BARRIER barrier = {};
-    barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
-    barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
-    barrier.Transition.pResource = swapChainResources_[backBufferIndex_].Get();
-    barrier.Transition.StateBefore = _now;
-    barrier.Transition.StateAfter = _next;
-    barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
-    _commandList->ResourceBarrier(1, &barrier);
 }
 
 DirectX12::~DirectX12()

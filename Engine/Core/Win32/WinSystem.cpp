@@ -2,6 +2,8 @@
 #include <cassert>
 
 #include <NiGui/NiGui.h>
+#include <Core/ConfigManager/ConfigManager.h>
+#include <Utility/ConvertString/ConvertString.h>
 
 #ifdef _DEBUG
 #include <imgui.h>
@@ -16,20 +18,26 @@ uint32_t WinSystem::preClientHeight = 900;
 
 bool WinSystem::isMoving_ = false;
 bool WinSystem::isResized_ = false;
+bool WinSystem::isFullScreen_ = false;
 
 void WinSystem::Initialize()
 {
     HRESULT hr = CoInitializeEx(0, COINIT_MULTITHREADED);
-    assert(SUCCEEDED(hr) && "初期化失敗");
+    if (FAILED(hr)) assert(false && "COMの初期化失敗");
 
     wc_.lpfnWndProc = WinSystem::WindowProcedure;
     wc_.lpszClassName = L"DXWindowClass";
     wc_.hInstance = GetModuleHandle(nullptr);
     wc_.hCursor = LoadCursor(nullptr, IDC_ARROW);
     RegisterClass(&wc_);
+
+    auto& cfgData = ConfigManager::GetInstance()->GetConfigData();
+    clientWidth = cfgData.screen_width;
+    clientHeight = cfgData.screen_height;
+    title_ = ConvertString(cfgData.window_title);
 }
 
-void WinSystem::Finalize()
+void WinSystem::Finalize() const
 {
     CloseWindow(hwnd_);
     CoUninitialize();
@@ -41,7 +49,7 @@ void WinSystem::ShowWnd()
     AdjustWindowRect(&wrc, WS_OVERLAPPEDWINDOW, false);
     hwnd_ = CreateWindow(
         wc_.lpszClassName,          // 利用するクラス名
-        L"LE2B_17_ナイトウ_ソウト",    // タイトルバーの文字
+        title_.c_str(),             // タイトルバーの文字
         WS_OVERLAPPEDWINDOW,        // よく見るウィンドウスタイル
         CW_USEDEFAULT,              // 表示X座標(ウィンドウ出現位置？)
         CW_USEDEFAULT,              // 表示Y座標
@@ -64,6 +72,23 @@ UINT WinSystem::GetMsg()
         DispatchMessage(&msg_);    // デキュー的な？
     }
     return msg_.message;
+}
+
+void WinSystem::ToggleFullScreen()
+{
+    isFullScreen_ = !isFullScreen_;
+    if(isFullScreen_)
+    {
+        // フルスクリーンモードにする
+        SetWindowLong(hwnd_, GWL_STYLE, WS_POPUP);
+        SetWindowPos(hwnd_, HWND_TOP, 0, 0, GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN), SWP_NOOWNERZORDER | SWP_FRAMECHANGED);
+    }
+    else
+    {
+        // ウィンドウモードに戻す
+        SetWindowLong(hwnd_, GWL_STYLE, WS_OVERLAPPEDWINDOW);
+        SetWindowPos(hwnd_, HWND_TOP, 100, 100, clientWidth, clientHeight, SWP_NOOWNERZORDER | SWP_FRAMECHANGED);
+    }
 }
 
 bool WinSystem::IsResized()

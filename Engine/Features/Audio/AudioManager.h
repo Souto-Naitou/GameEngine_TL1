@@ -2,9 +2,9 @@
 
 #include "Audio.h"
 #include <Utility/FilePathSearcher/FilePathSearcher.h>
-#include <vector>
 #include <map>
 #include <list>
+#include <string>
 
 class AudioManager
 {
@@ -26,8 +26,13 @@ public:
     void Update();
     void Finalize();
 
+    /// <summary>
+    /// 検索パスを追加
+    /// </summary>
+    /// <param name="_path">パス</param>
+    void AddSearchPath(const std::string& _path);
+
     void AddSourceVoice(IXAudio2SourceVoice* _sv) { sourceVoices_.push_back(_sv); }
-    
     Audio* GetNewAudio(const std::string& _filename);
 
 

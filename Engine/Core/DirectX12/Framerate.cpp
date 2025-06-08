@@ -1,7 +1,7 @@
 #include "Framerate.h"
 
 #include <thread>
-#include <Windows.h>
+#include <timeapi.h>
 
 #pragma comment(lib, "Winmm.lib")
 
@@ -37,12 +37,12 @@ void FrameRate::MeasureFPS()
         timer_.Start();
     }
     /// フレームレート計算
-    if (timer_.GetNow() - elapsedFrameCount_ >= intervalCalcurationFPS_)
+    if (timer_.GetNow<double>() - elapsedFrameCount_ >= intervalCalcurationFPS_)
     {
-        fps_ = frameCount_ * 1.0 / (timer_.GetNow() - elapsedFrameCount_);
+        fps_ = frameCount_ * 1.0 / (timer_.GetNow<double>() - elapsedFrameCount_);
 
         frameCount_ = 0;
-        elapsedFrameCount_ = timer_.GetNow();
+        elapsedFrameCount_ = timer_.GetNow<double>();
     }
     frameCount_++;
 }

@@ -1,18 +1,18 @@
 #include "ImGuiManager.h"
 
+#ifdef _DEBUG
+
 #include <Core/Win32/WinSystem.h>
 #include <Core/DirectX12/DirectX12.h>
 #include <Core/DirectX12/SRVManager.h>
 #include <DebugTools/DebugManager/DebugManager.h>
 
-#ifdef _DEBUG
 #include <imgui_impl_win32.h>
 #include <imgui_impl_dx12.h>
-#endif // _DEBUG
 
 void ImGuiManager::Initialize(DirectX12* _pDx12)
 {
-    #ifdef _DEBUG
+    InitializeStyleNameArray();
 
     SRVManager* srvManager = SRVManager::GetInstance();
     srvIndex_ = srvManager->Allocate();
@@ -30,60 +30,64 @@ void ImGuiManager::Initialize(DirectX12* _pDx12)
     ImGui_ImplDX12_Init(
         device,
         swapChainDesc.BufferCount,
-        DXGI_FORMAT_R8G8B8A8_UNORM_SRGB,
+        DXGI_FORMAT_R8G8B8A8_UNORM,
         srvDescHeap_,
-        srvDescHeap_->GetCPUDescriptorHandleForHeapStart(),
-        srvDescHeap_->GetGPUDescriptorHandleForHeapStart()
+        cpuHandle,
+        gpuHandle
     );
     ImGui_ImplWin32_Init(pWin32App->GetHwnd());
 
-    #endif // _DEBUG
+    io_ = &ImGui::GetIO();
+
+    DebugManager::GetInstance()->SetComponent("Core", "ImGui", std::bind(&ImGuiManager::DebugWindow, this));
 }
 
 void ImGuiManager::Finalize()
 {
-    #ifdef _DEBUG
-
+    DebugManager::GetInstance()->DeleteComponent("Core", "ImGui");
     ImGui_ImplDX12_Shutdown();
     ImGui_ImplWin32_Shutdown();
     ImGui::DestroyContext();
-
-    #endif // _DEBUG
 }
 
 void ImGuiManager::Resize()
 {
-    #ifdef _DEBUG
-
-    auto& io = ImGui::GetIO();
-    io.DisplaySize.x = static_cast<float>(WinSystem::clientWidth);
-    io.DisplaySize.y = static_cast<float>(WinSystem::clientHeight);
+    io_->DisplaySize.x = static_cast<float>(WinSystem::clientWidth);
+    io_->DisplaySize.y = static_cast<float>(WinSystem::clientHeight);
 
     float scaleX = static_cast<float>(WinSystem::clientWidth) / static_cast<float>(WinSystem::preClientWidth);
     float scaleY = static_cast<float>(WinSystem::clientHeight) / static_cast<float>(WinSystem::preClientHeight);
 
-    io.DisplayFramebufferScale = ImVec2(scaleX, scaleY);
+    io_->DisplayFramebufferScale = ImVec2(scaleX, scaleY);
 
     auto* drawData = ImGui::GetDrawData();
-    if(drawData)
+    if (drawData)
     {
         drawData->DisplayPos = ImVec2(0.0f, 0.0f);
-        drawData->DisplaySize = ImVec2(io.DisplaySize.x, io.DisplaySize.y);
+        drawData->DisplaySize = ImVec2(io_->DisplaySize.x, io_->DisplaySize.y);
     }
+}
 
-    #endif // _DEBUG
+void ImGuiManager::EnableDocking()
+{
+    #ifdef _DEBUG
+    io_->ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+    #endif
+}
+
+void ImGuiManager::EnableMultiViewport()
+{
+    #ifdef _DEBUG
+    io_->ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+    #endif
 }
 
 void ImGuiManager::BeginFrame()
 {
-    #ifdef _DEBUG
-
-    if(!isChangedFont_)
+    if (!isChangedFont_)
     {
         DebugManager* debugManager = DebugManager::GetInstance();
         debugManager->ChangeFont();
-        debugManager->DefaultStyle();
-        debugManager->EnableDocking();
 
         isChangedFont_ = true;
     }
@@ -91,30 +95,69 @@ void ImGuiManager::BeginFrame()
     ImGui_ImplDX12_NewFrame();
     ImGui_ImplWin32_NewFrame();
     ImGui::NewFrame();
-
-    #endif
 }
 
 void ImGuiManager::Render()
 {
-    #ifdef _DEBUG
-
     ImGui::EndFrame();
     ImGui::Render();
-
-    #endif // _DEBUG
 }
 
 void ImGuiManager::EndFrame()
 {
-    #ifdef _DEBUG
-
-    ID3D12GraphicsCommandList* commandList = DirectX12::GetInstance()->GetCommandList();
-
-    //ID3D12DescriptorHeap* descriptorHeaps[] = { srvDescHeap_ };
-    //commandList->SetDescriptorHeaps(1, descriptorHeaps);
-
+    ID3D12GraphicsCommandList* commandList = DirectX12::GetInstance()->GetCommandListsLast();
     ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), commandList);
-
-    #endif
 }
+
+void ImGuiManager::DebugWindow()
+{
+    bool isChange = false;
+    if (ImGui::BeginCombo("Style", styleNameArray_[idx_currentStyle_].c_str()))
+    {
+        for (size_t i = 0; i < styleNameArray_.size(); ++i)
+        {
+            const bool isSelected = i == idx_currentStyle_;
+            if (ImGui::Selectable(styleNameArray_[i].c_str(), isSelected))
+            {
+                idx_currentStyle_ = i;
+                isChange = true;
+            }
+        }
+        ImGui::EndCombo();
+    }
+
+    if (isChange)
+    {
+        switch (idx_currentStyle_)
+        {
+        case 0:
+            this->StyleOriginal();
+            break;
+        case 1:
+            this->StylePhotoshop();
+            break;
+        case 2:
+            this->StyleMaterialFlat();
+            break;
+        case 3:
+            this->StyleFutureDark();
+            break;
+        case 4:
+            this->StyleComfortableDarkCyan();
+            break;
+        default:
+            break;
+        }
+    }
+}
+
+void ImGuiManager::InitializeStyleNameArray()
+{
+    styleNameArray_.push_back("Original");
+    styleNameArray_.push_back("Photoshop");
+    styleNameArray_.push_back("Material Flat");
+    styleNameArray_.push_back("Future Dark");
+    styleNameArray_.push_back("Comfortable Dark Cyan");
+}
+
+#endif // _DEBUG
