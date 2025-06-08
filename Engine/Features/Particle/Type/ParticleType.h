@@ -4,6 +4,9 @@
 #include <Range.h>
 #include <Vector3.h>
 #include <Vector4.h>
+#include "../Emitter/EmitterData.h"
+
+using namespace  Type::ParticleEmitter;
 
 enum class ParticleDeleteCondition
 {
@@ -26,6 +29,10 @@ struct ParticleData
     Vector3                                 accResistance_      = {};
     Vector3                                 accGravity_         = {};
     Vector3                                 velocity_           = {};
+    float                                   frictionCoef_       = {};
     bool                                    enableDirectionByVelocity = false;
+    bool                                    enableCollisionFloor = false;
+    float                                   radius              = 0.0f;
+    v3::CollisionFloor                      collisionFloor_     = {};
     ParticleDeleteCondition                 deleteCondition_    = ParticleDeleteCondition::LifeTime;
 };

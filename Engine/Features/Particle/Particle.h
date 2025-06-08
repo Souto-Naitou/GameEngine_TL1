@@ -1,6 +1,5 @@
 #pragma once
 
-#include "./Type/ParticleType.h"
 #include <Core/DirectX12/DirectX12.h>
 #include <Common/structs.h>
 #include <Features/Model/Model.h>
@@ -11,6 +10,9 @@
 #include <string>
 #include <d3d12.h>
 #include <Matrix4x4.h>
+#include <Vector3.h>
+#include "./Type/ParticleType.h"
+#include "./Emitter/EmitterData.h"
 
 class Particle
 {
@@ -89,10 +91,11 @@ private:
     void DebugWindow();
     float EaseOutCubic(float t);
     float EaseOutQuad(float t);
+    bool UpdateByCollisionFloor(Vector3& _position, Vector3& _velocity, const v3::CollisionFloor& _floor, float _radius);
+    void ApplyFriction(Vector3& _velocity, bool _isGround, float _frictionCoef, float _deltaTime);
 
 private: /// delete condition
     bool ParticleDeleteByCondition(std::vector<ParticleData>::iterator& _itr);
     bool DeleteByLifeTime(std::vector<ParticleData>::iterator& _itr);
     bool DeleteByZeroAlpha(std::vector<ParticleData>::iterator& _itr);
-
 };

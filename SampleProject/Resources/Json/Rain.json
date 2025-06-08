@@ -1,8 +1,12 @@
 {
+    "collisionFloor": {
+        "bouncePower": 0.10999999940395355,
+        "elevation": 0.0
+    },
     "common": {
         "alphaDeltaValue": 0.0,
         "emitInterval": 0.20000000298023224,
-        "emitNum": 7,
+        "emitNum": 39,
         "emitPositionFixed": {
             "x": 0.0,
             "y": 3.0199999809265137,
@@ -23,6 +27,7 @@
         }
     },
     "flags": {
+        "enableCollisionFloor": true,
         "enableRandomEmit": true,
         "enableRandomRotation": false,
         "enableRandomScale": false,
@@ -31,6 +36,7 @@
     },
     "name": "Rain",
     "physics": {
+        "frictionCoef": 0.0,
         "gravity": {
             "x": 0.0,
             "y": -2.140000104904175,
@@ -118,5 +124,5 @@
             }
         }
     },
-    "version": 2
+    "version": 3
 }

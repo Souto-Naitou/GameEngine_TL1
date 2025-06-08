@@ -32,6 +32,18 @@ namespace Type
             void from_json(const nlohmann::json& _j, Data& _data);
             void to_json(nlohmann::json& _j, const Data& _data);
         }
+
+        namespace v3
+        {
+            struct Common;
+            struct Flags;
+            struct PhysicsData;
+            struct CollisionFloor;
+            struct Data;
+
+            void from_json(const nlohmann::json& _j, Data& _data);
+            void to_json(nlohmann::json& _j, const Data& _data);
+        }
     }
 }
 
@@ -66,6 +78,7 @@ struct Type::ParticleEmitter::v1::Data
 
 struct Type::ParticleEmitter::v2::Common
 {
+    Common& operator=(const Common& _rv) = default;
     Vector3         scaleFixed                  = {};                   // 固定スケール
     float           emitInterval                = {};                   // 発生間隔
     int32_t         emitNum                     = {};                   // 発生数
@@ -79,6 +92,7 @@ struct Type::ParticleEmitter::v2::Common
 
 struct Type::ParticleEmitter::v2::Flags
 {
+    Flags& operator=(const Flags&) = default;
     bool            enableRandomVelocity        = {};                   // ランダム速度
     bool            enableRandomEmit            = {};                   // ランダム発生
     bool            enableRandomRotation        = {};                   // ランダム回転
@@ -98,6 +112,7 @@ struct Type::ParticleEmitter::v2::RangeData
 
 struct Type::ParticleEmitter::v2::PhysicsData
 {
+    PhysicsData& operator=(const PhysicsData&) = default;
     Vector3         gravity                     = {};                   // 重力
     Vector3         resistance                  = {};                   // 抵抗
 };
@@ -114,4 +129,39 @@ struct Type::ParticleEmitter::v2::Data
     Flags           flags                       = {};                   // フラグ
 };
 
+struct Type::ParticleEmitter::v3::Common : public v2::Common
+{
+    float           radius                      = 0.0f;
+};
+
+struct Type::ParticleEmitter::v3::PhysicsData : public v2::PhysicsData
+{
+    float           frictionCoef                = 0.0f;                 // 摩擦
+};
+
+struct Type::ParticleEmitter::v3::Flags : v2::Flags
+{
+    bool            enableCollisionFloor        = {};                   // 衝突床
+};
+
+struct Type::ParticleEmitter::v3::CollisionFloor
+{
+    float           elevation                   = 0.0f;
+    float           bounce_power                = 0.0f;
+};
+
+struct Type::ParticleEmitter::v3::Data
+{
+    Data() = default;
+    Data(const Type::ParticleEmitter::v2::Data& _rv);
+    Data(const Type::ParticleEmitter::v1::Data& _rv);
+    
+    static constexpr uint32_t version           = 3;                    // バージョン番号
+    std::string     name                        = {};
+    Common          common                      = {};
+    v2::RangeData   ranges                      = {};
+    PhysicsData     physics                     = {};
+    Flags           flags                       = {};
+    CollisionFloor  collisionFloor              = {};                   // 衝突床データ
+};
 
