@@ -12,7 +12,7 @@ class EmitterManager
 {
 public:
     using json = nlohmann::json;
-    using EmitterData = Type::ParticleEmitter::v2::Data;
+    using EmitterData = Type::ParticleEmitter::v3::Data;
 
     EmitterManager(const EmitterManager&) = delete;
     EmitterManager& operator=(const EmitterManager&) = delete;

@@ -127,6 +127,9 @@ void ParticleEmitter::EmitParticle()
         datum.transform_.translate = emitterData_.common.emitPositionFixed;
     }
 
+    /// 衝突半径
+    datum.radius = emitterData_.common.radius;
+
     /// スケール
     if (emitterData_.flags.enableRandomScale)
     {
@@ -191,8 +194,14 @@ void ParticleEmitter::EmitParticle()
     datum.alphaDeltaValue_ = emitterData_.common.alphaDeltaValue;
     // 消去条件
     datum.deleteCondition_ = ParticleDeleteCondition::LifeTime;
+    // 物理
     datum.accGravity_ = emitterData_.physics.gravity;
     datum.accResistance_ = emitterData_.physics.resistance;
+    datum.frictionCoef_ = emitterData_.physics.frictionCoef;
+
+    // 衝突床
+    datum.enableCollisionFloor = emitterData_.flags.enableCollisionFloor;
+    datum.collisionFloor_ = emitterData_.collisionFloor;
 
     aabb_->SetMinMax(emitterData_.ranges.position.start(), emitterData_.ranges.position.end());
 }
@@ -300,6 +309,7 @@ void ParticleEmitter::DebugWindow()
     
     if (ImGui::CollapsingHeader("変形"))
     {
+        ImGui::DragFloat("衝突半径", &fromJsonData_.common.radius, 0.01f, FLT_MIN, FLT_MAX);
         if (!fromJsonData_.flags.enableRandomScale && !fromJsonData_.flags.enableScaleTransition)
         {
             ImGui::DragFloat3("スケール", &fromJsonData_.common.scaleFixed.x, 0.01f);
@@ -378,11 +388,23 @@ void ParticleEmitter::DebugWindow()
         ImGui::Spacing();
     }
 
+    if (ImGui::CollapsingHeader("衝突床"))
+    {
+        ImGui::Checkbox("衝突床との判定", &fromJsonData_.flags.enableCollisionFloor);
+        if (fromJsonData_.flags.enableCollisionFloor)
+        {
+            ImGui::DragFloat("高さ", &fromJsonData_.collisionFloor.elevation, 0.01f);
+            ImGui::DragFloat("反発係数", &fromJsonData_.collisionFloor.bounce_power, 0.01f);
+        }
+
+        ImGui::Spacing();
+    }
+
     if (ImGui::CollapsingHeader("物理"))
     {
         ImGui::DragFloat3("重力", &fromJsonData_.physics.gravity.x, 0.01f);
         ImGui::DragFloat3("抵抗", &fromJsonData_.physics.resistance.x, 0.01f);
-
+        ImGui::DragFloat("動摩擦係数", &fromJsonData_.physics.frictionCoef, 0.01f);
     }
 
     jsonPath_ = path;

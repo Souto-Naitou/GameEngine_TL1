@@ -1,7 +1,6 @@
 #include "Particle.h"
 #include <Core/DirectX12/Helper/DX12Helper.h>
 #include <Features/Model/ModelManager.h>
-#include <Features/Model/Helper/ModelHelper.h>
 #include <Core/DirectX12/SRVManager.h>
 #include <numbers>
 #include <Common/define.h>
@@ -12,6 +11,7 @@
 #include <DebugTools/ImGuiTemplates/ImGuiTemplates.h>
 #endif
 
+using namespace Type::ParticleEmitter;
 
 void Particle::Initialize(const std::string& _filepath, const std::string& _texturePath)
 {
@@ -201,6 +201,7 @@ void Particle::InitializeTransform()
 
 void Particle::ParticleDataUpdate(std::vector<ParticleData>::iterator& _itr)
 {
+    bool isGround = false;
     float deltaTime = 1.0f / 60.0f;
 
     Timer&              timer = _itr->timer_;
@@ -210,6 +211,7 @@ void Particle::ParticleDataUpdate(std::vector<ParticleData>::iterator& _itr)
     Vector3&            acceleration = _itr->acceleration_;
     Vector3&            gravity = _itr->accGravity_;
     Vector3&            resistance = _itr->accResistance_;
+    float               frictionCoef = _itr->frictionCoef_;
 
     Vector4&            currentColor = _itr->currentColor_;
     const auto&         colorRange = _itr->colorRange_;
@@ -220,6 +222,10 @@ void Particle::ParticleDataUpdate(std::vector<ParticleData>::iterator& _itr)
     float&              currentLifeTime = _itr->currentLifeTime_;
     float&              alphaDeltaValue = _itr->alphaDeltaValue_;
     bool&               enableDirectionByVelocity = _itr->enableDirectionByVelocity;
+    bool&               enableCollisionFloor = _itr->enableCollisionFloor;
+    float               radius = _itr->radius;
+    v3::CollisionFloor& collisionFloor = _itr->collisionFloor_;
+    
 
     /// タイマーの更新
     if (!timer.GetIsStart())
@@ -244,6 +250,9 @@ void Particle::ParticleDataUpdate(std::vector<ParticleData>::iterator& _itr)
         transform.rotate = velocity.Normalize();
     }
     transform.translate += velocity * deltaTime;
+
+    /// 加速度のリセット
+    acceleration = {};
 
     /// 色の更新
     {
@@ -281,8 +290,15 @@ void Particle::ParticleDataUpdate(std::vector<ParticleData>::iterator& _itr)
         transform.scale = scaleRange.start();
     }
 
-    /// 加速度のリセット
-    acceleration = {};
+    // 当たり判定(座標計算後に実行する)
+    if (enableCollisionFloor)
+    {
+        radius *= transform.scale.y;
+        isGround = UpdateByCollisionFloor(transform.translate, velocity, collisionFloor, radius);
+    }
+
+    // 摩擦を適用
+    ApplyFriction(velocity, isGround, frictionCoef, deltaTime);
 
     return;
 }
@@ -312,6 +328,26 @@ float Particle::EaseOutCubic(float t)
 float Particle::EaseOutQuad(float t)
 {
     return 1.0f - std::powf(1.0f - t, 2.0f);
+}
+
+bool Particle::UpdateByCollisionFloor(Vector3& _position, Vector3& _velocity, const v3::CollisionFloor& _floor, float _radius)
+{
+    if (_position.y - _radius < _floor.elevation && _velocity.y < 0.0f)
+    {
+        _position.y = _floor.elevation + _radius / 2.0f;
+        _velocity.y = -_velocity.y * _floor.bounce_power;
+        return true;
+    }
+    return false;
+}
+
+void Particle::ApplyFriction(Vector3& _velocity, bool _isGround, float _frictionCoef, float _deltaTime)
+{
+    if (!_isGround) return;
+
+    // XZ 平面に摩擦を適用（Y方向の速度はジャンプや重力のため残す）
+    _velocity.x *= std::pow(1.0f - _frictionCoef, _deltaTime);
+    _velocity.z *= std::pow(1.0f - _frictionCoef, _deltaTime);
 }
 
 bool Particle::ParticleDeleteByCondition(std::vector<ParticleData>::iterator& _itr)

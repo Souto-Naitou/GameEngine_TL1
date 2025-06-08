@@ -39,7 +39,7 @@ public: /// Getter
     //EmitterData& GetEmitterData() { return emitterData_; }
 
 private:
-    using EmitterData = Type::ParticleEmitter::v2::Data;
+    using EmitterData = Type::ParticleEmitter::v3::Data;
 
     static constexpr uint32_t   kDefaultReserveCount_   = 6000u;
     std::string                 name_                   = {};               // 名前

@@ -1,6 +1,6 @@
 #include "EmitterManager.h"
 
-using EmitterData = Type::ParticleEmitter::v2::Data;
+using EmitterData = Type::ParticleEmitter::v3::Data;
 
 const EmitterData& EmitterManager::LoadFile(const std::string& _path)
 {
@@ -38,6 +38,9 @@ void EmitterManager::Deserialize(const json& _root, EmitterData& _data)
         break;
     case 2:
         _data = Type::ParticleEmitter::v2::Data(_root);
+        break;
+    case 3:
+        _data = Type::ParticleEmitter::v3::Data(_root);
         break;
 
     default: break;
