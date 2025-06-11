@@ -58,11 +58,11 @@ void NimaFramework::Initialize()
     pImGuiManager_ = std::make_unique<ImGuiManager>();
     #endif // _DEBUG
 
-    // 設定ファイルの読み込み
-    pConfigManager_->Initialize("resources/json/.engine/config.json");
-
     /// ロガーの初期化
     pLogger_->Initialize();
+
+    // 設定ファイルの読み込み
+    pConfigManager_->Initialize("resources/json/.engine/config.json");
 
     /// ウィンドウの初期化
     pWinSystem_->Initialize();
