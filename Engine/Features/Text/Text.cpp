@@ -51,7 +51,7 @@ void Text::UpdatePosition()
 void Text::Draw()
 {
     const auto solidColorBrush = pTextSystem_->GetColorBrush(keyColor_);
-    d2dDeviceContext_->DrawTextLayout(
+    pTextSystem_->GetD2D1DeviceContext()->DrawTextLayout(
         D2D1::Point2F(screenPosition_.x, screenPosition_.y),
         textLayout_.Get(),
         solidColorBrush
