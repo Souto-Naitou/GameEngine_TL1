@@ -23,15 +23,16 @@ using json = nlohmann::json;
         return Iterator(jsonDataMap_.end());
     }
 
+    // 成功した場合は削除した要素数を返す
     size_t JSONStorage::erase(const std::string& _key)
     {
         auto it = jsonDataMap_.find(ToAbsPathLower(_key));
         if (it != jsonDataMap_.end())
         {
             jsonDataMap_.erase(it);
-            return 1; // 成功した場合は削除した要素数を返す
+            return 1; 
         }
-        return 0; // 要素が見つからなかった場合は0を返す
+        return 0;
     }
 
     json& JSONStorage::at(const std::string& _key)
