@@ -90,7 +90,7 @@ using json = nlohmann::json;
 
 #pragma region JSONLoader
     
-    json& JSONIO::Load(const std::string& _path)
+    const json& JSONIO::Load(const std::string& _path)
     {
         if (jsonDataStorage_.find(_path) != jsonDataStorage_.end())
         {

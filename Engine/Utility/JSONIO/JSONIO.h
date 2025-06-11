@@ -77,8 +77,7 @@ public:
     }
 
 
-    json& Load(const std::string& _path);
+    const json& Load(const std::string& _path);
     void Save(const std::string& _path, const json& _jsonData);
     bool Unload(const std::string& _path);
-
 };
