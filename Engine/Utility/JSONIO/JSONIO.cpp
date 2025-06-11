@@ -113,6 +113,9 @@ using json = nlohmann::json;
 
     void JSONIO::Save(const std::string& _path, const json& _jsonData)
     {
+        std::filesystem::path path = _path;
+        std::filesystem::create_directories(path.parent_path());
+        
         std::ofstream ofs(_path);
         if (!ofs.is_open())
         {
