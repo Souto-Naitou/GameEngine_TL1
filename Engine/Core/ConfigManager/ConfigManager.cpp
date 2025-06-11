@@ -2,6 +2,7 @@
 
 #include <Utility/JSONIO/JSONIO.h>
 #include <DebugTools/Logger/Logger.h>
+#include <Core/Win32/WinSystem.h>
 
 void ConfigManager::Initialize(const std::string& _cfgPath)
 {
@@ -23,6 +24,8 @@ void ConfigManager::LoadConfig(const std::string& _cfgPath)
     {
         Logger::GetInstance()->LogError("ConfigManager", __func__, _rter.what());
         configData_.window_title = "Nima Engine";
+        configData_.screen_width = WinSystem::clientWidth;
+        configData_.screen_height = WinSystem::clientHeight;
         JSONIO::GetInstance()->Save(_cfgPath, configData_);
     }
 }
