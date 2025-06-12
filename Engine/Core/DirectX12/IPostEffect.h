@@ -16,12 +16,13 @@ public:
     // Release resources
     virtual void    Release() = 0;
 
+    virtual void    Enable(bool _flag) = 0;
+    virtual bool    Enabled() const = 0;
+
 private:
     // Setter
-    virtual void    Enable(bool _flag) = 0;
     virtual void    SetInputTextureHandle(D3D12_GPU_DESCRIPTOR_HANDLE handle) = 0;
     // Getter
-    virtual bool    Enabled() const = 0;
     virtual D3D12_GPU_DESCRIPTOR_HANDLE GetOutputTextureHandle() const = 0;
     virtual const std::string& GetName() const = 0;
 
