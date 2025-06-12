@@ -250,6 +250,9 @@
     <Filter Include="Effect\PostEffect\Helper">
       <UniqueIdentifier>{2946dbcb-0581-4d0b-af8b-3987d55efe5e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Effect\PostEffect\Vignette">
+      <UniqueIdentifier>{b83890bf-4f67-4ef7-a098-3c2f12d2fc01}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DebugTools\DebugManager\DebugManager.cpp">
@@ -455,6 +458,9 @@
     </ClCompile>
     <ClCompile Include="Effects\PostEffects\Grayscale\Grayscale.cpp">
       <Filter>Effect\PostEffect\Grayscale</Filter>
+    </ClCompile>
+    <ClCompile Include="Effects\PostEffects\Vignette\Vignette.cpp">
+      <Filter>Effect\PostEffect\Vignette</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -716,6 +722,9 @@
     <ClInclude Include="Effects\PostEffects\Helper\PostEffectHelper.h">
       <Filter>Effect\PostEffect\Helper</Filter>
     </ClInclude>
+    <ClInclude Include="Effects\PostEffects\Vignette\Vignette.h">
+      <Filter>Effect\PostEffect\Vignette</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
@@ -777,6 +786,12 @@
       <Filter>HLSL</Filter>
     </FxCompile>
     <FxCompile Include="EngineResources\Shaders\Grayscale.VS.hlsl">
+      <Filter>HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="EngineResources\Shaders\Vignette.PS.hlsl">
+      <Filter>HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="EngineResources\Shaders\Vignette.VS.hlsl">
       <Filter>HLSL</Filter>
     </FxCompile>
   </ItemGroup>

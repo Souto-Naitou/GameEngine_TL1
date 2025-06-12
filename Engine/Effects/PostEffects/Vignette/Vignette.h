@@ -7,17 +7,28 @@
 #include <Core/DirectX12/DirectX12.h>
 #include <Core/DirectX12/ResourceStateTracker/ResourceStateTracker.h>
 
-/// <グレースケール>
+/// <ビネット>
 /// - PEはPost Effectの略
 /// - ApplyメソッドとSettingメソッドはPostEffectクラスで実行する
-class PEGrayscale : public IPostEffect
+class PEVignette : public IPostEffect
 {
+public:
+    struct VignetteOption
+    {
+        float scale;
+        float power;
+    };
+
 public:
     void    Initialize() override;
     void    Release() override;
 
     void    Enable(bool _flag) override;
     bool    Enabled() const override;
+
+    // Setter (Additional)
+    void    SetScale(float _scale) { pOption_->scale = _scale; }
+    void    SetPower(float _power) { pOption_->power = _power; }
 
 private:
     // PostEffectクラスがアクセスする
@@ -26,7 +37,7 @@ private:
     void    OnResizeBefore() override;
     void    OnResizedBuffers() override;
     void    ToShaderResourceState() override;
-    void    DebugOverlay() override {};
+    void    DebugOverlay() override;
 
     // Setters
     void    SetInputTextureHandle(D3D12_GPU_DESCRIPTOR_HANDLE _gpuHandle) override;
@@ -41,7 +52,7 @@ private:
     DirectX12*                                          pDx12_                  = nullptr;
 
     bool                                                isEnabled_              = true;
-    const std::string                                   name_                   = "Grayscale";
+    const std::string                                   name_                   = "Vignette";
     ResourceStateTracker                                renderTexture_          = {};
     Microsoft::WRL::ComPtr<IDxcBlob>                    vertexShaderBlob_       = nullptr;
     Microsoft::WRL::ComPtr<IDxcBlob>                    pixelShaderBlob_        = nullptr;
@@ -52,11 +63,17 @@ private:
     D3D12_GPU_DESCRIPTOR_HANDLE                         inputGpuHandle_         = {};
     uint32_t                                            rtvHeapIndex_           = 0;
     uint32_t                                            srvHeapIndex_           = 0;
-    const std::wstring                                  kVertexShaderPath       = L"EngineResources/Shaders/Grayscale.VS.hlsl";
-    const std::wstring                                  kPixelShaderPath        = L"EngineResources/Shaders/Grayscale.PS.hlsl";
+    const std::wstring                                  kVertexShaderPath       = L"EngineResources/Shaders/Vignette.VS.hlsl";
+    const std::wstring                                  kPixelShaderPath        = L"EngineResources/Shaders/Vignette.PS.hlsl";
+
+    // Constant buffer view
+    Microsoft::WRL::ComPtr<ID3D12Resource>      optionResource_     = nullptr;
+    VignetteOption*                             pOption_            = nullptr;
+
 
     // Internal functions
     void    CreateRootSignature();
     void    CreatePipelineStateObject();
     void    ToRenderTargetState();
+    void    CreateResourceCBuffer();
 };

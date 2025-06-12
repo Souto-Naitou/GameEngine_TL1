@@ -35,4 +35,5 @@ private:
     // On resize event
     virtual void    OnResizeBefore() = 0;
     virtual void    OnResizedBuffers() = 0;
+    virtual void    DebugOverlay() = 0;
 };
