@@ -208,6 +208,8 @@
     <ClCompile Include="DebugTools\ImGuiManager\ImGuiThemes.cpp" />
     <ClCompile Include="DebugTools\ImGuiTemplates\ImGuiTemplates.cpp" />
     <ClCompile Include="DebugTools\Logger\Logger.cpp" />
+    <ClCompile Include="Effects\PostEffects\Grayscale\Grayscale.cpp" />
+    <ClCompile Include="Effects\PostEffects\Helper\PostEffectHelper.cpp" />
     <ClCompile Include="Externals\Timer\Timer.cpp" />
     <ClCompile Include="Features\Audio\Audio.cpp" />
     <ClCompile Include="Features\Audio\AudioManager.cpp" />
@@ -268,6 +270,7 @@
     <ClInclude Include="Core\DirectX12\Framerate.h" />
     <ClInclude Include="Core\DirectX12\Helper\DX12Helper.h" />
     <ClInclude Include="Core\DirectX12\PostEffect.h" />
+    <ClInclude Include="Core\DirectX12\IPostEffect.h" />
     <ClInclude Include="Core\DirectX12\ResourceStateTracker\ResourceStateTracker.h" />
     <ClInclude Include="Core\DirectX12\RTVHeapCounter.h" />
     <ClInclude Include="Core\DirectX12\SRVManager.h" />
@@ -280,6 +283,8 @@
     <ClInclude Include="DebugTools\ImGuiTemplates\ImGuiTemplates.h" />
     <ClInclude Include="DebugTools\Logger\Logger.h" />
     <ClInclude Include="DebugTools\ReakChecker.h" />
+    <ClInclude Include="Effects\PostEffects\Grayscale\Grayscale.h" />
+    <ClInclude Include="Effects\PostEffects\Helper\PostEffectHelper.h" />
     <ClInclude Include="Externals\Timer\Timer.h" />
     <ClInclude Include="Features\Audio\Audio.h" />
     <ClInclude Include="Features\Audio\AudioManager.h" />
@@ -388,6 +393,16 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="EngineResources\Shaders\Grayscale.PS.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_ASAN|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="EngineResources\Shaders\Grayscale.VS.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_ASAN|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </FxCompile>
     <FxCompile Include="EngineResources\Shaders\Line.PS.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_ASAN|x64'">true</ExcludedFromBuild>

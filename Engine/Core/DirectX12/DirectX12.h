@@ -57,8 +57,8 @@ public:
     /// </summary>
     void CreateGameScreenResource();
 
-
     static const uint32_t kMaxSRVCount_;
+
 
 public: /// Getter
     ID3D12Device*                                           GetDevice() const                           { return device_.Get(); }

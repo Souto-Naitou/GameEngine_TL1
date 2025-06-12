@@ -53,6 +53,7 @@ void NimaFramework::Initialize()
     pTextSystem_ = TextSystem::GetInstance();
     pAudioManager_ = AudioManager::GetInstance();
     pEventTimer_ = EventTimer::GetInstance();
+    pPostEffect_ = PostEffect::GetInstance();
 
     #ifdef _DEBUG
     pImGuiManager_ = std::make_unique<ImGuiManager>();
@@ -145,7 +146,6 @@ void NimaFramework::Initialize()
     NiGui::SetDebug(pNiGuiDebug_.get());
 
     /// ポストエフェクト
-    pPostEffect_ = std::make_unique<PostEffect>();
     pPostEffect_->Initialize();
 
     /// コマンドリストを追加
@@ -154,7 +154,7 @@ void NimaFramework::Initialize()
     pDirectX_->AddCommandList(pSpriteSystem_->GetCommandList());
     pDirectX_->AddCommandList(pPostEffect_->GetCommandList());
 
-    pDirectX_->AddOnResize("PostEffect", std::bind(&PostEffect::OnResize, pPostEffect_.get()));
+    pDirectX_->AddOnResize("PostEffect", std::bind(&PostEffect::OnResize, pPostEffect_));
 }
 
 void NimaFramework::Finalize()
@@ -263,14 +263,18 @@ void NimaFramework::Draw()
     NiGui::DrawUI();
     pSpriteSystem_->DrawCall();
 
-    /// レンダーターゲットの初期化
-    pDirectX_->NewFrame();
-
     // 同期待ち
     pObject3dSystem_->Sync();
     pParticleSystem_->Sync();
     pSpriteSystem_->Sync();
 
+    // ポストエフェクトの適用
+    pPostEffect_->ApplyPostEffects();
+
+    /// レンダーターゲットの初期化
+    pDirectX_->NewFrame();
+
+    // ポストエフェクト後のテクスチャをスワップチェーンリソースに描画
     pPostEffect_->Draw();
 
     /// レンダーターゲットからビューポート用リソースにコピー

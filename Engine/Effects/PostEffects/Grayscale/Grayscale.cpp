@@ -1,144 +1,94 @@
-#include "PostEffect.h"
-
-#include <Core/DirectX12/Helper/DX12Helper.h>
-#include <Core/Win32/WinSystem.h>
+#include "Grayscale.h"
+#include <cassert>
+#include <Core/DirectX12/DirectX12.h>
+#include <Core/DirectX12/PostEffect.h>
 #include <Effects/PostEffects/Helper/PostEffectHelper.h>
+#include <Core/DirectX12/SRVManager.h>
+#include <Core/DirectX12/Helper/DX12Helper.h>
 
-void PostEffect::Initialize()
+void PEGrayscale::Initialize()
 {
-    // インスタンスの取得
-    ObtainInstances();
-
-    // 描画用コマンドリストの生成
-    CreateCommandList();
+    pDx12_ = DirectX12::GetInstance();
+    device_ = pDx12_->GetDevice();
+    commandList_ = PostEffect::GetInstance()->GetCommandList();
 
     // レンダーテクスチャの生成
-    Helper::CreateRenderTexture(pDevice_, renderTexture_, rtvHandle_, rtvHeapIndex_);
-    renderTexture_.resource->SetName(L"PureRenderTexture");
+    Helper::CreateRenderTexture(device_, renderTexture_, rtvHandleCpu_, rtvHeapIndex_);
+    renderTexture_.resource->SetName(L"GrayscaleRenderTexture");
 
-    // SRVの生成
+    // レンダーテクスチャのSRVを生成
     Helper::CreateSRV(renderTexture_, rtvHandleGpu_, srvHeapIndex_);
 
     // ルートシグネチャの生成
-    CreateRootSignature();
+    this->CreateRootSignature();
 
     // パイプラインステートの生成
-    CreatePipelineState();
+    this->CreatePipelineStateObject();
 }
 
-void PostEffect::ApplyPostEffects()
+void PEGrayscale::SetInputTextureHandle(D3D12_GPU_DESCRIPTOR_HANDLE _gpuHandle)
 {
-    // コマンドリストの設定
-    uint32_t indexBackbuffer = pDx12_->GetBackBufferIndex();
-    rtvHandleSwapChain_ = pDx12_->GetRTVHandle()[indexBackbuffer];
-    DX12Helper::CommandListCommonSetting(commandListForDraw_.Get(), &rtvHandleSwapChain_);
+    inputGpuHandle_ = _gpuHandle;
+}
 
+D3D12_GPU_DESCRIPTOR_HANDLE PEGrayscale::GetOutputTextureHandle() const
+{
+    return rtvHandleGpu_;
+}
+
+void PEGrayscale::Apply()
+{
+    commandList_->DrawInstanced(3, 1, 0, 0); // 三角形を1つ描画
+}
+
+void PEGrayscale::Release()
+{
+}
+
+void PEGrayscale::Setting()
+{
+    // レンダーテクスチャをレンダーターゲット状態に変更
+    this->ToRenderTargetState();
+
+    // レンダーターゲットを設定 (自分が所有するテクスチャに対して設定)
+    commandList_->OMSetRenderTargets(1, &rtvHandleCpu_, FALSE, nullptr);
+
+    // PSOとルートシグネチャを設定
+    commandList_->SetGraphicsRootSignature(rootSignature_.Get());
+    commandList_->SetPipelineState(pso_.Get());
+
+    // 入力テクスチャのSRVを設定する（自分が所有するテクスチャのSRVではないため注意)
+    commandList_->SetGraphicsRootDescriptorTable(0, inputGpuHandle_);
+
+    commandList_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+}
+
+void PEGrayscale::OnResizeBefore()
+{
+    SRVManager::GetInstance()->Deallocate(srvHeapIndex_);
+    renderTexture_.resource.Reset();
+    renderTexture_.state = D3D12_RESOURCE_STATE_PRESENT;
+}
+
+void PEGrayscale::OnResizedBuffers()
+{
+    // レンダーテクスチャの生成
+    Helper::CreateRenderTexture(device_, renderTexture_, rtvHandleCpu_, rtvHeapIndex_);
+    // レンダーテクスチャのSRVを生成
+    Helper::CreateSRV(renderTexture_, rtvHandleGpu_, srvHeapIndex_);
+}
+
+void PEGrayscale::ToShaderResourceState()
+{
+    // レンダーテクスチャをシェーダーリソース状態に変更
     DX12Helper::ChangeStateResource(
-        commandListForDraw_,
+        commandList_,
         renderTexture_,
         D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE
     );
-
-    outputHandleGpu_ = {};
-
-    for (auto it = postEffects_.begin(); it != postEffects_.end(); ++it)
-    {
-        auto postEffect = *it;
-        if (it == postEffects_.begin())
-        {
-            postEffect->SetInputTextureHandle(rtvHandleGpu_);
-        }
-        else
-        {
-            postEffect->SetInputTextureHandle(outputHandleGpu_);
-        }
-
-        // 1. PostEffectの設定 (PSOなど)
-        postEffect->Setting();
-        // 2. PostEffectの描画
-        postEffect->Apply();
-        // 3. PostEffectの描画後の処理
-        postEffect->ToShaderResourceState();
-        outputHandleGpu_ = postEffect->GetOutputTextureHandle();
-    }
-
-    DX12Helper::ChangeStateResource(
-        commandListForDraw_,
-        renderTexture_,
-        D3D12_RESOURCE_STATE_RENDER_TARGET
-    );
 }
 
-void PostEffect::Draw()
-{
-    uint32_t indexBuckbuffer = pDx12_->GetBackBufferIndex();
-    auto rtvHandle = pDx12_->GetRTVHandle()[indexBuckbuffer];
-    commandListForDraw_->OMSetRenderTargets(1, &rtvHandle, false, nullptr);
-    // レンダーターゲットがSwapchainリソースになっている前提
-    commandListForDraw_->SetGraphicsRootSignature(rootSignature_.Get());
-    commandListForDraw_->SetPipelineState(pso_.Get());
-    commandListForDraw_->SetGraphicsRootDescriptorTable(0, outputHandleGpu_);
-    commandListForDraw_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-    commandListForDraw_->DrawInstanced(3, 1, 0, 0);
-}
-
-void PostEffect::NewFrame()
-{
-    // Object3dやSpriteの描画先を決定する関数
-
-    /// 描画先のRTV/DSVの設定
-    D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle = dsvHeap_->GetCPUDescriptorHandleForHeapStart();
-    commandListMain_->OMSetRenderTargets(1, &rtvHandle_, false, &dsvHandle);
-
-    // 画面全体のクリア
-    commandListMain_->ClearRenderTargetView(rtvHandle_, &editorBG_.x, 0, nullptr);
-
-    // 指定した深度で画面全体をクリア
-    commandListMain_->ClearDepthStencilView(dsvHandle, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
-
-    // 描画先のビューを設定
-    commandListMain_->RSSetViewports(1, &viewport_);
-    commandListMain_->RSSetScissorRects(1, &scissorRect_);
-}
-
-void PostEffect::PostDraw()
-{
-    commandAllocator_->Reset();
-    commandListForDraw_->Reset(commandAllocator_.Get(), nullptr);
-}
-
-void PostEffect::OnResize()
-{
-    pSRVManager_->Deallocate(srvHeapIndex_);
-    renderTexture_.resource.Reset();
-    renderTexture_.state = D3D12_RESOURCE_STATE_PRESENT;
-    for (auto& posteffect : postEffects_) posteffect->OnResizeBefore();
-}
-
-void PostEffect::OnResizedBuffers()
-{
-    Helper::CreateRenderTexture(pDevice_, renderTexture_, rtvHandle_, rtvHeapIndex_);
-    renderTexture_.resource->SetName(L"PureRenderTexture");
-    Helper::CreateSRV(renderTexture_, rtvHandleGpu_, srvHeapIndex_);
-    for (auto& posteffect : postEffects_) posteffect->OnResizedBuffers();
-}
-
-void PostEffect::ObtainInstances()
-{
-    /// 必要なインスタンスを取得
-    pDx12_ = DirectX12::GetInstance();
-    rtvHeapCounter_ = pDx12_->GetRTVHeapCounter();
-    pDevice_ = pDx12_->GetDevice();
-    pSRVManager_ = SRVManager::GetInstance();
-    commandListMain_ = pDx12_->GetCommandList();
-    viewport_ = pDx12_->GetViewport();
-    scissorRect_ = pDx12_->GetScissorRect();
-    dsvHeap_ = pDx12_->GetDSVDescriptorHeap();
-    rtvHeap_ = pDx12_->GetRTVDescriptorHeap();
-    editorBG_ = pDx12_->GetEditorBGColor();
-}
-
-void PostEffect::CreateRootSignature()
+void PEGrayscale::CreateRootSignature()
 {
     D3D12_DESCRIPTOR_RANGE descriptorRange[1] = {};
     descriptorRange[0].BaseShaderRegister = 0; // 0から始まる
@@ -195,20 +145,19 @@ void PostEffect::CreateRootSignature()
         assert(false);
     }
     // バイナリをもとに生成
-    hr = pDevice_->CreateRootSignature(0, signatureBlob->GetBufferPointer(), signatureBlob->GetBufferSize(), IID_PPV_ARGS(&rootSignature_));
+    hr = device_->CreateRootSignature(0, signatureBlob->GetBufferPointer(), signatureBlob->GetBufferSize(), IID_PPV_ARGS(&rootSignature_));
     assert(SUCCEEDED(hr));
-
 }
 
-void PostEffect::CreatePipelineState()
+void PEGrayscale::CreatePipelineStateObject()
 {
-    ID3D12Device* device = pDx12_->GetDevice();
     IDxcUtils* dxcUtils = pDx12_->GetDxcUtils();
     IDxcCompiler3* dxcCompiler = pDx12_->GetDxcCompiler();
     IDxcIncludeHandler* includeHandler = pDx12_->GetIncludeHandler();
 
-    inputLayoutDesc_.pInputElementDescs = nullptr;
-    inputLayoutDesc_.NumElements = 0;
+    D3D12_INPUT_LAYOUT_DESC inputLayoutDesc{};
+    inputLayoutDesc.pInputElementDescs = nullptr;
+    inputLayoutDesc.NumElements = 0;
 
     /// BlendStateの設定
     D3D12_BLEND_DESC blendDesc{};
@@ -223,10 +172,11 @@ void PostEffect::CreatePipelineState()
 
 
     /// RasterizerStateの設定
-    rasterizerDesc_.CullMode = D3D12_CULL_MODE_NONE;
-    rasterizerDesc_.FillMode = D3D12_FILL_MODE_SOLID;
-    rasterizerDesc_.MultisampleEnable = TRUE;  // アンチエイリアス有効化
-    rasterizerDesc_.AntialiasedLineEnable = TRUE;  // ラインのアンチエイリアス有効化
+    D3D12_RASTERIZER_DESC rasterizerDesc{};
+    rasterizerDesc.CullMode = D3D12_CULL_MODE_NONE;
+    rasterizerDesc.FillMode = D3D12_FILL_MODE_SOLID;
+    rasterizerDesc.MultisampleEnable = TRUE;  // アンチエイリアス有効化
+    rasterizerDesc.AntialiasedLineEnable = TRUE;  // ラインのアンチエイリアス有効化
 
     /// ShaderをCompileする
     vertexShaderBlob_ = DX12Helper::CompileShader(kVertexShaderPath, L"vs_6_0", dxcUtils, dxcCompiler, includeHandler);
@@ -238,11 +188,11 @@ void PostEffect::CreatePipelineState()
     /// PSOを生成する
     D3D12_GRAPHICS_PIPELINE_STATE_DESC graphicsPipelineStateDesc{};
     graphicsPipelineStateDesc.pRootSignature = rootSignature_.Get();    // RootSignature
-    graphicsPipelineStateDesc.InputLayout = inputLayoutDesc_;    // InputLayout
+    graphicsPipelineStateDesc.InputLayout = inputLayoutDesc;    // InputLayout
     graphicsPipelineStateDesc.VS = { vertexShaderBlob_.Get()->GetBufferPointer(), vertexShaderBlob_.Get()->GetBufferSize() };
     graphicsPipelineStateDesc.PS = { pixelShaderBlob_.Get()->GetBufferPointer(), pixelShaderBlob_.Get()->GetBufferSize() };
     graphicsPipelineStateDesc.BlendState = blendDesc;            // BlendState
-    graphicsPipelineStateDesc.RasterizerState = rasterizerDesc_;    // RasterizerState
+    graphicsPipelineStateDesc.RasterizerState = rasterizerDesc;    // RasterizerState
     // 書き込むRTVの情報
     graphicsPipelineStateDesc.NumRenderTargets = 1;
     graphicsPipelineStateDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;
@@ -256,7 +206,7 @@ void PostEffect::CreatePipelineState()
     graphicsPipelineStateDesc.DepthStencilState = {};
     graphicsPipelineStateDesc.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
     // 実際に生成
-    HRESULT hr = device->CreateGraphicsPipelineState(&graphicsPipelineStateDesc, IID_PPV_ARGS(&pso_));
+    HRESULT hr = device_->CreateGraphicsPipelineState(&graphicsPipelineStateDesc, IID_PPV_ARGS(&pso_));
     if (FAILED(hr))
     {
         Logger::GetInstance()->LogError(
@@ -270,7 +220,12 @@ void PostEffect::CreatePipelineState()
     return;
 }
 
-void PostEffect::CreateCommandList()
+void PEGrayscale::ToRenderTargetState()
 {
-    Helper::CreateCommandList(pDevice_, commandListForDraw_, commandAllocator_);
+    // レンダーテクスチャをレンダーターゲット状態に変更
+    DX12Helper::ChangeStateResource(
+        commandList_,
+        renderTexture_,
+        D3D12_RESOURCE_STATE_RENDER_TARGET
+    );
 }

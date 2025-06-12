@@ -4,10 +4,10 @@
 #include <Interfaces/IScene.h>
 #include <Features/Object3d/Object3d.h>
 #include <Features/GameEye/GameEye.h>
+#include <Effects/PostEffects/Grayscale/Grayscale.h>
 
 #include <memory>
 #include <Features/Particle/Emitter/ParticleEmitter.h>
-#include <string>
 #include <string>
 
 class CG4Task1 : public IScene
@@ -35,6 +35,7 @@ private:
     std::unique_ptr<ParticleEmitter>    pEmitter_Snow_      = nullptr;
     std::unique_ptr<ParticleEmitter>    pEmitter_Spark_     = nullptr;
     std::unique_ptr<ParticleEmitter>    pEmitter_Test_      = nullptr;
+    std::unique_ptr<PEGrayscale>        pPEGrayscale_       = nullptr;
 
     // Pointers
     Input*  pInput_     = nullptr;

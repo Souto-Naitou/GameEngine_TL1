@@ -131,12 +131,8 @@ void DirectX12::OnResized()
 
 void DirectX12::NewFrame()
 {
-    // バックバッファのインデックスを取得
-    backBufferIndex_ = swapChain_->GetCurrentBackBufferIndex();
-
     // リソースバリアの設定
     DX12Helper::ChangeStateResource(commandList_, swapChainResources_[backBufferIndex_], D3D12_RESOURCE_STATE_RENDER_TARGET);
-
 
     /// 描画先のRTV/DSVの設定
     commandList_->OMSetRenderTargets(1, &rtvHandles_[backBufferIndex_], false, nullptr);
@@ -195,6 +191,8 @@ void DirectX12::DisplayFrame()
     /// GPUとISに画面の交換を行うよう通知する
     swapChain_->Present(1, 0);
 
+    // バックバッファのインデックスを取得
+    backBufferIndex_ = swapChain_->GetCurrentBackBufferIndex();
 
     /// Fenceの値を更新
     fenceValue_++;

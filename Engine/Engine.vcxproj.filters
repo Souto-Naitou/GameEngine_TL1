@@ -238,6 +238,18 @@
     <Filter Include="Core\DirectX12\ResourceStateTracker">
       <UniqueIdentifier>{589394c6-80ed-4d6d-8187-894120671dce}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Effect">
+      <UniqueIdentifier>{b3661dd5-34ec-43fa-8d87-0f3dd4e09792}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Effect\PostEffect">
+      <UniqueIdentifier>{01d61650-8c9e-445b-a928-032122192ccf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Effect\PostEffect\Grayscale">
+      <UniqueIdentifier>{df05c70a-a16e-4880-a01d-f71c08a6b1fb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Effect\PostEffect\Helper">
+      <UniqueIdentifier>{2946dbcb-0581-4d0b-af8b-3987d55efe5e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DebugTools\DebugManager\DebugManager.cpp">
@@ -437,6 +449,12 @@
     </ClCompile>
     <ClCompile Include="Features\Particle\Emitter\EmitterData.cpp">
       <Filter>Feature\Particle\Emitter</Filter>
+    </ClCompile>
+    <ClCompile Include="Effects\PostEffects\Helper\PostEffectHelper.cpp">
+      <Filter>Effect\PostEffect\Helper</Filter>
+    </ClCompile>
+    <ClCompile Include="Effects\PostEffects\Grayscale\Grayscale.cpp">
+      <Filter>Effect\PostEffect\Grayscale</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -689,6 +707,15 @@
     <ClInclude Include="Features\Particle\Emitter\EmitterData.h">
       <Filter>Feature\Particle\Emitter</Filter>
     </ClInclude>
+    <ClInclude Include="Core\DirectX12\IPostEffect.h">
+      <Filter>Core\DirectX12\PostEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="Effects\PostEffects\Grayscale\Grayscale.h">
+      <Filter>Effect\PostEffect\Grayscale</Filter>
+    </ClInclude>
+    <ClInclude Include="Effects\PostEffects\Helper\PostEffectHelper.h">
+      <Filter>Effect\PostEffect\Helper</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
@@ -744,6 +771,12 @@
       <Filter>HLSL</Filter>
     </FxCompile>
     <FxCompile Include="..\SampleProject\EngineResources\Shaders\Sprite.VS.hlsl">
+      <Filter>HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="EngineResources\Shaders\Grayscale.PS.hlsl">
+      <Filter>HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="EngineResources\Shaders\Grayscale.VS.hlsl">
       <Filter>HLSL</Filter>
     </FxCompile>
   </ItemGroup>

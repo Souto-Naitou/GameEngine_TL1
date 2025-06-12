@@ -204,7 +204,7 @@ void DirectX12::CreateSwapChainAndResource()
     rtvHeapCounter_ = std::make_unique<RTVHeapCounter>();
 
     /// ディスクリプタヒープの生成も行う
-    rtvHeapCounter_->Initialize(device_.Get(), 3);
+    rtvHeapCounter_->Initialize(device_.Get(), 64);
     dsvDescriptorHeap_ = DX12Helper::CreateDescriptorHeap(device_, D3D12_DESCRIPTOR_HEAP_TYPE_DSV, 1, false);
 
 
