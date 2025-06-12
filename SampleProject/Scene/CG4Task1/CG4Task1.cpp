@@ -55,8 +55,13 @@ void CG4Task1::Initialize()
     pEmitter_Test_->SetEnableBillboard(true);
 
     pPEGrayscale_ = std::make_unique<PEGrayscale>();
-    PostEffect::GetInstance()->AddPostEffect(pPEGrayscale_.get());
     pPEGrayscale_->Initialize();
+
+    pPEVignette_ = std::make_unique<PEVignette>();
+    pPEVignette_->Initialize();
+
+    PostEffect::GetInstance()->AddPostEffect(pPEGrayscale_.get())
+        .AddPostEffect(pPEVignette_.get());
 }
 
 void CG4Task1::Finalize()

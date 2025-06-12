@@ -159,6 +159,16 @@ void PostEffect::DebugWindow()
             if (selectedIndex == i) selectedIndex = -1;
             else selectedIndex = i;
         }
+        if (ImGui::BeginPopupContextItem()) // <-- use last item id as popup id
+        {
+            selectedIndex = i;
+            postEffects_[selectedIndex]->DebugOverlay();
+
+            if (ImGui::Button("Close"))
+                ImGui::CloseCurrentPopup();
+            ImGui::EndPopup();
+        }
+        ImGui::SetItemTooltip("Right-click to open setting");
     }
 
     ImGui::Spacing();
