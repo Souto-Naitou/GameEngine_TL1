@@ -2,6 +2,9 @@
 
 #include <Core/DirectX12/Helper/DX12Helper.h>
 #include <Core/Win32/WinSystem.h>
+#include <Effects/PostEffects/Helper/PostEffectHelper.h>
+#include <DebugTools/DebugManager/DebugManager.h>
+#include <imgui.h>
 
 void PostEffect::Initialize()
 {
@@ -12,20 +15,94 @@ void PostEffect::Initialize()
     CreateCommandList();
 
     // レンダーテクスチャの生成
-    CreateRenderTexture();
+    Helper::CreateRenderTexture(pDevice_, renderTexture_, rtvHandle_, rtvHeapIndex_);
+    renderTexture_.resource->SetName(L"PureRenderTexture");
 
     // SRVの生成
-    CreateSRV();
+    Helper::CreateSRV(renderTexture_, rtvHandleGpu_, srvHeapIndex_);
 
     // ルートシグネチャの生成
     CreateRootSignature();
 
     // パイプラインステートの生成
     CreatePipelineState();
+
+    // デバッグウィンドウの登録
+    #ifdef _DEBUG
+    DebugManager::GetInstance()->SetComponent("PostEffect", "EffectList", std::bind(&PostEffect::DebugWindow, this));
+    #endif //_DEBUG
+}
+
+void PostEffect::Finalize()
+{
+    #ifdef _DEBUG
+    DebugManager::GetInstance()->DeleteComponent("PostEffect", "EffectList");
+    #endif //_DEBUG
+}
+
+void PostEffect::ApplyPostEffects()
+{
+    // コマンドリストの設定
+    uint32_t indexBackbuffer = pDx12_->GetBackBufferIndex();
+    rtvHandleSwapChain_ = pDx12_->GetRTVHandle()[indexBackbuffer];
+    DX12Helper::CommandListCommonSetting(commandListForDraw_.Get(), &rtvHandleSwapChain_);
+
+    DX12Helper::ChangeStateResource(
+        commandListForDraw_,
+        renderTexture_,
+        D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE
+    );
+
+    outputHandleGpu_ = rtvHandleGpu_;
+
+    for (auto it = postEffects_.begin(); it != postEffects_.end(); ++it)
+    {
+        auto postEffect = *it;
+
+        if (!postEffect->Enabled()) continue;
+
+        if (it == postEffects_.begin())
+        {
+            postEffect->SetInputTextureHandle(rtvHandleGpu_);
+        }
+        else
+        {
+            postEffect->SetInputTextureHandle(outputHandleGpu_);
+        }
+
+        // 1. PostEffectの設定 (PSOなど)
+        postEffect->Setting();
+        // 2. PostEffectの描画
+        postEffect->Apply();
+        // 3. PostEffectの描画後の処理
+        postEffect->ToShaderResourceState();
+        outputHandleGpu_ = postEffect->GetOutputTextureHandle();
+    }
+}
+
+void PostEffect::Draw()
+{
+    uint32_t indexBuckbuffer = pDx12_->GetBackBufferIndex();
+    auto rtvHandle = pDx12_->GetRTVHandle()[indexBuckbuffer];
+    commandListForDraw_->OMSetRenderTargets(1, &rtvHandle, false, nullptr);
+    // レンダーターゲットがSwapchainリソースになっている前提
+    commandListForDraw_->SetGraphicsRootSignature(rootSignature_.Get());
+    commandListForDraw_->SetPipelineState(pso_.Get());
+    commandListForDraw_->SetGraphicsRootDescriptorTable(0, outputHandleGpu_);
+    commandListForDraw_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+    commandListForDraw_->DrawInstanced(3, 1, 0, 0);
+
+    DX12Helper::ChangeStateResource(
+        commandListForDraw_,
+        renderTexture_,
+        D3D12_RESOURCE_STATE_RENDER_TARGET
+    );
 }
 
 void PostEffect::NewFrame()
 {
+    // Object3dやSpriteの描画先を決定する関数
+
     /// 描画先のRTV/DSVの設定
     D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle = dsvHeap_->GetCPUDescriptorHandleForHeapStart();
     commandListMain_->OMSetRenderTargets(1, &rtvHandle_, false, &dsvHandle);
@@ -41,33 +118,6 @@ void PostEffect::NewFrame()
     commandListMain_->RSSetScissorRects(1, &scissorRect_);
 }
 
-void PostEffect::Draw()
-{
-    // コマンドリストの設定
-    rtvHandleSwapChain_ = pDx12_->GetRTVHandle()[pDx12_->GetBackBufferIndex()];
-    DX12Helper::CommandListCommonSetting(commandListForDraw_.Get(), &rtvHandleSwapChain_);
-
-    DX12Helper::ChangeStateResource(
-        commandListForDraw_,
-        renderTexture_,
-        D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE
-    );
-
-    commandListForDraw_->SetGraphicsRootSignature(rootSignature_.Get());
-    commandListForDraw_->SetPipelineState(pso_.Get());
-    commandListForDraw_->SetGraphicsRootDescriptorTable(0, rtvHandleGpu_);
-
-    commandListForDraw_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
-    commandListForDraw_->DrawInstanced(3, 1, 0, 0);
-
-    DX12Helper::ChangeStateResource(
-        commandListForDraw_,
-        renderTexture_,
-        D3D12_RESOURCE_STATE_RENDER_TARGET
-    );
-}
-
 void PostEffect::PostDraw()
 {
     commandAllocator_->Reset();
@@ -76,58 +126,82 @@ void PostEffect::PostDraw()
 
 void PostEffect::OnResize()
 {
-    pSRVManager_->Deallocate(renderSRVIndex_);
+    pSRVManager_->Deallocate(srvHeapIndex_);
     renderTexture_.resource.Reset();
     renderTexture_.state = D3D12_RESOURCE_STATE_PRESENT;
+    for (auto& posteffect : postEffects_) posteffect->OnResizeBefore();
 }
 
 void PostEffect::OnResizedBuffers()
 {
-    CreateRenderTexture();
-    CreateSRV();
+    Helper::CreateRenderTexture(pDevice_, renderTexture_, rtvHandle_, rtvHeapIndex_);
+    renderTexture_.resource->SetName(L"PureRenderTexture");
+    Helper::CreateSRV(renderTexture_, rtvHandleGpu_, srvHeapIndex_);
+    for (auto& posteffect : postEffects_) posteffect->OnResizedBuffers();
 }
 
-void PostEffect::CreateRenderTexture()
+void PostEffect::DebugWindow()
 {
-    renderTexture_.resource = DX12Helper::CreateRenderTextureResource(
-        pDevice_,
-        WinSystem::clientWidth,
-        WinSystem::clientHeight,
-        DXGI_FORMAT_R8G8B8A8_UNORM,
-        pDx12_->GetEditorBGColor()
-    );
-    renderTexture_.state = D3D12_RESOURCE_STATE_RENDER_TARGET;
+    #ifdef _DEBUG
 
-    D3D12_RENDER_TARGET_VIEW_DESC rtvDesc{};
-    rtvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-    rtvDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
+    // staticな変数で状態を保持
+    static int selectedIndex = -1;
 
-    if (rtvHandle_.ptr == 0)
+    // リスト表示
+    for (int i = 0; i < postEffects_.size(); ++i)
     {
-        rtvHeapIndex_ = rtvHeapCounter_->Allocate("PostEffectRTV");
-        rtvHandle_ = rtvHeapCounter_->GetRTVHandle(rtvHeapIndex_);
+        // 無効の場合は(Disable)を末尾に付与
+        std::string name = postEffects_[i]->GetName();
+        if (!postEffects_[i]->Enabled()) name += "(Disabled)";
+        // Selectableで要素を表示・選択状態を管理
+        if (ImGui::Selectable(name.c_str(), selectedIndex == i))
+        {
+            if (selectedIndex == i) selectedIndex = -1;
+            else selectedIndex = i;
+        }
     }
 
-    pDevice_->CreateRenderTargetView(
-        renderTexture_.resource.Get(),
-        &rtvDesc,
-        rtvHandle_
-    );
-    renderTexture_.resource->SetName(L"RenderTexture");
-}
+    ImGui::Spacing();
 
-void PostEffect::CreateSRV()
-{
-    renderSRVIndex_ = pSRVManager_->Allocate();
+    // 移動ボタンの表示と操作
+    bool isEnable = false;
+    if (selectedIndex < 0)
+    {
+        ImGui::BeginDisabled();
+    }
+    else
+    {
+        isEnable = postEffects_[selectedIndex]->Enabled();
+    }
 
-    pSRVManager_->CreateForTexture2D(
-        renderSRVIndex_,
-        renderTexture_.resource.Get(),
-        DXGI_FORMAT_R8G8B8A8_UNORM,
-        1
-    );
+    if (ImGui::Button("Up") && selectedIndex > 0)
+    {
+        std::swap(postEffects_[selectedIndex], postEffects_[selectedIndex - 1]);
+        selectedIndex--;  // 選択インデックスも一緒に更新
+    }
 
-    rtvHandleGpu_ = pSRVManager_->GetGPUDescriptorHandle(renderSRVIndex_);
+    ImGui::SameLine();
+
+    if (ImGui::Button("Down") && selectedIndex < postEffects_.size() - 1)
+    {
+        std::swap(postEffects_[selectedIndex], postEffects_[selectedIndex + 1]);
+        selectedIndex++;  // 選択インデックスも更新
+    }
+
+    ImGui::SameLine();
+
+    if (ImGui::Checkbox("Enabled", &isEnable))
+    {
+        postEffects_[selectedIndex]->Enable(isEnable);
+    }
+
+    if (selectedIndex < 0) 
+    {
+        ImGui::EndDisabled();
+        ImGui::Text("項目を選択してください");
+    }
+
+    #endif //_DEBUG
 }
 
 void PostEffect::ObtainInstances()
@@ -279,6 +353,5 @@ void PostEffect::CreatePipelineState()
 
 void PostEffect::CreateCommandList()
 {
-    pDevice_->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(commandAllocator_.GetAddressOf()));
-    pDevice_->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, commandAllocator_.Get(), nullptr, IID_PPV_ARGS(commandListForDraw_.GetAddressOf()));
+    Helper::CreateCommandList(pDevice_, commandListForDraw_, commandAllocator_);
 }

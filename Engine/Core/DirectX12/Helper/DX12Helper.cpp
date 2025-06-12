@@ -440,6 +440,8 @@ void DX12Helper::ChangeStateResource(const Microsoft::WRL::ComPtr<ID3D12Graphics
 
 void DX12Helper::ChangeStateResource(const ComPtr<ID3D12GraphicsCommandList>& _commandList, ResourceStateTracker& _resource, D3D12_RESOURCE_STATES _after)
 {
+    if (_resource.state == _after) return;
+
     D3D12_RESOURCE_BARRIER barrier{};
     barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
     barrier.Transition.pResource = _resource.resource.Get();

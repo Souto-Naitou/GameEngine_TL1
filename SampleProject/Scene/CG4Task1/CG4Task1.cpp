@@ -5,6 +5,7 @@
 #include <Features/SceneManager/SceneManager.h>
 #include <Features/Line/LineSystem.h>
 #include <Features/GameEye/FreeLook/FreeLookEye.h>
+#include <Core/DirectX12/PostEffect.h>
 
 
 void CG4Task1::Initialize()
@@ -52,6 +53,10 @@ void CG4Task1::Initialize()
     pEmitter_Test_ = std::make_unique<ParticleEmitter>();
     pEmitter_Test_->Initialize("Particle/ParticleSpark.obj", "spark.png");
     pEmitter_Test_->SetEnableBillboard(true);
+
+    pPEGrayscale_ = std::make_unique<PEGrayscale>();
+    PostEffect::GetInstance()->AddPostEffect(pPEGrayscale_.get());
+    pPEGrayscale_->Initialize();
 }
 
 void CG4Task1::Finalize()

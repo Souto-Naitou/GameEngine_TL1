@@ -54,7 +54,6 @@ protected: /// システムクラスのインスタンス
     std::unique_ptr<Viewport>       pViewport_                  = nullptr;
     std::unique_ptr<NiGuiDrawer>    pDrawer_                    = nullptr;
     std::unique_ptr<NiGuiDebug>     pNiGuiDebug_                = nullptr;
-    std::unique_ptr<PostEffect>     pPostEffect_                = nullptr;
 
     #ifdef _DEBUG
     std::unique_ptr<ImGuiManager>   pImGuiManager_              = nullptr;
@@ -81,6 +80,7 @@ protected: /// 他クラスのインスタンス
     RandomGenerator*                pRandomGenerator_           = nullptr;
     AudioManager*                   pAudioManager_              = nullptr;
     EventTimer*                     pEventTimer_                = nullptr;
+    PostEffect*                     pPostEffect_                = nullptr;
 
 
 protected:

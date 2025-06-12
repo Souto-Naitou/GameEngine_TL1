@@ -52,6 +52,7 @@ void ParticleEmitter::Initialize(const std::string& _modelPath, const std::strin
     {
         particleName_ = emitterData_.name;
         name_ = particleName_ + "##" + ptrHex_;
+        particle_->SetName(name_);
     }
 
     aabb_ = std::make_unique<AABB>();
@@ -223,6 +224,7 @@ void ParticleEmitter::DebugWindow()
             particleName_ = name;
             name_ = particleName_ + "##" + ptrHex_;
             fromJsonData_.name = name;
+            particle_->SetName(name_);
         }
         if (ImGui::Button("マニュアル発生"))
         {

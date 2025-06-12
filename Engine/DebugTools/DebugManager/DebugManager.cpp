@@ -21,7 +21,7 @@ void DebugManager::PushLog(const std::string& _log)
 
 DebugManager::DebugManager()
 {
-    pDX12_ = DirectX12::GetInstance();
+    pDx12_ = DirectX12::GetInstance();
 }
 
 DebugManager::~DebugManager()
@@ -368,10 +368,10 @@ void DebugManager::Window_GameScreen()
 {
     #ifdef _DEBUG
 
-    uint32_t srvIndex = pDX12_->GetGameWndSRVIndex();
+    uint32_t srvIndex = pDx12_->GetGameWndSRVIndex();
     auto gpuHnd = SRVManager::GetInstance()->GetGPUDescriptorHandle(srvIndex);
 
-    auto vp = pDX12_->GetViewport();
+    auto vp = pDx12_->GetViewport();
 
     uint32_t width = static_cast<uint32_t>(vp.Width);
     uint32_t height = static_cast<uint32_t>(vp.Height);

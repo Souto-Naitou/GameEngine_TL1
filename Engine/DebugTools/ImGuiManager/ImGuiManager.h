@@ -40,10 +40,10 @@ private:
     // Internal functions
     void InitializeStyleNameArray();
 
-    ImGuiIO*                io_             = nullptr;
-    bool                    isChangedFont_  = false;
-    uint32_t                srvIndex_       = 0u;
-    ID3D12DescriptorHeap*   srvDescHeap_    = nullptr;
+    ImGuiIO*                    io_                 = nullptr;
+    bool                        isChangedFont_      = false;
+    uint32_t                    srvIndex_           = 0u;
+    ID3D12DescriptorHeap*       srvDescHeap_        = nullptr;
 
     // For debug window
     std::vector<std::string>    styleNameArray_     = {};

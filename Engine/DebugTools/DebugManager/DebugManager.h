@@ -85,7 +85,7 @@ private:
     bool                    isExistSettingFile_ = false;
     
     // Pointers
-    DirectX12*  pDX12_ = nullptr;
+    DirectX12*  pDx12_ = nullptr;
 
 
 private:
