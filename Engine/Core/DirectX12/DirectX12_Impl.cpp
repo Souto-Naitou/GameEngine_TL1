@@ -686,6 +686,8 @@ void DirectX12::ResizeBuffers()
         swapChainResources_[i].state = D3D12_RESOURCE_STATE_PRESENT;
     }
 
+    backBufferIndex_ = swapChain_->GetCurrentBackBufferIndex();
+
     // ビューポート・シザーも更新
     viewport_.Width = static_cast<float>(WinSystem::clientWidth);
     viewport_.Height = static_cast<float>(WinSystem::clientHeight);
