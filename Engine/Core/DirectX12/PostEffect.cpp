@@ -28,12 +28,16 @@ void PostEffect::Initialize()
     CreatePipelineState();
 
     // デバッグウィンドウの登録
+    #ifdef _DEBUG
     DebugManager::GetInstance()->SetComponent("PostEffect", "EffectList", std::bind(&PostEffect::DebugWindow, this));
+    #endif //_DEBUG
 }
 
 void PostEffect::Finalize()
 {
+    #ifdef _DEBUG
     DebugManager::GetInstance()->DeleteComponent("PostEffect", "EffectList");
+    #endif //_DEBUG
 }
 
 void PostEffect::ApplyPostEffects()
@@ -138,6 +142,8 @@ void PostEffect::OnResizedBuffers()
 
 void PostEffect::DebugWindow()
 {
+    #ifdef _DEBUG
+
     // staticな変数で状態を保持
     static int selectedIndex = -1;
 
@@ -194,6 +200,8 @@ void PostEffect::DebugWindow()
         ImGui::EndDisabled();
         ImGui::Text("項目を選択してください");
     }
+
+    #endif //_DEBUG
 }
 
 void PostEffect::ObtainInstances()
