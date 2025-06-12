@@ -27,12 +27,14 @@ public:
     }
 
     void Initialize();
+    void Finalize();
     void ApplyPostEffects();
     void NewFrame();
     void PostDraw();
     void Draw();
     void OnResize();
     void OnResizedBuffers();
+    void DebugWindow();
 
 
 public:

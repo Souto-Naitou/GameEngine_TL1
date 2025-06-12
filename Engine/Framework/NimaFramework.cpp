@@ -165,6 +165,7 @@ void NimaFramework::Finalize()
     pLogger_->Save();
     pParticleManager_->Finalize();
     pSceneManager_->Finalize();
+    pPostEffect_->Finalize();
 
     #ifdef _DEBUG
     pImGuiManager_->Finalize();

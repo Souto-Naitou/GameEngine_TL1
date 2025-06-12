@@ -25,15 +25,20 @@ private:
     void    ToShaderResourceState() override;
 
     // Setters
+    void    Enable(bool _flag) override;
     void    SetInputTextureHandle(D3D12_GPU_DESCRIPTOR_HANDLE _gpuHandle) override;
     // Getters
+    bool    Enabled() const override;
     D3D12_GPU_DESCRIPTOR_HANDLE GetOutputTextureHandle() const override;
+    const std::string&          GetName() const override;
 
 private:
     ID3D12Device*                                       device_                 = nullptr;
     ID3D12GraphicsCommandList*                          commandList_            = nullptr;
     DirectX12*                                          pDx12_                  = nullptr;
 
+    bool                                                isEnabled_              = true;
+    const std::string                                   name_                   = "Grayscale";
     ResourceStateTracker                                renderTexture_          = {};
     Microsoft::WRL::ComPtr<IDxcBlob>                    vertexShaderBlob_       = nullptr;
     Microsoft::WRL::ComPtr<IDxcBlob>                    pixelShaderBlob_        = nullptr;

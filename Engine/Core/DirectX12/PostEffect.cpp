@@ -3,6 +3,8 @@
 #include <Core/DirectX12/Helper/DX12Helper.h>
 #include <Core/Win32/WinSystem.h>
 #include <Effects/PostEffects/Helper/PostEffectHelper.h>
+#include <DebugTools/DebugManager/DebugManager.h>
+#include <imgui.h>
 
 void PostEffect::Initialize()
 {
@@ -24,6 +26,14 @@ void PostEffect::Initialize()
 
     // パイプラインステートの生成
     CreatePipelineState();
+
+    // デバッグウィンドウの登録
+    DebugManager::GetInstance()->SetComponent("PostEffect", "EffectList", std::bind(&PostEffect::DebugWindow, this));
+}
+
+void PostEffect::Finalize()
+{
+    DebugManager::GetInstance()->DeleteComponent("PostEffect", "EffectList");
 }
 
 void PostEffect::ApplyPostEffects()
@@ -39,11 +49,14 @@ void PostEffect::ApplyPostEffects()
         D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE
     );
 
-    outputHandleGpu_ = {};
+    outputHandleGpu_ = rtvHandleGpu_;
 
     for (auto it = postEffects_.begin(); it != postEffects_.end(); ++it)
     {
         auto postEffect = *it;
+
+        if (!postEffect->Enabled()) continue;
+
         if (it == postEffects_.begin())
         {
             postEffect->SetInputTextureHandle(rtvHandleGpu_);
@@ -61,12 +74,6 @@ void PostEffect::ApplyPostEffects()
         postEffect->ToShaderResourceState();
         outputHandleGpu_ = postEffect->GetOutputTextureHandle();
     }
-
-    DX12Helper::ChangeStateResource(
-        commandListForDraw_,
-        renderTexture_,
-        D3D12_RESOURCE_STATE_RENDER_TARGET
-    );
 }
 
 void PostEffect::Draw()
@@ -80,6 +87,12 @@ void PostEffect::Draw()
     commandListForDraw_->SetGraphicsRootDescriptorTable(0, outputHandleGpu_);
     commandListForDraw_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     commandListForDraw_->DrawInstanced(3, 1, 0, 0);
+
+    DX12Helper::ChangeStateResource(
+        commandListForDraw_,
+        renderTexture_,
+        D3D12_RESOURCE_STATE_RENDER_TARGET
+    );
 }
 
 void PostEffect::NewFrame()
@@ -121,6 +134,66 @@ void PostEffect::OnResizedBuffers()
     renderTexture_.resource->SetName(L"PureRenderTexture");
     Helper::CreateSRV(renderTexture_, rtvHandleGpu_, srvHeapIndex_);
     for (auto& posteffect : postEffects_) posteffect->OnResizedBuffers();
+}
+
+void PostEffect::DebugWindow()
+{
+    // staticな変数で状態を保持
+    static int selectedIndex = -1;
+
+    // リスト表示
+    for (int i = 0; i < postEffects_.size(); ++i)
+    {
+        // 無効の場合は(Disable)を末尾に付与
+        std::string name = postEffects_[i]->GetName();
+        if (!postEffects_[i]->Enabled()) name += "(Disabled)";
+        // Selectableで要素を表示・選択状態を管理
+        if (ImGui::Selectable(name.c_str(), selectedIndex == i))
+        {
+            if (selectedIndex == i) selectedIndex = -1;
+            else selectedIndex = i;
+        }
+    }
+
+    ImGui::Spacing();
+
+    // 移動ボタンの表示と操作
+    bool isEnable = false;
+    if (selectedIndex < 0)
+    {
+        ImGui::BeginDisabled();
+    }
+    else
+    {
+        isEnable = postEffects_[selectedIndex]->Enabled();
+    }
+
+    if (ImGui::Button("Up") && selectedIndex > 0)
+    {
+        std::swap(postEffects_[selectedIndex], postEffects_[selectedIndex - 1]);
+        selectedIndex--;  // 選択インデックスも一緒に更新
+    }
+
+    ImGui::SameLine();
+
+    if (ImGui::Button("Down") && selectedIndex < postEffects_.size() - 1)
+    {
+        std::swap(postEffects_[selectedIndex], postEffects_[selectedIndex + 1]);
+        selectedIndex++;  // 選択インデックスも更新
+    }
+
+    ImGui::SameLine();
+
+    if (ImGui::Checkbox("Enabled", &isEnable))
+    {
+        postEffects_[selectedIndex]->Enable(isEnable);
+    }
+
+    if (selectedIndex < 0) 
+    {
+        ImGui::EndDisabled();
+        ImGui::Text("項目を選択してください");
+    }
 }
 
 void PostEffect::ObtainInstances()

@@ -26,14 +26,29 @@ void PEGrayscale::Initialize()
     this->CreatePipelineStateObject();
 }
 
+void PEGrayscale::Enable(bool _flag)
+{
+    isEnabled_ = _flag;
+}
+
 void PEGrayscale::SetInputTextureHandle(D3D12_GPU_DESCRIPTOR_HANDLE _gpuHandle)
 {
     inputGpuHandle_ = _gpuHandle;
 }
 
+bool PEGrayscale::Enabled() const
+{
+    return isEnabled_;
+}
+
 D3D12_GPU_DESCRIPTOR_HANDLE PEGrayscale::GetOutputTextureHandle() const
 {
     return rtvHandleGpu_;
+}
+
+const std::string& PEGrayscale::GetName() const
+{
+    return name_;
 }
 
 void PEGrayscale::Apply()
