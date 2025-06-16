@@ -5,7 +5,7 @@
 
 class IPostEffect
 {
-    friend class PostEffect;
+    friend class PostEffectExecuter;
 
 public:
     IPostEffect() = default;

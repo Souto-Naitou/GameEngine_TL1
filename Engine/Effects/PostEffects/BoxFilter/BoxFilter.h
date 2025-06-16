@@ -6,33 +6,22 @@
 #include <dxcapi.h>
 #include <Core/DirectX12/DirectX12.h>
 #include <Core/DirectX12/ResourceStateTracker/ResourceStateTracker.h>
-#include <Vector4.h>
-#include <Vector3.h>
 
-/// <ビネット>
-/// - ApplyメソッドとSettingメソッドはPostEffectクラスで実行する
-class Vignette : public IPostEffect
+struct BoxFilterOption
 {
-public:
-    struct VignetteOption
-    {
-        Vector3 color;
-        float scale;
-        float power;
-        int enableMultiply;
-        Vector3 padding;
-    };
+    unsigned int kernelSize = 3;
+};
 
+/// <ボックスフィルタ>
+/// - ApplyメソッドとSettingメソッドはPostEffectクラスで実行する
+class BoxFilter : public IPostEffect
+{
 public:
     void    Initialize() override;
     void    Release() override;
 
     void    Enable(bool _flag) override;
     bool    Enabled() const override;
-
-    // Setter (Additional)
-    void    SetScale(float _scale) { pOption_->scale = _scale; }
-    void    SetPower(float _power) { pOption_->power = _power; }
 
 private:
     // PostEffectクラスがアクセスする
@@ -56,7 +45,7 @@ private:
     DirectX12*                                          pDx12_                  = nullptr;
 
     bool                                                isEnabled_              = true;
-    const std::string                                   name_                   = "Vignette";
+    const std::string                                   name_                   = "BoxFilter";
     ResourceStateTracker                                renderTexture_          = {};
     Microsoft::WRL::ComPtr<IDxcBlob>                    vertexShaderBlob_       = nullptr;
     Microsoft::WRL::ComPtr<IDxcBlob>                    pixelShaderBlob_        = nullptr;
@@ -67,13 +56,12 @@ private:
     D3D12_GPU_DESCRIPTOR_HANDLE                         inputGpuHandle_         = {};
     uint32_t                                            rtvHeapIndex_           = 0;
     uint32_t                                            srvHeapIndex_           = 0;
-    const std::wstring                                  kVertexShaderPath       = L"EngineResources/Shaders/Vignette.VS.hlsl";
-    const std::wstring                                  kPixelShaderPath        = L"EngineResources/Shaders/Vignette.PS.hlsl";
+    const std::wstring                                  kVertexShaderPath       = L"EngineResources/Shaders/BoxFilter.VS.hlsl";
+    const std::wstring                                  kPixelShaderPath        = L"EngineResources/Shaders/BoxFilter.PS.hlsl";
 
-    // Constant buffer view
-    Microsoft::WRL::ComPtr<ID3D12Resource>      optionResource_     = nullptr;
-    VignetteOption*                             pOption_            = nullptr;
-
+    // Constant buffers
+    Microsoft::WRL::ComPtr<ID3D12Resource>              optionResource_         = nullptr;
+    BoxFilterOption*                                    pOption_                = nullptr;
 
     // Internal functions
     void    CreateRootSignature();

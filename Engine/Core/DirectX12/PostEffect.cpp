@@ -6,7 +6,7 @@
 #include <DebugTools/DebugManager/DebugManager.h>
 #include <imgui.h>
 
-void PostEffect::Initialize()
+void PostEffectExecuter::Initialize()
 {
     // インスタンスの取得
     ObtainInstances();
@@ -29,18 +29,18 @@ void PostEffect::Initialize()
 
     // デバッグウィンドウの登録
     #ifdef _DEBUG
-    DebugManager::GetInstance()->SetComponent("PostEffect", "EffectList", std::bind(&PostEffect::DebugWindow, this));
+    DebugManager::GetInstance()->SetComponent("PostEffect", "EffectList", std::bind(&PostEffectExecuter::DebugWindow, this));
     #endif //_DEBUG
 }
 
-void PostEffect::Finalize()
+void PostEffectExecuter::Finalize()
 {
     #ifdef _DEBUG
     DebugManager::GetInstance()->DeleteComponent("PostEffect", "EffectList");
     #endif //_DEBUG
 }
 
-void PostEffect::ApplyPostEffects()
+void PostEffectExecuter::ApplyPostEffects()
 {
     // コマンドリストの設定
     uint32_t indexBackbuffer = pDx12_->GetBackBufferIndex();
@@ -80,7 +80,7 @@ void PostEffect::ApplyPostEffects()
     }
 }
 
-void PostEffect::Draw()
+void PostEffectExecuter::Draw()
 {
     uint32_t indexBuckbuffer = pDx12_->GetBackBufferIndex();
     auto rtvHandle = pDx12_->GetRTVHandle()[indexBuckbuffer];
@@ -99,7 +99,7 @@ void PostEffect::Draw()
     );
 }
 
-void PostEffect::NewFrame()
+void PostEffectExecuter::NewFrame()
 {
     // Object3dやSpriteの描画先を決定する関数
 
@@ -118,13 +118,13 @@ void PostEffect::NewFrame()
     commandListMain_->RSSetScissorRects(1, &scissorRect_);
 }
 
-void PostEffect::PostDraw()
+void PostEffectExecuter::PostDraw()
 {
     commandAllocator_->Reset();
     commandListForDraw_->Reset(commandAllocator_.Get(), nullptr);
 }
 
-void PostEffect::OnResize()
+void PostEffectExecuter::OnResize()
 {
     pSRVManager_->Deallocate(srvHeapIndex_);
     renderTexture_.resource.Reset();
@@ -132,7 +132,7 @@ void PostEffect::OnResize()
     for (auto& posteffect : postEffects_) posteffect->OnResizeBefore();
 }
 
-void PostEffect::OnResizedBuffers()
+void PostEffectExecuter::OnResizedBuffers()
 {
     Helper::CreateRenderTexture(pDevice_, renderTexture_, rtvHandle_, rtvHeapIndex_);
     renderTexture_.resource->SetName(L"PureRenderTexture");
@@ -140,7 +140,7 @@ void PostEffect::OnResizedBuffers()
     for (auto& posteffect : postEffects_) posteffect->OnResizedBuffers();
 }
 
-void PostEffect::DebugWindow()
+void PostEffectExecuter::DebugWindow()
 {
     #ifdef _DEBUG
 
@@ -214,7 +214,7 @@ void PostEffect::DebugWindow()
     #endif //_DEBUG
 }
 
-void PostEffect::ObtainInstances()
+void PostEffectExecuter::ObtainInstances()
 {
     /// 必要なインスタンスを取得
     pDx12_ = DirectX12::GetInstance();
@@ -229,7 +229,7 @@ void PostEffect::ObtainInstances()
     editorBG_ = pDx12_->GetEditorBGColor();
 }
 
-void PostEffect::CreateRootSignature()
+void PostEffectExecuter::CreateRootSignature()
 {
     D3D12_DESCRIPTOR_RANGE descriptorRange[1] = {};
     descriptorRange[0].BaseShaderRegister = 0; // 0から始まる
@@ -291,7 +291,7 @@ void PostEffect::CreateRootSignature()
 
 }
 
-void PostEffect::CreatePipelineState()
+void PostEffectExecuter::CreatePipelineState()
 {
     ID3D12Device* device = pDx12_->GetDevice();
     IDxcUtils* dxcUtils = pDx12_->GetDxcUtils();
@@ -361,7 +361,7 @@ void PostEffect::CreatePipelineState()
     return;
 }
 
-void PostEffect::CreateCommandList()
+void PostEffectExecuter::CreateCommandList()
 {
     Helper::CreateCommandList(pDevice_, commandListForDraw_, commandAllocator_);
 }

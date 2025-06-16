@@ -53,7 +53,7 @@ void NimaFramework::Initialize()
     pTextSystem_ = TextSystem::GetInstance();
     pAudioManager_ = AudioManager::GetInstance();
     pEventTimer_ = EventTimer::GetInstance();
-    pPostEffect_ = PostEffect::GetInstance();
+    pPostEffect_ = PostEffectExecuter::GetInstance();
 
     #ifdef _DEBUG
     pImGuiManager_ = std::make_unique<ImGuiManager>();
@@ -148,14 +148,18 @@ void NimaFramework::Initialize()
     /// ポストエフェクト
     pPostEffect_->Initialize();
 
-    pPEGrayscale_ = std::make_unique<PEGrayscale>();
+    pPEGrayscale_ = std::make_unique<Grayscale>();
     pPEGrayscale_->Initialize();
 
-    pPEVignette_ = std::make_unique<PEVignette>();
+    pPEVignette_ = std::make_unique<Vignette>();
     pPEVignette_->Initialize();
 
-    PostEffect::GetInstance()->AddPostEffect(pPEGrayscale_.get())
-        .AddPostEffect(pPEVignette_.get());
+    pPEBoxFilter_ = std::make_unique<BoxFilter>();
+    pPEBoxFilter_->Initialize();
+
+    PostEffectExecuter::GetInstance()->AddPostEffect(pPEGrayscale_.get())
+        .AddPostEffect(pPEVignette_.get())
+        .AddPostEffect(pPEBoxFilter_.get());
 
     /// コマンドリストを追加
     pDirectX_->AddCommandList(pObject3dSystem_->GetCommandList());
@@ -163,7 +167,7 @@ void NimaFramework::Initialize()
     pDirectX_->AddCommandList(pSpriteSystem_->GetCommandList());
     pDirectX_->AddCommandList(pPostEffect_->GetCommandList());
 
-    pDirectX_->AddOnResize("PostEffect", std::bind(&PostEffect::OnResize, pPostEffect_));
+    pDirectX_->AddOnResize("PostEffect", std::bind(&PostEffectExecuter::OnResize, pPostEffect_));
 }
 
 void NimaFramework::Finalize()

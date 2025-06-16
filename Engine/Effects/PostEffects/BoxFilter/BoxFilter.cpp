@@ -1,4 +1,4 @@
-#include "Vignette.h"
+#include "BoxFilter.h"
 #include <cassert>
 #include <Core/DirectX12/DirectX12.h>
 #include <Core/DirectX12/PostEffect.h>
@@ -7,7 +7,7 @@
 #include <Core/DirectX12/Helper/DX12Helper.h>
 #include <imgui.h>
 
-void Vignette::Initialize()
+void BoxFilter::Initialize()
 {
     pDx12_ = DirectX12::GetInstance();
     device_ = pDx12_->GetDevice();
@@ -15,7 +15,7 @@ void Vignette::Initialize()
 
     // レンダーテクスチャの生成
     Helper::CreateRenderTexture(device_, renderTexture_, rtvHandleCpu_, rtvHeapIndex_);
-    renderTexture_.resource->SetName(L"VignetteRenderTexture");
+    renderTexture_.resource->SetName(L"BoxFilterRenderTexture");
 
     // レンダーテクスチャのSRVを生成
     Helper::CreateSRV(renderTexture_, rtvHandleGpu_, srvHeapIndex_);
@@ -30,41 +30,41 @@ void Vignette::Initialize()
     this->CreateResourceCBuffer();
 }
 
-void Vignette::Enable(bool _flag)
+void BoxFilter::Enable(bool _flag)
 {
     isEnabled_ = _flag;
 }
 
-void Vignette::SetInputTextureHandle(D3D12_GPU_DESCRIPTOR_HANDLE _gpuHandle)
+void BoxFilter::SetInputTextureHandle(D3D12_GPU_DESCRIPTOR_HANDLE _gpuHandle)
 {
     inputGpuHandle_ = _gpuHandle;
 }
 
-bool Vignette::Enabled() const
+bool BoxFilter::Enabled() const
 {
     return isEnabled_;
 }
 
-D3D12_GPU_DESCRIPTOR_HANDLE Vignette::GetOutputTextureHandle() const
+D3D12_GPU_DESCRIPTOR_HANDLE BoxFilter::GetOutputTextureHandle() const
 {
     return rtvHandleGpu_;
 }
 
-const std::string& Vignette::GetName() const
+const std::string& BoxFilter::GetName() const
 {
     return name_;
 }
 
-void Vignette::Apply()
+void BoxFilter::Apply()
 {
     commandList_->DrawInstanced(3, 1, 0, 0); // 三角形を1つ描画
 }
 
-void Vignette::Release()
+void BoxFilter::Release()
 {
 }
 
-void Vignette::Setting()
+void BoxFilter::Setting()
 {
     // レンダーテクスチャをレンダーターゲット状態に変更
     this->ToRenderTargetState();
@@ -84,14 +84,14 @@ void Vignette::Setting()
     commandList_->SetGraphicsRootConstantBufferView(1, optionResource_->GetGPUVirtualAddress());
 }
 
-void Vignette::OnResizeBefore()
+void BoxFilter::OnResizeBefore()
 {
     SRVManager::GetInstance()->Deallocate(srvHeapIndex_);
     renderTexture_.resource.Reset();
     renderTexture_.state = D3D12_RESOURCE_STATE_PRESENT;
 }
 
-void Vignette::OnResizedBuffers()
+void BoxFilter::OnResizedBuffers()
 {
     // レンダーテクスチャの生成
     Helper::CreateRenderTexture(device_, renderTexture_, rtvHandleCpu_, rtvHeapIndex_);
@@ -99,7 +99,7 @@ void Vignette::OnResizedBuffers()
     Helper::CreateSRV(renderTexture_, rtvHandleGpu_, srvHeapIndex_);
 }
 
-void Vignette::ToShaderResourceState()
+void BoxFilter::ToShaderResourceState()
 {
     // レンダーテクスチャをシェーダーリソース状態に変更
     DX12Helper::ChangeStateResource(
@@ -109,18 +109,16 @@ void Vignette::ToShaderResourceState()
     );
 }
 
-void Vignette::DebugOverlay()
+void BoxFilter::DebugOverlay()
 {
-    #ifdef _DEBUG
-    ImGui::DragFloat("Scale", &pOption_->scale, 0.01f, FLT_MIN);
-    ImGui::DragFloat("Power", &pOption_->power, 0.01f, FLT_MIN);
-    ImGui::ColorEdit3("Power", &pOption_->color.x);
-    ImGui::Checkbox("Multiply blending", reinterpret_cast<bool*>(&pOption_->enableMultiply));
-
-    #endif //_DEBUG
+    bool changed = ImGui::SliderInt("Kernel Size", reinterpret_cast<int*>(&pOption_->kernelSize), 3, 31, "%d", ImGuiSliderFlags_AlwaysClamp);
+    if (changed)
+    {
+        pOption_->kernelSize = (pOption_->kernelSize / 2) * 2 + 1;
+    }
 }
 
-void Vignette::CreateRootSignature()
+void BoxFilter::CreateRootSignature()
 {
     D3D12_DESCRIPTOR_RANGE descriptorRange[1] = {};
     descriptorRange[0].BaseShaderRegister = 0; // 0から始まる
@@ -139,10 +137,9 @@ void Vignette::CreateRootSignature()
     rootParameters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;                 // PixelShaderで使う
     rootParameters[0].DescriptorTable.pDescriptorRanges = descriptorRange;              // Tableの中身の配列を指定
     rootParameters[0].DescriptorTable.NumDescriptorRanges = _countof(descriptorRange);  // Tableで利用する数
-
-    rootParameters[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
-    rootParameters[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
-    rootParameters[1].Descriptor.ShaderRegister = 0;
+    rootParameters[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;                    // CBVを使う
+    rootParameters[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;                 // PixelShaderで使う
+    rootParameters[1].Descriptor.ShaderRegister = 0;                                    // シェーダーレジスタ番号
 
 
     descriptionRootSignature.pParameters = rootParameters;                              // ルートパラメータ配列へのポインタ
@@ -173,7 +170,7 @@ void Vignette::CreateRootSignature()
     if (FAILED(hr))
     {
         Logger::GetInstance()->LogError(
-            "Vignette",
+            "BoxFilter",
             __func__,
             reinterpret_cast<char*>(errorBlob->GetBufferPointer())
         );
@@ -185,7 +182,7 @@ void Vignette::CreateRootSignature()
     assert(SUCCEEDED(hr));
 }
 
-void Vignette::CreatePipelineStateObject()
+void BoxFilter::CreatePipelineStateObject()
 {
     IDxcUtils* dxcUtils = pDx12_->GetDxcUtils();
     IDxcCompiler3* dxcCompiler = pDx12_->GetDxcCompiler();
@@ -246,7 +243,7 @@ void Vignette::CreatePipelineStateObject()
     if (FAILED(hr))
     {
         Logger::GetInstance()->LogError(
-            "Vignette",
+            "BoxFilter",
             __func__,
             "Failed to create pipeline state"
         );
@@ -256,7 +253,7 @@ void Vignette::CreatePipelineStateObject()
     return;
 }
 
-void Vignette::ToRenderTargetState()
+void BoxFilter::ToRenderTargetState()
 {
     // レンダーテクスチャをレンダーターゲット状態に変更
     DX12Helper::ChangeStateResource(
@@ -266,12 +263,11 @@ void Vignette::ToRenderTargetState()
     );
 }
 
-void Vignette::CreateResourceCBuffer()
+void BoxFilter::CreateResourceCBuffer()
 {
-    optionResource_ = DX12Helper::CreateBufferResource(device_, sizeof(VignetteOption));
+    optionResource_ = DX12Helper::CreateBufferResource(device_, sizeof(BoxFilterOption));
     optionResource_->Map(0, nullptr, reinterpret_cast<void**>(&pOption_));
 
-    pOption_->scale = 16.0f;
-    pOption_->power = 0.8f;
-    pOption_->color = { 0.0f, 0.0f, 0.0f };
+    // 初期化
+    pOption_->kernelSize = 3; // カーネルサイズの初期値
 }

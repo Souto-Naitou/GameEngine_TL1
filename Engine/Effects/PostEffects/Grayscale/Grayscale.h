@@ -8,9 +8,9 @@
 #include <Core/DirectX12/ResourceStateTracker/ResourceStateTracker.h>
 
 /// <グレースケール>
-/// - PEはPost Effectの略
+
 /// - ApplyメソッドとSettingメソッドはPostEffectクラスで実行する
-class PEGrayscale : public IPostEffect
+class Grayscale : public IPostEffect
 {
 public:
     void    Initialize() override;

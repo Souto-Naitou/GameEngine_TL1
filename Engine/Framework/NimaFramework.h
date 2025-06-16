@@ -26,6 +26,7 @@
 #include <DebugTools/EventTimer/EventTimer.h>
 #include <Effects/PostEffects/Grayscale/Grayscale.h>
 #include <Effects/PostEffects/Vignette/Vignette.h>
+#include <Effects/PostEffects/BoxFilter/BoxFilter.h>
 
 #include <memory> /// std::unique_ptr
 #include <Core/DirectX12/PostEffect.h>
@@ -82,11 +83,12 @@ protected:
     RandomGenerator*                pRandomGenerator_           = nullptr;
     AudioManager*                   pAudioManager_              = nullptr;
     EventTimer*                     pEventTimer_                = nullptr;
-    PostEffect*                     pPostEffect_                = nullptr;
+    PostEffectExecuter*                     pPostEffect_                = nullptr;
 
     // ポストエフェクト
-    std::unique_ptr<PEGrayscale>    pPEGrayscale_       = nullptr;
-    std::unique_ptr<PEVignette>     pPEVignette_        = nullptr;
+    std::unique_ptr<Grayscale>      pPEGrayscale_       = nullptr;
+    std::unique_ptr<Vignette>       pPEVignette_        = nullptr;
+    std::unique_ptr<BoxFilter>      pPEBoxFilter_       = nullptr;
 
 
 protected:

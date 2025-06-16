@@ -12,17 +12,17 @@
 /// - 複数のポストエフェクトを順に適用するためにレンダーテクスチャのチェインを生成する
 /// - Bloom -> MotionBlur の順で実行する場合 MotionBlurにBloomのレンダーテクスチャを渡す
 
-class PostEffect
+class PostEffectExecuter
 {
 public:
-    PostEffect(const PostEffect&) = delete;
-    PostEffect& operator=(const PostEffect&) = delete;
-    PostEffect(PostEffect&&) = delete;
-    PostEffect& operator=(PostEffect&&) = delete;
+    PostEffectExecuter(const PostEffectExecuter&) = delete;
+    PostEffectExecuter& operator=(const PostEffectExecuter&) = delete;
+    PostEffectExecuter(PostEffectExecuter&&) = delete;
+    PostEffectExecuter& operator=(PostEffectExecuter&&) = delete;
 
-    static PostEffect* GetInstance()
+    static PostEffectExecuter* GetInstance()
     {
-        static PostEffect instance;
+        static PostEffectExecuter instance;
         return &instance;
     }
 
@@ -38,7 +38,7 @@ public:
 
 
 public:
-    PostEffect& AddPostEffect(IPostEffect* postEffect)
+    PostEffectExecuter& AddPostEffect(IPostEffect* postEffect)
     {
         postEffects_.emplace_back(postEffect);
         return *this;
@@ -66,8 +66,8 @@ public:
 
 
 private:
-    PostEffect() = default;
-    ~PostEffect() = default;
+    PostEffectExecuter() = default;
+    ~PostEffectExecuter() = default;
 
     static constexpr wchar_t kVertexShaderPath[] = L"EngineResources/Shaders/Fullscreen.VS.hlsl";
     static constexpr wchar_t kPixelShaderPath[] = L"EngineResources/Shaders/Fullscreen.PS.hlsl";
