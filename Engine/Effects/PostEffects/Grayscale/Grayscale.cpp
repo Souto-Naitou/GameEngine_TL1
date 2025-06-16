@@ -6,11 +6,11 @@
 #include <Core/DirectX12/SRVManager.h>
 #include <Core/DirectX12/Helper/DX12Helper.h>
 
-void PEGrayscale::Initialize()
+void Grayscale::Initialize()
 {
     pDx12_ = DirectX12::GetInstance();
     device_ = pDx12_->GetDevice();
-    commandList_ = PostEffect::GetInstance()->GetCommandList();
+    commandList_ = PostEffectExecuter::GetInstance()->GetCommandList();
 
     // レンダーテクスチャの生成
     Helper::CreateRenderTexture(device_, renderTexture_, rtvHandleCpu_, rtvHeapIndex_);
@@ -26,41 +26,41 @@ void PEGrayscale::Initialize()
     this->CreatePipelineStateObject();
 }
 
-void PEGrayscale::Enable(bool _flag)
+void Grayscale::Enable(bool _flag)
 {
     isEnabled_ = _flag;
 }
 
-void PEGrayscale::SetInputTextureHandle(D3D12_GPU_DESCRIPTOR_HANDLE _gpuHandle)
+void Grayscale::SetInputTextureHandle(D3D12_GPU_DESCRIPTOR_HANDLE _gpuHandle)
 {
     inputGpuHandle_ = _gpuHandle;
 }
 
-bool PEGrayscale::Enabled() const
+bool Grayscale::Enabled() const
 {
     return isEnabled_;
 }
 
-D3D12_GPU_DESCRIPTOR_HANDLE PEGrayscale::GetOutputTextureHandle() const
+D3D12_GPU_DESCRIPTOR_HANDLE Grayscale::GetOutputTextureHandle() const
 {
     return rtvHandleGpu_;
 }
 
-const std::string& PEGrayscale::GetName() const
+const std::string& Grayscale::GetName() const
 {
     return name_;
 }
 
-void PEGrayscale::Apply()
+void Grayscale::Apply()
 {
     commandList_->DrawInstanced(3, 1, 0, 0); // 三角形を1つ描画
 }
 
-void PEGrayscale::Release()
+void Grayscale::Release()
 {
 }
 
-void PEGrayscale::Setting()
+void Grayscale::Setting()
 {
     // レンダーテクスチャをレンダーターゲット状態に変更
     this->ToRenderTargetState();
@@ -78,14 +78,14 @@ void PEGrayscale::Setting()
     commandList_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 }
 
-void PEGrayscale::OnResizeBefore()
+void Grayscale::OnResizeBefore()
 {
     SRVManager::GetInstance()->Deallocate(srvHeapIndex_);
     renderTexture_.resource.Reset();
     renderTexture_.state = D3D12_RESOURCE_STATE_PRESENT;
 }
 
-void PEGrayscale::OnResizedBuffers()
+void Grayscale::OnResizedBuffers()
 {
     // レンダーテクスチャの生成
     Helper::CreateRenderTexture(device_, renderTexture_, rtvHandleCpu_, rtvHeapIndex_);
@@ -93,7 +93,7 @@ void PEGrayscale::OnResizedBuffers()
     Helper::CreateSRV(renderTexture_, rtvHandleGpu_, srvHeapIndex_);
 }
 
-void PEGrayscale::ToShaderResourceState()
+void Grayscale::ToShaderResourceState()
 {
     // レンダーテクスチャをシェーダーリソース状態に変更
     DX12Helper::ChangeStateResource(
@@ -103,7 +103,7 @@ void PEGrayscale::ToShaderResourceState()
     );
 }
 
-void PEGrayscale::CreateRootSignature()
+void Grayscale::CreateRootSignature()
 {
     D3D12_DESCRIPTOR_RANGE descriptorRange[1] = {};
     descriptorRange[0].BaseShaderRegister = 0; // 0から始まる
@@ -152,8 +152,8 @@ void PEGrayscale::CreateRootSignature()
     if (FAILED(hr))
     {
         Logger::GetInstance()->LogError(
-            "Object3dSystem",
-            "CreateRootSignature",
+            "Grayscale",
+            __func__,
             reinterpret_cast<char*>(errorBlob->GetBufferPointer())
         );
 
@@ -164,7 +164,7 @@ void PEGrayscale::CreateRootSignature()
     assert(SUCCEEDED(hr));
 }
 
-void PEGrayscale::CreatePipelineStateObject()
+void Grayscale::CreatePipelineStateObject()
 {
     IDxcUtils* dxcUtils = pDx12_->GetDxcUtils();
     IDxcCompiler3* dxcCompiler = pDx12_->GetDxcCompiler();
@@ -225,8 +225,8 @@ void PEGrayscale::CreatePipelineStateObject()
     if (FAILED(hr))
     {
         Logger::GetInstance()->LogError(
-            "PostEffect",
-            "CreatePipelineState",
+            "Grayscale",
+            __func__,
             "Failed to create pipeline state"
         );
         assert(false);
@@ -235,7 +235,7 @@ void PEGrayscale::CreatePipelineStateObject()
     return;
 }
 
-void PEGrayscale::ToRenderTargetState()
+void Grayscale::ToRenderTargetState()
 {
     // レンダーテクスチャをレンダーターゲット状態に変更
     DX12Helper::ChangeStateResource(

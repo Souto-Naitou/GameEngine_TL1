@@ -253,6 +253,9 @@
     <Filter Include="Effect\PostEffect\Vignette">
       <UniqueIdentifier>{b83890bf-4f67-4ef7-a098-3c2f12d2fc01}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Effect\PostEffect\BoxFilter">
+      <UniqueIdentifier>{fe20ff7d-b862-409e-be34-7f3d1e0afa90}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DebugTools\DebugManager\DebugManager.cpp">
@@ -461,6 +464,9 @@
     </ClCompile>
     <ClCompile Include="Effects\PostEffects\Vignette\Vignette.cpp">
       <Filter>Effect\PostEffect\Vignette</Filter>
+    </ClCompile>
+    <ClCompile Include="Effects\PostEffects\BoxFilter\BoxFilter.cpp">
+      <Filter>Effect\PostEffect\BoxFilter</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -725,6 +731,9 @@
     <ClInclude Include="Effects\PostEffects\Vignette\Vignette.h">
       <Filter>Effect\PostEffect\Vignette</Filter>
     </ClInclude>
+    <ClInclude Include="Effects\PostEffects\BoxFilter\BoxFilter.h">
+      <Filter>Effect\PostEffect\BoxFilter</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
@@ -792,6 +801,12 @@
       <Filter>HLSL</Filter>
     </FxCompile>
     <FxCompile Include="EngineResources\Shaders\Vignette.VS.hlsl">
+      <Filter>HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="EngineResources\Shaders\BoxFilter.PS.hlsl">
+      <Filter>HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="EngineResources\Shaders\BoxFilter.VS.hlsl">
       <Filter>HLSL</Filter>
     </FxCompile>
   </ItemGroup>

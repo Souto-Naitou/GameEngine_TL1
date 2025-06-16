@@ -24,6 +24,9 @@
 #include <Features/NiGui/NiGuiDrawer.h>
 #include <Features/NiGui/NiGuiDebug.h>
 #include <DebugTools/EventTimer/EventTimer.h>
+#include <Effects/PostEffects/Grayscale/Grayscale.h>
+#include <Effects/PostEffects/Vignette/Vignette.h>
+#include <Effects/PostEffects/BoxFilter/BoxFilter.h>
 
 #include <memory> /// std::unique_ptr
 #include <Core/DirectX12/PostEffect.h>
@@ -49,7 +52,8 @@ public:
     void                            PostProcess();
 
 
-protected: /// システムクラスのインスタンス
+protected: 
+    /// システムクラスのインスタンス
     std::unique_ptr<ISceneFactory>  pSceneFactory_              = nullptr;
     std::unique_ptr<Viewport>       pViewport_                  = nullptr;
     std::unique_ptr<NiGuiDrawer>    pDrawer_                    = nullptr;
@@ -59,8 +63,7 @@ protected: /// システムクラスのインスタンス
     std::unique_ptr<ImGuiManager>   pImGuiManager_              = nullptr;
     #endif // _DEBUG
 
-
-protected: /// 他クラスのインスタンス
+    /// 他クラスのインスタンス
     ConfigManager*                  pConfigManager_             = nullptr;
     Logger*                         pLogger_                    = nullptr;
     DirectX12*                      pDirectX_                   = nullptr;
@@ -80,7 +83,12 @@ protected: /// 他クラスのインスタンス
     RandomGenerator*                pRandomGenerator_           = nullptr;
     AudioManager*                   pAudioManager_              = nullptr;
     EventTimer*                     pEventTimer_                = nullptr;
-    PostEffect*                     pPostEffect_                = nullptr;
+    PostEffectExecuter*                     pPostEffect_                = nullptr;
+
+    // ポストエフェクト
+    std::unique_ptr<Grayscale>      pPEGrayscale_       = nullptr;
+    std::unique_ptr<Vignette>       pPEVignette_        = nullptr;
+    std::unique_ptr<BoxFilter>      pPEBoxFilter_       = nullptr;
 
 
 protected:
