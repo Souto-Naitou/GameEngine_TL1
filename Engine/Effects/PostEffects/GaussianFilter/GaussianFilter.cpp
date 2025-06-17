@@ -1,4 +1,4 @@
-#include "BoxFilter.h"
+#include "GaussianFilter.h"
 #include <cassert>
 #include <Core/DirectX12/DirectX12.h>
 #include <Core/DirectX12/PostEffect.h>
@@ -7,7 +7,7 @@
 #include <Core/DirectX12/Helper/DX12Helper.h>
 #include <imgui.h>
 
-void BoxFilter::Initialize()
+void GaussianFilter::Initialize()
 {
     pDx12_ = DirectX12::GetInstance();
     device_ = pDx12_->GetDevice();
@@ -15,7 +15,7 @@ void BoxFilter::Initialize()
 
     // レンダーテクスチャの生成
     Helper::CreateRenderTexture(device_, renderTexture_, rtvHandleCpu_, rtvHeapIndex_);
-    renderTexture_.resource->SetName(L"BoxFilterRenderTexture");
+    renderTexture_.resource->SetName(L"GaussianFilterRenderTexture");
 
     // レンダーテクスチャのSRVを生成
     Helper::CreateSRV(renderTexture_, rtvHandleGpu_, srvHeapIndex_);
@@ -30,41 +30,41 @@ void BoxFilter::Initialize()
     this->CreateResourceCBuffer();
 }
 
-void BoxFilter::Enable(bool _flag)
+void GaussianFilter::Enable(bool _flag)
 {
     isEnabled_ = _flag;
 }
 
-void BoxFilter::SetInputTextureHandle(D3D12_GPU_DESCRIPTOR_HANDLE _gpuHandle)
+void GaussianFilter::SetInputTextureHandle(D3D12_GPU_DESCRIPTOR_HANDLE _gpuHandle)
 {
     inputGpuHandle_ = _gpuHandle;
 }
 
-bool BoxFilter::Enabled() const
+bool GaussianFilter::Enabled() const
 {
     return isEnabled_;
 }
 
-D3D12_GPU_DESCRIPTOR_HANDLE BoxFilter::GetOutputTextureHandle() const
+D3D12_GPU_DESCRIPTOR_HANDLE GaussianFilter::GetOutputTextureHandle() const
 {
     return rtvHandleGpu_;
 }
 
-const std::string& BoxFilter::GetName() const
+const std::string& GaussianFilter::GetName() const
 {
     return name_;
 }
 
-void BoxFilter::Apply()
+void GaussianFilter::Apply()
 {
     commandList_->DrawInstanced(3, 1, 0, 0); // 三角形を1つ描画
 }
 
-void BoxFilter::Release()
+void GaussianFilter::Release()
 {
 }
 
-void BoxFilter::Setting()
+void GaussianFilter::Setting()
 {
     // レンダーテクスチャをレンダーターゲット状態に変更
     this->ToRenderTargetState();
@@ -84,23 +84,24 @@ void BoxFilter::Setting()
     commandList_->SetGraphicsRootConstantBufferView(1, optionResource_->GetGPUVirtualAddress());
 }
 
-void BoxFilter::OnResizeBefore()
+void GaussianFilter::OnResizeBefore()
 {
     SRVManager::GetInstance()->Deallocate(srvHeapIndex_);
     renderTexture_.resource.Reset();
     renderTexture_.state = D3D12_RESOURCE_STATE_PRESENT;
 }
 
-void BoxFilter::OnResizedBuffers()
+void GaussianFilter::OnResizedBuffers()
 {
     // レンダーテクスチャの生成
     Helper::CreateRenderTexture(device_, renderTexture_, rtvHandleCpu_, rtvHeapIndex_);
-    renderTexture_.resource->SetName(L"BoxFilterRenderTexture");
+    renderTexture_.resource->SetName(L"GaussianFilterRenderTexture");
+
     // レンダーテクスチャのSRVを生成
     Helper::CreateSRV(renderTexture_, rtvHandleGpu_, srvHeapIndex_);
 }
 
-void BoxFilter::ToShaderResourceState()
+void GaussianFilter::ToShaderResourceState()
 {
     // レンダーテクスチャをシェーダーリソース状態に変更
     DX12Helper::ChangeStateResource(
@@ -110,16 +111,21 @@ void BoxFilter::ToShaderResourceState()
     );
 }
 
-void BoxFilter::DebugOverlay()
+void GaussianFilter::DebugOverlay()
 {
+    #ifdef _DEBUG
+
     bool changed = ImGui::SliderInt("Kernel Size", reinterpret_cast<int*>(&pOption_->kernelSize), 3, 99, "%d", ImGuiSliderFlags_AlwaysClamp);
     if (changed)
     {
         pOption_->kernelSize = (pOption_->kernelSize / 2) * 2 + 1;
     }
+    ImGui::DragFloat("Sigma", &pOption_->sigma, 0.01f, 0.1f, 0.0f, "%.1f", ImGuiSliderFlags_AlwaysClamp);
+
+    #endif // _DEBUG
 }
 
-void BoxFilter::CreateRootSignature()
+void GaussianFilter::CreateRootSignature()
 {
     D3D12_DESCRIPTOR_RANGE descriptorRange[1] = {};
     descriptorRange[0].BaseShaderRegister = 0; // 0から始まる
@@ -171,7 +177,7 @@ void BoxFilter::CreateRootSignature()
     if (FAILED(hr))
     {
         Logger::GetInstance()->LogError(
-            "BoxFilter",
+            "GaussianFilter",
             __func__,
             reinterpret_cast<char*>(errorBlob->GetBufferPointer())
         );
@@ -183,7 +189,7 @@ void BoxFilter::CreateRootSignature()
     assert(SUCCEEDED(hr));
 }
 
-void BoxFilter::CreatePipelineStateObject()
+void GaussianFilter::CreatePipelineStateObject()
 {
     IDxcUtils* dxcUtils = pDx12_->GetDxcUtils();
     IDxcCompiler3* dxcCompiler = pDx12_->GetDxcCompiler();
@@ -244,7 +250,7 @@ void BoxFilter::CreatePipelineStateObject()
     if (FAILED(hr))
     {
         Logger::GetInstance()->LogError(
-            "BoxFilter",
+            "GaussianFilter",
             __func__,
             "Failed to create pipeline state"
         );
@@ -254,7 +260,7 @@ void BoxFilter::CreatePipelineStateObject()
     return;
 }
 
-void BoxFilter::ToRenderTargetState()
+void GaussianFilter::ToRenderTargetState()
 {
     // レンダーテクスチャをレンダーターゲット状態に変更
     DX12Helper::ChangeStateResource(
@@ -264,11 +270,12 @@ void BoxFilter::ToRenderTargetState()
     );
 }
 
-void BoxFilter::CreateResourceCBuffer()
+void GaussianFilter::CreateResourceCBuffer()
 {
-    optionResource_ = DX12Helper::CreateBufferResource(device_, sizeof(BoxFilterOption));
+    optionResource_ = DX12Helper::CreateBufferResource(device_, sizeof(GaussianFilterOption));
     optionResource_->Map(0, nullptr, reinterpret_cast<void**>(&pOption_));
 
     // 初期化
     pOption_->kernelSize = 3; // カーネルサイズの初期値
+    pOption_->sigma = 1.0f; // シグマの初期値
 }

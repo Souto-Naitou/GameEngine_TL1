@@ -17,11 +17,12 @@ struct PixelShaderOutput
 
 PixelShaderOutput main(VertexShaderOutput input)
 {
+    PixelShaderOutput output;
+    
     uint width, height;
     gTexture.GetDimensions(width, height);
     float2 texelSize = float2(rcp(float(width)), rcp(float(height)));
     
-    PixelShaderOutput output;
     output.color = float4(0.0f, 0.0f, 0.0f, 1.0f);
     
     int kernelSize = gOptions.kernelSize;

@@ -209,6 +209,7 @@
     <ClCompile Include="DebugTools\ImGuiTemplates\ImGuiTemplates.cpp" />
     <ClCompile Include="DebugTools\Logger\Logger.cpp" />
     <ClCompile Include="Effects\PostEffects\BoxFilter\BoxFilter.cpp" />
+    <ClCompile Include="Effects\PostEffects\GaussianFilter\GaussianFilter.cpp" />
     <ClCompile Include="Effects\PostEffects\Grayscale\Grayscale.cpp" />
     <ClCompile Include="Effects\PostEffects\Helper\PostEffectHelper.cpp" />
     <ClCompile Include="Effects\PostEffects\Vignette\Vignette.cpp" />
@@ -286,6 +287,7 @@
     <ClInclude Include="DebugTools\Logger\Logger.h" />
     <ClInclude Include="DebugTools\ReakChecker.h" />
     <ClInclude Include="Effects\PostEffects\BoxFilter\BoxFilter.h" />
+    <ClInclude Include="Effects\PostEffects\GaussianFilter\GaussianFilter.h" />
     <ClInclude Include="Effects\PostEffects\Grayscale\Grayscale.h" />
     <ClInclude Include="Effects\PostEffects\Helper\PostEffectHelper.h" />
     <ClInclude Include="Effects\PostEffects\Vignette\Vignette.h" />
@@ -401,6 +403,12 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="EngineResources\Shaders\BoxFilter.VS.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="EngineResources\Shaders\GaussianFilter.PS.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="EngineResources\Shaders\GaussianFilter.VS.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="EngineResources\Shaders\Grayscale.PS.hlsl">
