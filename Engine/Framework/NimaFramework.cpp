@@ -166,12 +166,16 @@ void NimaFramework::Initialize()
     pPEDepthBasedOutline_ = std::make_unique<DepthBasedOutline>();
     pPEDepthBasedOutline_->Initialize();
 
+    pPERadialBlur_ = std::make_unique<RadialBlur>();
+    pPERadialBlur_->Initialize();
+
     PostEffectExecuter::GetInstance()->AddPostEffect(pPEGrayscale_.get())
         .AddPostEffect(pPEVignette_.get())
         .AddPostEffect(pPEBoxFilter_.get())
         .AddPostEffect(pPEGaussianFilter_.get())
         .AddPostEffect(pPEPrewittOutline_.get())
-        .AddPostEffect(pPEDepthBasedOutline_.get());
+        .AddPostEffect(pPEDepthBasedOutline_.get())
+        .AddPostEffect(pPERadialBlur_.get());
 
     /// コマンドリストを追加
     pDirectX_->AddCommandList(pObject3dSystem_->GetCommandList());

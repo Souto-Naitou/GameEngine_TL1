@@ -6,7 +6,7 @@ Texture2D<float4> gTexture : register(t0);
 Texture2D<float> gDepthTexture : register(t1); // 深度テクスチャを使用する場合
 SamplerState gSampler : register(s0);
 
-struct BoxFilterOption
+struct DepthOutlineOption
 {
     float weightMultiply;
 };
@@ -16,7 +16,7 @@ struct Material
     float4x4 projectionInverse;
 };
 
-ConstantBuffer<BoxFilterOption> gOptions : register(b0); // カーネルのサイズを指定する定数バッファ
+ConstantBuffer<DepthOutlineOption> gOptions : register(b0); // カーネルのサイズを指定する定数バッファ
 ConstantBuffer<Material> gMaterial : register(b1); // マテリアルの定数バッファ
 
 struct PixelShaderOutput
