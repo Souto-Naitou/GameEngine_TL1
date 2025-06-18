@@ -31,6 +31,7 @@
 #include <Effects/PostEffects/GaussianFilter/GaussianFilter.h>
 #include <Effects/PostEffects/PrewittOutline/PrewittOutline.h>
 #include <Effects/PostEffects/DepthBasedOutline/DepthBasedOutline.h>
+#include <Effects/PostEffects/RadialBlur/RadialBlur.h>
 
 #include <memory> /// std::unique_ptr
 #include <Core/DirectX12/PostEffect.h>
@@ -96,6 +97,7 @@ protected:
     std::unique_ptr<GaussianFilter>     pPEGaussianFilter_      = nullptr;
     std::unique_ptr<PrewittOutline>     pPEPrewittOutline_      = nullptr;
     std::unique_ptr<DepthBasedOutline>  pPEDepthBasedOutline_   = nullptr;
+    std::unique_ptr<RadialBlur>         pPERadialBlur_          = nullptr;
 
 
 protected:

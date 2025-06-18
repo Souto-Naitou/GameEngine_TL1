@@ -265,6 +265,9 @@
     <Filter Include="Effect\PostEffect\DepthBasedOutline">
       <UniqueIdentifier>{6f6ead96-d95d-4bce-bc76-6121ce61918d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Effect\PostEffect\RadialBlur">
+      <UniqueIdentifier>{6e29f5a3-7f69-49cc-a21b-b782281dc1ce}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DebugTools\DebugManager\DebugManager.cpp">
@@ -488,6 +491,9 @@
     </ClCompile>
     <ClCompile Include="Core\DirectX12\ResourceStateTracker\ResourceStateTracker.cpp">
       <Filter>Core\DirectX12\ResourceStateTracker</Filter>
+    </ClCompile>
+    <ClCompile Include="Effects\PostEffects\RadialBlur\RadialBlur.cpp">
+      <Filter>Effect\PostEffect\RadialBlur</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -764,6 +770,9 @@
     <ClInclude Include="Effects\PostEffects\DepthBasedOutline\DepthBasedOutline.h">
       <Filter>Effect\PostEffect\DepthBasedOutline</Filter>
     </ClInclude>
+    <ClInclude Include="Effects\PostEffects\RadialBlur\RadialBlur.h">
+      <Filter>Effect\PostEffect\RadialBlur</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
@@ -855,6 +864,12 @@
       <Filter>HLSL</Filter>
     </FxCompile>
     <FxCompile Include="EngineResources\Shaders\PrewittOutline.VS.hlsl">
+      <Filter>HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="EngineResources\Shaders\RadialBlur.VS.hlsl">
+      <Filter>HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="EngineResources\Shaders\RadialBlur.PS.hlsl">
       <Filter>HLSL</Filter>
     </FxCompile>
   </ItemGroup>
