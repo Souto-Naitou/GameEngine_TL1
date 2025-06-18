@@ -6,11 +6,22 @@
 #include <dxcapi.h>
 #include <Core/DirectX12/DirectX12.h>
 #include <Core/DirectX12/ResourceStateTracker/ResourceStateTracker.h>
+#include <Matrix4x4.h>
 
-/// <グレースケール>
+struct alignas(16) OutlineOption
+{
+    float weightMultiply = 1.0f;
+    float padding[3] = {};
+};
 
+struct alignas(16) DepthBasedOutlineMaterial
+{
+    Matrix4x4 projectionInverse;
+};
+
+/// <ボックスフィルタ>
 /// - ApplyメソッドとSettingメソッドはPostEffectクラスで実行する
-class Grayscale : public IPostEffect
+class DepthBasedOutline : public IPostEffect
 {
 public:
     void    Initialize() override;
@@ -26,7 +37,7 @@ private:
     void    OnResizeBefore() override;
     void    OnResizedBuffers() override;
     void    ToShaderResourceState() override;
-    void    DebugOverlay() override {};
+    void    DebugOverlay() override;
 
     // Setters
     void    SetInputTextureHandle(D3D12_GPU_DESCRIPTOR_HANDLE _gpuHandle) override;
@@ -34,6 +45,8 @@ private:
     // Getters
     D3D12_GPU_DESCRIPTOR_HANDLE     GetOutputTextureHandle() const override;
     const std::string&              GetName() const override;
+    OutlineOption*                  GetOption();
+    DepthBasedOutlineMaterial*      GetMaterial();
 
 private:
     ID3D12Device*                                       device_                 = nullptr;
@@ -41,7 +54,7 @@ private:
     DirectX12*                                          pDx12_                  = nullptr;
 
     bool                                                isEnabled_              = false;
-    const std::string                                   name_                   = "Grayscale";
+    const std::string                                   name_                   = "DepthBasedOutline";
     ResourceStateTracker                                renderTexture_          = {};
     Microsoft::WRL::ComPtr<IDxcBlob>                    vertexShaderBlob_       = nullptr;
     Microsoft::WRL::ComPtr<IDxcBlob>                    pixelShaderBlob_        = nullptr;
@@ -50,13 +63,23 @@ private:
     D3D12_CPU_DESCRIPTOR_HANDLE                         rtvHandleCpu_           = {};
     D3D12_GPU_DESCRIPTOR_HANDLE                         rtvHandleGpu_           = {};
     D3D12_GPU_DESCRIPTOR_HANDLE                         inputGpuHandle_         = {};
+    D3D12_GPU_DESCRIPTOR_HANDLE                         depthGpuHandle_         = {};
     uint32_t                                            rtvHeapIndex_           = 0;
     uint32_t                                            srvHeapIndex_           = 0;
-    const std::wstring                                  kVertexShaderPath       = L"EngineResources/Shaders/Grayscale.VS.hlsl";
-    const std::wstring                                  kPixelShaderPath        = L"EngineResources/Shaders/Grayscale.PS.hlsl";
+    uint32_t                                            srvIndexDepth_          = 0;
+    const std::wstring                                  kVertexShaderPath       = L"EngineResources/Shaders/DepthBasedOutline.VS.hlsl";
+    const std::wstring                                  kPixelShaderPath        = L"EngineResources/Shaders/DepthBasedOutline.PS.hlsl";
+
+    // Constant buffers
+    Microsoft::WRL::ComPtr<ID3D12Resource>              optionResource_         = nullptr;
+    OutlineOption*                                      pOption_                = nullptr;
+    Microsoft::WRL::ComPtr<ID3D12Resource>              materialResource_       = nullptr;
+    DepthBasedOutlineMaterial*                          pMaterial_              = nullptr;
 
     // Internal functions
     void    CreateRootSignature();
     void    CreatePipelineStateObject();
     void    ToRenderTargetState();
+    void    CreateResourceCBuffer();
+    void    CreateSRV();
 };

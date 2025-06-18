@@ -198,6 +198,7 @@
     <ClCompile Include="Core\DirectX12\Framerate.cpp" />
     <ClCompile Include="Core\DirectX12\Helper\DX12Helper.cpp" />
     <ClCompile Include="Core\DirectX12\PostEffect.cpp" />
+    <ClCompile Include="Core\DirectX12\ResourceStateTracker\ResourceStateTracker.cpp" />
     <ClCompile Include="Core\DirectX12\RTVHeapCounter.cpp" />
     <ClCompile Include="Core\DirectX12\SRVManager.cpp" />
     <ClCompile Include="Core\DirectX12\TextureManager.cpp" />
@@ -209,9 +210,11 @@
     <ClCompile Include="DebugTools\ImGuiTemplates\ImGuiTemplates.cpp" />
     <ClCompile Include="DebugTools\Logger\Logger.cpp" />
     <ClCompile Include="Effects\PostEffects\BoxFilter\BoxFilter.cpp" />
+    <ClCompile Include="Effects\PostEffects\DepthBasedOutline\DepthBasedOutline.cpp" />
     <ClCompile Include="Effects\PostEffects\GaussianFilter\GaussianFilter.cpp" />
     <ClCompile Include="Effects\PostEffects\Grayscale\Grayscale.cpp" />
     <ClCompile Include="Effects\PostEffects\Helper\PostEffectHelper.cpp" />
+    <ClCompile Include="Effects\PostEffects\PrewittOutline\PrewittOutline.cpp" />
     <ClCompile Include="Effects\PostEffects\Vignette\Vignette.cpp" />
     <ClCompile Include="Externals\Timer\Timer.cpp" />
     <ClCompile Include="Features\Audio\Audio.cpp" />
@@ -287,9 +290,11 @@
     <ClInclude Include="DebugTools\Logger\Logger.h" />
     <ClInclude Include="DebugTools\ReakChecker.h" />
     <ClInclude Include="Effects\PostEffects\BoxFilter\BoxFilter.h" />
+    <ClInclude Include="Effects\PostEffects\DepthBasedOutline\DepthBasedOutline.h" />
     <ClInclude Include="Effects\PostEffects\GaussianFilter\GaussianFilter.h" />
     <ClInclude Include="Effects\PostEffects\Grayscale\Grayscale.h" />
     <ClInclude Include="Effects\PostEffects\Helper\PostEffectHelper.h" />
+    <ClInclude Include="Effects\PostEffects\PrewittOutline\PrewittOutline.h" />
     <ClInclude Include="Effects\PostEffects\Vignette\Vignette.h" />
     <ClInclude Include="Externals\Timer\Timer.h" />
     <ClInclude Include="Features\Audio\Audio.h" />
@@ -409,6 +414,16 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_ASAN|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </FxCompile>
+    <FxCompile Include="EngineResources\Shaders\DepthBasedOutline.PS.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_ASAN|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="EngineResources\Shaders\DepthBasedOutline.VS.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_ASAN|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </FxCompile>
     <FxCompile Include="EngineResources\Shaders\GaussianFilter.PS.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_ASAN|x64'">true</ExcludedFromBuild>
@@ -470,6 +485,16 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="EngineResources\Shaders\Particle.VS.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_ASAN|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="EngineResources\Shaders\PrewittOutline.PS.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_ASAN|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="EngineResources\Shaders\PrewittOutline.VS.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_ASAN|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>

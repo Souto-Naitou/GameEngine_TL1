@@ -328,14 +328,14 @@ void DirectX12::CreateGameScreenResource()
 void DirectX12::CreateDSVAndSettingState()
 {
     /// リソースの生成
-    depthStencilResource_ = DX12Helper::CreateDepthStencilTextureResource(device_, WinSystem::clientWidth, WinSystem::clientHeight);
-
+    depthStencilResource_.resource = DX12Helper::CreateDepthStencilTextureResource(device_, WinSystem::clientWidth, WinSystem::clientHeight);
+    depthStencilResource_.state = D3D12_RESOURCE_STATE_DEPTH_WRITE;
 
     /// DSVの生成
     D3D12_DEPTH_STENCIL_VIEW_DESC dsvDesc{};
     dsvDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT; // フォーマット
     dsvDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D; // 2DTexture
-    device_->CreateDepthStencilView(depthStencilResource_.Get(), &dsvDesc, dsvDescriptorHeap_->GetCPUDescriptorHandleForHeapStart());
+    device_->CreateDepthStencilView(depthStencilResource_.resource.Get(), &dsvDesc, dsvDescriptorHeap_->GetCPUDescriptorHandleForHeapStart());
 
 
     /// DepthStencilStateの設定
@@ -653,10 +653,8 @@ void DirectX12::ResizeBuffers()
 
     depthStencilResource_.Reset();
 
-    gameScreenResource_.resource.Reset();
-    gameScreenResource_.state = D3D12_RESOURCE_STATE_PRESENT;
-    gameScreenComputed_.resource.Reset();
-    gameScreenComputed_.state = D3D12_RESOURCE_STATE_PRESENT;
+    gameScreenResource_.Reset();
+    gameScreenComputed_.Reset();
 
     DXGI_SWAP_CHAIN_DESC1 desc = {};
     swapChain_->GetDesc1(&desc);

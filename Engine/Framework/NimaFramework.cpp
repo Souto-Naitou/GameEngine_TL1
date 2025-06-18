@@ -160,10 +160,18 @@ void NimaFramework::Initialize()
     pPEGaussianFilter_ = std::make_unique<GaussianFilter>();
     pPEGaussianFilter_->Initialize();
 
+    pPEPrewittOutline_ = std::make_unique<PrewittOutline>();
+    pPEPrewittOutline_->Initialize();
+
+    pPEDepthBasedOutline_ = std::make_unique<DepthBasedOutline>();
+    pPEDepthBasedOutline_->Initialize();
+
     PostEffectExecuter::GetInstance()->AddPostEffect(pPEGrayscale_.get())
         .AddPostEffect(pPEVignette_.get())
         .AddPostEffect(pPEBoxFilter_.get())
-        .AddPostEffect(pPEGaussianFilter_.get());
+        .AddPostEffect(pPEGaussianFilter_.get())
+        .AddPostEffect(pPEPrewittOutline_.get())
+        .AddPostEffect(pPEDepthBasedOutline_.get());
 
     /// コマンドリストを追加
     pDirectX_->AddCommandList(pObject3dSystem_->GetCommandList());

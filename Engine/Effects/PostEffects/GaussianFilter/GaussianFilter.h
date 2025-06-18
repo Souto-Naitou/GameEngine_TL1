@@ -46,7 +46,7 @@ private:
     ID3D12GraphicsCommandList*                          commandList_            = nullptr;
     DirectX12*                                          pDx12_                  = nullptr;
 
-    bool                                                isEnabled_              = true;
+    bool                                                isEnabled_              = false;
     const std::string                                   name_                   = "GaussianFilter";
     ResourceStateTracker                                renderTexture_          = {};
     Microsoft::WRL::ComPtr<IDxcBlob>                    vertexShaderBlob_       = nullptr;
