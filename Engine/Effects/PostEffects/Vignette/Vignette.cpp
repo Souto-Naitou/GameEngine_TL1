@@ -95,6 +95,7 @@ void Vignette::OnResizedBuffers()
 {
     // レンダーテクスチャの生成
     Helper::CreateRenderTexture(device_, renderTexture_, rtvHandleCpu_, rtvHeapIndex_);
+    renderTexture_.resource->SetName(L"VignetteRenderTexture");
     // レンダーテクスチャのSRVを生成
     Helper::CreateSRV(renderTexture_, rtvHandleGpu_, srvHeapIndex_);
 }
@@ -112,6 +113,7 @@ void Vignette::ToShaderResourceState()
 void Vignette::DebugOverlay()
 {
     #ifdef _DEBUG
+
     ImGui::DragFloat("Scale", &pOption_->scale, 0.01f, FLT_MIN);
     ImGui::DragFloat("Power", &pOption_->power, 0.01f, FLT_MIN);
     ImGui::ColorEdit3("Power", &pOption_->color.x);

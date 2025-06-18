@@ -9,13 +9,12 @@
 
 void EventTimer::NewFrame()
 {
-    events_.clear();
-    timers_.clear();
     globalTimer_.Start();
 }
 
 void EventTimer::BeginEvent(const std::string& _eventName)
 {
+    timers_[_eventName].Reset();
     timers_[_eventName].Start();
 }
 
@@ -33,6 +32,12 @@ void EventTimer::EndEvent(const std::string& _eventName)
     {
         maxTime_[_eventName] = 0.0f;
     }
+}
+
+void EventTimer::Reset()
+{
+    timers_.clear();
+    events_.clear();
 }
 
 void EventTimer::Measure(const std::string& _eventName, const std::function<void()>& _func)

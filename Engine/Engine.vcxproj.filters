@@ -256,6 +256,9 @@
     <Filter Include="Effect\PostEffect\BoxFilter">
       <UniqueIdentifier>{fe20ff7d-b862-409e-be34-7f3d1e0afa90}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Effect\PostEffect\GaussianFilter">
+      <UniqueIdentifier>{4d490812-3ac6-4777-bd5e-55f245f08b0c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DebugTools\DebugManager\DebugManager.cpp">
@@ -467,6 +470,9 @@
     </ClCompile>
     <ClCompile Include="Effects\PostEffects\BoxFilter\BoxFilter.cpp">
       <Filter>Effect\PostEffect\BoxFilter</Filter>
+    </ClCompile>
+    <ClCompile Include="Effects\PostEffects\GaussianFilter\GaussianFilter.cpp">
+      <Filter>Effect\PostEffect\GaussianFilter</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -734,6 +740,9 @@
     <ClInclude Include="Effects\PostEffects\BoxFilter\BoxFilter.h">
       <Filter>Effect\PostEffect\BoxFilter</Filter>
     </ClInclude>
+    <ClInclude Include="Effects\PostEffects\GaussianFilter\GaussianFilter.h">
+      <Filter>Effect\PostEffect\GaussianFilter</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
@@ -807,6 +816,12 @@
       <Filter>HLSL</Filter>
     </FxCompile>
     <FxCompile Include="EngineResources\Shaders\BoxFilter.VS.hlsl">
+      <Filter>HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="EngineResources\Shaders\GaussianFilter.PS.hlsl">
+      <Filter>HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="EngineResources\Shaders\GaussianFilter.VS.hlsl">
       <Filter>HLSL</Filter>
     </FxCompile>
   </ItemGroup>

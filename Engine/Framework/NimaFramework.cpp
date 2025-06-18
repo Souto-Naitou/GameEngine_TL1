@@ -53,7 +53,7 @@ void NimaFramework::Initialize()
     pTextSystem_ = TextSystem::GetInstance();
     pAudioManager_ = AudioManager::GetInstance();
     pEventTimer_ = EventTimer::GetInstance();
-    pPostEffect_ = PostEffectExecuter::GetInstance();
+    pPostEffectExecuter_ = PostEffectExecuter::GetInstance();
 
     #ifdef _DEBUG
     pImGuiManager_ = std::make_unique<ImGuiManager>();
@@ -146,7 +146,7 @@ void NimaFramework::Initialize()
     NiGui::SetDebug(pNiGuiDebug_.get());
 
     /// ポストエフェクト
-    pPostEffect_->Initialize();
+    pPostEffectExecuter_->Initialize();
 
     pPEGrayscale_ = std::make_unique<Grayscale>();
     pPEGrayscale_->Initialize();
@@ -157,17 +157,21 @@ void NimaFramework::Initialize()
     pPEBoxFilter_ = std::make_unique<BoxFilter>();
     pPEBoxFilter_->Initialize();
 
+    pPEGaussianFilter_ = std::make_unique<GaussianFilter>();
+    pPEGaussianFilter_->Initialize();
+
     PostEffectExecuter::GetInstance()->AddPostEffect(pPEGrayscale_.get())
         .AddPostEffect(pPEVignette_.get())
-        .AddPostEffect(pPEBoxFilter_.get());
+        .AddPostEffect(pPEBoxFilter_.get())
+        .AddPostEffect(pPEGaussianFilter_.get());
 
     /// コマンドリストを追加
     pDirectX_->AddCommandList(pObject3dSystem_->GetCommandList());
     pDirectX_->AddCommandList(pParticleSystem_->GetCommandList());
     pDirectX_->AddCommandList(pSpriteSystem_->GetCommandList());
-    pDirectX_->AddCommandList(pPostEffect_->GetCommandList());
+    pDirectX_->AddCommandList(pPostEffectExecuter_->GetCommandList());
 
-    pDirectX_->AddOnResize("PostEffect", std::bind(&PostEffectExecuter::OnResize, pPostEffect_));
+    pDirectX_->AddOnResize("PostEffect", std::bind(&PostEffectExecuter::OnResize, pPostEffectExecuter_));
 }
 
 void NimaFramework::Finalize()
@@ -178,7 +182,7 @@ void NimaFramework::Finalize()
     pLogger_->Save();
     pParticleManager_->Finalize();
     pSceneManager_->Finalize();
-    pPostEffect_->Finalize();
+    pPostEffectExecuter_->Finalize();
 
     #ifdef _DEBUG
     pImGuiManager_->Finalize();
@@ -187,6 +191,12 @@ void NimaFramework::Finalize()
 
 void NimaFramework::Update()
 {
+    /// イベント計測開始
+    #ifdef _DEBUG
+    pEventTimer_->NewFrame();
+    pEventTimer_->BeginEvent("Update");
+    #endif // _DEBUG
+
     UINT msg = pWinSystem_->GetMsg();
     if (msg == WM_QUIT)
     {
@@ -197,7 +207,7 @@ void NimaFramework::Update()
     if(pWinSystem_->IsResized())
     {
         pDirectX_->OnResized();
-        pPostEffect_->OnResizedBuffers();
+        pPostEffectExecuter_->OnResizedBuffers();
         pViewport_->OnResizedBuffers();
         #ifdef _DEBUG
         pImGuiManager_->Resize();
@@ -213,12 +223,6 @@ void NimaFramework::Update()
         { pViewport_->GetViewportPos().x, pViewport_->GetViewportPos().y }
     );
 
-    #endif // _DEBUG
-
-    /// イベント計測開始
-    #ifdef _DEBUG
-    pEventTimer_->NewFrame();
-    pEventTimer_->BeginEvent("Update");
     #endif // _DEBUG
 
     NiGui::BeginFrame();
@@ -283,13 +287,13 @@ void NimaFramework::Draw()
     pSpriteSystem_->Sync();
 
     // ポストエフェクトの適用
-    pPostEffect_->ApplyPostEffects();
+    pPostEffectExecuter_->ApplyPostEffects();
 
     /// レンダーターゲットの初期化
     pDirectX_->NewFrame();
 
     // ポストエフェクト後のテクスチャをスワップチェーンリソースに描画
-    pPostEffect_->Draw();
+    pPostEffectExecuter_->Draw();
 
     /// レンダーターゲットからビューポート用リソースにコピー
     pDirectX_->CopyFromRTV(pDirectX_->GetCommandListsLast());
@@ -318,12 +322,12 @@ void NimaFramework::Draw()
 
 void NimaFramework::PreProcess()
 {
-    pPostEffect_->NewFrame();
+    pPostEffectExecuter_->NewFrame();
     pSRVManager_->SetDescriptorHeaps();
 
-    pObject3dSystem_->SetRTVHandle(pPostEffect_->GetRTVHandle());
-    pSpriteSystem_->SetRTVHandle(pPostEffect_->GetRTVHandle());
-    pParticleSystem_->SetRTVHandle(pPostEffect_->GetRTVHandle());
+    pObject3dSystem_->SetRTVHandle(pPostEffectExecuter_->GetRTVHandle());
+    pSpriteSystem_->SetRTVHandle(pPostEffectExecuter_->GetRTVHandle());
+    pParticleSystem_->SetRTVHandle(pPostEffectExecuter_->GetRTVHandle());
 }
 
 void NimaFramework::PostProcess()
@@ -332,5 +336,5 @@ void NimaFramework::PostProcess()
     pObject3dSystem_->PostDraw();
     pSpriteSystem_->PostDraw();
     pParticleSystem_->PostDraw();
-    pPostEffect_->PostDraw();
+    pPostEffectExecuter_->PostDraw();
 }

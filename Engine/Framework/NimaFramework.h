@@ -30,6 +30,7 @@
 
 #include <memory> /// std::unique_ptr
 #include <Core/DirectX12/PostEffect.h>
+#include <Effects/PostEffects/GaussianFilter/GaussianFilter.h>
 
 
 /// ゲーム共通のフレームワーククラス
@@ -83,12 +84,13 @@ protected:
     RandomGenerator*                pRandomGenerator_           = nullptr;
     AudioManager*                   pAudioManager_              = nullptr;
     EventTimer*                     pEventTimer_                = nullptr;
-    PostEffectExecuter*                     pPostEffect_                = nullptr;
+    PostEffectExecuter*             pPostEffectExecuter_        = nullptr;
 
     // ポストエフェクト
     std::unique_ptr<Grayscale>      pPEGrayscale_       = nullptr;
     std::unique_ptr<Vignette>       pPEVignette_        = nullptr;
     std::unique_ptr<BoxFilter>      pPEBoxFilter_       = nullptr;
+    std::unique_ptr<GaussianFilter> pPEGaussianFilter_  = nullptr;
 
 
 protected:

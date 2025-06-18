@@ -5,7 +5,6 @@
 #include <Features/SceneManager/SceneManager.h>
 #include <Features/Line/LineSystem.h>
 #include <Features/GameEye/FreeLook/FreeLookEye.h>
-#include <Core/DirectX12/PostEffect.h>
 
 
 void CG4Task1::Initialize()
