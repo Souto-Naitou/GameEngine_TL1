@@ -112,11 +112,15 @@ void BoxFilter::ToShaderResourceState()
 
 void BoxFilter::DebugOverlay()
 {
+    #ifdef _DEBUG
+
     bool changed = ImGui::SliderInt("Kernel Size", reinterpret_cast<int*>(&pOption_->kernelSize), 3, 99, "%d", ImGuiSliderFlags_AlwaysClamp);
     if (changed)
     {
         pOption_->kernelSize = (pOption_->kernelSize / 2) * 2 + 1;
     }
+
+    #endif // _DEBUG
 }
 
 void BoxFilter::CreateRootSignature()
