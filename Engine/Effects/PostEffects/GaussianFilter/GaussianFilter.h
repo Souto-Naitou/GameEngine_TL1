@@ -11,6 +11,7 @@ struct alignas(16) GaussianFilterOption
 {
     int kernelSize = 3;
     float sigma = 1.0f;
+    float padding[2] = {};
 };
 
 /// <ボックスフィルタ>
