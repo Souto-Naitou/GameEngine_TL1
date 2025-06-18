@@ -7,10 +7,15 @@
 #include <Core/DirectX12/DirectX12.h>
 #include <Core/DirectX12/ResourceStateTracker/ResourceStateTracker.h>
 
-/// <グレースケール>
+struct alignas(16) PrewittOutlineOption
+{
+    float weightMultiply = 6.0f;
+    float padding[3] = {};
+};
 
+/// <ボックスフィルタ>
 /// - ApplyメソッドとSettingメソッドはPostEffectクラスで実行する
-class Grayscale : public IPostEffect
+class PrewittOutline : public IPostEffect
 {
 public:
     void    Initialize() override;
@@ -26,7 +31,7 @@ private:
     void    OnResizeBefore() override;
     void    OnResizedBuffers() override;
     void    ToShaderResourceState() override;
-    void    DebugOverlay() override {};
+    void    DebugOverlay() override;
 
     // Setters
     void    SetInputTextureHandle(D3D12_GPU_DESCRIPTOR_HANDLE _gpuHandle) override;
@@ -41,7 +46,7 @@ private:
     DirectX12*                                          pDx12_                  = nullptr;
 
     bool                                                isEnabled_              = false;
-    const std::string                                   name_                   = "Grayscale";
+    const std::string                                   name_                   = "PrewittOutline";
     ResourceStateTracker                                renderTexture_          = {};
     Microsoft::WRL::ComPtr<IDxcBlob>                    vertexShaderBlob_       = nullptr;
     Microsoft::WRL::ComPtr<IDxcBlob>                    pixelShaderBlob_        = nullptr;
@@ -52,11 +57,16 @@ private:
     D3D12_GPU_DESCRIPTOR_HANDLE                         inputGpuHandle_         = {};
     uint32_t                                            rtvHeapIndex_           = 0;
     uint32_t                                            srvHeapIndex_           = 0;
-    const std::wstring                                  kVertexShaderPath       = L"EngineResources/Shaders/Grayscale.VS.hlsl";
-    const std::wstring                                  kPixelShaderPath        = L"EngineResources/Shaders/Grayscale.PS.hlsl";
+    const std::wstring                                  kVertexShaderPath       = L"EngineResources/Shaders/PrewittOutline.VS.hlsl";
+    const std::wstring                                  kPixelShaderPath        = L"EngineResources/Shaders/PrewittOutline.PS.hlsl";
+
+    // Constant buffers
+    Microsoft::WRL::ComPtr<ID3D12Resource>              optionResource_         = nullptr;
+    PrewittOutlineOption*                                      pOption_                = nullptr;
 
     // Internal functions
     void    CreateRootSignature();
     void    CreatePipelineStateObject();
     void    ToRenderTargetState();
+    void    CreateResourceCBuffer();
 };

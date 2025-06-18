@@ -24,13 +24,16 @@
 #include <Features/NiGui/NiGuiDrawer.h>
 #include <Features/NiGui/NiGuiDebug.h>
 #include <DebugTools/EventTimer/EventTimer.h>
+
 #include <Effects/PostEffects/Grayscale/Grayscale.h>
 #include <Effects/PostEffects/Vignette/Vignette.h>
 #include <Effects/PostEffects/BoxFilter/BoxFilter.h>
+#include <Effects/PostEffects/GaussianFilter/GaussianFilter.h>
+#include <Effects/PostEffects/PrewittOutline/PrewittOutline.h>
+#include <Effects/PostEffects/DepthBasedOutline/DepthBasedOutline.h>
 
 #include <memory> /// std::unique_ptr
 #include <Core/DirectX12/PostEffect.h>
-#include <Effects/PostEffects/GaussianFilter/GaussianFilter.h>
 
 
 /// ゲーム共通のフレームワーククラス
@@ -87,10 +90,12 @@ protected:
     PostEffectExecuter*             pPostEffectExecuter_        = nullptr;
 
     // ポストエフェクト
-    std::unique_ptr<Grayscale>      pPEGrayscale_       = nullptr;
-    std::unique_ptr<Vignette>       pPEVignette_        = nullptr;
-    std::unique_ptr<BoxFilter>      pPEBoxFilter_       = nullptr;
-    std::unique_ptr<GaussianFilter> pPEGaussianFilter_  = nullptr;
+    std::unique_ptr<Grayscale>          pPEGrayscale_           = nullptr;
+    std::unique_ptr<Vignette>           pPEVignette_            = nullptr;
+    std::unique_ptr<BoxFilter>          pPEBoxFilter_           = nullptr;
+    std::unique_ptr<GaussianFilter>     pPEGaussianFilter_      = nullptr;
+    std::unique_ptr<PrewittOutline>     pPEPrewittOutline_      = nullptr;
+    std::unique_ptr<DepthBasedOutline>  pPEDepthBasedOutline_   = nullptr;
 
 
 protected:

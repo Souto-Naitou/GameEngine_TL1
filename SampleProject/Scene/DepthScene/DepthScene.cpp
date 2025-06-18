@@ -26,7 +26,7 @@ void DepthScene::Finalize()
     objectList_.clear();
 
 #ifdef _DEBUG
-    DebugManager::GetInstance()->DeleteComponent("Scene", windowName_.c_str());
+    DebugManager::GetInstance()->DeleteComponent("Scene", windowName_);
 #endif // _DEBUG
 }
 

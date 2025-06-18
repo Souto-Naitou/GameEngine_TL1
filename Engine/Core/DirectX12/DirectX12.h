@@ -96,6 +96,7 @@ public: /// Getter
     ResourceStateTracker*                                   GetGameScreenComputed()                     { return &gameScreenComputed_; }
     D3D12_RECT                                              GetScissorRect() const                      { return scissorRect_; }
     const Vector4&                                          GetEditorBGColor() const                    { return editorBG_; }
+    ResourceStateTracker*                                   GetDepthStencilResource()                   { return &depthStencilResource_; }
 
 public:
     void SetGameWindowRect(D3D12_VIEWPORT _viewport);
@@ -127,7 +128,7 @@ private:
     std::unique_ptr<RTVHeapCounter>                         rtvHeapCounter_                 = nullptr;      // RTVヒープカウンタ
     Microsoft::WRL::ComPtr<ID3D12DescriptorHeap>            dsvDescriptorHeap_              = nullptr;
     Microsoft::WRL::ComPtr<ID3D12DescriptorHeap>            descriptorHeaps_                = nullptr;
-    Microsoft::WRL::ComPtr<ID3D12Resource>                  depthStencilResource_           = nullptr;      // 深度ステンシルリソース
+    ResourceStateTracker                                    depthStencilResource_           = {};           // 深度ステンシルリソース
     ResourceStateTracker                                    gameScreenResource_             = {};           // ゲーム画面(ImGuiを含まない)リソース
     ResourceStateTracker                                    gameScreenComputed_             = {};           // ゲーム画面(コンピュートシェーダー後)リソース
     Microsoft::WRL::ComPtr<IDxcUtils>                       dxcUtils_                       = nullptr;

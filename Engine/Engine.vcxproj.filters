@@ -247,9 +247,6 @@
     <Filter Include="Effect\PostEffect\Grayscale">
       <UniqueIdentifier>{df05c70a-a16e-4880-a01d-f71c08a6b1fb}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Effect\PostEffect\Helper">
-      <UniqueIdentifier>{2946dbcb-0581-4d0b-af8b-3987d55efe5e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Effect\PostEffect\Vignette">
       <UniqueIdentifier>{b83890bf-4f67-4ef7-a098-3c2f12d2fc01}</UniqueIdentifier>
     </Filter>
@@ -258,6 +255,15 @@
     </Filter>
     <Filter Include="Effect\PostEffect\GaussianFilter">
       <UniqueIdentifier>{4d490812-3ac6-4777-bd5e-55f245f08b0c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Effect\PostEffect\.Helper">
+      <UniqueIdentifier>{2946dbcb-0581-4d0b-af8b-3987d55efe5e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Effect\PostEffect\PrewittOutline">
+      <UniqueIdentifier>{25dec821-bd38-4995-8651-113363b582da}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Effect\PostEffect\DepthBasedOutline">
+      <UniqueIdentifier>{6f6ead96-d95d-4bce-bc76-6121ce61918d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -460,7 +466,7 @@
       <Filter>Feature\Particle\Emitter</Filter>
     </ClCompile>
     <ClCompile Include="Effects\PostEffects\Helper\PostEffectHelper.cpp">
-      <Filter>Effect\PostEffect\Helper</Filter>
+      <Filter>Effect\PostEffect\.Helper</Filter>
     </ClCompile>
     <ClCompile Include="Effects\PostEffects\Grayscale\Grayscale.cpp">
       <Filter>Effect\PostEffect\Grayscale</Filter>
@@ -473,6 +479,15 @@
     </ClCompile>
     <ClCompile Include="Effects\PostEffects\GaussianFilter\GaussianFilter.cpp">
       <Filter>Effect\PostEffect\GaussianFilter</Filter>
+    </ClCompile>
+    <ClCompile Include="Effects\PostEffects\PrewittOutline\PrewittOutline.cpp">
+      <Filter>Effect\PostEffect\PrewittOutline</Filter>
+    </ClCompile>
+    <ClCompile Include="Effects\PostEffects\DepthBasedOutline\DepthBasedOutline.cpp">
+      <Filter>Effect\PostEffect\DepthBasedOutline</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\DirectX12\ResourceStateTracker\ResourceStateTracker.cpp">
+      <Filter>Core\DirectX12\ResourceStateTracker</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -732,7 +747,7 @@
       <Filter>Effect\PostEffect\Grayscale</Filter>
     </ClInclude>
     <ClInclude Include="Effects\PostEffects\Helper\PostEffectHelper.h">
-      <Filter>Effect\PostEffect\Helper</Filter>
+      <Filter>Effect\PostEffect\.Helper</Filter>
     </ClInclude>
     <ClInclude Include="Effects\PostEffects\Vignette\Vignette.h">
       <Filter>Effect\PostEffect\Vignette</Filter>
@@ -742,6 +757,12 @@
     </ClInclude>
     <ClInclude Include="Effects\PostEffects\GaussianFilter\GaussianFilter.h">
       <Filter>Effect\PostEffect\GaussianFilter</Filter>
+    </ClInclude>
+    <ClInclude Include="Effects\PostEffects\PrewittOutline\PrewittOutline.h">
+      <Filter>Effect\PostEffect\PrewittOutline</Filter>
+    </ClInclude>
+    <ClInclude Include="Effects\PostEffects\DepthBasedOutline\DepthBasedOutline.h">
+      <Filter>Effect\PostEffect\DepthBasedOutline</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -822,6 +843,18 @@
       <Filter>HLSL</Filter>
     </FxCompile>
     <FxCompile Include="EngineResources\Shaders\GaussianFilter.VS.hlsl">
+      <Filter>HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="EngineResources\Shaders\DepthBasedOutline.VS.hlsl">
+      <Filter>HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="EngineResources\Shaders\DepthBasedOutline.PS.hlsl">
+      <Filter>HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="EngineResources\Shaders\PrewittOutline.PS.hlsl">
+      <Filter>HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="EngineResources\Shaders\PrewittOutline.VS.hlsl">
       <Filter>HLSL</Filter>
     </FxCompile>
   </ItemGroup>
