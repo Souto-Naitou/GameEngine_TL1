@@ -191,6 +191,12 @@ void NimaFramework::Finalize()
 
 void NimaFramework::Update()
 {
+    /// イベント計測開始
+    #ifdef _DEBUG
+    pEventTimer_->NewFrame();
+    pEventTimer_->BeginEvent("Update");
+    #endif // _DEBUG
+
     UINT msg = pWinSystem_->GetMsg();
     if (msg == WM_QUIT)
     {
@@ -217,12 +223,6 @@ void NimaFramework::Update()
         { pViewport_->GetViewportPos().x, pViewport_->GetViewportPos().y }
     );
 
-    #endif // _DEBUG
-
-    /// イベント計測開始
-    #ifdef _DEBUG
-    pEventTimer_->NewFrame();
-    pEventTimer_->BeginEvent("Update");
     #endif // _DEBUG
 
     NiGui::BeginFrame();

@@ -22,6 +22,7 @@ public:
     void NewFrame();
     void BeginEvent(const std::string& _eventName);
     void EndEvent(const std::string& _eventName);
+    void Reset();
 
     void Measure(const std::string& _eventName, const std::function<void()>& _func);
 
