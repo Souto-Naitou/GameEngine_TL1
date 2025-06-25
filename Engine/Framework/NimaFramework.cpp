@@ -311,7 +311,7 @@ void NimaFramework::Draw()
     // ポストエフェクト後のテクスチャをスワップチェーンリソースに描画
     pPostEffectExecuter_->Draw();
 
-    /// レンダーターゲットからビューポート用リソースにコピー
+    /// レンダーターゲットからビューポート用リソースにコピー (Releaseでは実行されない)
     pDirectX_->CopyFromRTV(pDirectX_->GetCommandListsLast());
     /// コンピュートシェーダーの実行
     pViewport_->Compute();

@@ -70,7 +70,6 @@ private: /// メンバー
     DWRITE_TEXT_METRICS                         metrics_                    = {};
 
 private: /// 借り物
-    DirectX12*                                  pDirectX12_                 = nullptr;
     IDWriteFactory7*                            dwriteFactory_              = nullptr;
     TextSystem*                                 pTextSystem_                = nullptr;
     ID2D1DeviceContext2*                        d2dDeviceContext_           = nullptr;

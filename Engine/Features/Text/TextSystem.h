@@ -46,6 +46,7 @@ private:
     ~TextSystem() = default;
 
     void CreateDirectWriteFactory();
+    void CreateDefaultColorBrush();
 
 private:
     HRESULT hr_ = 0;

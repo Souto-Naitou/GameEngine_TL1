@@ -97,7 +97,8 @@ void Text::SetPosition(const Vector2& _pos)
 
         #else
 
-        auto vp = pDirectX12_->GetViewport();
+        auto pDx12 = pTextSystem_->GetDirectX12();
+        auto vp = pDx12->GetViewport();
         screenPosition_ = position_ + anchorPos * Vector2(vp.Width, vp.Height) + Vector2(vp.TopLeftX, vp.TopLeftY);
         screenPosition_ -= pivotPos * Vector2(metrics_.width, metrics_.height);
 

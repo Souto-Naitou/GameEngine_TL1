@@ -17,13 +17,7 @@ void TextSystem::Initialize()
     this->CreateDirectWriteFactory();
 
     /// カラーブラシの生成
-    this->SetColorBrush("Black", D2D1::ColorF(D2D1::ColorF::Black));
-    this->SetColorBrush("White", D2D1::ColorF(D2D1::ColorF::White));
-    this->SetColorBrush("Red", D2D1::ColorF(D2D1::ColorF::Red));
-    this->SetColorBrush("Green", D2D1::ColorF(D2D1::ColorF::Green));
-    this->SetColorBrush("Blue", D2D1::ColorF(D2D1::ColorF::Blue));
-    this->SetColorBrush("Yellow", D2D1::ColorF(D2D1::ColorF::Yellow));
-    this->SetColorBrush("Cyan", D2D1::ColorF(D2D1::ColorF::Cyan));
+    CreateDefaultColorBrush();
 }
 
 void TextSystem::PresentDraw()
@@ -41,19 +35,25 @@ void TextSystem::PostDraw()
 {
     const auto backBufferIndex = pDx12_->GetBackBufferIndex();
     const auto wrappedBackBuffer = pDx12_->GetD3D11WrappedBackBuffer(backBufferIndex);
-    d2dDeviceContext_->EndDraw();
+    auto hr = d2dDeviceContext_->EndDraw();
+    if (FAILED(hr))
+    {
+        assert(false && "D2D1の描画に失敗しました");
+    }
     d3d11On12Device_->ReleaseWrappedResources(&wrappedBackBuffer, 1);
     d3d11On12DeviceContext_->Flush();
 }
 
 void TextSystem::OnResized()
 {
-    d2dFactory_ = pDx12_->GetD2D1Factory();
-    dxgiDevice_ = pDx12_->GetDXGIDevice();
-    d2dDevice_ = pDx12_->GetDirect2dDevice();
-    d2dDeviceContext_ = pDx12_->GetDirect2dDeviceContext();
-    d3d11On12Device_ = pDx12_->GetD3D11On12Device();
-    d3d11On12DeviceContext_ = pDx12_->GetD3D11On12DeviceContext();
+    //d2dFactory_ = pDx12_->GetD2D1Factory();
+    //dxgiDevice_ = pDx12_->GetDXGIDevice();
+    //d2dDevice_ = pDx12_->GetDirect2dDevice();
+    //d2dDeviceContext_ = pDx12_->GetDirect2dDeviceContext();
+    //d3d11On12Device_ = pDx12_->GetD3D11On12Device();
+    //d3d11On12DeviceContext_ = pDx12_->GetD3D11On12DeviceContext();
+    //CreateDefaultColorBrush();
+    this->Initialize();
 }
 
 void TextSystem::SetColorBrush(const std::string& _key, const D2D1::ColorF& _color)
@@ -114,4 +114,17 @@ void TextSystem::CreateDirectWriteFactory()
     /// DirectWriteのファクトリを生成
     hr_ = DWriteCreateFactory(DWRITE_FACTORY_TYPE_SHARED, __uuidof(IDWriteFactory7), reinterpret_cast<IUnknown**>(dwriteFactory_.GetAddressOf()));
     assert(SUCCEEDED(hr_));
+}
+
+void TextSystem::CreateDefaultColorBrush()
+{
+    colorBrushes_.clear();
+    /// カラーブラシの生成
+    this->SetColorBrush("Black", D2D1::ColorF(D2D1::ColorF::Black));
+    this->SetColorBrush("White", D2D1::ColorF(D2D1::ColorF::White));
+    this->SetColorBrush("Red", D2D1::ColorF(D2D1::ColorF::Red));
+    this->SetColorBrush("Green", D2D1::ColorF(D2D1::ColorF::Green));
+    this->SetColorBrush("Blue", D2D1::ColorF(D2D1::ColorF::Blue));
+    this->SetColorBrush("Yellow", D2D1::ColorF(D2D1::ColorF::Yellow));
+    this->SetColorBrush("Cyan", D2D1::ColorF(D2D1::ColorF::Cyan));
 }

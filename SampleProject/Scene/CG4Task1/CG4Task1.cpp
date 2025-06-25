@@ -6,6 +6,8 @@
 #include <Features/Line/LineSystem.h>
 #include <Features/GameEye/FreeLook/FreeLookEye.h>
 
+#include <DebugTools/DebugManager/DebugManager.h>
+
 
 void CG4Task1::Initialize()
 {
@@ -52,10 +54,21 @@ void CG4Task1::Initialize()
     pEmitter_Test_ = std::make_unique<ParticleEmitter>();
     pEmitter_Test_->Initialize("Particle/ParticleSpark.obj", "spark.png");
     pEmitter_Test_->SetEnableBillboard(true);
+
+    pText_ = std::make_unique<Text>();
+    pText_->Initialize();
+    pText_->SetName("FPSTEXT");
+    pText_->SetFontFamily("Bahnschrift");
+    pText_->SetFontSize(12);
+    pText_->SetColorName("White");
+    pText_->SetPosition({ 10.0f, 10.0f });
+    pText_->SetText("FPS: 0.0");
+    pText_->SetMaxSize({ 200.0f, 50.0f });
 }
 
 void CG4Task1::Finalize()
 {
+    pText_->Finalize();
     pEmitter_Test_->Finalize();
     pEmitter_Spark_->Finalize();
     pEmitter_Snow_->Finalize();
@@ -76,6 +89,8 @@ void CG4Task1::Update()
     pEmitter_Snow_->Update();
     pEmitter_Spark_->Update();
     pEmitter_Test_->Update();
+    pText_->SetText("FPS: " + std::to_string(static_cast<int>(DebugManager::GetInstance()->GetFPS())));
+    pText_->Update();
 }
 
 void CG4Task1::Draw2dBackGround()
@@ -106,4 +121,5 @@ void CG4Task1::Draw2dForeground()
 
 void CG4Task1::DrawTexts()
 {
+    pText_->Draw();
 }

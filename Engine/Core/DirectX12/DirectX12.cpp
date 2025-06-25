@@ -212,7 +212,7 @@ void DirectX12::DisplayFrame()
 
 
     /// フレームレート固定
-    pFramerate_->FixFramerate();
+    //pFramerate_->FixFramerate();
 
 
     /// 次のフレーム用のコマンドリストを準備
@@ -224,6 +224,8 @@ void DirectX12::DisplayFrame()
 
 void DirectX12::CopyFromRTV(ID3D12GraphicsCommandList* _commandList)
 {
+    #ifdef _DEBUG
+
     /// レンダーターゲットからコピー元状態にする
     DX12Helper::ChangeStateResource(_commandList, swapChainResources_[backBufferIndex_], D3D12_RESOURCE_STATE_COPY_SOURCE);
 
@@ -260,10 +262,12 @@ void DirectX12::CopyFromRTV(ID3D12GraphicsCommandList* _commandList)
         D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE
     );
 
-    #ifdef _DEBUG
-
     /// rtvのクリア
     _commandList->ClearRenderTargetView(rtvHandles_[backBufferIndex_], &editorBG_.x, 0, nullptr);
+
+    #else
+
+    _commandList;
 
     #endif // _DEBUG
 }
