@@ -4,7 +4,10 @@
 #include <Core/Win32/WinSystem.h>
 #include <Effects/PostEffects/.Helper/PostEffectHelper.h>
 #include <DebugTools/DebugManager/DebugManager.h>
+
+#ifdef _DEBUG
 #include <imgui.h>
+#endif //_DEBUG
 
 void PostEffectExecuter::Initialize()
 {
@@ -456,6 +459,8 @@ void PostEffectExecuter::EnableSolo(const size_t _index)
 
 void PostEffectExecuter::ImGuiCenterTable(const std::function<void()>& _fn)
 {
+    #ifdef _DEBUG
+
     if (ImGui::BeginTable("CenterAlignTable", 3))
     {
         ImGui::TableSetupColumn("##left", ImGuiTableColumnFlags_WidthStretch);
@@ -467,4 +472,10 @@ void PostEffectExecuter::ImGuiCenterTable(const std::function<void()>& _fn)
         ImGui::TableNextColumn();
         ImGui::EndTable();
     }
+
+    #else
+
+    _fn;
+
+    #endif //_DEBUG
 }
