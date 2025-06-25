@@ -1,4 +1,4 @@
-#include "GaussianFilter.h"
+#include "Dissolve.h"
 #include <cassert>
 #include <Core/DirectX12/DirectX12.h>
 #include <Core/DirectX12/PostEffect.h>
@@ -6,15 +6,16 @@
 #include <Core/DirectX12/SRVManager.h>
 #include <Core/DirectX12/Helper/DX12Helper.h>
 #include <imgui.h>
+#include <cfloat>
 
-void GaussianFilter::Initialize()
+void Dissolve::Initialize()
 {
     device_ = pDx12_->GetDevice();
     commandList_ = PostEffectExecuter::GetInstance()->GetCommandList();
 
     // レンダーテクスチャの生成
     Helper::CreateRenderTexture(pDx12_, device_, renderTexture_, rtvHandleCpu_, rtvHeapIndex_);
-    renderTexture_.resource->SetName(L"GaussianFilterRenderTexture");
+    renderTexture_.resource->SetName(L"DissolveRenderTexture");
 
     // レンダーテクスチャのSRVを生成
     Helper::CreateSRV(renderTexture_, rtvHandleGpu_, srvHeapIndex_);
@@ -29,42 +30,49 @@ void GaussianFilter::Initialize()
     this->CreateResourceCBuffer();
 }
 
-void GaussianFilter::Enable(bool _flag)
+void Dissolve::Enable(bool _flag)
 {
     isEnabled_ = _flag;
 }
 
-void GaussianFilter::SetInputTextureHandle(D3D12_GPU_DESCRIPTOR_HANDLE _gpuHandle)
+void Dissolve::SetInputTextureHandle(D3D12_GPU_DESCRIPTOR_HANDLE _gpuHandle)
 {
     inputGpuHandle_ = _gpuHandle;
 }
 
-bool GaussianFilter::Enabled() const
+bool Dissolve::Enabled() const
 {
     return isEnabled_;
 }
 
-D3D12_GPU_DESCRIPTOR_HANDLE GaussianFilter::GetOutputTextureHandle() const
+void Dissolve::SetTextureResource(const TextureResource& _texResource)
+{
+    maskTexture_ = _texResource;
+}
+
+D3D12_GPU_DESCRIPTOR_HANDLE Dissolve::GetOutputTextureHandle() const
 {
     return rtvHandleGpu_;
 }
 
-const std::string& GaussianFilter::GetName() const
+const std::string& Dissolve::GetName() const
 {
     return name_;
 }
 
-void GaussianFilter::Apply()
+void Dissolve::Apply()
 {
     commandList_->DrawInstanced(3, 1, 0, 0); // 三角形を1つ描画
 }
 
-void GaussianFilter::Release()
+void Dissolve::Release()
 {
 }
 
-void GaussianFilter::Setting()
+void Dissolve::Setting()
 {
+    this->CheckValidation();
+
     // レンダーテクスチャをレンダーターゲット状態に変更
     this->ToRenderTargetState();
 
@@ -77,30 +85,32 @@ void GaussianFilter::Setting()
 
     // 入力テクスチャのSRVを設定する（自分が所有するテクスチャのSRVではないため注意)
     commandList_->SetGraphicsRootDescriptorTable(0, inputGpuHandle_);
+    // マスクテクスチャのSRVを設定
+    commandList_->SetGraphicsRootDescriptorTable(1, maskTexture_.GetSRVHandleGPU());
+    // オプションリソースのCBVを設定
+    commandList_->SetGraphicsRootConstantBufferView(2, optionResource_->GetGPUVirtualAddress());
 
     commandList_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
-    commandList_->SetGraphicsRootConstantBufferView(1, optionResource_->GetGPUVirtualAddress());
 }
 
-void GaussianFilter::OnResizeBefore()
+void Dissolve::OnResizeBefore()
 {
     SRVManager::GetInstance()->Deallocate(srvHeapIndex_);
     renderTexture_.resource.Reset();
     renderTexture_.state = D3D12_RESOURCE_STATE_PRESENT;
 }
 
-void GaussianFilter::OnResizedBuffers()
+void Dissolve::OnResizedBuffers()
 {
     // レンダーテクスチャの生成
     Helper::CreateRenderTexture(pDx12_, device_, renderTexture_, rtvHandleCpu_, rtvHeapIndex_);
-    renderTexture_.resource->SetName(L"GaussianFilterRenderTexture");
+    renderTexture_.resource->SetName(L"DissolveRenderTexture");
 
     // レンダーテクスチャのSRVを生成
     Helper::CreateSRV(renderTexture_, rtvHandleGpu_, srvHeapIndex_);
 }
 
-void GaussianFilter::ToShaderResourceState()
+void Dissolve::ToShaderResourceState()
 {
     // レンダーテクスチャをシェーダーリソース状態に変更
     DX12Helper::ChangeStateResource(
@@ -110,27 +120,30 @@ void GaussianFilter::ToShaderResourceState()
     );
 }
 
-void GaussianFilter::DebugOverlay()
+void Dissolve::DebugOverlay()
 {
     #ifdef _DEBUG
 
-    bool changed = ImGui::SliderInt("Kernel Size", reinterpret_cast<int*>(&pOption_->kernelSize), 3, 99, "%d", ImGuiSliderFlags_AlwaysClamp);
-    if (changed)
-    {
-        pOption_->kernelSize = (pOption_->kernelSize / 2) * 2 + 1;
-    }
-    ImGui::DragFloat("Sigma", &pOption_->sigma, 0.01f, 0.1f, 0.0f, "%.1f", ImGuiSliderFlags_AlwaysClamp);
+    ImGui::SliderFloat("Threshold", &pOption_->threshold, FLT_MIN, 1.0f, "%.2f");
+    ImGui::SliderFloat("Edge threshold offset", &pOption_->edgeThresholdOffset, FLT_MIN, 1.0f, "%.2f");
+    ImGui::ColorEdit4("DissolveColor", &pOption_->colorDissolve.x);
+    ImGui::ColorEdit4("EdgeColor", &pOption_->colorEdge.x);
 
     #endif // _DEBUG
 }
 
-void GaussianFilter::CreateRootSignature()
+void Dissolve::CreateRootSignature()
 {
-    D3D12_DESCRIPTOR_RANGE descriptorRange[1] = {};
+    D3D12_DESCRIPTOR_RANGE descriptorRange[2] = {};
     descriptorRange[0].BaseShaderRegister = 0; // 0から始まる
     descriptorRange[0].NumDescriptors = 1; // 数は1つ
     descriptorRange[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV; // SRVを使う
     descriptorRange[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND; // Offsetを自動計算
+
+    descriptorRange[1].BaseShaderRegister = 1; // 0から始まる
+    descriptorRange[1].NumDescriptors = 1; // 数は1つ
+    descriptorRange[1].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV; // CBVを使う
+    descriptorRange[1].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND; // Offsetを自動計算
 
     /// RootSignature作成
     D3D12_ROOT_SIGNATURE_DESC descriptionRootSignature{};
@@ -138,14 +151,20 @@ void GaussianFilter::CreateRootSignature()
         D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
 
     // RootParameter作成。複数設定できるので配列
-    D3D12_ROOT_PARAMETER rootParameters[2] = {};
+    D3D12_ROOT_PARAMETER rootParameters[3] = {};
     rootParameters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;       // DescriptorTableを使う
     rootParameters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;                 // PixelShaderで使う
     rootParameters[0].DescriptorTable.pDescriptorRanges = descriptorRange;              // Tableの中身の配列を指定
-    rootParameters[0].DescriptorTable.NumDescriptorRanges = _countof(descriptorRange);  // Tableで利用する数
-    rootParameters[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;                    // CBVを使う
+    rootParameters[0].DescriptorTable.NumDescriptorRanges = 1;                          // Tableで利用する数
+
+    rootParameters[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;       // DescriptorTableを使う
     rootParameters[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;                 // PixelShaderで使う
-    rootParameters[1].Descriptor.ShaderRegister = 0;                                    // シェーダーレジスタ番号
+    rootParameters[1].DescriptorTable.pDescriptorRanges = &descriptorRange[1];          // Tableの中身の配列を指定
+    rootParameters[1].DescriptorTable.NumDescriptorRanges = 1;                          // Tableで利用する数
+
+    rootParameters[2].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;                    // CBVを使う
+    rootParameters[2].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;                 // PixelShaderで使う
+    rootParameters[2].Descriptor.ShaderRegister = 0;                                    // シェーダーレジスタ番号
 
 
     descriptionRootSignature.pParameters = rootParameters;                              // ルートパラメータ配列へのポインタ
@@ -176,7 +195,7 @@ void GaussianFilter::CreateRootSignature()
     if (FAILED(hr))
     {
         Logger::GetInstance()->LogError(
-            "GaussianFilter",
+            "Dissolve",
             __func__,
             reinterpret_cast<char*>(errorBlob->GetBufferPointer())
         );
@@ -188,7 +207,7 @@ void GaussianFilter::CreateRootSignature()
     assert(SUCCEEDED(hr));
 }
 
-void GaussianFilter::CreatePipelineStateObject()
+void Dissolve::CreatePipelineStateObject()
 {
     IDxcUtils* dxcUtils = pDx12_->GetDxcUtils();
     IDxcCompiler3* dxcCompiler = pDx12_->GetDxcCompiler();
@@ -249,7 +268,7 @@ void GaussianFilter::CreatePipelineStateObject()
     if (FAILED(hr))
     {
         Logger::GetInstance()->LogError(
-            "GaussianFilter",
+            "Dissolve",
             __func__,
             "Failed to create pipeline state"
         );
@@ -259,7 +278,7 @@ void GaussianFilter::CreatePipelineStateObject()
     return;
 }
 
-void GaussianFilter::ToRenderTargetState()
+void Dissolve::ToRenderTargetState()
 {
     // レンダーテクスチャをレンダーターゲット状態に変更
     DX12Helper::ChangeStateResource(
@@ -269,12 +288,72 @@ void GaussianFilter::ToRenderTargetState()
     );
 }
 
-void GaussianFilter::CreateResourceCBuffer()
+void Dissolve::CreateResourceCBuffer()
 {
-    optionResource_ = DX12Helper::CreateBufferResource(device_, sizeof(GaussianFilterOption));
+    optionResource_ = DX12Helper::CreateBufferResource(device_, sizeof(DissolveOption));
     optionResource_->Map(0, nullptr, reinterpret_cast<void**>(&pOption_));
 
     // 初期化
-    pOption_->kernelSize = 3; // カーネルサイズの初期値
-    pOption_->sigma = 1.0f; // シグマの初期値
+    pOption_->threshold = 0.5f; // デフォルトのしきい値を設定
+    pOption_->edgeThresholdOffset = 0.1f; // エッジのしきい値オフセットを設定
+    pOption_->colorDissolve = { 1.0f, 1.0f, 1.0f, 1.0f }; // デフォルトの色を設定
+    pOption_->colorEdge = { 1.0f, 1.0f, 1.0f, 1.0f }; // デフォルトの色を設定
+}
+
+void Dissolve::CheckValidation() const
+{
+    if (optionResource_ == nullptr)
+    {
+        Logger::GetInstance()->LogError(
+            "Dissolve",
+            __func__,
+            "Option resource is not initialized."
+        );
+        assert(false);
+    }
+    if (maskTexture_.GetSRVHandleGPU().ptr == 0)
+    {
+        Logger::GetInstance()->LogError(
+            "Dissolve",
+            __func__,
+            "Mask texture is not set."
+        );
+        assert(false);
+    }
+    if (inputGpuHandle_.ptr == 0)
+    {
+        Logger::GetInstance()->LogError(
+            "Dissolve",
+            __func__,
+            "Input texture handle is not set."
+        );
+        assert(false);
+    }
+    if (renderTexture_.resource == nullptr)
+    {
+        Logger::GetInstance()->LogError(
+            "Dissolve",
+            __func__,
+            "Render texture is not initialized."
+        );
+        assert(false);
+    }
+    if (pso_ == nullptr)
+    {
+        Logger::GetInstance()->LogError(
+            "Dissolve",
+            __func__,
+            "Pipeline state object is not initialized."
+        );
+        assert(false);
+    }
+    if (rootSignature_ == nullptr)
+    {
+        Logger::GetInstance()->LogError(
+            "Dissolve",
+            __func__,
+            "Root signature is not initialized."
+        );
+        assert(false);
+    }
 }

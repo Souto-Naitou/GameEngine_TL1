@@ -2,9 +2,12 @@
 
 #include <Core/DirectX12/Helper/DX12Helper.h>
 #include <Core/Win32/WinSystem.h>
-#include <Effects/PostEffects/Helper/PostEffectHelper.h>
+#include <Effects/PostEffects/.Helper/PostEffectHelper.h>
 #include <DebugTools/DebugManager/DebugManager.h>
+
+#ifdef _DEBUG
 #include <imgui.h>
+#endif //_DEBUG
 
 void PostEffectExecuter::Initialize()
 {
@@ -15,7 +18,7 @@ void PostEffectExecuter::Initialize()
     CreateCommandList();
 
     // レンダーテクスチャの生成
-    Helper::CreateRenderTexture(pDevice_, renderTexture_, rtvHandle_, rtvHeapIndex_);
+    Helper::CreateRenderTexture(pDx12_, pDevice_, renderTexture_, rtvHandle_, rtvHeapIndex_);
     renderTexture_.resource->SetName(L"PureRenderTexture");
 
     // SRVの生成
@@ -45,7 +48,7 @@ void PostEffectExecuter::ApplyPostEffects()
     // コマンドリストの設定
     uint32_t indexBackbuffer = pDx12_->GetBackBufferIndex();
     rtvHandleSwapChain_ = pDx12_->GetRTVHandle()[indexBackbuffer];
-    DX12Helper::CommandListCommonSetting(commandListForDraw_.Get(), &rtvHandleSwapChain_);
+    DX12Helper::CommandListCommonSetting(pDx12_, commandListForDraw_.Get(), &rtvHandleSwapChain_);
 
     DX12Helper::ChangeStateResource(
         commandListForDraw_,
@@ -134,7 +137,7 @@ void PostEffectExecuter::OnResize()
 
 void PostEffectExecuter::OnResizedBuffers()
 {
-    Helper::CreateRenderTexture(pDevice_, renderTexture_, rtvHandle_, rtvHeapIndex_);
+    Helper::CreateRenderTexture(pDx12_, pDevice_, renderTexture_, rtvHandle_, rtvHeapIndex_);
     renderTexture_.resource->SetName(L"PureRenderTexture");
     Helper::CreateSRV(renderTexture_, rtvHandleGpu_, srvHeapIndex_);
     for (auto& posteffect : postEffects_) posteffect->OnResizedBuffers();
@@ -146,29 +149,100 @@ void PostEffectExecuter::DebugWindow()
 
     // staticな変数で状態を保持
     static int selectedIndex = -1;
+    static const ImVec4 kColorRed(1.0f, 0.0f, 0.0f, 1.0f);
+    static const ImVec4 kColorGreen(0.0f, 1.0f, 0.0f, 1.0f);
 
-    // リスト表示
-    for (int i = 0; i < postEffects_.size(); ++i)
+    static int soloIndex = -1;
+
+    bool isBeginTable = ImGui::BeginTable("PostEffectTable", 3, ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg);
+
+    if (isBeginTable)
     {
-        // 無効の場合は(Disable)を末尾に付与
-        std::string name = postEffects_[i]->GetName();
-        if (!postEffects_[i]->Enabled()) name += "(Disabled)";
-        // Selectableで要素を表示・選択状態を管理
-        if (ImGui::Selectable(name.c_str(), selectedIndex == i))
-        {
-            if (selectedIndex == i) selectedIndex = -1;
-            else selectedIndex = i;
-        }
-        if (ImGui::BeginPopupContextItem()) // <-- use last item id as popup id
-        {
-            selectedIndex = i;
-            postEffects_[selectedIndex]->DebugOverlay();
+        ImGui::TableSetupColumn("Effect Name"       , ImGuiTableColumnFlags_WidthStretch);
+        ImGui::TableSetupColumn(" Enable "          , ImGuiTableColumnFlags_WidthFixed);
+        ImGui::TableSetupColumn("  Solo  "          , ImGuiTableColumnFlags_WidthFixed);
+        ImGui::TableHeadersRow();
 
-            if (ImGui::Button("Close"))
-                ImGui::CloseCurrentPopup();
-            ImGui::EndPopup();
+        // 一列目の処理
+        auto fnColumn1 = [&](int i) -> void
+        {
+            std::string name = postEffects_[i]->GetName();
+            // Selectableで要素を表示・選択状態を管理
+            if (ImGui::Selectable(name.c_str(), selectedIndex == i))
+            {
+                if (selectedIndex == i) selectedIndex = -1;
+                else selectedIndex = i;
+            }
+            if (ImGui::BeginPopupContextItem()) // <-- use last item id as popup id
+            {
+                selectedIndex = i;
+                postEffects_[selectedIndex]->DebugOverlay();
+
+                if (ImGui::Button("Close"))
+                    ImGui::CloseCurrentPopup();
+                ImGui::EndPopup();
+            }
+            ImGui::SetItemTooltip("Right-click to open setting");
+        };
+
+        // 二列目の処理
+        auto fnColumn2 = [&](int i) -> void
+        {
+            auto fn = [&]() -> void
+            {
+                if (postEffects_[i]->Enabled()) ImGui::TextColored(kColorGreen, "Yes");
+                else ImGui::TextColored(kColorRed, "No");
+            };
+
+            this->ImGuiCenterTable(fn);
+        };
+
+        // 三列目の処理
+        auto fnColumn3 = [&](int i) -> void
+        {
+            auto fn = [&](int i) -> void
+            {
+                bool isSolo = (soloIndex == i);
+                if (ImGui::SmallButton("S"))
+                {
+                    isSolo = !isSolo; // ボタンが押されたらソロモードの切り替え
+                    if (isSolo)
+                    {
+                        soloIndex = i;
+                        this->EnableSolo(i); // ソロモードを有効化
+                    }
+                    else if (soloIndex == i)
+                    {
+                        postEffects_[i]->Enable(false); // チェックを外すとソロ解除
+                        soloIndex = -1; // チェックを外すとソロ解除
+                    }
+                }
+            };
+
+            this->ImGuiCenterTable(std::bind(fn, i));
+        };
+
+        // テーブル構成
+        for (int i = 0; i < postEffects_.size(); ++i)
+        {
+            ImGui::PushID(i); // 各要素にユニークなIDを付与
+
+            ImGui::TableNextColumn(); // 次の列へ移動
+
+            fnColumn1(i);
+
+            ImGui::TableNextColumn(); // 2列目へ移動
+
+            fnColumn2(i);
+
+            ImGui::TableNextColumn(); // 3列目へ移動
+
+            fnColumn3(i);
+
+            ImGui::PopID(); // IDをポップして元に戻す
         }
-        ImGui::SetItemTooltip("Right-click to open setting");
+
+        ImGui::EndTable(); // テーブルの終了
     }
 
     ImGui::Spacing();
@@ -217,7 +291,6 @@ void PostEffectExecuter::DebugWindow()
 void PostEffectExecuter::ObtainInstances()
 {
     /// 必要なインスタンスを取得
-    pDx12_ = DirectX12::GetInstance();
     rtvHeapCounter_ = pDx12_->GetRTVHeapCounter();
     pDevice_ = pDx12_->GetDevice();
     pSRVManager_ = SRVManager::GetInstance();
@@ -364,4 +437,45 @@ void PostEffectExecuter::CreatePipelineState()
 void PostEffectExecuter::CreateCommandList()
 {
     Helper::CreateCommandList(pDevice_, commandListForDraw_, commandAllocator_);
+}
+
+void PostEffectExecuter::EnableSolo(const size_t _index)
+{
+    if (_index < postEffects_.size())
+    {
+        for (size_t i = 0; i < postEffects_.size(); ++i)
+        {
+            if (i == _index)
+            {
+                postEffects_[i]->Enable(true);
+            }
+            else
+            {
+                postEffects_[i]->Enable(false);
+            }
+        }
+    }
+}
+
+void PostEffectExecuter::ImGuiCenterTable(const std::function<void()>& _fn)
+{
+    #ifdef _DEBUG
+
+    if (ImGui::BeginTable("CenterAlignTable", 3))
+    {
+        ImGui::TableSetupColumn("##left", ImGuiTableColumnFlags_WidthStretch);
+        ImGui::TableSetupColumn("##center", ImGuiTableColumnFlags_WidthFixed);
+        ImGui::TableSetupColumn("##right", ImGuiTableColumnFlags_WidthStretch);
+        ImGui::TableNextColumn();
+        ImGui::TableNextColumn();
+        _fn();
+        ImGui::TableNextColumn();
+        ImGui::EndTable();
+    }
+
+    #else
+
+    _fn;
+
+    #endif //_DEBUG
 }

@@ -31,16 +31,8 @@ class SRVManager;
 class DirectX12
 {
 public:
-    DirectX12(const DirectX12&) = delete;
-    DirectX12(const DirectX12&&) = delete;
-    DirectX12& operator=(const DirectX12&) = delete;
-    DirectX12& operator=(const DirectX12&&) = delete;
-
-    static DirectX12* GetInstance()
-    {
-        static D3DResourceLeakChecker leakchecker;
-        static DirectX12 instance; return &instance;
-    }
+    DirectX12() = default;
+    ~DirectX12();
 
     void Initialize();
 
@@ -106,12 +98,9 @@ public:
     void DeleteOnResize(const std::string& _key) { map_func_onResize_.erase(_key); }
 
 private:
-    DirectX12() = default;
-    ~DirectX12();
-
+    static D3DResourceLeakChecker                           leakchecker;
     HRESULT                                                 hr_                             = 0;
     HWND                                                    hwnd_                           = {};
-
     std::vector<D3D12_GPU_DESCRIPTOR_HANDLE>                srvHandlesGPUList_              = {};           // SRVハンドルリスト(GPU)
     std::vector<D3D12_CPU_DESCRIPTOR_HANDLE>                srvHandlesCPUList_              = {};           // SRVハンドルリスト(CPU)
     std::vector<Microsoft::WRL::ComPtr<ID3D12Resource>>     textureResources_               = {};           // テクスチャリソース
@@ -247,4 +236,17 @@ private: /// 他クラスのインスタンス(シングルトンなど)
     FrameRate* pFramerate_ = nullptr;
     SRVManager* pSRVManager_ = nullptr;
     Logger* pLogger_ = nullptr;
+};
+
+class EngineFeature
+{
+public:
+    EngineFeature() = default;
+    virtual ~EngineFeature() = default;
+
+    void        SetDirectX12(DirectX12* _pDx12);
+    DirectX12*  GetDirectX12();
+
+protected:
+    DirectX12* pDx12_ = nullptr; 
 };

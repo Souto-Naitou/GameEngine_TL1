@@ -2,7 +2,7 @@
 #include <cassert>
 #include <Core/DirectX12/DirectX12.h>
 #include <Core/DirectX12/PostEffect.h>
-#include <Effects/PostEffects/Helper/PostEffectHelper.h>
+#include <Effects/PostEffects/.Helper/PostEffectHelper.h>
 #include <Core/DirectX12/SRVManager.h>
 #include <Core/DirectX12/Helper/DX12Helper.h>
 #include <Core/Win32/WinSystem.h>
@@ -10,12 +10,11 @@
 
 void DepthBasedOutline::Initialize()
 {
-    pDx12_ = DirectX12::GetInstance();
     device_ = pDx12_->GetDevice();
     commandList_ = PostEffectExecuter::GetInstance()->GetCommandList();
 
     // レンダーテクスチャの生成
-    Helper::CreateRenderTexture(device_, renderTexture_, rtvHandleCpu_, rtvHeapIndex_);
+    Helper::CreateRenderTexture(pDx12_, device_, renderTexture_, rtvHandleCpu_, rtvHeapIndex_);
     renderTexture_.resource->SetName(L"DepthBasedOutlineRenderTexture");
 
     // レンダーテクスチャのSRVを生成
@@ -112,7 +111,7 @@ void DepthBasedOutline::OnResizeBefore()
 void DepthBasedOutline::OnResizedBuffers()
 {
     // レンダーテクスチャの生成
-    Helper::CreateRenderTexture(device_, renderTexture_, rtvHandleCpu_, rtvHeapIndex_);
+    Helper::CreateRenderTexture(pDx12_, device_, renderTexture_, rtvHandleCpu_, rtvHeapIndex_);
     renderTexture_.resource->SetName(L"DepthBasedOutlineRenderTexture");
 
     // レンダーテクスチャのSRVを生成
@@ -161,7 +160,7 @@ void DepthBasedOutline::CreateRootSignature()
     rootParameters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;       // DescriptorTableを使う
     rootParameters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;                 // PixelShaderで使う
     rootParameters[0].DescriptorTable.pDescriptorRanges = descriptorRange;              // Tableの中身の配列を指定
-    rootParameters[0].DescriptorTable.NumDescriptorRanges = 1;  // Tableで利用する数
+    rootParameters[0].DescriptorTable.NumDescriptorRanges = 1;                          // Tableで利用する数
 
     rootParameters[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;                    // CBVを使う
     rootParameters[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;                 // PixelShaderで使う
@@ -174,7 +173,7 @@ void DepthBasedOutline::CreateRootSignature()
     rootParameters[3].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;       // DescriptorTableを使う
     rootParameters[3].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;                 // PixelShaderで使う
     rootParameters[3].DescriptorTable.pDescriptorRanges = &descriptorRange[1];          // Tableの中身の配列を指定
-    rootParameters[3].DescriptorTable.NumDescriptorRanges = 1;  // Tableで利用する数
+    rootParameters[3].DescriptorTable.NumDescriptorRanges = 1;                          // Tableで利用する数
    
 
     descriptionRootSignature.pParameters = rootParameters;                              // ルートパラメータ配列へのポインタ

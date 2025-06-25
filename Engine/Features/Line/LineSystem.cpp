@@ -6,7 +6,6 @@
 
 void LineSystem::Initialize()
 {
-    pDx12_ = DirectX12::GetInstance();
     device_ = pDx12_->GetDevice();
     dxcUtils_ = pDx12_->GetDxcUtils();
     dxcCompiler_ = pDx12_->GetDxcCompiler();

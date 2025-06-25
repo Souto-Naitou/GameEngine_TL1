@@ -11,7 +11,6 @@
 
 void Text::Initialize()
 {
-    pDirectX12_ = DirectX12::GetInstance();
     pTextSystem_ = TextSystem::GetInstance();
     dwriteFactory_ = pTextSystem_->GetDWriteFactory();
     d2dDeviceContext_ = pTextSystem_->GetD2D1DeviceContext();

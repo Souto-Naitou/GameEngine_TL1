@@ -103,7 +103,7 @@ void ModelManager::LoadModel(const std::string& _filePath, const std::string& _t
     }
 
     std::unique_ptr<Model> model = std::make_unique<Model>();
-
+    model->SetDirectX12(pDx12_);
     model->Initialize(fullpath.string(), _texturePath);
     models_.emplace(fullpath, std::move(model));
 }

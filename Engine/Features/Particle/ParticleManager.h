@@ -5,7 +5,7 @@
 #include <list>
 #include <memory>
 
-class ParticleManager
+class ParticleManager : public EngineFeature
 {
 public:
     ParticleManager(ParticleManager const&) = delete;

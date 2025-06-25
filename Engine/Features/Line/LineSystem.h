@@ -6,7 +6,7 @@
 #include <Core/DirectX12/DirectX12.h>
 #include <Features/GameEye/GameEye.h>
 
-class LineSystem
+class LineSystem : public EngineFeature
 {
 public:
     LineSystem(const LineSystem&) = delete;
@@ -30,7 +30,6 @@ private:
 
 
 public: /// Getter
-    DirectX12* GetDx12() { return pDx12_; }
     GameEye** GetSharedGameEye() { return &pDefaultGameEye_; }
 
 
@@ -60,7 +59,6 @@ private: /// 処理郡
     void SetDSVDesc();
 
 private: /// 他クラスのインスタンス
-    DirectX12* pDx12_ = nullptr;
     GameEye* pDefaultGameEye_ = nullptr;
     ID3D12Device* device_ = nullptr;
     IDxcUtils* dxcUtils_ = nullptr;

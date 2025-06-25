@@ -10,14 +10,6 @@
 
 void CG3PT2::Initialize()
 {
-    #ifdef _DEBUG
-    DebugManager::GetInstance()->SetComponent("Common", name_, std::bind(&CG3PT2::DebugWindow, this));
-    #endif // _DEBUG
-
-    DirectX12* pDx12 = DirectX12::GetInstance();
-
-    viewport_ = pDx12->GetViewport();
-
     /// カメラの初期化
     pGameEye_ = std::make_unique<GameEye>();
     pGameEye_->SetName("MainCamera@CG3PT2");
@@ -81,10 +73,6 @@ void CG3PT2::Finalize()
     pGrid_->Finalize();
     pointLight_.Finalize();
     pText_->Finalize();
-
-    #ifdef _DEBUG
-    DebugManager::GetInstance()->DeleteComponent("Common", name_.c_str());
-    #endif // _DEBUG
 }
 
 void CG3PT2::Update()
@@ -132,41 +120,4 @@ void CG3PT2::Draw2dForeground()
 void CG3PT2::DrawTexts()
 {
     pText_->Draw();
-}
-
-void CG3PT2::DebugWindow()
-{
-#ifdef _DEBUG
-
-    int x = static_cast<int>(viewport_.TopLeftX);
-    int y = static_cast<int>(viewport_.TopLeftY);
-    int width = static_cast<int>(viewport_.Width);
-    int height = static_cast<int>(viewport_.Height);
-
-    if (ImGui::DragInt("Window X", &x))
-    {
-        viewport_.TopLeftX = static_cast<float>(x);
-    }
-    if (ImGui::DragInt("Window Y", &y))
-    {
-        viewport_.TopLeftY = static_cast<float>(y);
-    }
-
-    if (ImGui::InputInt("Window Width", &width))
-    {
-        /// 16:9の比率を保つ
-        height = static_cast<int>(width * 9 / 16);
-    }
-    if (ImGui::InputInt("Window Height", &height))
-    {
-        /// 16:9の比率を保つ
-        width = static_cast<int>(height * 16 / 9);
-    }
-
-    viewport_.Width = static_cast<float>(width);
-    viewport_.Height = static_cast<float>(height);
-
-    DirectX12::GetInstance()->SetGameWindowRect(viewport_);
-
-#endif // _DEBUG
 }

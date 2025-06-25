@@ -23,7 +23,6 @@ void Particle::Initialize(const std::string& _filepath, const std::string& _text
 #endif
 
     /// 必要なインスタンスを取得
-    pDx12_ = DirectX12::GetInstance();
     pDevice_ = pDx12_->GetDevice();
     pSystem_ = ParticleSystem::GetInstance();
 

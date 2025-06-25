@@ -10,7 +10,7 @@ void Line::Initialize()
 {
     /// 必要なインスタンスを取得
     pLineSystem_ = LineSystem::GetInstance();
-    pDx12_ = pLineSystem_->GetDx12();
+    pDx12_ = pLineSystem_->GetDirectX12();
     device_ = pDx12_->GetDevice();
 
     pGameEye_ = pLineSystem_->GetSharedGameEye();

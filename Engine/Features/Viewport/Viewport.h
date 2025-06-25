@@ -9,7 +9,7 @@
 #include <imgui.h>
 #endif //_DEBUG
 
-class Viewport
+class Viewport : public EngineFeature
 {
 public:
     Viewport() = default;
@@ -57,15 +57,13 @@ private:
     ImVec2  nextContentRegionSize_ = {};
     #endif 
 
-
-private: /// 借り物
-    DirectX12* pDx12_ = nullptr;
-    ID3D12Device* device_ = nullptr;
-    IDxcUtils* dxcUtils_ = nullptr;
-    IDxcCompiler3* dxcCompiler_ = nullptr;
-    IDxcIncludeHandler* includeHandler_ = nullptr;
-    ID3D12GraphicsCommandList* commandList_ = nullptr;
-    ResourceStateTracker* inputTexture_ = nullptr;
-    ResourceStateTracker* outputTexture_ = nullptr;
-    SRVManager* pSRVManager_ = nullptr;
+    // DirectX 12 objects
+    ID3D12Device*               device_         = nullptr;
+    IDxcUtils*                  dxcUtils_       = nullptr;
+    IDxcCompiler3*              dxcCompiler_    = nullptr;
+    IDxcIncludeHandler*         includeHandler_ = nullptr;
+    ID3D12GraphicsCommandList*  commandList_    = nullptr;
+    ResourceStateTracker*       inputTexture_   = nullptr;
+    ResourceStateTracker*       outputTexture_  = nullptr;
+    SRVManager*                 pSRVManager_    = nullptr;
 };

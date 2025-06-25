@@ -32,6 +32,7 @@
 #include <Effects/PostEffects/PrewittOutline/PrewittOutline.h>
 #include <Effects/PostEffects/DepthBasedOutline/DepthBasedOutline.h>
 #include <Effects/PostEffects/RadialBlur/RadialBlur.h>
+#include <Effects/PostEffects/Dissolve/Dissolve.h>
 
 #include <memory> /// std::unique_ptr
 #include <Core/DirectX12/PostEffect.h>
@@ -59,6 +60,7 @@ public:
 
 protected: 
     /// システムクラスのインスタンス
+    std::unique_ptr<DirectX12>      pDirectX_                   = nullptr;
     std::unique_ptr<ISceneFactory>  pSceneFactory_              = nullptr;
     std::unique_ptr<Viewport>       pViewport_                  = nullptr;
     std::unique_ptr<NiGuiDrawer>    pDrawer_                    = nullptr;
@@ -71,7 +73,6 @@ protected:
     /// 他クラスのインスタンス
     ConfigManager*                  pConfigManager_             = nullptr;
     Logger*                         pLogger_                    = nullptr;
-    DirectX12*                      pDirectX_                   = nullptr;
     DebugManager*                   pDebugManager_              = nullptr;
     WinSystem*                      pWinSystem_                 = nullptr;
     ModelManager*                   pModelManager_              = nullptr;
@@ -98,13 +99,10 @@ protected:
     std::unique_ptr<PrewittOutline>     pPEPrewittOutline_      = nullptr;
     std::unique_ptr<DepthBasedOutline>  pPEDepthBasedOutline_   = nullptr;
     std::unique_ptr<RadialBlur>         pPERadialBlur_          = nullptr;
+    std::unique_ptr<Dissolve>           pPEDissolve_            = nullptr;
 
-
-protected:
-    bool                            isExitProgram_              = false;
+    bool                                isExitProgram_          = false;
 };
-
-
 
 #define CREATE_APPLICATION(class) \
 int _stdcall WinMain(HINSTANCE, HINSTANCE, LPSTR, int) \

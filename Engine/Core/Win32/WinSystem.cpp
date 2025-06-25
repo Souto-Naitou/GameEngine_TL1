@@ -102,8 +102,19 @@ bool WinSystem::IsResized()
         preClientHeight = clientHeight;
 
         GetClientRect(hwnd_, &wndSize_);
-        clientWidth = static_cast<uint32_t>(wndSize_.right - wndSize_.left);
-        clientHeight = static_cast<uint32_t>(wndSize_.bottom - wndSize_.top);
+
+        if (wndSize_.right - wndSize_.left <= 0 || wndSize_.bottom - wndSize_.top <= 0)
+        {
+            // ウィンドウのサイズが0以下になってしまった場合は、前回のサイズを使用
+            clientWidth = preClientWidth;
+            clientHeight = preClientHeight;
+        }
+        else
+        {
+            // ウィンドウのサイズを更新
+            clientWidth = static_cast<uint32_t>(wndSize_.right - wndSize_.left);
+            clientHeight = static_cast<uint32_t>(wndSize_.bottom - wndSize_.top);
+        }
 
         return true;
     }

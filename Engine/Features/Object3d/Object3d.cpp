@@ -19,7 +19,7 @@ void Object3d::Initialize(const std::string& _filePath)
 {
     /// 必要なインスタンスを取得
     pSystem_ = Object3dSystem::GetInstance();
-    pDx12_ = pSystem_->GetDx12();
+    pDx12_ = pSystem_->GetDirectX12();
     device_ = pDx12_->GetDevice();
     ppSystemGameEye_ = pSystem_->GetGlobalEye();
 

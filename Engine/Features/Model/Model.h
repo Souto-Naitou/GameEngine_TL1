@@ -12,7 +12,7 @@
 struct Material;
 struct VertexData;
 
-class Model
+class Model : public EngineFeature
 {
 public:
     // Common functions
@@ -51,7 +51,6 @@ private: /// 非公開メンバ関数
     void LoadModelTexture();
 
 private: /// 他クラスのインスタンス
-    DirectX12* pDx12_ = nullptr;
     ID3D12Device* device_ = nullptr;
     std::unique_ptr<std::thread> th_LoadObjectFile_ = nullptr;
     std::string filePath_;

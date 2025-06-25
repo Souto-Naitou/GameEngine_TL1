@@ -388,20 +388,20 @@ void DX12Helper::UploadTextureData(const Microsoft::WRL::ComPtr<ID3D12Resource>&
     return;
 }
 
-void DX12Helper::CreateNewTexture(const Microsoft::WRL::ComPtr<ID3D12Device>& _device,
+void DX12Helper::CreateNewTexture(DirectX12* _pDx12,
     const Microsoft::WRL::ComPtr<ID3D12DescriptorHeap>& _srvDescriptorHeap,
     const uint32_t _kDescriptorSizeSRV,
     const char* _path,
     std::vector<Microsoft::WRL::ComPtr<ID3D12Resource>>& _textureResources)
 {
-    DirectX12* pDx12 = DirectX12::GetInstance();
-    int32_t numUploadedTexture = pDx12->GetNumUploadedTexture();
-    std::vector<D3D12_CPU_DESCRIPTOR_HANDLE>& textureSrvHandleCPUs = pDx12->GetSRVHandlesCPUList();
-    std::vector<D3D12_GPU_DESCRIPTOR_HANDLE>& textureSrvHandleGPUs = pDx12->GetSRVHandlesGPUList();
+    auto device = _pDx12->GetDevice();
+    int32_t numUploadedTexture = _pDx12->GetNumUploadedTexture();
+    std::vector<D3D12_CPU_DESCRIPTOR_HANDLE>& textureSrvHandleCPUs = _pDx12->GetSRVHandlesCPUList();
+    std::vector<D3D12_GPU_DESCRIPTOR_HANDLE>& textureSrvHandleGPUs = _pDx12->GetSRVHandlesGPUList();
 
     DirectX::ScratchImage mipImage = LoadTexture(_path);
     const DirectX::TexMetadata& metadata = mipImage.GetMetadata();
-    Microsoft::WRL::ComPtr<ID3D12Resource> textureResource = CreateTextureResource(_device, metadata);
+    Microsoft::WRL::ComPtr<ID3D12Resource> textureResource = CreateTextureResource(device, metadata);
     _textureResources.push_back(textureResource);
     UploadTextureData(textureResource, mipImage);
 
@@ -416,7 +416,7 @@ void DX12Helper::CreateNewTexture(const Microsoft::WRL::ComPtr<ID3D12Device>& _d
     D3D12_GPU_DESCRIPTOR_HANDLE textureSrvHandleGPU = GetGPUDescriptorHandle(_srvDescriptorHeap, _kDescriptorSizeSRV, numUploadedTexture);
     textureSrvHandleCPUs.push_back(textureSrvHandleCPU);
     textureSrvHandleGPUs.push_back(textureSrvHandleGPU);
-    _device->CreateShaderResourceView(textureResource.Get(), &srvDesc, textureSrvHandleCPU);
+    device->CreateShaderResourceView(textureResource.Get(), &srvDesc, textureSrvHandleCPU);
     return;
 }
 
@@ -452,15 +452,15 @@ void DX12Helper::ChangeStateResource(const ComPtr<ID3D12GraphicsCommandList>& _c
     _resource.state = _after;
 }
 
-void DX12Helper::CommandListCommonSetting(ID3D12GraphicsCommandList* _commandList, const D3D12_CPU_DESCRIPTOR_HANDLE* rtvHandle)
+void DX12Helper::CommandListCommonSetting(const DirectX12* _pDx12, ID3D12GraphicsCommandList* _commandList, const D3D12_CPU_DESCRIPTOR_HANDLE* rtvHandle)
 {
     /// 必要なデータを取得
-    const DirectX12* pDx12 = DirectX12::GetInstance();
     const SRVManager* pSrvManager = SRVManager::GetInstance();
     ID3D12DescriptorHeap* ppHeaps[] = { pSrvManager->GetDescriptorHeap() };
-    auto dsvHandle = pDx12->GetDSVDescriptorHeap()->GetCPUDescriptorHandleForHeapStart();
-    auto viewport = pDx12->GetViewport();
-    auto scissorRect = pDx12->GetScissorRect();
+
+    auto dsvHandle      = _pDx12->GetDSVDescriptorHeap()->GetCPUDescriptorHandleForHeapStart();
+    auto viewport       = _pDx12->GetViewport();
+    auto scissorRect    = _pDx12->GetScissorRect();
 
     /// コマンドリストの設定
     _commandList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);

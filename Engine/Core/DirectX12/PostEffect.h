@@ -7,12 +7,13 @@
 #include "ResourceStateTracker/ResourceStateTracker.h"
 #include "IPostEffect.h"
 #include <vector>
+#include <functional>
 
 /// <ポストエフェクトを実行するクラス>
 /// - 複数のポストエフェクトを順に適用するためにレンダーテクスチャのチェインを生成する
 /// - Bloom -> MotionBlur の順で実行する場合 MotionBlurにBloomのレンダーテクスチャを渡す
 
-class PostEffectExecuter
+class PostEffectExecuter : public EngineFeature
 {
 public:
     PostEffectExecuter(const PostEffectExecuter&) = delete;
@@ -95,10 +96,11 @@ private:
     void CreateRootSignature();
     void CreatePipelineState();
     void CreateCommandList();
+    void EnableSolo(const size_t _index);
+    void ImGuiCenterTable(const std::function<void()>& _fn);
 
 
 private:
-    DirectX12*                              pDx12_              = nullptr;
     RTVHeapCounter*                         rtvHeapCounter_     = nullptr;
     ID3D12Device*                           pDevice_            = nullptr;
     SRVManager*                             pSRVManager_        = nullptr;

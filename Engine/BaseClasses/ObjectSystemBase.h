@@ -3,12 +3,12 @@
 #include <future>
 #include <d3d12.h>
 #include <wrl/client.h>
+#include <Core/DirectX12/DirectX12.h>
 
 // Forward declarations
-class DirectX12;
 class GameEye;
 
-class ObjectSystemBase
+class ObjectSystemBase : public EngineFeature
 {
 public:
     // Virtual functions
@@ -19,7 +19,6 @@ public:
     virtual void    PostDraw();                         // Reset the command allocator and command list
     
     // Getters
-    DirectX12*                      GetDx12();          // Get the instance of the DirectX12 class
     ID3D12GraphicsCommandList*      GetCommandList();   // Get the command list
     GameEye**                       GetGlobalEye();     // Get the GameEye for global use
 
@@ -40,7 +39,6 @@ protected:
     void CreateCommandList();
 
     // Pointers
-    DirectX12*                          pDx12_              = nullptr;
     GameEye*                            pGlobalEye_         = nullptr;
     D3D12_CPU_DESCRIPTOR_HANDLE*        rtvHandle_          = nullptr;
 };
