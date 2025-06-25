@@ -21,7 +21,7 @@ public:
     void Render();                          // 描画
     void EndFrame();                        // フレーム終了
     void Finalize();
-    void Resize();
+    void OnResizedBuffers();
 
     // Switch options
     void EnableDocking();

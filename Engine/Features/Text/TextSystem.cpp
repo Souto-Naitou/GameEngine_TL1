@@ -44,16 +44,21 @@ void TextSystem::PostDraw()
     d3d11On12DeviceContext_->Flush();
 }
 
-void TextSystem::OnResized()
+void TextSystem::OnResizedWindow()
 {
-    //d2dFactory_ = pDx12_->GetD2D1Factory();
-    //dxgiDevice_ = pDx12_->GetDXGIDevice();
-    //d2dDevice_ = pDx12_->GetDirect2dDevice();
-    //d2dDeviceContext_ = pDx12_->GetDirect2dDeviceContext();
-    //d3d11On12Device_ = pDx12_->GetD3D11On12Device();
-    //d3d11On12DeviceContext_ = pDx12_->GetD3D11On12DeviceContext();
-    //CreateDefaultColorBrush();
-    this->Initialize();
+    colorBrushes_.clear();
+}
+
+void TextSystem::OnResizedBuffers()
+{
+    d2dFactory_ = pDx12_->GetD2D1Factory();
+    dxgiDevice_ = pDx12_->GetDXGIDevice();
+    d2dDevice_ = pDx12_->GetDirect2dDevice();
+    d2dDeviceContext_ = pDx12_->GetDirect2dDeviceContext();
+    d3d11On12Device_ = pDx12_->GetD3D11On12Device();
+    d3d11On12DeviceContext_ = pDx12_->GetD3D11On12DeviceContext();
+    /// カラーブラシの生成
+    CreateDefaultColorBrush();
 }
 
 void TextSystem::SetColorBrush(const std::string& _key, const D2D1::ColorF& _color)
@@ -118,7 +123,6 @@ void TextSystem::CreateDirectWriteFactory()
 
 void TextSystem::CreateDefaultColorBrush()
 {
-    colorBrushes_.clear();
     /// カラーブラシの生成
     this->SetColorBrush("Black", D2D1::ColorF(D2D1::ColorF::Black));
     this->SetColorBrush("White", D2D1::ColorF(D2D1::ColorF::White));

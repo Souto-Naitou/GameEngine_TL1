@@ -36,7 +36,7 @@ public:
 
     void Initialize();
 
-    void OnResized();
+    void OnResizedWindow();
 
     void NewFrame();
     void CommandExecute();

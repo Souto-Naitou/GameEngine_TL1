@@ -222,13 +222,16 @@ void NimaFramework::Update()
 
     if(pWinSystem_->IsResized())
     {
-        pDirectX_->OnResized();
+        // ウィンドウのリサイズ後、バッファーのリサイズ前
+        pTextSystem_->OnResizedWindow();
+        pDirectX_->OnResizedWindow();
+        // バッファーのリサイズ後
         pPostEffectExecuter_->OnResizedBuffers();
         pViewport_->OnResizedBuffers();
         #ifdef _DEBUG
-        pImGuiManager_->Resize();
+        pImGuiManager_->OnResizedBuffers();
         #endif // _DEBUG
-        pTextSystem_->OnResized();
+        pTextSystem_->OnResizedBuffers();
     }
 
     #ifdef _DEBUG

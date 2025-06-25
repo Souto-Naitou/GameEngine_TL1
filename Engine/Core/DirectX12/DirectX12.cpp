@@ -123,7 +123,7 @@ void DirectX12::Initialize()
     CreateD2DRenderTarget();
 }
 
-void DirectX12::OnResized()
+void DirectX12::OnResizedWindow()
 {
     this->ResizeBuffers();
     isResized_ = false;
@@ -212,7 +212,7 @@ void DirectX12::DisplayFrame()
 
 
     /// フレームレート固定
-    //pFramerate_->FixFramerate();
+    pFramerate_->FixFramerate();
 
 
     /// 次のフレーム用のコマンドリストを準備

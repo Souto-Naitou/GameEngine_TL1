@@ -639,7 +639,6 @@ void DirectX12::ResizeBuffers()
     d3d11Device_.Reset();
     d3d11On12DeviceContext_.Reset();
     d3d11On12Device_.Reset();
-    d2dFactory_.Reset();
     dxgiDevice_.Reset();
     d2dDevice_.Reset();
     d2dDeviceContext_.Reset();
@@ -694,7 +693,6 @@ void DirectX12::ResizeBuffers()
 
     CreateDSVAndSettingState();
     CreateD3D11Device();
-    CreateD2D1Factory();
     CreateID2D1DeviceContext();
     CreateD2DRenderTarget();
     CreateGameScreenResource();
