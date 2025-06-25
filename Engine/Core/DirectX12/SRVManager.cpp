@@ -83,10 +83,10 @@ void SRVManager::SetGraphicsRootDescriptorTable(UINT _rootParameterIndex, uint32
 void SRVManager::CreateForTexture2D(uint32_t _index, ID3D12Resource* _pTexture, DXGI_FORMAT _format, UINT _mipLevels)
 {
     D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
-    srvDesc.Format = _format;
-    srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
+    srvDesc.Format                  = _format;
+    srvDesc.ViewDimension           = D3D12_SRV_DIMENSION_TEXTURE2D;
     srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
-    srvDesc.Texture2D.MipLevels = _mipLevels;
+    srvDesc.Texture2D.MipLevels     = _mipLevels;
 
     pDx12_->GetDevice()->CreateShaderResourceView(_pTexture, &srvDesc, GetCPUDescriptorHandle(_index));
 }
@@ -94,12 +94,12 @@ void SRVManager::CreateForTexture2D(uint32_t _index, ID3D12Resource* _pTexture, 
 void SRVManager::CreateForStructuredBuffer(uint32_t _index, ID3D12Resource* _pBuffer, UINT _numElements, UINT _stride)
 {
     D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
-    srvDesc.Format = DXGI_FORMAT_UNKNOWN;
-    srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
-    srvDesc.ViewDimension = D3D12_SRV_DIMENSION_BUFFER;
-    srvDesc.Buffer.FirstElement = 0;
-    srvDesc.Buffer.Flags = D3D12_BUFFER_SRV_FLAG_NONE;
-    srvDesc.Buffer.NumElements = _numElements;
+    srvDesc.Format                     = DXGI_FORMAT_UNKNOWN;
+    srvDesc.Shader4ComponentMapping    = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+    srvDesc.ViewDimension              = D3D12_SRV_DIMENSION_BUFFER;
+    srvDesc.Buffer.FirstElement        = 0;
+    srvDesc.Buffer.Flags               = D3D12_BUFFER_SRV_FLAG_NONE;
+    srvDesc.Buffer.NumElements         = _numElements;
     srvDesc.Buffer.StructureByteStride = _stride;
 
     pDx12_->GetDevice()->CreateShaderResourceView(_pBuffer, &srvDesc, GetCPUDescriptorHandle(_index));
@@ -108,8 +108,8 @@ void SRVManager::CreateForStructuredBuffer(uint32_t _index, ID3D12Resource* _pBu
 void SRVManager::CreateForUAV(uint32_t _index, ID3D12Resource* _pTexture, DXGI_FORMAT _format)
 {
     D3D12_UNORDERED_ACCESS_VIEW_DESC uavDesc = {};
-    uavDesc.ViewDimension = D3D12_UAV_DIMENSION_TEXTURE2D;
-    uavDesc.Format = _format;
+    uavDesc.ViewDimension      = D3D12_UAV_DIMENSION_TEXTURE2D;
+    uavDesc.Format             = _format;
     uavDesc.Texture2D.MipSlice = 0;
 
     pDx12_->GetDevice()->CreateUnorderedAccessView(_pTexture, nullptr, &uavDesc, GetCPUDescriptorHandle(_index));

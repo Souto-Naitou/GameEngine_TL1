@@ -9,7 +9,7 @@ void TextureResource::SetResource(Microsoft::WRL::ComPtr<ID3D12Resource>&& _reso
 
 void TextureResource::SetSRV(uint32_t _srvIndex, D3D12_CPU_DESCRIPTOR_HANDLE _srvHandleCPU, D3D12_GPU_DESCRIPTOR_HANDLE _srvHandleGPU)
 {
-    srvIndex_ = _srvIndex;
+    srvIndex_     = _srvIndex;
     srvHandleCPU_ = _srvHandleCPU;
     srvHandleGPU_ = _srvHandleGPU;
 }
