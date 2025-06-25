@@ -21,7 +21,6 @@ void DebugManager::PushLog(const std::string& _log)
 
 DebugManager::DebugManager()
 {
-    pDx12_ = DirectX12::GetInstance();
 }
 
 DebugManager::~DebugManager()

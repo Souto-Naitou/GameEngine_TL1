@@ -35,6 +35,7 @@ void ParticleManager::Finalize()
 Particle* ParticleManager::CreateParticle()
 {
     auto& ref = particles_.emplace_back(std::make_unique<Particle>());
+    ref->SetDirectX12(pDx12_);
     return ref.get();
 }
 

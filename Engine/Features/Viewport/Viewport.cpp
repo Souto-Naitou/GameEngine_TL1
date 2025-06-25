@@ -12,7 +12,6 @@
 void Viewport::Initialize()
 {
     /// インスタンスの取得
-    pDx12_ = DirectX12::GetInstance();
     pSRVManager_ = SRVManager::GetInstance();
     device_ = pDx12_->GetDevice();
     dxcUtils_ = pDx12_->GetDxcUtils();

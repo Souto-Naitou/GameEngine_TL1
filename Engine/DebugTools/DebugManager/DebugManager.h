@@ -11,7 +11,7 @@
 #include <array>
 #include <optional>
 
-class DebugManager
+class DebugManager : public EngineFeature
 {
     struct ComponentData
     {
@@ -84,9 +84,6 @@ private:
     bool                    enableAutoScroll_ = true;
     bool                    isExistSettingFile_ = false;
     
-    // Pointers
-    DirectX12*  pDx12_ = nullptr;
-
 
 private:
     void MeasureFPS();

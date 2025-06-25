@@ -6,13 +6,12 @@
 void TextSystem::Initialize()
 {
     /// インスタンスの取得
-    pDirectX12_ = DirectX12::GetInstance();
-    d2dFactory_ = pDirectX12_->GetD2D1Factory();
-    dxgiDevice_ = pDirectX12_->GetDXGIDevice();
-    d2dDevice_ = pDirectX12_->GetDirect2dDevice();
-    d2dDeviceContext_ = pDirectX12_->GetDirect2dDeviceContext();
-    d3d11On12Device_ = pDirectX12_->GetD3D11On12Device();
-    d3d11On12DeviceContext_ = pDirectX12_->GetD3D11On12DeviceContext();
+    d2dFactory_ = pDx12_->GetD2D1Factory();
+    dxgiDevice_ = pDx12_->GetDXGIDevice();
+    d2dDevice_ = pDx12_->GetDirect2dDevice();
+    d2dDeviceContext_ = pDx12_->GetDirect2dDeviceContext();
+    d3d11On12Device_ = pDx12_->GetD3D11On12Device();
+    d3d11On12DeviceContext_ = pDx12_->GetD3D11On12DeviceContext();
 
     /// D2D1デバイスの生成
     this->CreateDirectWriteFactory();
@@ -29,9 +28,9 @@ void TextSystem::Initialize()
 
 void TextSystem::PresentDraw()
 {
-    const auto backBufferIndex = pDirectX12_->GetBackBufferIndex();
-    const auto wrappedBackBuffer = pDirectX12_->GetD3D11WrappedBackBuffer(backBufferIndex);
-    const auto backBufferForD2D = pDirectX12_->GetD2D1RenderTarget(backBufferIndex);
+    const auto backBufferIndex = pDx12_->GetBackBufferIndex();
+    const auto wrappedBackBuffer = pDx12_->GetD3D11WrappedBackBuffer(backBufferIndex);
+    const auto backBufferForD2D = pDx12_->GetD2D1RenderTarget(backBufferIndex);
     d3d11On12Device_->AcquireWrappedResources(&wrappedBackBuffer, 1);
     d2dDeviceContext_->SetTarget(backBufferForD2D);
     d2dDeviceContext_->BeginDraw();
@@ -40,8 +39,8 @@ void TextSystem::PresentDraw()
 
 void TextSystem::PostDraw()
 {
-    const auto backBufferIndex = pDirectX12_->GetBackBufferIndex();
-    const auto wrappedBackBuffer = pDirectX12_->GetD3D11WrappedBackBuffer(backBufferIndex);
+    const auto backBufferIndex = pDx12_->GetBackBufferIndex();
+    const auto wrappedBackBuffer = pDx12_->GetD3D11WrappedBackBuffer(backBufferIndex);
     d2dDeviceContext_->EndDraw();
     d3d11On12Device_->ReleaseWrappedResources(&wrappedBackBuffer, 1);
     d3d11On12DeviceContext_->Flush();
@@ -49,12 +48,12 @@ void TextSystem::PostDraw()
 
 void TextSystem::OnResized()
 {
-    d2dFactory_ = pDirectX12_->GetD2D1Factory();
-    dxgiDevice_ = pDirectX12_->GetDXGIDevice();
-    d2dDevice_ = pDirectX12_->GetDirect2dDevice();
-    d2dDeviceContext_ = pDirectX12_->GetDirect2dDeviceContext();
-    d3d11On12Device_ = pDirectX12_->GetD3D11On12Device();
-    d3d11On12DeviceContext_ = pDirectX12_->GetD3D11On12DeviceContext();
+    d2dFactory_ = pDx12_->GetD2D1Factory();
+    dxgiDevice_ = pDx12_->GetDXGIDevice();
+    d2dDevice_ = pDx12_->GetDirect2dDevice();
+    d2dDeviceContext_ = pDx12_->GetDirect2dDeviceContext();
+    d3d11On12Device_ = pDx12_->GetD3D11On12Device();
+    d3d11On12DeviceContext_ = pDx12_->GetD3D11On12DeviceContext();
 }
 
 void TextSystem::SetColorBrush(const std::string& _key, const D2D1::ColorF& _color)

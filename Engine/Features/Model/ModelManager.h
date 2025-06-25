@@ -8,10 +8,11 @@
 #include "Model.h"
 #include <filesystem>
 #include <mutex>
+#include <Core/DirectX12/DirectX12.h>
 
 class Particle;
 
-class ModelManager
+class ModelManager : public EngineFeature
 {
 public:
     ModelManager(ModelManager&) = delete;

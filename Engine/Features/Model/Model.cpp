@@ -11,7 +11,6 @@
 void Model::Initialize(const std::string& _filePath)
 {
     /// 必要なインスタンスを取得
-    pDx12_ = DirectX12::GetInstance();
     device_ = pDx12_->GetDevice();
 
     filePath_ = _filePath;

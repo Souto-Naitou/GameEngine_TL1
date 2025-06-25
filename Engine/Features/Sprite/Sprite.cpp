@@ -30,7 +30,7 @@ Sprite::~Sprite()
 void Sprite::Initialize(std::string _filepath)
 {
     pSpriteSystem_ = SpriteSystem::GetInstance();
-    pDx12_ = pSpriteSystem_->GetDx12();
+    pDx12_ = pSpriteSystem_->GetDirectX12();
     device_ = pDx12_->GetDevice();
 
 #if defined (_DEBUG) && defined (DEBUG_ENGINE)

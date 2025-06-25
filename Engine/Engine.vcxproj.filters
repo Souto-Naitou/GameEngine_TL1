@@ -268,6 +268,15 @@
     <Filter Include="Effect\PostEffect\RadialBlur">
       <UniqueIdentifier>{6e29f5a3-7f69-49cc-a21b-b782281dc1ce}</UniqueIdentifier>
     </Filter>
+    <Filter Include="HLSL\PostEffect">
+      <UniqueIdentifier>{12c1fcab-855f-4791-a760-dbb00b16c22f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Effect\PostEffect\Dissolve">
+      <UniqueIdentifier>{31600556-5aed-4a75-935d-44efeec4848d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\DirectX12\TextureResource">
+      <UniqueIdentifier>{a0d649d6-f1f7-4d1d-bbad-3046629187cb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DebugTools\DebugManager\DebugManager.cpp">
@@ -468,9 +477,6 @@
     <ClCompile Include="Features\Particle\Emitter\EmitterData.cpp">
       <Filter>Feature\Particle\Emitter</Filter>
     </ClCompile>
-    <ClCompile Include="Effects\PostEffects\Helper\PostEffectHelper.cpp">
-      <Filter>Effect\PostEffect\.Helper</Filter>
-    </ClCompile>
     <ClCompile Include="Effects\PostEffects\Grayscale\Grayscale.cpp">
       <Filter>Effect\PostEffect\Grayscale</Filter>
     </ClCompile>
@@ -494,6 +500,13 @@
     </ClCompile>
     <ClCompile Include="Effects\PostEffects\RadialBlur\RadialBlur.cpp">
       <Filter>Effect\PostEffect\RadialBlur</Filter>
+    </ClCompile>
+    <ClCompile Include="Effects\PostEffects\Dissolve\Dissolve.cpp">
+      <Filter>Effect\PostEffect\Dissolve</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\DirectX12\TextureResource\TextureResource.cpp" />
+    <ClCompile Include="Effects\PostEffects\.Helper\PostEffectHelper.cpp">
+      <Filter>Effect\PostEffect\.Helper</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -752,9 +765,6 @@
     <ClInclude Include="Effects\PostEffects\Grayscale\Grayscale.h">
       <Filter>Effect\PostEffect\Grayscale</Filter>
     </ClInclude>
-    <ClInclude Include="Effects\PostEffects\Helper\PostEffectHelper.h">
-      <Filter>Effect\PostEffect\.Helper</Filter>
-    </ClInclude>
     <ClInclude Include="Effects\PostEffects\Vignette\Vignette.h">
       <Filter>Effect\PostEffect\Vignette</Filter>
     </ClInclude>
@@ -773,6 +783,15 @@
     <ClInclude Include="Effects\PostEffects\RadialBlur\RadialBlur.h">
       <Filter>Effect\PostEffect\RadialBlur</Filter>
     </ClInclude>
+    <ClInclude Include="Effects\PostEffects\Dissolve\Dissolve.h">
+      <Filter>Effect\PostEffect\Dissolve</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\DirectX12\TextureResource\TextureResource.h">
+      <Filter>Core\DirectX12\TextureResource</Filter>
+    </ClInclude>
+    <ClInclude Include="Effects\PostEffects\.Helper\PostEffectHelper.h">
+      <Filter>Effect\PostEffect\.Helper</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
@@ -790,8 +809,9 @@
       <Filter>HLSL</Filter>
     </None>
     <None Include="EngineResources\Shaders\Fullscreen.hlsli">
-      <Filter>HLSL</Filter>
+      <Filter>HLSL\PostEffect</Filter>
     </None>
+    <None Include="ClassDiagram.cd" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="EngineResources\Shaders\Line.VS.hlsl">
@@ -821,56 +841,62 @@
     <FxCompile Include="EngineResources\Shaders\Line.PS.hlsl">
       <Filter>HLSL</Filter>
     </FxCompile>
-    <FxCompile Include="EngineResources\Shaders\Fullscreen.VS.hlsl">
-      <Filter>HLSL</Filter>
-    </FxCompile>
-    <FxCompile Include="EngineResources\Shaders\Fullscreen.PS.hlsl">
-      <Filter>HLSL</Filter>
-    </FxCompile>
     <FxCompile Include="..\SampleProject\EngineResources\Shaders\Sprite.VS.hlsl">
       <Filter>HLSL</Filter>
     </FxCompile>
-    <FxCompile Include="EngineResources\Shaders\Grayscale.PS.hlsl">
-      <Filter>HLSL</Filter>
-    </FxCompile>
     <FxCompile Include="EngineResources\Shaders\Grayscale.VS.hlsl">
-      <Filter>HLSL</Filter>
-    </FxCompile>
-    <FxCompile Include="EngineResources\Shaders\Vignette.PS.hlsl">
-      <Filter>HLSL</Filter>
-    </FxCompile>
-    <FxCompile Include="EngineResources\Shaders\Vignette.VS.hlsl">
-      <Filter>HLSL</Filter>
+      <Filter>HLSL\PostEffect</Filter>
     </FxCompile>
     <FxCompile Include="EngineResources\Shaders\BoxFilter.PS.hlsl">
-      <Filter>HLSL</Filter>
+      <Filter>HLSL\PostEffect</Filter>
     </FxCompile>
     <FxCompile Include="EngineResources\Shaders\BoxFilter.VS.hlsl">
-      <Filter>HLSL</Filter>
-    </FxCompile>
-    <FxCompile Include="EngineResources\Shaders\GaussianFilter.PS.hlsl">
-      <Filter>HLSL</Filter>
-    </FxCompile>
-    <FxCompile Include="EngineResources\Shaders\GaussianFilter.VS.hlsl">
-      <Filter>HLSL</Filter>
-    </FxCompile>
-    <FxCompile Include="EngineResources\Shaders\DepthBasedOutline.VS.hlsl">
-      <Filter>HLSL</Filter>
+      <Filter>HLSL\PostEffect</Filter>
     </FxCompile>
     <FxCompile Include="EngineResources\Shaders\DepthBasedOutline.PS.hlsl">
-      <Filter>HLSL</Filter>
+      <Filter>HLSL\PostEffect</Filter>
+    </FxCompile>
+    <FxCompile Include="EngineResources\Shaders\DepthBasedOutline.VS.hlsl">
+      <Filter>HLSL\PostEffect</Filter>
+    </FxCompile>
+    <FxCompile Include="EngineResources\Shaders\Fullscreen.PS.hlsl">
+      <Filter>HLSL\PostEffect</Filter>
+    </FxCompile>
+    <FxCompile Include="EngineResources\Shaders\Fullscreen.VS.hlsl">
+      <Filter>HLSL\PostEffect</Filter>
+    </FxCompile>
+    <FxCompile Include="EngineResources\Shaders\GaussianFilter.PS.hlsl">
+      <Filter>HLSL\PostEffect</Filter>
+    </FxCompile>
+    <FxCompile Include="EngineResources\Shaders\GaussianFilter.VS.hlsl">
+      <Filter>HLSL\PostEffect</Filter>
+    </FxCompile>
+    <FxCompile Include="EngineResources\Shaders\Grayscale.PS.hlsl">
+      <Filter>HLSL\PostEffect</Filter>
     </FxCompile>
     <FxCompile Include="EngineResources\Shaders\PrewittOutline.PS.hlsl">
-      <Filter>HLSL</Filter>
+      <Filter>HLSL\PostEffect</Filter>
     </FxCompile>
     <FxCompile Include="EngineResources\Shaders\PrewittOutline.VS.hlsl">
-      <Filter>HLSL</Filter>
-    </FxCompile>
-    <FxCompile Include="EngineResources\Shaders\RadialBlur.VS.hlsl">
-      <Filter>HLSL</Filter>
+      <Filter>HLSL\PostEffect</Filter>
     </FxCompile>
     <FxCompile Include="EngineResources\Shaders\RadialBlur.PS.hlsl">
-      <Filter>HLSL</Filter>
+      <Filter>HLSL\PostEffect</Filter>
+    </FxCompile>
+    <FxCompile Include="EngineResources\Shaders\RadialBlur.VS.hlsl">
+      <Filter>HLSL\PostEffect</Filter>
+    </FxCompile>
+    <FxCompile Include="EngineResources\Shaders\Vignette.VS.hlsl">
+      <Filter>HLSL\PostEffect</Filter>
+    </FxCompile>
+    <FxCompile Include="EngineResources\Shaders\Vignette.PS.hlsl">
+      <Filter>HLSL\PostEffect</Filter>
+    </FxCompile>
+    <FxCompile Include="EngineResources\Shaders\Dissolve.PS.hlsl">
+      <Filter>HLSL\PostEffect</Filter>
+    </FxCompile>
+    <FxCompile Include="EngineResources\Shaders\Dissolve.VS.hlsl">
+      <Filter>HLSL\PostEffect</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

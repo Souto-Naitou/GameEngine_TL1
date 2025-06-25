@@ -1,6 +1,7 @@
 #pragma once
 #include <d3d12.h>
 #include <string>
+#include <memory>
 
 
 class IPostEffect
@@ -37,3 +38,17 @@ private:
     virtual void    OnResizedBuffers() = 0;
     virtual void    DebugOverlay() = 0;
 };
+
+class DirectX12;
+namespace Helper::PostEffect
+{
+    template <typename T>
+    inline std::unique_ptr<T> CreatePostEffect(DirectX12* _pDx12)
+    {
+        auto pEffect = std::make_unique<T>();
+        pEffect->SetDirectX12(_pDx12);
+        pEffect->Initialize();
+        return pEffect;
+    }
+}
+

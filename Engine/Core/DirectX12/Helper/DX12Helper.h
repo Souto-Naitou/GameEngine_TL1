@@ -11,6 +11,8 @@
 #include <Vector4.h>
 #include "../ResourceStateTracker/ResourceStateTracker.h"
 
+class DirectX12;
+
 namespace DX12Helper
 {
     using Microsoft::WRL::ComPtr;
@@ -105,7 +107,7 @@ namespace DX12Helper
     /// <param name="_path">ファイルパス</param>
     /// <param name="_textureResources">テクスチャリソース</param>
     /// <returns></returns>
-    void CreateNewTexture(const ComPtr<ID3D12Device>& _device,
+    void CreateNewTexture(DirectX12* _pDx12,
         const ComPtr<ID3D12DescriptorHeap>& _srvDescriptorHeap,
         const uint32_t _kDescriptorSizeSRV,
         const char* _path,
@@ -130,7 +132,7 @@ namespace DX12Helper
         D3D12_RESOURCE_STATES _after
     );
 
-    void CommandListCommonSetting(ID3D12GraphicsCommandList* _commandList, const D3D12_CPU_DESCRIPTOR_HANDLE* rtvHandle);
+    void CommandListCommonSetting(const DirectX12* _pDx12, ID3D12GraphicsCommandList* _commandList, const D3D12_CPU_DESCRIPTOR_HANDLE* rtvHandle);
 
     /// <summary>
     /// レンダーターゲットテクスチャリソースを生成

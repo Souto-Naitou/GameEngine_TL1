@@ -2,19 +2,18 @@
 #include <cassert>
 #include <Core/DirectX12/DirectX12.h>
 #include <Core/DirectX12/PostEffect.h>
-#include <Effects/PostEffects/Helper/PostEffectHelper.h>
+#include <Effects/PostEffects/.Helper/PostEffectHelper.h>
 #include <Core/DirectX12/SRVManager.h>
 #include <Core/DirectX12/Helper/DX12Helper.h>
 #include <imgui.h>
 
 void PrewittOutline::Initialize()
 {
-    pDx12_ = DirectX12::GetInstance();
     device_ = pDx12_->GetDevice();
     commandList_ = PostEffectExecuter::GetInstance()->GetCommandList();
 
     // レンダーテクスチャの生成
-    Helper::CreateRenderTexture(device_, renderTexture_, rtvHandleCpu_, rtvHeapIndex_);
+    Helper::CreateRenderTexture(pDx12_, device_, renderTexture_, rtvHandleCpu_, rtvHeapIndex_);
     renderTexture_.resource->SetName(L"PrewittOutlineRenderTexture");
 
     // レンダーテクスチャのSRVを生成
@@ -94,7 +93,7 @@ void PrewittOutline::OnResizeBefore()
 void PrewittOutline::OnResizedBuffers()
 {
     // レンダーテクスチャの生成
-    Helper::CreateRenderTexture(device_, renderTexture_, rtvHandleCpu_, rtvHeapIndex_);
+    Helper::CreateRenderTexture(pDx12_, device_, renderTexture_, rtvHandleCpu_, rtvHeapIndex_);
     renderTexture_.resource->SetName(L"PrewittOutlineRenderTexture");
 
     // レンダーテクスチャのSRVを生成

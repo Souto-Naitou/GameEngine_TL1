@@ -14,7 +14,7 @@
 #include "./Type/ParticleType.h"
 #include "./Emitter/EmitterData.h"
 
-class Particle
+class Particle : public EngineFeature
 {
 public:
     Particle() = default;
@@ -77,7 +77,6 @@ private:
 
 
 private: /// 他クラスのインスタンス
-    DirectX12* pDx12_ = nullptr;
     ID3D12Device* pDevice_ = nullptr;
     ParticleSystem* pSystem_ = nullptr;
 

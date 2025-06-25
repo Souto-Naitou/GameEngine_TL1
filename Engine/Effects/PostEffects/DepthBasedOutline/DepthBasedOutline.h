@@ -21,7 +21,10 @@ struct alignas(16) DepthBasedOutlineMaterial
 
 /// <ボックスフィルタ>
 /// - ApplyメソッドとSettingメソッドはPostEffectクラスで実行する
-class DepthBasedOutline : public IPostEffect
+class DepthBasedOutline : 
+    public IPostEffect,
+    public EngineFeature
+
 {
 public:
     void    Initialize() override;
@@ -51,7 +54,6 @@ private:
 private:
     ID3D12Device*                                       device_                 = nullptr;
     ID3D12GraphicsCommandList*                          commandList_            = nullptr;
-    DirectX12*                                          pDx12_                  = nullptr;
 
     bool                                                isEnabled_              = false;
     const std::string                                   name_                   = "DepthBasedOutline";

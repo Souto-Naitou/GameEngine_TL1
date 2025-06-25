@@ -35,7 +35,7 @@ void NimaFramework::Initialize()
     /// システムクラスの初期化
     pConfigManager_ = ConfigManager::GetInstance();
     pLogger_ = Logger::GetInstance();
-    pDirectX_ = DirectX12::GetInstance();
+    pDirectX_ = std::make_unique<DirectX12>();
 
     pDebugManager_ = DebugManager::GetInstance();
     pWinSystem_ = WinSystem::GetInstance();
@@ -73,32 +73,43 @@ void NimaFramework::Initialize()
     pDirectX_->Initialize();
 
     /// SRVManagerの初期化
-    pSRVManager_->Initialize(pDirectX_);
+    pSRVManager_->Initialize(pDirectX_.get());
 
     /// ImGui基盤の初期化
     #ifdef _DEBUG
-    pImGuiManager_->Initialize(pDirectX_);
+    pImGuiManager_->SetDirectX12(pDirectX_.get());
+    pImGuiManager_->Initialize();
     #endif // _DEBUG
 
+    // デバッグマネージャの初期化
+    pDebugManager_->SetDirectX12(pDirectX_.get());
+
     /// テクスチャマネージャの初期化
+    pTextureManager_->SetDirectX12(pDirectX_.get());
     pTextureManager_->Initialize(pSRVManager_);
 
     /// モデルマネージャの初期化
+    pModelManager_->SetDirectX12(pDirectX_.get());
     pModelManager_->Initialize();
 
     /// スプライト基盤の初期化
+    pSpriteSystem_->SetDirectX12(pDirectX_.get());
     pSpriteSystem_->Initialize();
 
     /// 3Dオブジェクト基盤の初期化
+    pObject3dSystem_->SetDirectX12(pDirectX_.get());
     pObject3dSystem_->Initialize();
 
     /// パーティクル基盤の初期化
+    pParticleSystem_->SetDirectX12(pDirectX_.get());
     pParticleSystem_->Initialize();
 
     /// ライン基盤の初期化
+    pLineSystem_->SetDirectX12(pDirectX_.get());
     pLineSystem_->Initialize();
 
     /// テキスト基盤の初期化
+    pTextSystem_->SetDirectX12(pDirectX_.get());
     pTextSystem_->Initialize();
 
     /// オーディオの初期化
@@ -115,11 +126,14 @@ void NimaFramework::Initialize()
 
     /// ビューポートの初期化
     pViewport_ = std::make_unique<Viewport>();
+    pViewport_->SetDirectX12(pDirectX_.get());
     pViewport_->Initialize();
     pTextSystem_->SetViewport(pViewport_.get());
 
     /// シーンマネージャの初期化
     pSceneManager_->Initialize();
+
+    pParticleManager_->SetDirectX12(pDirectX_.get());
 
     /// UIの初期化
     auto vp = pDirectX_->GetViewport();
@@ -146,36 +160,26 @@ void NimaFramework::Initialize()
     NiGui::SetDebug(pNiGuiDebug_.get());
 
     /// ポストエフェクト
+    pPostEffectExecuter_->SetDirectX12(pDirectX_.get());
     pPostEffectExecuter_->Initialize();
 
-    pPEGrayscale_ = std::make_unique<Grayscale>();
-    pPEGrayscale_->Initialize();
+    pPEGrayscale_           = Helper::PostEffect::CreatePostEffect<Grayscale>(pDirectX_.get());
+    pPEVignette_            = Helper::PostEffect::CreatePostEffect<Vignette>(pDirectX_.get());
+    pPEBoxFilter_           = Helper::PostEffect::CreatePostEffect<BoxFilter>(pDirectX_.get());
+    pPEGaussianFilter_      = Helper::PostEffect::CreatePostEffect<GaussianFilter>(pDirectX_.get());
+    pPEPrewittOutline_      = Helper::PostEffect::CreatePostEffect<PrewittOutline>(pDirectX_.get());
+    pPEDepthBasedOutline_   = Helper::PostEffect::CreatePostEffect<DepthBasedOutline>(pDirectX_.get());
+    pPERadialBlur_          = Helper::PostEffect::CreatePostEffect<RadialBlur>(pDirectX_.get());
+    pPEDissolve_            = Helper::PostEffect::CreatePostEffect<Dissolve>(pDirectX_.get());
 
-    pPEVignette_ = std::make_unique<Vignette>();
-    pPEVignette_->Initialize();
-
-    pPEBoxFilter_ = std::make_unique<BoxFilter>();
-    pPEBoxFilter_->Initialize();
-
-    pPEGaussianFilter_ = std::make_unique<GaussianFilter>();
-    pPEGaussianFilter_->Initialize();
-
-    pPEPrewittOutline_ = std::make_unique<PrewittOutline>();
-    pPEPrewittOutline_->Initialize();
-
-    pPEDepthBasedOutline_ = std::make_unique<DepthBasedOutline>();
-    pPEDepthBasedOutline_->Initialize();
-
-    pPERadialBlur_ = std::make_unique<RadialBlur>();
-    pPERadialBlur_->Initialize();
-
-    PostEffectExecuter::GetInstance()->AddPostEffect(pPEGrayscale_.get())
+    pPostEffectExecuter_->AddPostEffect(pPEGrayscale_.get())
         .AddPostEffect(pPEVignette_.get())
         .AddPostEffect(pPEBoxFilter_.get())
         .AddPostEffect(pPEGaussianFilter_.get())
         .AddPostEffect(pPEPrewittOutline_.get())
         .AddPostEffect(pPEDepthBasedOutline_.get())
-        .AddPostEffect(pPERadialBlur_.get());
+        .AddPostEffect(pPERadialBlur_.get())
+        .AddPostEffect(pPEDissolve_.get());
 
     /// コマンドリストを追加
     pDirectX_->AddCommandList(pObject3dSystem_->GetCommandList());

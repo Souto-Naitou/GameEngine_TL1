@@ -54,21 +54,34 @@ void TextureManager::LoadTexture(const std::string& _filePath)
     }
 
     textureData.metadata = metadata;
-    textureData.resource = DX12Helper::CreateTextureResource(DirectX12::GetInstance()->GetDevice(), textureData.metadata);
-    DX12Helper::UploadTextureData(textureData.resource, image);
+    textureData.textureResource.SetResource(DX12Helper::CreateTextureResource(pDx12_->GetDevice(), textureData.metadata));
+    DX12Helper::UploadTextureData(textureData.textureResource.GetResource(), image);
 
-    textureData.srvIndex = srvManager_->Allocate();
-    textureData.srvHandleCPU = srvManager_->GetCPUDescriptorHandle(textureData.srvIndex);
-    textureData.srvHandleGPU = srvManager_->GetGPUDescriptorHandle(textureData.srvIndex);
+    uint32_t srvIndex = srvManager_->Allocate();
+    auto srvHandleCPU = srvManager_->GetCPUDescriptorHandle(srvIndex);
+    auto srvHandleGPU = srvManager_->GetGPUDescriptorHandle(srvIndex);
 
-    srvManager_->CreateForTexture2D(textureData.srvIndex, textureData.resource.Get(), textureData.metadata.format, static_cast<UINT>(textureData.metadata.mipLevels));
+    textureData.textureResource.SetSRV(
+        srvIndex,
+        srvHandleCPU,
+        srvHandleGPU
+    );
+
+    srvManager_->CreateForTexture2D(srvIndex, textureData.textureResource.GetResource(), textureData.metadata.format, static_cast<UINT>(textureData.metadata.mipLevels));
 }
 
 D3D12_GPU_DESCRIPTOR_HANDLE TextureManager::GetSrvHandleGPU(const std::string& _filePath)
 {
     std::string fullPath = filePathSearcher_.GetFilePath(_filePath);
     const TextureData& textureData = textureDataMap_[fullPath];
-    return textureData.srvHandleGPU;
+    return textureData.textureResource.GetSRVHandleGPU();
+}
+
+const TextureResource& TextureManager::GetTextureResource(const std::string& _filePath)
+{
+    std::string fullPath = filePathSearcher_.GetFilePath(_filePath);
+    const TextureData& textureData = textureDataMap_[fullPath];
+    return textureData.textureResource;
 }
 
 const DirectX::TexMetadata& TextureManager::GetMetaData(const std::string& _filePath)
@@ -82,5 +95,5 @@ uint32_t TextureManager::GetSrvIndex(const std::string& _filePath)
 {
     std::string fullPath = filePathSearcher_.GetFilePath(_filePath);
     const TextureData& textureData = textureDataMap_[fullPath];
-    return textureData.srvIndex;
+    return textureData.textureResource.GetSRVIndex();
 }

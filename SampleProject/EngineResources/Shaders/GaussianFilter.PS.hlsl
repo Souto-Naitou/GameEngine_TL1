@@ -5,13 +5,13 @@ static const float PI = 3.14159265f;
 Texture2D<float4> gTexture : register(t0);
 SamplerState gSampler : register(s0);
 
-struct BoxFilterOption
+struct GaussianFilterOption
 {
     int kernelSize;
     float sigma; // σはガウス関数の標準偏差
 };
 
-ConstantBuffer<BoxFilterOption> gOptions : register(b0); // カーネルのサイズを指定する定数バッファ
+ConstantBuffer<GaussianFilterOption> gOptions : register(b0); // カーネルのサイズを指定する定数バッファ
 
 struct PixelShaderOutput
 {

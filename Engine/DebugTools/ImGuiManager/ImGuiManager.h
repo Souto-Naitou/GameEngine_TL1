@@ -8,14 +8,15 @@
 #include <imgui.h>
 #include <string>
 #include <vector>
+#include <Core/DirectX12/DirectX12.h>
 
 class DirectX12;
 
-class ImGuiManager
+class ImGuiManager : public EngineFeature
 {
 public:
     // Common functions
-    void Initialize(DirectX12* _pDx12);
+    void Initialize();
     void BeginFrame();
     void Render();                          // 描画
     void EndFrame();                        // フレーム終了

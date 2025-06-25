@@ -10,7 +10,7 @@
 #include <imgui_impl_win32.h>
 #include <imgui_impl_dx12.h>
 
-void ImGuiManager::Initialize(DirectX12* _pDx12)
+void ImGuiManager::Initialize()
 {
     InitializeStyleNameArray();
 
@@ -18,8 +18,8 @@ void ImGuiManager::Initialize(DirectX12* _pDx12)
     srvIndex_ = srvManager->Allocate();
 
     WinSystem* pWin32App = WinSystem::GetInstance();
-    ID3D12Device* device = _pDx12->GetDevice();
-    const DXGI_SWAP_CHAIN_DESC1& swapChainDesc = _pDx12->GetSwapChainDesc();
+    ID3D12Device* device = pDx12_->GetDevice();
+    const DXGI_SWAP_CHAIN_DESC1& swapChainDesc = pDx12_->GetSwapChainDesc();
     srvDescHeap_ = srvManager->GetDescriptorHeap();
     D3D12_CPU_DESCRIPTOR_HANDLE cpuHandle = srvManager->GetCPUDescriptorHandle(srvIndex_);
     D3D12_GPU_DESCRIPTOR_HANDLE gpuHandle = srvManager->GetGPUDescriptorHandle(srvIndex_);
@@ -105,7 +105,7 @@ void ImGuiManager::Render()
 
 void ImGuiManager::EndFrame()
 {
-    ID3D12GraphicsCommandList* commandList = DirectX12::GetInstance()->GetCommandListsLast();
+    ID3D12GraphicsCommandList* commandList = pDx12_->GetCommandListsLast();
     ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), commandList);
 }
 

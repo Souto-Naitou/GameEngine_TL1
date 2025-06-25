@@ -282,3 +282,13 @@ DirectX12::~DirectX12()
 
     pSRVManager_->Deallocate(gameWndSrvIndex_);
 }
+
+void EngineFeature::SetDirectX12(DirectX12* _pDx12)
+{
+    pDx12_ = _pDx12;
+}
+
+DirectX12* EngineFeature::GetDirectX12()
+{
+    return pDx12_;
+}

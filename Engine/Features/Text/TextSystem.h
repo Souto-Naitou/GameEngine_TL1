@@ -10,7 +10,7 @@
 #include <string>
 #include <utility>
 
-class TextSystem
+class TextSystem : public EngineFeature
 {
 public:
     TextSystem(const TextSystem&) = delete;
@@ -57,7 +57,6 @@ private:
 
 
 private: /// 借り物
-    DirectX12* pDirectX12_ = nullptr;
     IDXGIDevice* dxgiDevice_ = nullptr;
     ID2D1Factory3* d2dFactory_ = nullptr;
     ID2D1Device2* d2dDevice_ = nullptr;

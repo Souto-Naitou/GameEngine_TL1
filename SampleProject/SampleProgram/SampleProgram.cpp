@@ -11,7 +11,7 @@ void SampleProgram::Initialize()
     #ifdef _DEBUG
     pImGuiManager_->EnableDocking();
     //pImGuiManager_->EnableMultiViewport();
-    pImGuiManager_->StyleMaterialFlat();
+    //pImGuiManager_->StyleMaterialFlat();
     #endif // _DEBUG
     
     /// シーンファクトリの設定
@@ -20,6 +20,9 @@ void SampleProgram::Initialize()
 
     /// モデルを全てロード
     pModelManager_->LoadAllModel();
+
+    pTextureManager_->LoadTexture("noise0.png");
+    pPEDissolve_->SetTextureResource(pTextureManager_->GetTextureResource("noise0.png"));
 }
 
 void SampleProgram::Finalize()

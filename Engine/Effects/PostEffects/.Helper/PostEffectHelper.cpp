@@ -4,16 +4,14 @@
 #include <Core/DirectX12/DirectX12.h>
 #include <Core/DirectX12/SRVManager.h>
 
-void Helper::CreateRenderTexture(ID3D12Device* _pDevice, ResourceStateTracker& _resource, D3D12_CPU_DESCRIPTOR_HANDLE& _rtvHandle, uint32_t& _rtvHeapIndex)
+void Helper::CreateRenderTexture(DirectX12* _pDx12, ID3D12Device* _pDevice, ResourceStateTracker& _resource, D3D12_CPU_DESCRIPTOR_HANDLE& _rtvHandle, uint32_t& _rtvHeapIndex)
 {
-    auto pDx12 = DirectX12::GetInstance();
-
     _resource.resource = DX12Helper::CreateRenderTextureResource(
         _pDevice,
         WinSystem::clientWidth,
         WinSystem::clientHeight,
         DXGI_FORMAT_R8G8B8A8_UNORM,
-        pDx12->GetEditorBGColor()
+        _pDx12->GetEditorBGColor()
     );
     _resource.state = D3D12_RESOURCE_STATE_RENDER_TARGET;
 
@@ -23,8 +21,8 @@ void Helper::CreateRenderTexture(ID3D12Device* _pDevice, ResourceStateTracker& _
 
     if (_rtvHandle.ptr == 0)
     {
-        _rtvHeapIndex = pDx12->GetRTVHeapCounter()->Allocate("PostEffectRTV");
-        _rtvHandle = pDx12->GetRTVHeapCounter()->GetRTVHandle(_rtvHeapIndex);
+        _rtvHeapIndex = _pDx12->GetRTVHeapCounter()->Allocate("PostEffectRTV");
+        _rtvHandle = _pDx12->GetRTVHeapCounter()->GetRTVHandle(_rtvHeapIndex);
     }
 
     _pDevice->CreateRenderTargetView(

@@ -4,12 +4,12 @@
 #include <Externals/DirectXTex/DirectXTex.h>
 #include <wrl.h>
 #include <d3d12.h>
-#include <vector>
 #include <Core/DirectX12/SRVManager.h>
 #include <unordered_map>
 #include <Utility/FilePathSearcher/FilePathSearcher.h>
+#include <Core/DirectX12/TextureResource/TextureResource.h>
 
-class TextureManager
+class TextureManager : public EngineFeature
 {
 public:
     TextureManager(const TextureManager&) = delete;
@@ -33,18 +33,16 @@ public: /// Setter
 
 
 public: /// Getter
-    const DirectX::TexMetadata& GetMetaData(const std::string& _filePath);
-    uint32_t GetSrvIndex(const std::string& _filePath);
-    D3D12_GPU_DESCRIPTOR_HANDLE GetSrvHandleGPU(const std::string& _filePath);
+    [[nodiscard]] const DirectX::TexMetadata&   GetMetaData(const std::string& _filePath);
+    [[nodiscard]] uint32_t                      GetSrvIndex(const std::string& _filePath);
+    [[nodiscard]] D3D12_GPU_DESCRIPTOR_HANDLE   GetSrvHandleGPU(const std::string& _filePath);
+    [[nodiscard]] const TextureResource&        GetTextureResource(const std::string& _filePath);
 
 private:
     struct TextureData
     {
         DirectX::TexMetadata metadata = {};
-        Microsoft::WRL::ComPtr<ID3D12Resource> resource;
-        uint32_t srvIndex = {};
-        D3D12_CPU_DESCRIPTOR_HANDLE srvHandleCPU = {};
-        D3D12_GPU_DESCRIPTOR_HANDLE srvHandleGPU = {};
+        TextureResource textureResource = {};
     };
 
     std::unordered_map<std::string, TextureData> textureDataMap_;

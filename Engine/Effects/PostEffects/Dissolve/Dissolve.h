@@ -6,16 +6,22 @@
 #include <dxcapi.h>
 #include <Core/DirectX12/DirectX12.h>
 #include <Core/DirectX12/ResourceStateTracker/ResourceStateTracker.h>
+#include <string>
+#include <Core/DirectX12/TextureResource/TextureResource.h>
+#include <Vector4.h>
 
-struct alignas(16) PrewittOutlineOption
+struct alignas(16) DissolveOption
 {
-    float weightMultiply = 6.0f;
-    float padding[3] = {};
+    float threshold;
+    float edgeThresholdOffset;
+    float padding[2];
+    Vector4 colorDissolve;
+    Vector4 colorEdge;
 };
 
 /// <ボックスフィルタ>
 /// - ApplyメソッドとSettingメソッドはPostEffectクラスで実行する
-class PrewittOutline : 
+class Dissolve :
     public IPostEffect,
     public EngineFeature
 {
@@ -25,6 +31,8 @@ public:
 
     void    Enable(bool _flag) override;
     bool    Enabled() const override;
+
+    void    SetTextureResource(const TextureResource& _texResource);
 
 private:
     // PostEffectクラスがアクセスする
@@ -47,7 +55,7 @@ private:
     ID3D12GraphicsCommandList*                          commandList_            = nullptr;
 
     bool                                                isEnabled_              = false;
-    const std::string                                   name_                   = "PrewittOutline";
+    const std::string                                   name_                   = "Dissolve";
     ResourceStateTracker                                renderTexture_          = {};
     Microsoft::WRL::ComPtr<IDxcBlob>                    vertexShaderBlob_       = nullptr;
     Microsoft::WRL::ComPtr<IDxcBlob>                    pixelShaderBlob_        = nullptr;
@@ -58,16 +66,18 @@ private:
     D3D12_GPU_DESCRIPTOR_HANDLE                         inputGpuHandle_         = {};
     uint32_t                                            rtvHeapIndex_           = 0;
     uint32_t                                            srvHeapIndex_           = 0;
-    const std::wstring                                  kVertexShaderPath       = L"EngineResources/Shaders/PrewittOutline.VS.hlsl";
-    const std::wstring                                  kPixelShaderPath        = L"EngineResources/Shaders/PrewittOutline.PS.hlsl";
+    const std::wstring                                  kVertexShaderPath       = L"EngineResources/Shaders/Dissolve.VS.hlsl";
+    const std::wstring                                  kPixelShaderPath        = L"EngineResources/Shaders/Dissolve.PS.hlsl";
+    TextureResource                                     maskTexture_            = {};
 
     // Constant buffers
     Microsoft::WRL::ComPtr<ID3D12Resource>              optionResource_         = nullptr;
-    PrewittOutlineOption*                                      pOption_                = nullptr;
+    DissolveOption*                                     pOption_                = nullptr;
 
     // Internal functions
     void    CreateRootSignature();
     void    CreatePipelineStateObject();
     void    ToRenderTargetState();
     void    CreateResourceCBuffer();
+    void    CheckValidation() const;
 };

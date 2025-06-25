@@ -1,9 +1,7 @@
 #include "ObjectSystemBase.h"
-#include <Core/DirectX12/DirectX12.h>
 
 void ObjectSystemBase::Initialize()
 {
-    pDx12_ = DirectX12::GetInstance();
     CreateCommandList();
 }
 
@@ -11,11 +9,6 @@ void ObjectSystemBase::PostDraw()
 {
     commandAllocator_->Reset();
     commandList_->Reset(commandAllocator_.Get(), nullptr);
-}
-
-DirectX12* ObjectSystemBase::GetDx12()
-{
-    return pDx12_;
 }
 
 ID3D12GraphicsCommandList* ObjectSystemBase::GetCommandList()

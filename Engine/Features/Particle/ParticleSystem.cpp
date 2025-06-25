@@ -10,9 +10,6 @@ void ParticleSystem::Initialize()
 {
     ObjectSystemBase::Initialize();
 
-    /// 必要なインスタンスを取得
-    pDx12_ = DirectX12::GetInstance();
-
     CreateRootSignature();
 
     CreatePipelineState();
@@ -40,7 +37,7 @@ void ParticleSystem::DrawCall()
     auto record = [&](ID3D12GraphicsCommandList* _commandList)
     {
         /// コマンドリストの設定
-        DX12Helper::CommandListCommonSetting(_commandList, rtvHandle_);
+        DX12Helper::CommandListCommonSetting(pDx12_, _commandList, rtvHandle_);
 
         /// ルートシグネチャをセットする
         _commandList->SetGraphicsRootSignature(rootSignature_.Get());
