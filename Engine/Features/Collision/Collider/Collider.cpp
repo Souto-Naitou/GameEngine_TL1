@@ -2,14 +2,23 @@
 #include <Features/Collision/Manager/CollisionManager.h>
 #include <DebugTools/ImGuiTemplates/ImGuiTemplates.h>
 #include <sstream>
+#include <Utility/Debug/dbgutl.h>
 
-Collider::Collider()
+Collider::Collider(bool _enableDebugWindow) : isEnableDebugWindow_(_enableDebugWindow)
 {
+    hexID_ = utl::debug::generate_name_default(this);
+    if (isEnableDebugWindow_)
+    {
+        DebugManager::GetInstance()->SetComponent("Colliders", hexID_, std::bind(&Collider::DebugWindow, this));
+    }
 }
 
 Collider::~Collider()
 {
-    DebugManager::GetInstance()->DeleteComponent("Colliders", colliderID_.c_str());
+    if (isEnableDebugWindow_)
+    {
+        DebugManager::GetInstance()->DeleteComponent("Colliders", hexID_);
+    }
 }
 
 void Collider::DrawArea()
@@ -44,6 +53,12 @@ void Collider::EraseCollidingPtr(const Collider* _ptr)
         return _pCollider == _ptr;
     });
     return;
+}
+
+void Collider::SetColliderID(const std::string& _id)
+{
+    colliderID_ = _id;
+    hexID_ = utl::debug::generate_name(_id, this);
 }
 
 void Collider::SetAttribute(uint32_t _attribute)

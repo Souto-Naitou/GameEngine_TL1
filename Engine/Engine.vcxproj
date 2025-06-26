@@ -228,7 +228,6 @@
     <ClCompile Include="Externals\Timer\Timer.cpp" />
     <ClCompile Include="Features\Audio\Audio.cpp" />
     <ClCompile Include="Features\Audio\AudioManager.cpp" />
-    <ClCompile Include="Features\BaseObject\BaseObject.cpp" />
     <ClCompile Include="Features\Collision\Collider\Collider.cpp" />
     <ClCompile Include="Features\Collision\Manager\CollisionManager.cpp" />
     <ClCompile Include="Features\CSV\CSVLoader.cpp" />
@@ -312,7 +311,6 @@
     <ClInclude Include="Externals\Timer\Timer.h" />
     <ClInclude Include="Features\Audio\Audio.h" />
     <ClInclude Include="Features\Audio\AudioManager.h" />
-    <ClInclude Include="Features\BaseObject\BaseObject.h" />
     <ClInclude Include="Features\Collision\Collider\Collider.h" />
     <ClInclude Include="Features\Collision\Manager\CollisionManager.h" />
     <ClInclude Include="Features\Collision\Shape.h" />

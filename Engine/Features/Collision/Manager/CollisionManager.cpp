@@ -16,7 +16,13 @@
 
 void CollisionManager::Initialize()
 {
-    DebugManager::GetInstance()->SetComponent("#Window", name_, std::bind(&CollisionManager::DebugWindow, this));
+    DebugManager::GetInstance()->SetComponent("Common", name_, std::bind(&CollisionManager::DebugWindow, this), true);
+}
+
+void CollisionManager::Finalize()
+{
+    DebugManager::GetInstance()->DeleteComponent("Common", name_);
+    ClearCollider();
 }
 
 void CollisionManager::CheckAllCollision()
