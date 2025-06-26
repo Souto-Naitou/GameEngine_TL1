@@ -510,6 +510,9 @@
     <ClCompile Include="Utility\Debug\dbgutl.cpp">
       <Filter>Utility\Debug</Filter>
     </ClCompile>
+    <ClCompile Include="Utility\String\strutl.cpp">
+      <Filter>Utility\String</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common\define.h">
