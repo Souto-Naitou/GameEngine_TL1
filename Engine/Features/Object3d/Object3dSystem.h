@@ -37,7 +37,7 @@ public:
     struct CommandListData
     {
         std::map<UINT, ID3D12Resource*> cbuffers;
-        Model* model;
+        Model* model = nullptr;
     };
 
 public:
