@@ -513,7 +513,12 @@
     <ClCompile Include="Core\DirectX12\TextureResource\TextureResource.cpp">
       <Filter>Core\DirectX12\TextureResource</Filter>
     </ClCompile>
-    <ClCompile Include="Utility\Debug\dbgutl.cpp" />
+    <ClCompile Include="Utility\Debug\dbgutl.cpp">
+      <Filter>Utility\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Utility\String\strutl.cpp">
+      <Filter>Utility\String</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common\define.h">

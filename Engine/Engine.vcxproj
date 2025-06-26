@@ -272,6 +272,7 @@
     <ClCompile Include="Utility\Debug\dbgutl.cpp" />
     <ClCompile Include="Utility\FilePathSearcher\FilePathSearcher.cpp" />
     <ClCompile Include="Utility\JSONIO\JSONIO.cpp" />
+    <ClCompile Include="Utility\String\strutl.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BaseClasses\ObjectSystemBase.h" />
