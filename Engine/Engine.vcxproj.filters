@@ -277,6 +277,9 @@
     <Filter Include="Core\DirectX12\TextureResource">
       <UniqueIdentifier>{a0d649d6-f1f7-4d1d-bbad-3046629187cb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Utility\Debug">
+      <UniqueIdentifier>{ce80308a-e3cc-4688-a1a9-2d23bb82709a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DebugTools\DebugManager\DebugManager.cpp">
@@ -510,6 +513,7 @@
     <ClCompile Include="Core\DirectX12\TextureResource\TextureResource.cpp">
       <Filter>Core\DirectX12\TextureResource</Filter>
     </ClCompile>
+    <ClCompile Include="Utility\Debug\dbgutl.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common\define.h">
@@ -793,6 +797,9 @@
     </ClInclude>
     <ClInclude Include="Effects\PostEffects\.Helper\PostEffectHelper.h">
       <Filter>Effect\PostEffect\.Helper</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility\Debug\dbgutl.h">
+      <Filter>Utility\Debug</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
