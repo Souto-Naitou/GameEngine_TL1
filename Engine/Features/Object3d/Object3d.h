@@ -29,7 +29,7 @@ public:
     /// <summary>
     /// 初期化
     /// </summary>
-    void Initialize(const std::string& _filePath);
+    void Initialize(const std::string& _filePath, bool _enableDebugWindow = true);
 
     /// <summary>
     /// 更新
@@ -77,6 +77,7 @@ private: /// メンバ変数
 
     bool                                            isUpdate_                       = true;
     bool                                            isDraw_                         = true;
+    bool                                            isEnableDebugWindow_            = true;
 
     Microsoft::WRL::ComPtr<ID3D12Resource>          transformationMatrixResource_   = nullptr;
     Microsoft::WRL::ComPtr<ID3D12Resource>          directionalLightResource_       = nullptr;

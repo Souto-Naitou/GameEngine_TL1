@@ -7,6 +7,7 @@
 #include <Core/DirectX12/Helper/DX12Helper.h>
 #include <Core/DirectX12/TextureManager.h>
 #include <Features/Model/ModelManager.h>
+#include <Utility/Debug/dbgutl.h>
 
 
 #if defined (DEBUG_ENGINE) && (_DEBUG)
@@ -15,7 +16,7 @@
 #endif // DEBUG_ENGINE && _DEBUG
 
 
-void Object3d::Initialize(const std::string& _filePath)
+void Object3d::Initialize(const std::string& _filePath, bool _enableDebugWindow)
 {
     /// 必要なインスタンスを取得
     pSystem_ = Object3dSystem::GetInstance();
@@ -23,12 +24,15 @@ void Object3d::Initialize(const std::string& _filePath)
     device_ = pDx12_->GetDevice();
     ppSystemGameEye_ = pSystem_->GetGlobalEye();
 
+    isEnableDebugWindow_ = _enableDebugWindow;
+
 #if defined (DEBUG_ENGINE) && (_DEBUG)
-    pDebugManager_ = DebugManager::GetInstance();
-    std::stringstream ss;
-    ss << "instance##0x" << std::hex << this;
-    name_ = ss.str();
-    pDebugManager_->SetComponent("Object3d", name_, std::bind(&Object3d::DebugWindow, this));
+    if (isEnableDebugWindow_)
+    {
+        pDebugManager_ = DebugManager::GetInstance();
+        name_ = utl::debug::generate_name_default(this);
+        pDebugManager_->SetComponent("Object3d", name_, std::bind(&Object3d::DebugWindow, this));
+    }
 #endif // DEBUG_ENGINE && _DEBUG
 
     transform_.scale = Vector3(1.0f, 1.0f, 1.0f);
@@ -155,7 +159,10 @@ void Object3d::Draw()
 void Object3d::Finalize()
 {
 #if defined (DEBUG_ENGINE) && (_DEBUG)
-    pDebugManager_->DeleteComponent("Object3d", name_.c_str());
+    if (isEnableDebugWindow_)
+    {
+        pDebugManager_->DeleteComponent("Object3d", name_.c_str());
+    }
 #endif // DEBUG_ENGINE && _DEBUG
 }
 
