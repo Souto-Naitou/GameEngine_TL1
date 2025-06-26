@@ -5,10 +5,6 @@
 #pragma comment(lib, "dinput8.lib")
 #pragma comment(lib, "dxguid.lib")
 
-#ifdef _DEBUG
-#include <imgui.h>
-#endif 
-
 void Input::Initialize(HINSTANCE _hInstance, HWND _hwnd)
 {
     HRESULT hr = DirectInput8Create(

@@ -19,6 +19,7 @@ public:
     static CollisionManager* GetInstance() { static CollisionManager instance; return &instance; }
 
     void Initialize();
+    void Finalize();
     void CheckAllCollision();
     void RegisterCollider(Collider* _collider);
     void DeleteCollider(Collider* _collider);

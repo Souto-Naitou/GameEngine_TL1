@@ -422,7 +422,7 @@ void ParticleEmitter::ModifyGameEye(GameEye** _eye)
 void ParticleEmitter::Finalize()
 {
 #ifdef _DEBUG
-    DebugManager::GetInstance()->DeleteComponent("ParticleEmitter", name_.c_str());
+    DebugManager::GetInstance()->DeleteComponent("ParticleEmitter", name_);
 #endif
 
     ParticleManager::GetInstance()->ReserveDeleteParticle(particle_);

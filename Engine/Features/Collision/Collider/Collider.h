@@ -7,7 +7,6 @@
 #include <vector>
 #include <string>
 #include <functional>
-#include <Features/BaseObject/BaseObject.h>
 #include <list>
 #include <DebugTools/DebugManager/DebugManager.h>
 #include <variant>
@@ -18,13 +17,13 @@ class Collider
 {
 public:
 
-    Collider();
+    Collider(bool _enableDebugWindow = true);
     ~Collider();
 
     void DrawArea();
 
 public: /// Getter
-    inline  const BaseObject*           GetOwner()                  const       { return owner_; }
+    inline  const void*                 GetOwner()                  const       { return owner_; }
 
     inline  const AABB*                 GetAABB()                   const       { return std::get<AABB*>(shapeData_); }
     inline  const OBB*                  GetOBB()                    const       { return std::get<OBB*>(shapeData_); }
@@ -44,12 +43,8 @@ public: /// Getter
 
 
 public: /// Setter
-    inline  void                        SetOwner(BaseObject* _owner)            { owner_ = _owner; }
-    inline  void                        SetColliderID(const std::string& _id)
-    {
-        colliderID_ = _id;
-        DebugManager::GetInstance()->SetComponent("Colliders", colliderID_, std::bind(&Collider::DebugWindow, this));
-    }
+    inline  void                        SetOwner(void* _owner)                  { owner_ = _owner; }
+    void                                SetColliderID(const std::string& _id);
 
     template<typename T>
     void                                SetShapeData(T* _shapeData) { shapeData_ = _shapeData; }
@@ -81,10 +76,12 @@ private:
     std::function<void(const Collider*)>    onCollisionTriggerFunction_;
     std::variant<OBB*, AABB*, Sphere*>      shapeData_          = {};
 
-    BaseObject*                     owner_                      = nullptr;
+    bool                            isEnableDebugWindow_        = true;                         // デバッグウィンドウを表示するかどうか
+    void*                           owner_                      = nullptr;
     bool                            isEnableCollision_          = true;                         // 判定をするかどうか
     Shape                           shape_                      = Shape::Sphere;                // 形状
     std::string                     colliderID_                 = {};                           // ID
+    std::string                     hexID_                      = {};                           // HexID
 
 
     std::list<const Collider*>      collidingPtrList_           = {};                           // 現在あたっているコライダーのリスト

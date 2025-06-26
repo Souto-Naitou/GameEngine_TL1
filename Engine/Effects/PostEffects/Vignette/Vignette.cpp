@@ -115,7 +115,7 @@ void Vignette::DebugOverlay()
 
     ImGui::DragFloat("Scale", &pOption_->scale, 0.01f, FLT_MIN);
     ImGui::DragFloat("Power", &pOption_->power, 0.01f, FLT_MIN);
-    ImGui::ColorEdit3("Power", &pOption_->color.x);
+    ImGui::ColorEdit3("Color", &pOption_->color.x);
     ImGui::Checkbox("Multiply blending", reinterpret_cast<bool*>(&pOption_->enableMultiply));
 
     #endif //_DEBUG
