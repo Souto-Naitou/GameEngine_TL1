@@ -50,7 +50,7 @@ void ImGuiManager::Finalize()
     ImGui::DestroyContext();
 }
 
-void ImGuiManager::Resize()
+void ImGuiManager::OnResizedBuffers()
 {
     io_->DisplaySize.x = static_cast<float>(WinSystem::clientWidth);
     io_->DisplaySize.y = static_cast<float>(WinSystem::clientHeight);

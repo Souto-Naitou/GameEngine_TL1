@@ -8,6 +8,7 @@
 
 #include <memory>
 #include <Features/Particle/Emitter/ParticleEmitter.h>
+#include <Features/Text/Text.h>
 #include <string>
 
 class CG4Task1 : public IScene
@@ -35,6 +36,7 @@ private:
     std::unique_ptr<ParticleEmitter>    pEmitter_Snow_      = nullptr;
     std::unique_ptr<ParticleEmitter>    pEmitter_Spark_     = nullptr;
     std::unique_ptr<ParticleEmitter>    pEmitter_Test_      = nullptr;
+    std::unique_ptr<Text>               pText_              = nullptr;
 
     // Pointers
     Input*  pInput_     = nullptr;

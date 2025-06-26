@@ -11,30 +11,30 @@
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 #endif // _DEBUG
 
-uint32_t WinSystem::clientWidth = 1600;
-uint32_t WinSystem::clientHeight = 900;
-uint32_t WinSystem::preClientWidth = 1600;
+uint32_t WinSystem::clientWidth     = 1600;
+uint32_t WinSystem::clientHeight    = 900;
+uint32_t WinSystem::preClientWidth  = 1600;
 uint32_t WinSystem::preClientHeight = 900;
 
-bool WinSystem::isMoving_ = false;
-bool WinSystem::isResized_ = false;
-bool WinSystem::isFullScreen_ = false;
+bool WinSystem::isMoving_           = false;
+bool WinSystem::isResized_          = false;
+bool WinSystem::isFullScreen_       = false;
 
 void WinSystem::Initialize()
 {
     HRESULT hr = CoInitializeEx(0, COINIT_MULTITHREADED);
     if (FAILED(hr)) assert(false && "COMの初期化失敗");
 
-    wc_.lpfnWndProc = WinSystem::WindowProcedure;
+    wc_.lpfnWndProc   = WinSystem::WindowProcedure;
     wc_.lpszClassName = L"DXWindowClass";
-    wc_.hInstance = GetModuleHandle(nullptr);
-    wc_.hCursor = LoadCursor(nullptr, IDC_ARROW);
+    wc_.hInstance     = GetModuleHandle(nullptr);
+    wc_.hCursor       = LoadCursor(nullptr, IDC_ARROW);
     RegisterClass(&wc_);
 
-    auto& cfgData = ConfigManager::GetInstance()->GetConfigData();
-    clientWidth = cfgData.screen_width;
-    clientHeight = cfgData.screen_height;
-    title_ = ConvertString(cfgData.window_title);
+    auto& cfgData     = ConfigManager::GetInstance()->GetConfigData();
+    clientWidth       = cfgData.screen_width;
+    clientHeight      = cfgData.screen_height;
+    title_            = ConvertString(cfgData.window_title);
 }
 
 void WinSystem::Finalize() const

@@ -164,13 +164,13 @@ void DirectX12::CreateSwapChainAndResource()
 {
     /// スワップチェーンの設定
     swapChainDesc_ = {};
-    swapChainDesc_.Width = WinSystem::clientWidth;                         // 画面の幅。ウィンドウのクライアント領域を同じものにしておく
-    swapChainDesc_.Height = WinSystem::clientHeight;                        // 画面の高さ。ウィンドウのクライアント領域を同じものにしておく
-    swapChainDesc_.Format = DXGI_FORMAT_R8G8B8A8_UNORM;           // 色の形式
+    swapChainDesc_.Width            = WinSystem::clientWidth;               // 画面の幅。ウィンドウのクライアント領域を同じものにしておく
+    swapChainDesc_.Height           = WinSystem::clientHeight;              // 画面の高さ。ウィンドウのクライアント領域を同じものにしておく
+    swapChainDesc_.Format           = DXGI_FORMAT_R8G8B8A8_UNORM;           // 色の形式
     swapChainDesc_.SampleDesc.Count = 1;                                    // マルチサンプルしない
-    swapChainDesc_.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;      // 描画のターゲットとして利用する
-    swapChainDesc_.BufferCount = 2;                                    // ダブルバッファ
-    swapChainDesc_.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;        // モニタにうつしたら、中身を破棄
+    swapChainDesc_.BufferUsage      = DXGI_USAGE_RENDER_TARGET_OUTPUT;      // 描画のターゲットとして利用する
+    swapChainDesc_.BufferCount      = 2;                                    // ダブルバッファ
+    swapChainDesc_.SwapEffect       = DXGI_SWAP_EFFECT_FLIP_DISCARD;        // モニタにうつしたら、中身を破棄
 
 
     /// 生成
@@ -265,15 +265,15 @@ void DirectX12::CreateGameScreenResource()
 {
     /// リソースの生成
     D3D12_RESOURCE_DESC resourceDesc{};
-    resourceDesc.Width = static_cast<UINT64>(viewport_.Width);              // 幅
-    resourceDesc.Height = static_cast<UINT>(viewport_.Height);              // 高さ
-    resourceDesc.MipLevels = 1;                                             // mipmapの数
-    resourceDesc.DepthOrArraySize = 1;                                      // 奥行き or 配列Textureの配列数
-    resourceDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;                  // フォーマット
-    resourceDesc.SampleDesc.Count = 1;                                      // サンプリング数
-    resourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;            // 2DTexture
-    resourceDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS;        // UAVを使うためのフラグ
-    resourceDesc.Layout = D3D12_TEXTURE_LAYOUT_UNKNOWN;                     // テクスチャのレイアウト
+    resourceDesc.Width            = static_cast<UINT64>(viewport_.Width);       // 幅
+    resourceDesc.Height           = static_cast<UINT>(viewport_.Height);        // 高さ
+    resourceDesc.MipLevels        = 1;                                          // mipmapの数
+    resourceDesc.DepthOrArraySize = 1;                                          // 奥行き or 配列Textureの配列数
+    resourceDesc.Format           = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;            // フォーマット
+    resourceDesc.SampleDesc.Count = 1;                                          // サンプリング数
+    resourceDesc.Dimension        = D3D12_RESOURCE_DIMENSION_TEXTURE2D;         // 2DTexture
+    resourceDesc.Flags            = D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS; // UAVを使うためのフラグ
+    resourceDesc.Layout           = D3D12_TEXTURE_LAYOUT_UNKNOWN;               // テクスチャのレイアウト
 
     D3D12_HEAP_PROPERTIES heapProperties{};
     heapProperties.Type = D3D12_HEAP_TYPE_DEFAULT;                          // VRAMに
@@ -297,17 +297,17 @@ void DirectX12::CreateGameScreenResource()
 
     /// UAVの生成
     D3D12_RESOURCE_DESC textureDesc = {};
-    textureDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
-    textureDesc.Alignment = 0;
-    textureDesc.Width = static_cast<UINT64>(viewport_.Width);
-    textureDesc.Height = static_cast<UINT>(viewport_.Height);
-    textureDesc.DepthOrArraySize = 1;
-    textureDesc.MipLevels = 1;
-    textureDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
-    textureDesc.SampleDesc.Count = 1;
+    textureDesc.Dimension          = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
+    textureDesc.Alignment          = 0;
+    textureDesc.Width              = static_cast<UINT64>(viewport_.Width);
+    textureDesc.Height             = static_cast<UINT>(viewport_.Height);
+    textureDesc.DepthOrArraySize   = 1;
+    textureDesc.MipLevels          = 1;
+    textureDesc.Format             = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+    textureDesc.SampleDesc.Count   = 1;
     textureDesc.SampleDesc.Quality = 0;
-    textureDesc.Layout = D3D12_TEXTURE_LAYOUT_UNKNOWN;
-    textureDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS;
+    textureDesc.Layout             = D3D12_TEXTURE_LAYOUT_UNKNOWN;
+    textureDesc.Flags              = D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS;
 
     D3D12_HEAP_PROPERTIES heapPropertiesUAV = {};
     heapPropertiesUAV.Type = D3D12_HEAP_TYPE_DEFAULT;
@@ -340,10 +340,10 @@ void DirectX12::CreateDSVAndSettingState()
 
     /// DepthStencilStateの設定
     D3D12_DEPTH_STENCIL_DESC depthStencilDesc{};
-    depthStencilDesc.DepthEnable = true;                            // 深度テストを有効化
-    depthStencilDesc.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;   // 深度書き込み
-    depthStencilDesc.DepthFunc = D3D12_COMPARISON_FUNC_LESS_EQUAL;  // 深度テストの比較条件式（近ければ描画）
-    depthStencilDesc.StencilEnable = true;                          // ステンシルテストを有効
+    depthStencilDesc.DepthEnable    = true;                             // 深度テストを有効化
+    depthStencilDesc.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;       // 深度書き込み
+    depthStencilDesc.DepthFunc      = D3D12_COMPARISON_FUNC_LESS_EQUAL; // 深度テストの比較条件式（近ければ描画）
+    depthStencilDesc.StencilEnable  = true;                             // ステンシルテストを有効
 }
 
 void DirectX12::CreateFenceAndEvent()
@@ -377,8 +377,8 @@ void DirectX12::CreateFenceAndEvent()
 void DirectX12::SetViewportAndScissorRect()
 {
     /// ビューポート
-    viewport_.Width = static_cast<FLOAT>(WinSystem::clientWidth);
-    viewport_.Height = static_cast<FLOAT>(WinSystem::clientHeight);
+    viewport_.Width    = static_cast<FLOAT>(WinSystem::clientWidth);
+    viewport_.Height   = static_cast<FLOAT>(WinSystem::clientHeight);
     viewport_.TopLeftX = 0;
     viewport_.TopLeftY = 0;
     viewport_.MinDepth = 0.0f;
@@ -386,9 +386,9 @@ void DirectX12::SetViewportAndScissorRect()
 
     /// シザー矩形
     // 基本的にビューポートと同じ矩形が構成されるようにする
-    scissorRect_.left = 0;
-    scissorRect_.right = WinSystem::clientWidth;
-    scissorRect_.top = 0;
+    scissorRect_.left   = 0;
+    scissorRect_.right  = WinSystem::clientWidth;
+    scissorRect_.top    = 0;
     scissorRect_.bottom = WinSystem::clientHeight;
 }
 
@@ -639,7 +639,6 @@ void DirectX12::ResizeBuffers()
     d3d11Device_.Reset();
     d3d11On12DeviceContext_.Reset();
     d3d11On12Device_.Reset();
-    d2dFactory_.Reset();
     dxgiDevice_.Reset();
     d2dDevice_.Reset();
     d2dDeviceContext_.Reset();
@@ -687,14 +686,13 @@ void DirectX12::ResizeBuffers()
     backBufferIndex_ = swapChain_->GetCurrentBackBufferIndex();
 
     // ビューポート・シザーも更新
-    viewport_.Width = static_cast<float>(WinSystem::clientWidth);
-    viewport_.Height = static_cast<float>(WinSystem::clientHeight);
-    scissorRect_.right = static_cast<LONG>(WinSystem::clientWidth);
+    viewport_.Width     = static_cast<float>(WinSystem::clientWidth);
+    viewport_.Height    = static_cast<float>(WinSystem::clientHeight);
+    scissorRect_.right  = static_cast<LONG>(WinSystem::clientWidth);
     scissorRect_.bottom = static_cast<LONG>(WinSystem::clientHeight);
 
     CreateDSVAndSettingState();
     CreateD3D11Device();
-    CreateD2D1Factory();
     CreateID2D1DeviceContext();
     CreateD2DRenderTarget();
     CreateGameScreenResource();

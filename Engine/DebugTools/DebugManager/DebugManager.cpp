@@ -65,8 +65,6 @@ void DebugManager::OverlayFPS() const
 
 void DebugManager::MeasureFPS()
 {
-    #ifdef _DEBUG
-
     if (!timer_.GetIsStart())
     {
         timer_.Start();
@@ -82,8 +80,6 @@ void DebugManager::MeasureFPS()
 
     std::rotate(fpsList_.begin(), fpsList_.begin() + 1, fpsList_.end());
     fpsList_.back() = static_cast<float>(fps_);
-
-    #endif // _DEBUG
 }
 
 void DebugManager::MeasureFrameTime()

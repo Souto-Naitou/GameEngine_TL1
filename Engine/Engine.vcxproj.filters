@@ -504,9 +504,11 @@
     <ClCompile Include="Effects\PostEffects\Dissolve\Dissolve.cpp">
       <Filter>Effect\PostEffect\Dissolve</Filter>
     </ClCompile>
-    <ClCompile Include="Core\DirectX12\TextureResource\TextureResource.cpp" />
     <ClCompile Include="Effects\PostEffects\.Helper\PostEffectHelper.cpp">
       <Filter>Effect\PostEffect\.Helper</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\DirectX12\TextureResource\TextureResource.cpp">
+      <Filter>Core\DirectX12\TextureResource</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

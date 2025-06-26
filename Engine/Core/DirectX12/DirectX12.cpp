@@ -123,7 +123,7 @@ void DirectX12::Initialize()
     CreateD2DRenderTarget();
 }
 
-void DirectX12::OnResized()
+void DirectX12::OnResizedWindow()
 {
     this->ResizeBuffers();
     isResized_ = false;
@@ -224,6 +224,8 @@ void DirectX12::DisplayFrame()
 
 void DirectX12::CopyFromRTV(ID3D12GraphicsCommandList* _commandList)
 {
+    #ifdef _DEBUG
+
     /// レンダーターゲットからコピー元状態にする
     DX12Helper::ChangeStateResource(_commandList, swapChainResources_[backBufferIndex_], D3D12_RESOURCE_STATE_COPY_SOURCE);
 
@@ -231,23 +233,23 @@ void DirectX12::CopyFromRTV(ID3D12GraphicsCommandList* _commandList)
 
 
     D3D12_TEXTURE_COPY_LOCATION srcLocation = {};
-    srcLocation.pResource = swapChainResources_[backBufferIndex_].resource.Get();
-    srcLocation.Type = D3D12_TEXTURE_COPY_TYPE_SUBRESOURCE_INDEX;
+    srcLocation.pResource        = swapChainResources_[backBufferIndex_].resource.Get();
+    srcLocation.Type             = D3D12_TEXTURE_COPY_TYPE_SUBRESOURCE_INDEX;
     srcLocation.SubresourceIndex = 0; // コピーするサブリソースインデックス
 
     D3D12_TEXTURE_COPY_LOCATION dstLocation = {};
-    dstLocation.pResource = gameScreenResource_.resource.Get();
-    dstLocation.Type = D3D12_TEXTURE_COPY_TYPE_SUBRESOURCE_INDEX;
+    dstLocation.pResource        = gameScreenResource_.resource.Get();
+    dstLocation.Type             = D3D12_TEXTURE_COPY_TYPE_SUBRESOURCE_INDEX;
     dstLocation.SubresourceIndex = 0;
 
     /// コピー範囲
     D3D12_BOX srcBox = {};
-    srcBox.left = static_cast<UINT>(viewport_.TopLeftX);
-    srcBox.top = static_cast<UINT>(viewport_.TopLeftY);
-    srcBox.right = static_cast<UINT>(viewport_.Width + viewport_.TopLeftX);
+    srcBox.left   = static_cast<UINT>(viewport_.TopLeftX);
+    srcBox.top    = static_cast<UINT>(viewport_.TopLeftY);
+    srcBox.right  = static_cast<UINT>(viewport_.Width + viewport_.TopLeftX);
     srcBox.bottom = static_cast<UINT>(viewport_.Height + viewport_.TopLeftY);
-    srcBox.front = 0;
-    srcBox.back = 1;
+    srcBox.front  = 0;
+    srcBox.back   = 1;
 
     _commandList->CopyTextureRegion(&dstLocation, 0, 0, 0, &srcLocation, &srcBox);
 
@@ -260,10 +262,12 @@ void DirectX12::CopyFromRTV(ID3D12GraphicsCommandList* _commandList)
         D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE
     );
 
-    #ifdef _DEBUG
-
     /// rtvのクリア
     _commandList->ClearRenderTargetView(rtvHandles_[backBufferIndex_], &editorBG_.x, 0, nullptr);
+
+    #else
+
+    _commandList;
 
     #endif // _DEBUG
 }

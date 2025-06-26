@@ -68,8 +68,8 @@ void DX12Helper::PauseError(Microsoft::WRL::ComPtr<ID3D12Device>& _device, Micro
         // 抑制するレベル
         D3D12_MESSAGE_SEVERITY severities[] = { D3D12_MESSAGE_SEVERITY_INFO };
         D3D12_INFO_QUEUE_FILTER filter{};
-        filter.DenyList.NumIDs = _countof(denyIds);
-        filter.DenyList.pIDList = denyIds;
+        filter.DenyList.NumIDs        = _countof(denyIds);
+        filter.DenyList.pIDList       = denyIds;
         filter.DenyList.NumSeverities = _countof(severities);
         filter.DenyList.pSeverityList = severities;
         // 指定したメッセージの表示を制限する
@@ -83,9 +83,9 @@ Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> DX12Helper::CreateDescriptorHeap(co
 {
     Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> descriptorHeap = nullptr;
     D3D12_DESCRIPTOR_HEAP_DESC descriptorHeapDesc{};
-    descriptorHeapDesc.Type = _heapType;
+    descriptorHeapDesc.Type           = _heapType;
     descriptorHeapDesc.NumDescriptors = _numDescriptors;
-    descriptorHeapDesc.Flags = _shaderVisible ? D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE : D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
+    descriptorHeapDesc.Flags          = _shaderVisible ? D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE : D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
     HRESULT hr = _device->CreateDescriptorHeap(&descriptorHeapDesc, IID_PPV_ARGS(&descriptorHeap));
 
     if (FAILED(hr))
@@ -104,14 +104,14 @@ Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> DX12Helper::CreateDescriptorHeap(co
 Microsoft::WRL::ComPtr<ID3D12Resource> DX12Helper::CreateDepthStencilTextureResource(const Microsoft::WRL::ComPtr<ID3D12Device>& _device, int32_t _width, int32_t _height)
 {
     D3D12_RESOURCE_DESC resourceDesc{};
-    resourceDesc.Width = _width;                                    // 幅
-    resourceDesc.Height = _height;                                  // 高さ
-    resourceDesc.MipLevels = 1;                                     // mipmapの数
-    resourceDesc.DepthOrArraySize = 1;	                            // 奥行き or 配列Textureの配列数
-    resourceDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;            // フォーマット
-    resourceDesc.SampleDesc.Count = 1;                              // サンプリング数
-    resourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;    // 2DTexture
-    resourceDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL;   // DepthStencilとして使う通知
+    resourceDesc.Width            = _width;                                     // 幅
+    resourceDesc.Height           = _height;                                    // 高さ
+    resourceDesc.MipLevels        = 1;                                          // mipmapの数
+    resourceDesc.DepthOrArraySize = 1;	                                        // 奥行き or 配列Textureの配列数
+    resourceDesc.Format           = DXGI_FORMAT_D24_UNORM_S8_UINT;              // フォーマット
+    resourceDesc.SampleDesc.Count = 1;                                          // サンプリング数
+    resourceDesc.Dimension        = D3D12_RESOURCE_DIMENSION_TEXTURE2D;         // 2DTexture
+    resourceDesc.Flags            = D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL;    // DepthStencilとして使う通知
 
 
     /// 利用するHeapの設定
@@ -121,8 +121,8 @@ Microsoft::WRL::ComPtr<ID3D12Resource> DX12Helper::CreateDepthStencilTextureReso
 
     /// 深度値のクリア設定
     D3D12_CLEAR_VALUE depthClearValue{};
-    depthClearValue.DepthStencil.Depth = 1.0f;                      // 1.0f(最大値)でクリア
-    depthClearValue.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;         // フォーマット。Resourceと合わせる
+    depthClearValue.DepthStencil.Depth = 1.0f;                          // 1.0f(最大値)でクリア
+    depthClearValue.Format             = DXGI_FORMAT_D24_UNORM_S8_UINT; // フォーマット。Resourceと合わせる
 
 
     /// Resourceの生成
@@ -197,19 +197,30 @@ Microsoft::WRL::ComPtr<IDxcBlob> DX12Helper::CompileShader(
 
     // 読み込んだファイルの内容を設定する
     DxcBuffer shaderSourceBuffer;
-    shaderSourceBuffer.Ptr = shaderSource->GetBufferPointer();
-    shaderSourceBuffer.Size = shaderSource->GetBufferSize();
+    shaderSourceBuffer.Ptr      = shaderSource->GetBufferPointer();
+    shaderSourceBuffer.Size     = shaderSource->GetBufferSize();
     shaderSourceBuffer.Encoding = DXC_CP_UTF8; // UTF-8の文字コードであることを通知
 
     /// 2. Compileする
+    #ifdef _DEBUG
     LPCWSTR arguments[] = {
-        filePath.c_str(),			// コンパイル対象のhlslファイル名
-        L"-E", L"main",				// エントリーポイントの指定。基本的にmain以外にはしない
-        L"-T", profile,				// ShaderProfileの設定
-        L"-Zi", L"-Qembed_debug",	// デバッグ用の情報を埋め込む
-        L"-Od",						// 最適化を外しておく
-        L"-Zpr",					// メモリレイアウトは行優先
+        filePath.c_str(),           // コンパイル対象のhlslファイル名
+        L"-E", L"main",             // エントリーポイントの指定。基本的にmain以外にはしない
+        L"-T", profile,             // ShaderProfileの設定
+        L"-Zi", L"-Qembed_debug",   // デバッグ用の情報を埋め込む
+        L"-Od",                     // 最適化を外しておく
+        L"-Zpr",                    // メモリレイアウトは行優先
     };
+    #else
+    LPCWSTR arguments[] = {
+        filePath.c_str(),           // コンパイル対象のhlslファイル名
+        L"-E", L"main",             // エントリーポイントの指定。基本的にmain以外にはしない
+        L"-T", profile,             // ShaderProfileの設定
+        L"-Zi", L"-Qembed_debug",   // デバッグ用の情報を埋め込む
+        L"-O3",                     // 最適化を有効に
+        L"-Zpr",                    // メモリレイアウトは行優先
+    };
+    #endif
 
     // 実際にShaderをコンパイルする
     Microsoft::WRL::ComPtr<IDxcResult> shaderResult = nullptr;

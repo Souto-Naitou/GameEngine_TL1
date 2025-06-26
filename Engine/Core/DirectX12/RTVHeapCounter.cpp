@@ -2,8 +2,8 @@
 
 void RTVHeapCounter::Initialize(ID3D12Device* _device, uint32_t _numDescriptor)
 {   
-    device_ = _device;
-    rtvHeap_ = DX12Helper::CreateDescriptorHeap(device_, D3D12_DESCRIPTOR_HEAP_TYPE_RTV, _numDescriptor, false);
+    device_             = _device;
+    rtvHeap_            = DX12Helper::CreateDescriptorHeap(device_, D3D12_DESCRIPTOR_HEAP_TYPE_RTV, _numDescriptor, false);
     kDescriptorSizeRTV_ = device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
 }
 
