@@ -33,6 +33,7 @@
 #include <Effects/PostEffects/DepthBasedOutline/DepthBasedOutline.h>
 #include <Effects/PostEffects/RadialBlur/RadialBlur.h>
 #include <Effects/PostEffects/Dissolve/Dissolve.h>
+#include <Effects/PostEffects/RandomFilter/RandomFilter.h>
 
 #include <memory> /// std::unique_ptr
 #include <Core/DirectX12/PostEffect.h>
@@ -100,6 +101,7 @@ protected:
     std::unique_ptr<DepthBasedOutline>  pPEDepthBasedOutline_   = nullptr;
     std::unique_ptr<RadialBlur>         pPERadialBlur_          = nullptr;
     std::unique_ptr<Dissolve>           pPEDissolve_            = nullptr;
+    std::unique_ptr<RandomFilter>       pPERandomFilter_        = nullptr;
 
     bool                                isExitProgram_          = false;
 };

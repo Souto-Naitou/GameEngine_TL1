@@ -59,7 +59,7 @@ void RadialBlur::Apply()
     commandList_->DrawInstanced(3, 1, 0, 0); // 三角形を1つ描画
 }
 
-void RadialBlur::Release()
+void RadialBlur::Finalize()
 {
 }
 

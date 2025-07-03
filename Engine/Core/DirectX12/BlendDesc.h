@@ -1,19 +1,18 @@
 #pragma once
 
-#include <utility>
-
 #include <d3d12.h>
 
 /// <summary>
 /// ブレンドモード関連
 /// </summary>
-class BlendMode
+class BlendDesc
 {
 public:
     enum class BlendModes
     {
         None,       // !< ブレンドなし
         Normal,     // !< 通常αブレンド。デフォルト
+        Alpha,      // !< 通常αブレンド。Normalと同じ
         Add,        // !< 加算
         Subtract,   // !< 減算
         Multiply,   // !< 乗算
@@ -22,12 +21,11 @@ public:
         COUNT,      // !< カウント用
     };
 
-    const D3D12_BLEND_DESC& GetBlendDesc() const { return blendDesc_; }
-
     void Initialize(BlendModes _mode);
-    void Apply(BlendModes _mode);
+    void ChangeMode(BlendModes _mode);
+    const D3D12_BLEND_DESC& Get() const { return desc_; }
 
 private:
-    D3D12_BLEND_DESC blendDesc_;
     BlendModes currentMode_;
+    D3D12_BLEND_DESC desc_;
 };

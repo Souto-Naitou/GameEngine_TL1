@@ -1,4 +1,4 @@
-#include "BoxFilter.h"
+#include "RandomFilter.h"
 #include <cassert>
 #include <Core/DirectX12/DirectX12.h>
 #include <Core/DirectX12/PostEffect.h>
@@ -10,14 +10,14 @@
 #include <Core/DirectX12/StaticSamplerDesc/StaticSamplerDesc.h>
 #include <Core/DirectX12/RootParameters/RootParameters.h>
 
-void BoxFilter::Initialize()
+void RandomFilter::Initialize()
 {
     device_ = pDx12_->GetDevice();
     commandList_ = PostEffectExecuter::GetInstance()->GetCommandList();
 
     // レンダーテクスチャの生成
     Helper::CreateRenderTexture(pDx12_, device_, renderTexture_, rtvHandleCpu_, rtvHeapIndex_);
-    renderTexture_.resource->SetName(L"BoxFilterRenderTexture");
+    renderTexture_.resource->SetName(L"RandomFilterRenderTexture");
 
     // レンダーテクスチャのSRVを生成
     Helper::CreateSRV(renderTexture_, rtvHandleGpu_, srvHeapIndex_);
@@ -32,41 +32,57 @@ void BoxFilter::Initialize()
     this->CreateResourceCBuffer();
 }
 
-void BoxFilter::Enable(bool _flag)
+void RandomFilter::Enable(bool _flag)
 {
     isEnabled_ = _flag;
 }
 
-void BoxFilter::SetInputTextureHandle(D3D12_GPU_DESCRIPTOR_HANDLE _gpuHandle)
+void RandomFilter::SetInputTextureHandle(D3D12_GPU_DESCRIPTOR_HANDLE _gpuHandle)
 {
     inputGpuHandle_ = _gpuHandle;
 }
 
-bool BoxFilter::Enabled() const
+void RandomFilter::SetOpacity(float _opacity)
+{
+    if (pOption_ != nullptr)
+    {
+        pOption_->opacity = _opacity;
+    }
+}
+
+void RandomFilter::SetSeed(float _seed)
+{
+    if (pOption_ != nullptr)
+    {
+        pOption_->seed = _seed;
+    }
+}
+
+bool RandomFilter::Enabled() const
 {
     return isEnabled_;
 }
 
-D3D12_GPU_DESCRIPTOR_HANDLE BoxFilter::GetOutputTextureHandle() const
+D3D12_GPU_DESCRIPTOR_HANDLE RandomFilter::GetOutputTextureHandle() const
 {
     return rtvHandleGpu_;
 }
 
-const std::string& BoxFilter::GetName() const
+const std::string& RandomFilter::GetName() const
 {
     return name_;
 }
 
-void BoxFilter::Apply()
+void RandomFilter::Apply()
 {
     commandList_->DrawInstanced(3, 1, 0, 0); // 三角形を1つ描画
 }
 
-void BoxFilter::Finalize()
+void RandomFilter::Finalize()
 {
 }
 
-void BoxFilter::Setting()
+void RandomFilter::Setting()
 {
     // レンダーテクスチャをレンダーターゲット状態に変更
     this->ToRenderTargetState();
@@ -86,23 +102,23 @@ void BoxFilter::Setting()
     commandList_->SetGraphicsRootConstantBufferView(1, optionResource_->GetGPUVirtualAddress());
 }
 
-void BoxFilter::OnResizeBefore()
+void RandomFilter::OnResizeBefore()
 {
     SRVManager::GetInstance()->Deallocate(srvHeapIndex_);
     renderTexture_.resource.Reset();
     renderTexture_.state = D3D12_RESOURCE_STATE_PRESENT;
 }
 
-void BoxFilter::OnResizedBuffers()
+void RandomFilter::OnResizedBuffers()
 {
     // レンダーテクスチャの生成
     Helper::CreateRenderTexture(pDx12_, device_, renderTexture_, rtvHandleCpu_, rtvHeapIndex_);
-    renderTexture_.resource->SetName(L"BoxFilterRenderTexture");
+    renderTexture_.resource->SetName(L"RandomFilterRenderTexture");
     // レンダーテクスチャのSRVを生成
     Helper::CreateSRV(renderTexture_, rtvHandleGpu_, srvHeapIndex_);
 }
 
-void BoxFilter::ToShaderResourceState()
+void RandomFilter::ToShaderResourceState()
 {
     // レンダーテクスチャをシェーダーリソース状態に変更
     DX12Helper::ChangeStateResource(
@@ -112,39 +128,50 @@ void BoxFilter::ToShaderResourceState()
     );
 }
 
-void BoxFilter::DebugOverlay()
+void RandomFilter::DebugOverlay()
 {
     #ifdef _DEBUG
 
-    bool changed = ImGui::SliderInt("Kernel Size", reinterpret_cast<int*>(&pOption_->kernelSize), 3, 99, "%d", ImGuiSliderFlags_AlwaysClamp);
-    if (changed)
-    {
-        pOption_->kernelSize = (pOption_->kernelSize / 2) * 2 + 1;
-    }
+    ImGui::DragFloat("Seed", &pOption_->seed, 0.01f, FLT_MIN);
+    ImGui::DragFloat("Opacity", &pOption_->opacity, 0.01f, FLT_MIN);
 
-    #endif // _DEBUG
+    #endif //_DEBUG
 }
 
-void BoxFilter::CreateRootSignature()
+void RandomFilter::CreateRootSignature()
 {
     /// RootSignature作成
     D3D12_ROOT_SIGNATURE_DESC descriptionRootSignature{};
     descriptionRootSignature.Flags =
         D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
 
-    RootParameters<2> rootParam = {};
-    rootParam.SetParameter(0, "t0", D3D12_SHADER_VISIBILITY_PIXEL);
-    rootParam.SetParameter(1, "b0", D3D12_SHADER_VISIBILITY_PIXEL);
+    // RootParameter作成。複数設定できるので配列
+    RootParameters<2> rootParameters = {};
+    try
+    {
+        rootParameters
+            .SetParameter(0, "t0", D3D12_SHADER_VISIBILITY_PIXEL)
+            .SetParameter(1, "b0", D3D12_SHADER_VISIBILITY_PIXEL);
+    }
+    catch (const std::exception& _e)
+    {
+        Logger::GetInstance()->LogError(
+            "RandomFilter",
+            __func__,
+            _e.what()
+        );
+    }
 
-    descriptionRootSignature.pParameters = rootParam.GetParams();   // ルートパラメータ配列へのポインタ
-    descriptionRootSignature.NumParameters = rootParam.GetSize();   // 配列の長さ
+    descriptionRootSignature.pParameters = rootParameters.GetParams();                  // ルートパラメータ配列へのポインタ
+    descriptionRootSignature.NumParameters = rootParameters.GetSize();                  // 配列の長さ
 
     StaticSamplerDesc staticSampler = {};
     staticSampler
-        .PresetPointWrap()
-        .SetMaxAnisotropy(16) // 最大異方性を16に設定
-        .SetShaderRegister(0) // シェーダーレジスタ番号を0に設定
-        .SetRegisterSpace(0); // レジスタスペースを0に設定
+        .PresetPointWrap()                                      // Point&Wrapの設定
+        .SetMaxAnisotropy(16)                                   // 最大異方性
+        .SetShaderRegister(0)                                   // サンプラーのレジスタ番号
+        .SetRegisterSpace(0)                                    // レジスタスペース
+        .SetShaderVisibility(D3D12_SHADER_VISIBILITY_PIXEL);    // ピクセルシェーダーで使用
 
     descriptionRootSignature.pStaticSamplers = &staticSampler.Get();
     descriptionRootSignature.NumStaticSamplers = 1;
@@ -156,7 +183,7 @@ void BoxFilter::CreateRootSignature()
     if (FAILED(hr))
     {
         Logger::GetInstance()->LogError(
-            "BoxFilter",
+            "RandomFilter",
             __func__,
             reinterpret_cast<char*>(errorBlob->GetBufferPointer())
         );
@@ -168,7 +195,7 @@ void BoxFilter::CreateRootSignature()
     assert(SUCCEEDED(hr));
 }
 
-void BoxFilter::CreatePipelineStateObject()
+void RandomFilter::CreatePipelineStateObject()
 {
     IDxcUtils* dxcUtils = pDx12_->GetDxcUtils();
     IDxcCompiler3* dxcCompiler = pDx12_->GetDxcCompiler();
@@ -179,7 +206,7 @@ void BoxFilter::CreatePipelineStateObject()
     inputLayoutDesc.NumElements = 0;
 
     /// BlendStateの設定
-    BlendDesc blendDesc = {};
+    BlendDesc blendDesc{};
     blendDesc.Initialize(BlendDesc::BlendModes::Alpha);
 
     /// RasterizerStateの設定
@@ -192,38 +219,37 @@ void BoxFilter::CreatePipelineStateObject()
     /// ShaderをCompileする
     vertexShaderBlob_ = DX12Helper::CompileShader(kVertexShaderPath, L"vs_6_0", dxcUtils, dxcCompiler, includeHandler);
     assert(vertexShaderBlob_ != nullptr);
+
     pixelShaderBlob_ = DX12Helper::CompileShader(kPixelShaderPath, L"ps_6_0", dxcUtils, dxcCompiler, includeHandler);
     assert(pixelShaderBlob_ != nullptr);
 
-    /// PipelineStateObjectの設定
     try
     {
         pso_.SetRootSignature(rootSignature_.Get())
             .SetInputLayout(inputLayoutDesc)
-            .SetVertexShader(vertexShaderBlob_.Get()->GetBufferPointer(), vertexShaderBlob_.Get()->GetBufferSize())
-            .SetPixelShader(pixelShaderBlob_.Get()->GetBufferPointer(), pixelShaderBlob_.Get()->GetBufferSize())
+            .SetVertexShader(vertexShaderBlob_->GetBufferPointer(), vertexShaderBlob_->GetBufferSize())
+            .SetPixelShader(pixelShaderBlob_->GetBufferPointer(), pixelShaderBlob_->GetBufferSize())
             .SetBlendState(blendDesc.Get())
             .SetRasterizerState(rasterizerDesc)
             .SetRenderTargetFormats(1, &renderTexture_.format, DXGI_FORMAT_D24_UNORM_S8_UINT)
             .SetPrimitiveTopologyType(D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE)
-            .SetSampleDesc({ 1, 0 })
+            .SetSampleDesc({ 1, 0 }) // マルチサンプルなし
             .SetSampleMask(D3D12_DEFAULT_SAMPLE_MASK)
             .Build(device_);
     }
     catch (const std::exception& _e)
     {
         Logger::GetInstance()->LogError(
-            "BoxFilter",
+            "RandomFilter",
             __func__,
             _e.what()
         );
-        assert(false);
     }
 
     return;
 }
 
-void BoxFilter::ToRenderTargetState()
+void RandomFilter::ToRenderTargetState()
 {
     // レンダーテクスチャをレンダーターゲット状態に変更
     DX12Helper::ChangeStateResource(
@@ -233,11 +259,11 @@ void BoxFilter::ToRenderTargetState()
     );
 }
 
-void BoxFilter::CreateResourceCBuffer()
+void RandomFilter::CreateResourceCBuffer()
 {
-    optionResource_ = DX12Helper::CreateBufferResource(device_, sizeof(BoxFilterOption));
+    optionResource_ = DX12Helper::CreateBufferResource(device_, sizeof(RandomFilterOption));
     optionResource_->Map(0, nullptr, reinterpret_cast<void**>(&pOption_));
 
-    // 初期化
-    pOption_->kernelSize = 3; // カーネルサイズの初期値
+    pOption_->seed = 0.0f;
+    pOption_->opacity = 1.0f;
 }

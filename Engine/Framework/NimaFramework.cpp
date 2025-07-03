@@ -171,6 +171,7 @@ void NimaFramework::Initialize()
     pPEDepthBasedOutline_   = Helper::PostEffect::CreatePostEffect<DepthBasedOutline>(pDirectX_.get());
     pPERadialBlur_          = Helper::PostEffect::CreatePostEffect<RadialBlur>(pDirectX_.get());
     pPEDissolve_            = Helper::PostEffect::CreatePostEffect<Dissolve>(pDirectX_.get());
+    pPERandomFilter_        = Helper::PostEffect::CreatePostEffect<RandomFilter>(pDirectX_.get());
 
     pPostEffectExecuter_->AddPostEffect(pPEGrayscale_.get())
         .AddPostEffect(pPEVignette_.get())
@@ -179,7 +180,8 @@ void NimaFramework::Initialize()
         .AddPostEffect(pPEPrewittOutline_.get())
         .AddPostEffect(pPEDepthBasedOutline_.get())
         .AddPostEffect(pPERadialBlur_.get())
-        .AddPostEffect(pPEDissolve_.get());
+        .AddPostEffect(pPEDissolve_.get())
+        .AddPostEffect(pPERandomFilter_.get());
 
     /// コマンドリストを追加
     pDirectX_->AddCommandList(pObject3dSystem_->GetCommandList());

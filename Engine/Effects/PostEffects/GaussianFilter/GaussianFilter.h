@@ -22,7 +22,7 @@ class GaussianFilter :
 {
 public:
     void    Initialize() override;
-    void    Release() override;
+    void    Finalize() override;
 
     void    Enable(bool _flag) override;
     bool    Enabled() const override;

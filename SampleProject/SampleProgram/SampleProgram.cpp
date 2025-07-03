@@ -3,6 +3,7 @@
 #include <Features/SceneManager/SceneManager.h>
 #include <Scene/Factory/SceneFactory.h>
 
+
 void SampleProgram::Initialize()
 {
     /// 基底クラスの初期化処理
@@ -23,6 +24,9 @@ void SampleProgram::Initialize()
 
     pTextureManager_->LoadTexture("noise0.png");
     pPEDissolve_->SetTextureResource(pTextureManager_->GetTextureResource("noise0.png"));
+
+    // 計測スタート
+    globalTimer_.Start();
 }
 
 void SampleProgram::Finalize()
@@ -35,6 +39,7 @@ void SampleProgram::Update()
 {
     /// 基底クラスの更新処理
     NimaFramework::Update();
+    pPERandomFilter_->SetSeed(globalTimer_.GetNow<float>() * 0.01f);
 }
 
 void SampleProgram::Draw()

@@ -6,17 +6,20 @@
 
 void Helper::CreateRenderTexture(DirectX12* _pDx12, ID3D12Device* _pDevice, ResourceStateTracker& _resource, D3D12_CPU_DESCRIPTOR_HANDLE& _rtvHandle, uint32_t& _rtvHeapIndex)
 {
+    const auto kFormat = DXGI_FORMAT_R8G8B8A8_UNORM;
+
     _resource.resource = DX12Helper::CreateRenderTextureResource(
         _pDevice,
         WinSystem::clientWidth,
         WinSystem::clientHeight,
-        DXGI_FORMAT_R8G8B8A8_UNORM,
+        kFormat,
         _pDx12->GetEditorBGColor()
     );
+    _resource.format = kFormat;
     _resource.state = D3D12_RESOURCE_STATE_RENDER_TARGET;
 
     D3D12_RENDER_TARGET_VIEW_DESC rtvDesc{};
-    rtvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+    rtvDesc.Format = kFormat;
     rtvDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
 
     if (_rtvHandle.ptr == 0)

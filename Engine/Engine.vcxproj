@@ -198,15 +198,17 @@
     <ClCompile Include="Common\HRESULT_ASSERT.cpp" />
     <ClCompile Include="Core\ConfigManager\ConfigManager.cpp" />
     <ClCompile Include="Core\ConfigManager\ConfigType.cpp" />
-    <ClCompile Include="Core\DirectX12\BlendMode.cpp" />
+    <ClCompile Include="Core\DirectX12\BlendDesc.cpp" />
     <ClCompile Include="Core\DirectX12\DirectX12.cpp" />
     <ClCompile Include="Core\DirectX12\DirectX12_Impl.cpp" />
     <ClCompile Include="Core\DirectX12\Framerate.cpp" />
     <ClCompile Include="Core\DirectX12\Helper\DX12Helper.cpp" />
+    <ClCompile Include="Core\DirectX12\PipelineStateObject\PipelineStateObject.cpp" />
     <ClCompile Include="Core\DirectX12\PostEffect.cpp" />
     <ClCompile Include="Core\DirectX12\ResourceStateTracker\ResourceStateTracker.cpp" />
     <ClCompile Include="Core\DirectX12\RTVHeapCounter.cpp" />
     <ClCompile Include="Core\DirectX12\SRVManager.cpp" />
+    <ClCompile Include="Core\DirectX12\StaticSamplerDesc\StaticSamplerDesc.cpp" />
     <ClCompile Include="Core\DirectX12\TextureManager.cpp" />
     <ClCompile Include="Core\DirectX12\TextureResource\TextureResource.cpp" />
     <ClCompile Include="Core\Win32\WinSystem.cpp" />
@@ -224,6 +226,7 @@
     <ClCompile Include="Effects\PostEffects\Grayscale\Grayscale.cpp" />
     <ClCompile Include="Effects\PostEffects\PrewittOutline\PrewittOutline.cpp" />
     <ClCompile Include="Effects\PostEffects\RadialBlur\RadialBlur.cpp" />
+    <ClCompile Include="Effects\PostEffects\RandomFilter\RandomFilter.cpp" />
     <ClCompile Include="Effects\PostEffects\Vignette\Vignette.cpp" />
     <ClCompile Include="Externals\Timer\Timer.cpp" />
     <ClCompile Include="Features\Audio\Audio.cpp" />
@@ -281,15 +284,18 @@
     <ClInclude Include="Common\structs.h" />
     <ClInclude Include="Core\ConfigManager\ConfigManager.h" />
     <ClInclude Include="Core\ConfigManager\ConfigType.h" />
-    <ClInclude Include="Core\DirectX12\BlendMode.h" />
+    <ClInclude Include="Core\DirectX12\BlendDesc.h" />
     <ClInclude Include="Core\DirectX12\DirectX12.h" />
     <ClInclude Include="Core\DirectX12\Framerate.h" />
     <ClInclude Include="Core\DirectX12\Helper\DX12Helper.h" />
+    <ClInclude Include="Core\DirectX12\PipelineStateObject\PipelineStateObject.h" />
     <ClInclude Include="Core\DirectX12\PostEffect.h" />
     <ClInclude Include="Core\DirectX12\IPostEffect.h" />
     <ClInclude Include="Core\DirectX12\ResourceStateTracker\ResourceStateTracker.h" />
+    <ClInclude Include="Core\DirectX12\RootParameters\RootParameters.h" />
     <ClInclude Include="Core\DirectX12\RTVHeapCounter.h" />
     <ClInclude Include="Core\DirectX12\SRVManager.h" />
+    <ClInclude Include="Core\DirectX12\StaticSamplerDesc\StaticSamplerDesc.h" />
     <ClInclude Include="Core\DirectX12\TextureManager.h" />
     <ClInclude Include="Core\DirectX12\TextureResource\TextureResource.h" />
     <ClInclude Include="Core\Localization\LanguageData.h" />
@@ -308,6 +314,7 @@
     <ClInclude Include="Effects\PostEffects\Grayscale\Grayscale.h" />
     <ClInclude Include="Effects\PostEffects\PrewittOutline\PrewittOutline.h" />
     <ClInclude Include="Effects\PostEffects\RadialBlur\RadialBlur.h" />
+    <ClInclude Include="Effects\PostEffects\RandomFilter\RandomFilter.h" />
     <ClInclude Include="Effects\PostEffects\Vignette\Vignette.h" />
     <ClInclude Include="Externals\Timer\Timer.h" />
     <ClInclude Include="Features\Audio\Audio.h" />
@@ -377,6 +384,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </None>
     <None Include="ClassDiagram.cd" />
+    <None Include="Core\DirectX12\RootParameters\RootParameters.inl" />
     <None Include="EngineResources\Shaders\Line.hlsli">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_ASAN|x64'">true</ExcludedFromBuild>
@@ -529,6 +537,16 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="EngineResources\Shaders\RadialBlur.VS.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_ASAN|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="EngineResources\Shaders\RandomFilter.PS.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_ASAN|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="EngineResources\Shaders\RandomFilter.VS.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_ASAN|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>

@@ -58,9 +58,6 @@
     <Filter Include="Core\DirectX12">
       <UniqueIdentifier>{55c061c3-927c-45ed-a4ab-5d06972fc5bb}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Core\DirectX12\BlendMode">
-      <UniqueIdentifier>{fb9d6f31-4fb9-4701-bd6d-64c85dfa071b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Core\DirectX12\FPS">
       <UniqueIdentifier>{88cff5bd-cd25-4ccd-9324-62389d1650c2}</UniqueIdentifier>
     </Filter>
@@ -277,6 +274,21 @@
     <Filter Include="Utility\Debug">
       <UniqueIdentifier>{ce80308a-e3cc-4688-a1a9-2d23bb82709a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Core\DirectX12\BlendDesc">
+      <UniqueIdentifier>{fb9d6f31-4fb9-4701-bd6d-64c85dfa071b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\DirectX12\StaticSamplerDesc">
+      <UniqueIdentifier>{cbbf766d-c801-48d4-9cc5-72f739ab46c2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\DirectX12\PipelineStateObject">
+      <UniqueIdentifier>{5e8625a2-f1ce-4256-9e8d-35b424832bf4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\DirectX12\RootParameters">
+      <UniqueIdentifier>{4681c9cf-3bf7-4cb6-b1d4-0e3766e651b9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Effect\PostEffect\RandomFilter">
+      <UniqueIdentifier>{3d98c8fa-48b9-4be5-a62e-40363c273462}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DebugTools\DebugManager\DebugManager.cpp">
@@ -285,8 +297,8 @@
     <ClCompile Include="DebugTools\ImGuiTemplates\ImGuiTemplates.cpp">
       <Filter>DebugTools\Templates</Filter>
     </ClCompile>
-    <ClCompile Include="Core\DirectX12\BlendMode.cpp">
-      <Filter>Core\DirectX12\BlendMode</Filter>
+    <ClCompile Include="Core\DirectX12\BlendDesc.cpp">
+      <Filter>Core\DirectX12\BlendDesc</Filter>
     </ClCompile>
     <ClCompile Include="Core\DirectX12\Framerate.cpp">
       <Filter>Core\DirectX12\FPS</Filter>
@@ -513,6 +525,15 @@
     <ClCompile Include="Utility\String\strutl.cpp">
       <Filter>Utility\String</Filter>
     </ClCompile>
+    <ClCompile Include="Core\DirectX12\StaticSamplerDesc\StaticSamplerDesc.cpp">
+      <Filter>Core\DirectX12\StaticSamplerDesc</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\DirectX12\PipelineStateObject\PipelineStateObject.cpp">
+      <Filter>Core\DirectX12\PipelineStateObject</Filter>
+    </ClCompile>
+    <ClCompile Include="Effects\PostEffects\RandomFilter\RandomFilter.cpp">
+      <Filter>Effect\PostEffect\RandomFilter</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common\define.h">
@@ -527,8 +548,8 @@
     <ClInclude Include="DebugTools\ImGuiTemplates\ImGuiTemplates.h">
       <Filter>DebugTools\Templates</Filter>
     </ClInclude>
-    <ClInclude Include="Core\DirectX12\BlendMode.h">
-      <Filter>Core\DirectX12\BlendMode</Filter>
+    <ClInclude Include="Core\DirectX12\BlendDesc.h">
+      <Filter>Core\DirectX12\BlendDesc</Filter>
     </ClInclude>
     <ClInclude Include="Core\DirectX12\Framerate.h">
       <Filter>Core\DirectX12\FPS</Filter>
@@ -797,6 +818,18 @@
     <ClInclude Include="Utility\Debug\dbgutl.h">
       <Filter>Utility\Debug</Filter>
     </ClInclude>
+    <ClInclude Include="Core\DirectX12\StaticSamplerDesc\StaticSamplerDesc.h">
+      <Filter>Core\DirectX12\StaticSamplerDesc</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\DirectX12\PipelineStateObject\PipelineStateObject.h">
+      <Filter>Core\DirectX12\PipelineStateObject</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\DirectX12\RootParameters\RootParameters.h">
+      <Filter>Core\DirectX12\RootParameters</Filter>
+    </ClInclude>
+    <ClInclude Include="Effects\PostEffects\RandomFilter\RandomFilter.h">
+      <Filter>Effect\PostEffect\RandomFilter</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
@@ -817,6 +850,9 @@
       <Filter>HLSL\PostEffect</Filter>
     </None>
     <None Include="ClassDiagram.cd" />
+    <None Include="Core\DirectX12\RootParameters\RootParameters.inl">
+      <Filter>Core\DirectX12\RootParameters</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="EngineResources\Shaders\Line.VS.hlsl">
@@ -901,6 +937,12 @@
       <Filter>HLSL\PostEffect</Filter>
     </FxCompile>
     <FxCompile Include="EngineResources\Shaders\Dissolve.VS.hlsl">
+      <Filter>HLSL\PostEffect</Filter>
+    </FxCompile>
+    <FxCompile Include="EngineResources\Shaders\RandomFilter.VS.hlsl">
+      <Filter>HLSL\PostEffect</Filter>
+    </FxCompile>
+    <FxCompile Include="EngineResources\Shaders\RandomFilter.PS.hlsl">
       <Filter>HLSL\PostEffect</Filter>
     </FxCompile>
   </ItemGroup>

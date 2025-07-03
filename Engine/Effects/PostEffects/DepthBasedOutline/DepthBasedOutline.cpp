@@ -73,7 +73,7 @@ void DepthBasedOutline::Apply()
     DX12Helper::ChangeStateResource(commandList_, *dsResource, D3D12_RESOURCE_STATE_DEPTH_WRITE);
 }
 
-void DepthBasedOutline::Release()
+void DepthBasedOutline::Finalize()
 {
 }
 
