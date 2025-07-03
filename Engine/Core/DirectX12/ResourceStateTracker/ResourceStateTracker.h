@@ -6,6 +6,7 @@ struct ResourceStateTracker
 {
     Microsoft::WRL::ComPtr<ID3D12Resource> resource;
     D3D12_RESOURCE_STATES state;
+    DXGI_FORMAT format;
 
     void Reset();
 };

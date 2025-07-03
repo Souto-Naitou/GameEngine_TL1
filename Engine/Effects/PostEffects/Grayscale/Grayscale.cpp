@@ -55,7 +55,7 @@ void Grayscale::Apply()
     commandList_->DrawInstanced(3, 1, 0, 0); // 三角形を1つ描画
 }
 
-void Grayscale::Release()
+void Grayscale::Finalize()
 {
 }
 

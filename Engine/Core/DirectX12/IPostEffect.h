@@ -13,9 +13,10 @@ public:
     virtual ~IPostEffect() = default;
 
     // Initialize the post effect
+    // Please use the "Helper::PostEffect::CreatePostEffect" function to create an instance.
     virtual void    Initialize() = 0;
     // Release resources
-    virtual void    Release() = 0;
+    virtual void    Finalize() = 0;
 
     virtual void    Enable(bool _flag) = 0;
     virtual bool    Enabled() const = 0;

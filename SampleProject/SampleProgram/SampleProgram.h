@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Framework/NimaFramework.h>
+#include <Timer/Timer.h>
 
 class SampleProgram : public NimaFramework
 {
@@ -32,5 +33,5 @@ public:
 
 
 private: /// ゲーム内オブジェクト
-
+    Timer globalTimer_;     // !< グローバルタイマー
 };

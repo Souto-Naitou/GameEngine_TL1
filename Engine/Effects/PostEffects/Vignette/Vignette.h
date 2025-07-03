@@ -6,6 +6,7 @@
 #include <dxcapi.h>
 #include <Core/DirectX12/DirectX12.h>
 #include <Core/DirectX12/ResourceStateTracker/ResourceStateTracker.h>
+#include <Core/DirectX12/PipelineStateObject/PipelineStateObject.h>
 #include <Vector4.h>
 #include <Vector3.h>
 
@@ -27,7 +28,7 @@ public:
 
 public:
     void    Initialize() override;
-    void    Release() override;
+    void    Finalize() override;
 
     void    Enable(bool _flag) override;
     bool    Enabled() const override;
@@ -61,7 +62,7 @@ private:
     ResourceStateTracker                                renderTexture_          = {};
     Microsoft::WRL::ComPtr<IDxcBlob>                    vertexShaderBlob_       = nullptr;
     Microsoft::WRL::ComPtr<IDxcBlob>                    pixelShaderBlob_        = nullptr;
-    Microsoft::WRL::ComPtr<ID3D12PipelineState>         pso_                    = nullptr;
+    PipelineStateObject                                 pso_                    = {};
     Microsoft::WRL::ComPtr<ID3D12RootSignature>         rootSignature_          = nullptr;
     D3D12_CPU_DESCRIPTOR_HANDLE                         rtvHandleCpu_           = {};
     D3D12_GPU_DESCRIPTOR_HANDLE                         rtvHandleGpu_           = {};
