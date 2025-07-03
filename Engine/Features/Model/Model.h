@@ -1,5 +1,7 @@
 #pragma once
 
+#include "./IModel.h"
+
 #include <Common/structs.h>
 #include <d3d12.h>
 #include <wrl.h>
@@ -12,15 +14,18 @@
 struct Material;
 struct VertexData;
 
-class Model : public EngineFeature
+class Model : 
+    public IModel,
+    public EngineFeature
 {
 public:
     // Common functions
     ~Model();
+    void    Initialize() override;
+    void    Update() override;
+    void    Draw() override;
     void    Initialize(const std::string& _filePath);
     void    Initialize(const std::string& _modelPath, const std::string& _texturePath);
-    void    Update();
-    void    Draw(ID3D12GraphicsCommandList* _commandList);
     void    Upload();
 
     // Getter

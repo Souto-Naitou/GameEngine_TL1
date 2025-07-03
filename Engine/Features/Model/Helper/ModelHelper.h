@@ -5,7 +5,7 @@
 struct ModelData;
 struct MaterialData;
 
-namespace ModelHelper
+namespace Helper::Model
 {
     ModelData LoadObjFile(const std::string& _directoryPath, const std::string& _filename, const std::string& _texturePath = {});
 

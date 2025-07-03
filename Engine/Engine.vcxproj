@@ -113,7 +113,8 @@
       <AdditionalIncludeDirectories>$(ProjectDir)Resources\Shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </FxCompile>
     <Lib>
-      <AdditionalDependencies>$(ProjectDir)Externals\WinTools\$(Configuration)\WinTools.lib;$(ProjectDir)Externals\Network\$(Configuration)\Network.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>WinTools\$(Configuration)\WinTools.lib;Network\$(Configuration)\Network.lib;Assimp\lib\$(Configuration)\assimp-vc143.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(ProjectDir)Externals\</AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_ASAN|x64'">
@@ -150,7 +151,8 @@
       <AdditionalIncludeDirectories>$(ProjectDir)Resources\Shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </FxCompile>
     <Lib>
-      <AdditionalDependencies>$(ProjectDir)Externals\WinTools\$(Configuration)\WinTools.lib;$(ProjectDir)Externals\Network\$(Configuration)\Network.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>WinTools\$(Configuration)\WinTools.lib;Network\$(Configuration)\Network.lib;Assimp\lib\$(Configuration)\assimp-vc143.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(ProjectDir)Externals\</AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -190,7 +192,8 @@
       <AdditionalIncludeDirectories>$(ProjectDir)Resources\Shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </FxCompile>
     <Lib>
-      <AdditionalDependencies>$(ProjectDir)Externals\WinTools\$(Configuration)\WinTools.lib;$(ProjectDir)Externals\Network\$(Configuration)\Network.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>WinTools\$(Configuration)\WinTools.lib;Network\$(Configuration)\Network.lib;Assimp\lib\$(Configuration)\assimp-vc143.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(ProjectDir)Externals\</AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -247,6 +250,7 @@
     <ClCompile Include="Features\Line\LineSystem.cpp" />
     <ClCompile Include="Features\Model\Helper\ModelHelper.cpp" />
     <ClCompile Include="Features\Model\Model.cpp" />
+    <ClCompile Include="Features\Model\ModelLoader.cpp" />
     <ClCompile Include="Features\Model\ModelManager.cpp" />
     <ClCompile Include="Features\NiGui\NiGuiDebug.cpp" />
     <ClCompile Include="Features\NiGui\NiGuiDrawer.cpp" />
@@ -338,8 +342,11 @@
     <ClInclude Include="Features\Line\LineSystem.h" />
     <ClInclude Include="Features\Line\Manager\LineManager.h" />
     <ClInclude Include="Features\Model\Helper\ModelHelper.h" />
+    <ClInclude Include="Features\Model\IModel.h" />
     <ClInclude Include="Features\Model\Model.h" />
+    <ClInclude Include="Features\Model\ModelLoader.h" />
     <ClInclude Include="Features\Model\ModelManager.h" />
+    <ClInclude Include="Features\Model\ModelStorage.h" />
     <ClInclude Include="Features\NiGui\NiGuiDebug.h" />
     <ClInclude Include="Features\NiGui\NiGuiDrawer.h" />
     <ClInclude Include="Features\Object3d\Object3d.h" />

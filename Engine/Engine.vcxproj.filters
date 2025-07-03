@@ -289,6 +289,9 @@
     <Filter Include="Effect\PostEffect\RandomFilter">
       <UniqueIdentifier>{3d98c8fa-48b9-4be5-a62e-40363c273462}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Feature\Model\Loader">
+      <UniqueIdentifier>{80b8eb5c-4876-4a3e-9661-2b772e2ade41}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DebugTools\DebugManager\DebugManager.cpp">
@@ -533,6 +536,9 @@
     </ClCompile>
     <ClCompile Include="Effects\PostEffects\RandomFilter\RandomFilter.cpp">
       <Filter>Effect\PostEffect\RandomFilter</Filter>
+    </ClCompile>
+    <ClCompile Include="Features\Model\ModelLoader.cpp">
+      <Filter>Feature\Model\Loader</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -829,6 +835,15 @@
     </ClInclude>
     <ClInclude Include="Effects\PostEffects\RandomFilter\RandomFilter.h">
       <Filter>Effect\PostEffect\RandomFilter</Filter>
+    </ClInclude>
+    <ClInclude Include="Features\Model\IModel.h">
+      <Filter>Feature\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Features\Model\ModelStorage.h">
+      <Filter>Feature\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Features\Model\ModelLoader.h">
+      <Filter>Feature\Model\Loader</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
