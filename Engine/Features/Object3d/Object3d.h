@@ -6,7 +6,7 @@
 #include <d3d12.h>
 #include <string>
 #include <Common/structs.h>
-#include <Features/Model/Model.h>
+#include <Features/Model/IModel.h>
 #include <Common/define.h>
 #include <Features/GameEye/GameEye.h>
 #include <Features/Lighting/PointLight/PointLight.h>
@@ -29,7 +29,7 @@ public:
     /// <summary>
     /// 初期化
     /// </summary>
-    void Initialize(const std::string& _filePath, bool _enableDebugWindow = true);
+    void Initialize(bool _enableDebugWindow = true);
 
     /// <summary>
     /// 更新
@@ -39,7 +39,7 @@ public:
     /// <summary>
     /// 描画
     /// </summary>
-    void Draw();
+    void Draw(IModel* _pModel);
 
     /// <summary>
     /// 終了処理
@@ -59,7 +59,6 @@ public: /// Setter
     void SetRotate(const Vector3& _rotate)                      { transform_.rotate = _rotate; }
     void SetTranslate(const Vector3& _translate)                { transform_.translate = _translate; }
     void SetColor(const Vector4& _color)                        { materialData_->color = _color; }
-    void SetModel(Model* _pModel)                               { pModel_ = _pModel; }
     void SetGameEye(GameEye* _pGameEye)                         { pGameEye_ = _pGameEye; }
     void SetName(const std::string& _name)                      { name_ = _name; }
     void SetTilingMultiply(const Vector2& _tilingMultiply)      { tilingData_->tilingMultiply = _tilingMultiply; }
@@ -99,7 +98,6 @@ private: /// メンバ変数
 
     bool                                            isEnableLighting_               = true;
 
-    Model*                                          pModel_                         = nullptr;
     std::string                                     modelPath_                      = {};
     GameEye*                                        pGameEye_                       = nullptr;
     GameEye**                                       ppSystemGameEye_                = nullptr;

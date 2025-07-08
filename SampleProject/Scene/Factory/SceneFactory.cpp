@@ -9,16 +9,16 @@
 
 #include <cassert>
 
-#define JUDGE_SCENE(class) if (_sceneName == #class) { return std::make_unique<class>(); }
+#define JUDGE_SCENE(class, arg) if (_sceneName == #class) { return std::make_unique<class>(arg); }
 
-std::unique_ptr<IScene> SceneFactory::CreateScene(const std::string & _sceneName)
+std::unique_ptr<SceneBase> SceneFactory::CreateScene(const std::string & _sceneName, ISceneArgs* _pArgs)
 {
-    JUDGE_SCENE(InstancingScene)
-    else JUDGE_SCENE(GameScene)
-    else JUDGE_SCENE(CG3PT2)
-    else JUDGE_SCENE(DepthScene)
-    else JUDGE_SCENE(PG3PT1)
-    else JUDGE_SCENE(CG4Task1)
+    JUDGE_SCENE(InstancingScene, _pArgs)
+    else JUDGE_SCENE(GameScene, _pArgs)
+    else JUDGE_SCENE(CG3PT2, _pArgs)
+    else JUDGE_SCENE(DepthScene, _pArgs)
+    else JUDGE_SCENE(PG3PT1, _pArgs)
+    else JUDGE_SCENE(CG4Task1, _pArgs)
 
     assert(false && "シーンの生成に失敗しました");
 

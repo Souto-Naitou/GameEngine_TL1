@@ -1,60 +1,96 @@
 #include "ModelManager.h"
-
+#include <stdexcept>
+#include <Utility/String/strutl.h>
 #include <Core/ConfigManager/ConfigManager.h>
-#include <filesystem>
-#include <algorithm>
-#include <cctype>
 
 void ModelManager::Initialize()
 {
-
+    // Configに記述されているフォルダの追加
+    auto& cfgData = ConfigManager::GetInstance()->GetConfigData();
+    for (auto& path : cfgData.model_paths)
+    {
+        this->AddLoadPath(path);
+        this->AddSearchPath(path);
+    }
 }
 
-
-
-Model* ModelManager::FindModel(const std::string& _filePath)
+void ModelManager::SetModelLoader(IModelLoader* _loader)
 {
-    std::string fullpath = GetDirectoryPath(_filePath);
-    if (fullpath.empty()) fullpath = _filePath;
-    else fullpath += "/" + _filePath;
-
-    auto lowerFullPath = GetLowerPath(fullpath);
-
-    Model* result = nullptr;
-
-    for ( auto& model : models_ )
+    if (_loader != nullptr)
     {
-        auto lowerModelPath = GetLowerPath(model.first.string());
-        if ( lowerModelPath == lowerFullPath )
+        pModelLoader_ = _loader;
+    }
+    else
+    {
+        throw std::invalid_argument("Model loader cannot be null");
+    }
+}
+
+void ModelManager::SetModelStorage(ModelStorage* _storage)
+{
+    if (_storage != nullptr)
+    {
+        pModelStorage_ = _storage;
+    }
+    else
+    {
+        throw std::invalid_argument("Model storage cannot be null");
+    }
+}
+
+void ModelManager::AddLoadPath(const std::string& _path)
+{
+    auto lowerPath = utl::string::to_lower(_path);
+
+    for (const auto& path : loadPaths_)
+    {
+        if (path == lowerPath)
         {
-            result = model.second.get();
-            break;
+            // The path already exists, no need to add it again
+            return;
         }
     }
 
-    return result;
+    loadPaths_.push_back(lowerPath);
 }
 
-std::filesystem::path ModelManager::GetLowerPath(const std::string& _path)
+void ModelManager::AddSearchPath(const std::string& _path)
 {
-    std::filesystem::path result = _path;
-    std::string str = _path;
-
-    std::transform(str.begin(), str.end(), str.begin(),
-        [](unsigned char c) -> char {
-        return static_cast<char>(std::tolower(c));
-    });
-
-    result = str;
-
-    return result;
+    auto lowerPath = utl::string::to_lower(_path);
+    pathResolver_.AddSearchPath(lowerPath);
 }
 
-void ModelManager::Update()
+int ModelManager::LoadAll()
 {
-    if (!uploadQueue_.empty())
+    int count = 0;
+    for (const auto& path : loadPaths_)
     {
-        uploadQueue_.front()->Upload();
-        uploadQueue_.pop();
+        for (auto itr = std::filesystem::recursive_directory_iterator(path, std::filesystem::directory_options::skip_permission_denied);
+            itr != std::filesystem::recursive_directory_iterator();
+            ++itr)
+        {
+            std::filesystem::path objPath = itr->path();
+            if (objPath.extension() != ".obj")
+            {
+                continue;
+            }
+            this->Load(objPath.string());
+            ++count;
+        }
     }
+
+    return count;
+}
+
+IModel* ModelManager::Load(const std::string& _path)
+{
+    auto resolvedPath = pathResolver_.GetFilePath(_path);
+    auto model = pModelLoader_->LoadModel(resolvedPath);
+
+    if (model == nullptr)
+    {
+        throw std::runtime_error("Failed to load model from path: " + resolvedPath);
+    }
+
+    return pModelStorage_->AddModel(resolvedPath, std::move(model));
 }

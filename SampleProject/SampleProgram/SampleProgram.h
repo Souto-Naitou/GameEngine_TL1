@@ -2,6 +2,9 @@
 
 #include <Framework/NimaFramework.h>
 #include <Timer/Timer.h>
+#include <Features/Model/Loader/ModelLoader.h>
+#include <Features/Model/ModelStorage.h>
+#include <Features/Model/ModelManager.h>
 
 class SampleProgram : public NimaFramework
 {
@@ -34,4 +37,7 @@ public:
 
 private: /// ゲーム内オブジェクト
     Timer globalTimer_;     // !< グローバルタイマー
+    std::unique_ptr<ModelLoader> pModelLoader_ = nullptr; // !< モデルローダー
+    std::unique_ptr<ModelStorage> pModelStorage_ = nullptr; // !< モデルストレージ
+    std::unique_ptr<ModelManager> pModelManager_ = nullptr; // !< モデルマネージャー
 };

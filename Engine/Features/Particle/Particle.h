@@ -2,7 +2,6 @@
 
 #include <Core/DirectX12/DirectX12.h>
 #include <Common/structs.h>
-#include <Features/Model/Model.h>
 #include "ParticleSystem.h"
 #include <wrl/client.h>
 #include <vector>
@@ -13,13 +12,14 @@
 #include <Vector3.h>
 #include "./Type/ParticleType.h"
 #include "./Emitter/EmitterData.h"
+#include <Features/Model/IModel.h>
 
 class Particle : public EngineFeature
 {
 public:
     Particle() = default;
 
-    void Initialize(const std::string& _filepath, const std::string& _texturePath = {});
+    void Initialize(IModel* _pModel);
     void Draw();
     void Update();
     void Finalize();
@@ -57,8 +57,8 @@ private:
 
     /// Model
     std::string                             modelPath_                          = {};
-    Model*                                  pModel_                             = nullptr;
-    ModelData*                              pModelData_                         = nullptr;
+    IModel*                                 pModel_                             = nullptr;
+    size_t                                  vertexCount_                        = 0u;
     D3D12_VERTEX_BUFFER_VIEW                vertexBufferView_                   = {};
 
     /// SRV

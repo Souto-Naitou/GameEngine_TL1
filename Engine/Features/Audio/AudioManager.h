@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Audio.h"
-#include <Utility/FilePathSearcher/FilePathSearcher.h>
+#include <Utility/PathResolver/PathResolver.h>
 #include <map>
 #include <list>
 #include <string>
@@ -41,7 +41,7 @@ private:
     Microsoft::WRL::ComPtr<IXAudio2> pXAudio2_;
     IXAudio2MasteringVoice* pMasteringVoice_ = nullptr;
     std::map<std::string, SoundData> soundDataMap_;
-    std::unique_ptr<FilePathSearcher> pFilePathSearcher_ = nullptr;
+    std::unique_ptr<PathResolver> pFilePathSearcher_ = nullptr;
 
     std::list<IXAudio2SourceVoice*> sourceVoices_;
 

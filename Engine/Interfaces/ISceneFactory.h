@@ -1,9 +1,10 @@
 #pragma once
 
-#include "IScene.h"
+#include <Scene/SceneBase.h>
 #include <string>
 
 #include <memory>
+#include "./ISceneArgs.h"
 
 /// <summary>
 /// シーンファクトリ インターフェース
@@ -13,19 +14,5 @@ class ISceneFactory
 public:
     virtual ~ISceneFactory() = default;
 
-    virtual std::unique_ptr<IScene> CreateScene(const std::string& _sceneName) = 0;
+    virtual std::unique_ptr<SceneBase> CreateScene(const std::string& _sceneName, ISceneArgs* _pArgs) = 0;
 };
-
-#define CREATE_SCENE_FACTORY(classname) \
-class classname : public ISceneFactory \
-{ \
-public: \
-    SceneFactory() = default; \
-    std::unique_ptr<IScene> CreateScene(const std::string& _sceneName) override; \
-};
-
-#define JUDGE_SCENE_NAME(class) \
-if (_sceneName == #class) \
-{ \
-    return std::make_unique<class>(); \
-}

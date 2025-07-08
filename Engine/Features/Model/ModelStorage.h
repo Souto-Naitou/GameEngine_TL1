@@ -7,27 +7,20 @@
 
 // 読み込み済みモデル保持クラス
 // - ファイルから一度読み込んだモデルのデータを保持するクラス
-// - 自動読み込みに対応
 class ModelStorage
 {
-    /// <summary>
-    /// 自動読み込みパスを追加
-    /// </summary>
-    /// <param name="_path">パス</param>
-    void AddAutoLoadPath(const std::string& _path);
-
-    /// <summary>
-    /// 全てのモデルデータを読み込む
-    /// </summary>
-    void LoadAllModel();
-
+public:
     /// <summary>
     /// モデルデータを取得
     /// </summary>
     /// <param name="_filePath">ファイルパス</param>
     /// <returns>モデルデータ</returns>
-    IModel* FindModel(const std::string& _filePath);
+    IModel* FindModel(const std::string& _path);
+
+    bool IsLoaded(const std::filesystem::path& _path);
+
+    IModel* AddModel(const std::filesystem::path& _path, std::shared_ptr<IModel> _model);
 
 private:
-    std::unordered_map<std::filesystem::path, std::unique_ptr<IModel>> models_;
+    std::unordered_map<std::filesystem::path, std::shared_ptr<IModel>> models_;
 };

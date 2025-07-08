@@ -21,7 +21,7 @@ public:
     ParticleEmitter() = default;
     ~ParticleEmitter() = default;
 
-    void Initialize(const std::string& _modelPath, const std::string& _texturePath = {}, const std::string& _jsonPath = {});
+    void Initialize(IModel* _pModel, const std::string& _jsonPath = {});
     void EnableManualMode();
     void DisableManualMode();
     void Update();

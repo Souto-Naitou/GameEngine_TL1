@@ -1,8 +1,8 @@
 #pragma once
 
-#include <Interfaces/IScene.h>
+#include <Scene/SceneBase.h>
 
-class EmptyScene : public IScene
+class EmptyScene : public SceneBase
 {
 public:
     EmptyScene() = default;
@@ -13,8 +13,6 @@ public:
     void Update() override;
     void Draw2dBackGround() override;
     void Draw3d() override;
-    void Draw2dMidground() override;
-    void Draw3dMidground() override;
     void DrawLine() override;
     void Draw2dForeground() override;
     void DrawTexts() override;

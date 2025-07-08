@@ -4,11 +4,11 @@
 #include <filesystem>
 #include <vector>
 
-class FilePathSearcher
+class PathResolver
 {
 public:
-    FilePathSearcher() = default;
-    ~FilePathSearcher() = default;
+    PathResolver() = default;
+    ~PathResolver() = default;
 
     void Initialize();
     void Finalize();

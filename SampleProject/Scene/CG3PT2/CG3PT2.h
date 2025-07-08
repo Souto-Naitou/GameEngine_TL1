@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Interfaces/IScene.h>
+#include <Scene/SceneBase.h>
 #include <Features/Object3d/Object3d.h>
 #include <Features/GameEye/GameEye.h>
 #include <Features/Text/Text.h>
@@ -11,10 +11,10 @@
 #include <memory>
 #include <string>
 
-class CG3PT2 : public IScene
+class CG3PT2 : public SceneBase
 {
 public:
-    CG3PT2() = default;
+    CG3PT2(ISceneArgs* pArgs_) : SceneBase(pArgs_) {}
     ~CG3PT2() = default;
 
     void Initialize() override;
@@ -22,8 +22,6 @@ public:
     void Update() override;
     void Draw2dBackGround() override;
     void Draw3d() override;
-    void Draw2dMidground() override;
-    void Draw3dMidground() override;
     void DrawLine() override;
     void Draw2dForeground() override;
     void DrawTexts() override;
@@ -35,6 +33,8 @@ private:
     DirectionalLight            directionalLight_       = {};
     PointLight                  pointLight_             = {};
 
+    IModel*                     pModelMonsterBall_      = nullptr;
+    IModel*                     pModelGrid_             = nullptr;
     std::unique_ptr<Object3d>   pMonsterBall_           = nullptr;
     std::unique_ptr<Object3d>   pGrid_                  = nullptr;
 
@@ -50,4 +50,5 @@ private:
 private:
     void DebugWindow();
 
+    ModelManager* pModelManager_ = nullptr;
 };

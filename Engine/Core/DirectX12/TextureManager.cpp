@@ -19,7 +19,7 @@ void TextureManager::Initialize(SRVManager* _srvManager)
 
 void TextureManager::LoadTexture(const std::string& _filePath)
 {
-    std::string fullPath = filePathSearcher_.GetFilePath(_filePath);
+    std::string fullPath = pathResolver_.GetFilePath(_filePath);
 
     /// すでに読み込まれている場合は読み込まない
     if (textureDataMap_.contains(fullPath))
@@ -72,28 +72,28 @@ void TextureManager::LoadTexture(const std::string& _filePath)
 
 D3D12_GPU_DESCRIPTOR_HANDLE TextureManager::GetSrvHandleGPU(const std::string& _filePath)
 {
-    std::string fullPath = filePathSearcher_.GetFilePath(_filePath);
+    std::string fullPath = pathResolver_.GetFilePath(_filePath);
     const TextureData& textureData = textureDataMap_[fullPath];
     return textureData.textureResource.GetSRVHandleGPU();
 }
 
 const TextureResource& TextureManager::GetTextureResource(const std::string& _filePath)
 {
-    std::string fullPath = filePathSearcher_.GetFilePath(_filePath);
+    std::string fullPath = pathResolver_.GetFilePath(_filePath);
     const TextureData& textureData = textureDataMap_[fullPath];
     return textureData.textureResource;
 }
 
 const DirectX::TexMetadata& TextureManager::GetMetaData(const std::string& _filePath)
 {
-    std::string fullPath = filePathSearcher_.GetFilePath(_filePath);
+    std::string fullPath = pathResolver_.GetFilePath(_filePath);
     const TextureData& textureData = textureDataMap_[fullPath];
     return textureData.metadata;
 }
 
 uint32_t TextureManager::GetSrvIndex(const std::string& _filePath)
 {
-    std::string fullPath = filePathSearcher_.GetFilePath(_filePath);
+    std::string fullPath = pathResolver_.GetFilePath(_filePath);
     const TextureData& textureData = textureDataMap_[fullPath];
     return textureData.textureResource.GetSRVIndex();
 }

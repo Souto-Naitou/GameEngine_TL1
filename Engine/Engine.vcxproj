@@ -249,9 +249,10 @@
     <ClCompile Include="Features\Line\Line.cpp" />
     <ClCompile Include="Features\Line\LineSystem.cpp" />
     <ClCompile Include="Features\Model\Helper\ModelHelper.cpp" />
-    <ClCompile Include="Features\Model\Model.cpp" />
-    <ClCompile Include="Features\Model\ModelLoader.cpp" />
+    <ClCompile Include="Features\Model\Loader\ModelLoader.cpp" />
+    <ClCompile Include="Features\Model\ModelFromObj.cpp" />
     <ClCompile Include="Features\Model\ModelManager.cpp" />
+    <ClCompile Include="Features\Model\ModelStorage.cpp" />
     <ClCompile Include="Features\NiGui\NiGuiDebug.cpp" />
     <ClCompile Include="Features\NiGui\NiGuiDrawer.cpp" />
     <ClCompile Include="Features\Object3d\Object3d.cpp" />
@@ -272,12 +273,16 @@
     <ClCompile Include="Features\Sprite\SpriteSystem.cpp" />
     <ClCompile Include="Features\Text\Text.cpp" />
     <ClCompile Include="Features\Text\TextSystem.cpp" />
+    <ClCompile Include="Features\ThreadPool\ThreadPool.cpp" />
     <ClCompile Include="Features\Viewport\Viewport.cpp" />
     <ClCompile Include="Framework\NimaFramework.cpp" />
+    <ClCompile Include="Scene\Args\SceneArgs.cpp" />
+    <ClCompile Include="Scene\SceneBase.cpp" />
     <ClCompile Include="Type\Color.cpp" />
     <ClCompile Include="Utility\Debug\dbgutl.cpp" />
-    <ClCompile Include="Utility\FilePathSearcher\FilePathSearcher.cpp" />
+    <ClCompile Include="Utility\FileSystem\fsutl.cpp" />
     <ClCompile Include="Utility\JSONIO\JSONIO.cpp" />
+    <ClCompile Include="Utility\PathResolver\PathResolver.cpp" />
     <ClCompile Include="Utility\String\strutl.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -343,8 +348,9 @@
     <ClInclude Include="Features\Line\Manager\LineManager.h" />
     <ClInclude Include="Features\Model\Helper\ModelHelper.h" />
     <ClInclude Include="Features\Model\IModel.h" />
-    <ClInclude Include="Features\Model\Model.h" />
-    <ClInclude Include="Features\Model\ModelLoader.h" />
+    <ClInclude Include="Features\Model\Loader\IModelLoader.h" />
+    <ClInclude Include="Features\Model\Loader\ModelLoader.h" />
+    <ClInclude Include="Features\Model\ModelFromObj.h" />
     <ClInclude Include="Features\Model\ModelManager.h" />
     <ClInclude Include="Features\Model\ModelStorage.h" />
     <ClInclude Include="Features\NiGui\NiGuiDebug.h" />
@@ -369,18 +375,22 @@
     <ClInclude Include="Features\Sprite\SpriteSystem.h" />
     <ClInclude Include="Features\Text\Text.h" />
     <ClInclude Include="Features\Text\TextSystem.h" />
+    <ClInclude Include="Features\ThreadPool\ThreadPool.h" />
     <ClInclude Include="Features\Viewport\Viewport.h" />
     <ClInclude Include="Framework\NimaFramework.h" />
-    <ClInclude Include="Interfaces\IScene.h" />
+    <ClInclude Include="Interfaces\ISceneArgs.h" />
     <ClInclude Include="Interfaces\ISceneFactory.h" />
+    <ClInclude Include="Scene\Args\SceneArgs.h" />
+    <ClInclude Include="Scene\SceneBase.h" />
     <ClInclude Include="Type\Color.h" />
     <ClInclude Include="Utility\ConvertString\ConvertString.h" />
     <ClInclude Include="Utility\Debug\dbgutl.h" />
     <ClInclude Include="Utility\DIContainer\DIContainer.h" />
-    <ClInclude Include="Utility\FilePathSearcher\FilePathSearcher.h" />
+    <ClInclude Include="Utility\FileSystem\fsutl.h" />
     <ClInclude Include="Utility\JSONConvTypeFuncs\JSONConvTypeFuncs.h" />
     <ClInclude Include="Utility\JSONIO\JSONIO.h" />
     <ClInclude Include="Utility\JSON\jsonutl.h" />
+    <ClInclude Include="Utility\PathResolver\PathResolver.h" />
     <ClInclude Include="Utility\String\strutl.h" />
   </ItemGroup>
   <ItemGroup>

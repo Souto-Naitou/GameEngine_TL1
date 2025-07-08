@@ -1,9 +1,11 @@
 #pragma once
 
-#include <Interfaces/IScene.h>
+#include <Scene/SceneBase.h>
 #include <Interfaces/ISceneFactory.h>
 #include <Features/SceneTransition/SceneTransitionManager.h>
+#include <Features/Model/ModelManager.h>
 #include <memory>
+#include <Interfaces/ISceneArgs.h>
 
 class SceneManager
 {
@@ -21,7 +23,9 @@ public:
 
 
 public: /// Setter
-    void SetSceneFactory(ISceneFactory* _pSceneFactory) { pSceneFactory_ = _pSceneFactory; }
+    void SetSceneFactory(ISceneFactory* _pSceneFactory);
+    void SetSceneArgs(std::unique_ptr<ISceneArgs> _pSceneArgs);
+    void SetModelManager(ModelManager* _pModelManager);
 
 
 public:
@@ -34,8 +38,6 @@ public: /// シーン動作
     void Update();
     void SceneDraw2dBackGround();
     void SceneDraw3d();
-    void SceneDraw2dMidground();
-    void SceneDraw3dMidground();
     void SceneDrawLine();
     void SceneDraw2dForeground();
     void SceneDrawText();
@@ -46,6 +48,7 @@ private:
     SceneManager() = default;
     void ChangeScene();
     void DebugWindow();
+    void PackSceneArgs();
 
     std::string name_ = "SceneManager";
     char buffer[128] = {};
@@ -53,10 +56,12 @@ private:
     bool isReserveScene_ = false;
 
     std::string nextSceneName_;
-    std::unique_ptr<IScene> pCurrentScene_ = nullptr;
+    std::unique_ptr<SceneBase> pCurrentScene_ = nullptr;
+    std::unique_ptr<ISceneArgs> pSceneArgs_ = nullptr;
 
 
 private: /// 他クラスのインスタンス
     ISceneFactory* pSceneFactory_ = nullptr;
     SceneTransitionManager* pSceneTransitionManager_ = nullptr;
+    ModelManager* pModelManager_ = nullptr;
 };

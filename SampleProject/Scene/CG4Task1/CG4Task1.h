@@ -1,7 +1,7 @@
 #pragma once
 
 #include <Features/Input/Input.h>
-#include <Interfaces/IScene.h>
+#include <Scene/SceneBase.h>
 #include <Features/Object3d/Object3d.h>
 #include <Features/GameEye/GameEye.h>
 
@@ -9,17 +9,17 @@
 #include <memory>
 #include <Features/Particle/Emitter/ParticleEmitter.h>
 #include <Features/Text/Text.h>
-#include <string>
+#include <Features/Model/IModel.h>
+#include <Features/Model/ModelManager.h>
 
-class CG4Task1 : public IScene
+class CG4Task1 : public SceneBase
 {
 public:
     /// Common function
+    CG4Task1(ISceneArgs* pArgs_) : SceneBase(pArgs_) {}
     void    Initialize() override;
     void    Finalize() override;
     void    Update() override;
-    void    Draw3dMidground() override;
-    void    Draw2dMidground() override;
     void    DrawLine() override;
     void    Draw3d() override;
     void    Draw2dBackGround() override;
@@ -30,6 +30,9 @@ private:
     // Resources
     std::unique_ptr<GameEye>            pGameEye_           = nullptr;
     std::unique_ptr<Object3d>           pGrid_              = nullptr;
+    std::unique_ptr<IModel>             pModelSpark_        = nullptr;
+    std::unique_ptr<IModel>             pModelCircle_       = nullptr;
+    std::unique_ptr<IModel>             pModelGrid_         = nullptr;
     std::unique_ptr<ParticleEmitter>    pEmitter_Basic_     = nullptr;
     std::unique_ptr<ParticleEmitter>    pEmitter_Stars_     = nullptr;
     std::unique_ptr<ParticleEmitter>    pEmitter_Rain_      = nullptr;
@@ -40,4 +43,5 @@ private:
 
     // Pointers
     Input*  pInput_     = nullptr;
+    ModelManager* pModelManager_ = nullptr;
 };

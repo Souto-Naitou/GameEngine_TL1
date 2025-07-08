@@ -2,7 +2,6 @@
 
 #include <Common/structs.h>
 #include <dxcapi.h>
-#include <Features/Model/Model.h>
 #include <Vector4.h>
 #include <Vector3.h>
 #include <Matrix4x4.h>
@@ -11,6 +10,7 @@
 #include <list> // std::list
 
 #include <BaseClasses/ObjectSystemBase.h>
+#include <Features/Model/IModel.h>
 
 struct Material
 {
@@ -37,7 +37,7 @@ public:
     struct CommandListData
     {
         std::map<UINT, ID3D12Resource*> cbuffers;
-        Model* model = nullptr;
+        IModel* model = nullptr;
     };
 
 public:

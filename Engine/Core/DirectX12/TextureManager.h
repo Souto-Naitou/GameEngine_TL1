@@ -6,7 +6,7 @@
 #include <d3d12.h>
 #include <Core/DirectX12/SRVManager.h>
 #include <unordered_map>
-#include <Utility/FilePathSearcher/FilePathSearcher.h>
+#include <Utility/PathResolver/PathResolver.h>
 #include <Core/DirectX12/TextureResource/TextureResource.h>
 
 class TextureManager : public EngineFeature
@@ -29,7 +29,7 @@ public:
 
 
 public: /// Setter
-    void AddSearchPath(const std::string& _path) { filePathSearcher_.AddSearchPath(_path); }
+    void AddSearchPath(const std::string& _path) { pathResolver_.AddSearchPath(_path); }
 
 
 public: /// Getter
@@ -46,7 +46,7 @@ private:
     };
 
     std::unordered_map<std::string, TextureData> textureDataMap_;
-    FilePathSearcher filePathSearcher_ = {};
+    PathResolver pathResolver_ = {};
 
 private:
     SRVManager* srvManager_ = nullptr;

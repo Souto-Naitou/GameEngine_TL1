@@ -1,20 +1,20 @@
-#include "FilePathSearcher.h"
+#include "./PathResolver.h"
 
 #include <filesystem>
 
 namespace fs = std::filesystem;
 
-void FilePathSearcher::Initialize()
+void PathResolver::Initialize()
 {
     searchPaths_.clear();
 }
 
-void FilePathSearcher::Finalize()
+void PathResolver::Finalize()
 {
     searchPaths_.clear();
 }
 
-void FilePathSearcher::AddSearchPath(const std::string& _path)
+void PathResolver::AddSearchPath(const std::string& _path)
 {
     for (const auto& path : searchPaths_)
     {
@@ -26,7 +26,7 @@ void FilePathSearcher::AddSearchPath(const std::string& _path)
     searchPaths_.push_back(_path);
 }
 
-std::string FilePathSearcher::GetParentPath(const std::string& _fileName)
+std::string PathResolver::GetParentPath(const std::string& _fileName)
 {
     fs::path directoryPath = {};
     if (!fs::exists(_fileName))
@@ -49,7 +49,7 @@ std::string FilePathSearcher::GetParentPath(const std::string& _fileName)
     return directoryPath.string();
 }
 
-std::string FilePathSearcher::GetFilePath(const std::string& _fileName)
+std::string PathResolver::GetFilePath(const std::string& _fileName)
 {
     fs::path filePath = {};
     if (!fs::exists(_fileName))

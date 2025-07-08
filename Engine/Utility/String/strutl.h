@@ -4,18 +4,17 @@
 #include <cstdio>
 #include <cstdint>
 
-namespace utl
+namespace utl::string
 {
-    namespace string
+    template <typename T>
+    inline std::string to_string(const T* _ptr)
     {
-        template <typename T>
-        inline std::string to_string(const T* _ptr)
-        {
-            char buffer[20];
-            std::snprintf(buffer, sizeof(buffer), "%p", static_cast<const void*>(_ptr));
-            return std::string(buffer);
-        }
-
-        uint32_t to_hash(const std::string& _str);
+        char buffer[20];
+        std::snprintf(buffer, sizeof(buffer), "%p", static_cast<const void*>(_ptr));
+        return std::string(buffer);
     }
+
+    uint32_t to_hash(const std::string& _str);
+
+    std::string to_lower(const std::string& _str);
 }

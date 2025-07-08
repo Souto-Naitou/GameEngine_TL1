@@ -7,57 +7,57 @@
 #include <wrl.h>
 #include <string>
 #include <Core/DirectX12/DirectX12.h>
-#include <thread>
-#include <memory>
 
 
 struct Material;
 struct VertexData;
 
-class Model : 
+class ModelFromObj : 
     public IModel,
     public EngineFeature
 {
 public:
     // Common functions
-    ~Model();
+    ~ModelFromObj();
     void    Initialize() override;
     void    Update() override;
     void    Draw() override;
-    void    Initialize(const std::string& _filePath);
-    void    Initialize(const std::string& _modelPath, const std::string& _texturePath);
-    void    Upload();
+    void    CreateGPUResource() override;
+    void    Clone(IModel* _src) override;
 
     // Getter
     ModelData*                  GetModelData();
-    D3D12_VERTEX_BUFFER_VIEW    GetVertexBufferView() const;
-    bool                        IsUploaded() const;
-    D3D12_GPU_DESCRIPTOR_HANDLE GetTextureSrvHandleGPU() const;
+    size_t                      GetVertexCount() const override;
+    D3D12_VERTEX_BUFFER_VIEW    GetVertexBufferView() const override;
+    D3D12_GPU_DESCRIPTOR_HANDLE GetTextureSrvHandle() const override;
+    bool                        IsEndLoading() const;
 
     // Setter
     int ChangeTexture(const std::string& _filepath);
+    void SetCommandList(ID3D12GraphicsCommandList* _cl);
+    void ChangeTexture(D3D12_GPU_DESCRIPTOR_HANDLE _texSrvHnd) override;
 
 
 private: /// メンバ変数
     static const std::string kDefaultDirectoryPath;
 
+    ID3D12GraphicsCommandList*              commandList_ = nullptr;
     ModelData                               modelData_                  = {};
     Microsoft::WRL::ComPtr<ID3D12Resource>  vertexResource_             = nullptr;
     D3D12_VERTEX_BUFFER_VIEW                vertexBufferView_           = {};
     VertexData*                             vertexData_                 = nullptr;
     D3D12_GPU_DESCRIPTOR_HANDLE             textureSrvHandleGPU_        = {};
     std::string                             texturePath_                = {};
+    bool                                    isReadyDraw_                = false;
 
-    bool                                    isUploaded_                 = false;
-
+    ModelFromObj*                           pCloneSrc_                  = nullptr; ///< クローン元のインスタンス
 
 private: /// 非公開メンバ関数
-    void CreateVertexResource();
-    void LoadModelTexture();
+    void _CreateVertexResource();
+    void _LoadModelTexture();
+    void _CopyFrom(ModelFromObj* pCopySrc);
 
 private: /// 他クラスのインスタンス
-    ID3D12Device* device_ = nullptr;
-    std::unique_ptr<std::thread> th_LoadObjectFile_ = nullptr;
     std::string filePath_;
     std::string directoryPath_;
 };

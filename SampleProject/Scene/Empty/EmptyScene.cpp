@@ -20,14 +20,6 @@ void EmptyScene::Draw3d()
 {
 }
 
-void EmptyScene::Draw2dMidground()
-{
-}
-
-void EmptyScene::Draw3dMidground()
-{
-}
-
 void EmptyScene::DrawLine()
 {
 }
