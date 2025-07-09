@@ -19,8 +19,13 @@ void CG3PT2::Initialize()
     /// オブジェクト共有にカメラをセット
     Object3dSystem::GetInstance()->SetGlobalEye(pGameEye_.get());
 
+    pModelManager_ = std::any_cast<ModelManager*>(pArgs_->Get("ModelManager"));
+
+    pModelMonsterBall_ = pModelManager_->Load("Sphere1m/Sphere1m.obj");
+    pModelGrid_ = pModelManager_->Load("Grid_v3.obj");
+
     pMonsterBall_ = std::make_unique<Object3d>();
-    pMonsterBall_->Initialize("Sphere1m/Sphere1m.obj");
+    pMonsterBall_->Initialize();
     pMonsterBall_->SetScale({ 1.0f, 1.0f, 1.0f });
     pMonsterBall_->SetRotate({ 0.0f, -3.14f / 2.0f, 0.0f });
     pMonsterBall_->SetTranslate({ 0.0f, 1.f, 0.0f });
@@ -29,7 +34,7 @@ void CG3PT2::Initialize()
     pMonsterBall_->SetShininess(12.f);
 
     pGrid_ = std::make_unique<Object3d>();
-    pGrid_->Initialize("Grid_v3.obj");
+    pGrid_->Initialize(pModelManager_->Load("Grid_v3.obj"));
     pGrid_->SetScale({ 1.0f, 1.0f, 1.0f });
     pGrid_->SetName("Grid");
     pGrid_->SetTilingMultiply({ 100.0f, 100.0f });
@@ -97,16 +102,8 @@ void CG3PT2::Draw2dBackGround()
 void CG3PT2::Draw3d()
 {
     pointLight_.Draw();
-    pMonsterBall_->Draw();
-    pGrid_->Draw();
-}
-
-void CG3PT2::Draw2dMidground()
-{
-}
-
-void CG3PT2::Draw3dMidground()
-{
+    pMonsterBall_->Draw(pModelMonsterBall_);
+    pGrid_->Draw(pModelGrid_);
 }
 
 void CG3PT2::DrawLine()

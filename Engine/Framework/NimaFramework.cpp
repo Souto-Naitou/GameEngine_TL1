@@ -39,7 +39,6 @@ void NimaFramework::Initialize()
 
     pDebugManager_ = DebugManager::GetInstance();
     pWinSystem_ = WinSystem::GetInstance();
-    pModelManager_ = ModelManager::GetInstance();
     pSpriteSystem_ = SpriteSystem::GetInstance();
     pObject3dSystem_ = Object3dSystem::GetInstance();
     pParticleSystem_ = ParticleSystem::GetInstance();
@@ -87,10 +86,6 @@ void NimaFramework::Initialize()
     /// テクスチャマネージャの初期化
     pTextureManager_->SetDirectX12(pDirectX_.get());
     pTextureManager_->Initialize(pSRVManager_);
-
-    /// モデルマネージャの初期化
-    pModelManager_->SetDirectX12(pDirectX_.get());
-    pModelManager_->Initialize();
 
     /// スプライト基盤の初期化
     pSpriteSystem_->SetDirectX12(pDirectX_.get());
@@ -250,7 +245,6 @@ void NimaFramework::Update()
 
     /// マネージャ更新
     pInput_->Update();
-    pModelManager_->Update();
     pAudioManager_->Update();
 
     #ifdef _DEBUG

@@ -3,15 +3,29 @@
 #include <imgui.h>
 #include <DebugTools/DebugManager/DebugManager.h>
 #include <Core/ConfigManager/ConfigManager.h>
+#include <Scene/Args/SceneArgs.h>
 
 #include <cassert>
+
+void SceneManager::SetSceneFactory(ISceneFactory* _pSceneFactory)
+{
+    pSceneFactory_ = _pSceneFactory;
+}
+
+void SceneManager::SetSceneArgs(std::unique_ptr<ISceneArgs> _pSceneArgs)
+{
+    pSceneArgs_ = std::move(_pSceneArgs);
+}
+
+void SceneManager::SetModelManager(ModelManager* _pModelManager)
+{
+    pModelManager_ = _pModelManager;
+}
 
 void SceneManager::ReserveScene(const std::string& _name)
 {
     isReserveScene_ = true;
     nextSceneName_ = _name;
-
-    return;
 }
 
 void SceneManager::ReserveStartupScene()
@@ -23,6 +37,9 @@ void SceneManager::ReserveStartupScene()
 void SceneManager::Initialize()
 {
     DebugManager::GetInstance()->SetComponent("Core", name_, std::bind(&SceneManager::DebugWindow, this), true);
+
+    pSceneArgs_ = std::make_unique<SceneArgs>();
+
     ReserveStartupScene();
 }
 
@@ -57,22 +74,6 @@ void SceneManager::SceneDraw3d()
     if (pCurrentScene_ != nullptr)
     {
         pCurrentScene_->Draw3d();
-    }
-}
-
-void SceneManager::SceneDraw2dMidground()
-{
-    if (pCurrentScene_ != nullptr)
-    {
-        pCurrentScene_->Draw2dMidground();
-    }
-}
-
-void SceneManager::SceneDraw3dMidground()
-{
-    if (pCurrentScene_ != nullptr)
-    {
-        pCurrentScene_->Draw3dMidground();
     }
 }
 
@@ -121,7 +122,9 @@ void SceneManager::ChangeScene()
         pCurrentScene_->Finalize();
     }
 
-    pCurrentScene_ = pSceneFactory_->CreateScene(nextSceneName_);
+    this->PackSceneArgs();
+
+    pCurrentScene_ = pSceneFactory_->CreateScene(nextSceneName_, pSceneArgs_.get());
     pCurrentScene_->Initialize();
 }
 
@@ -137,4 +140,13 @@ void SceneManager::DebugWindow()
     }
 
 #endif // _DEBUG
+}
+
+void SceneManager::PackSceneArgs()
+{
+    if (pSceneArgs_ == nullptr)
+    {
+        pSceneArgs_ = std::make_unique<SceneArgs>();
+    }
+    pSceneArgs_->Set("ModelManager", pModelManager_);
 }

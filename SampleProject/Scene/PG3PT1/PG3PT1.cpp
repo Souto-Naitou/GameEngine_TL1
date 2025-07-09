@@ -5,6 +5,9 @@
 void PG3PT1::Initialize()
 {
     pInput_ = Input::GetInstance();
+    pModelManager_ = std::any_cast<ModelManager*>(pArgs_->Get("ModelManager"));
+
+    pModelBunny_ = pModelManager_->Load("Bunny.obj");
 
     pGameEye_ = std::make_unique<FreeLookEye>();
     pBunny_ = std::make_unique<Object3d>();
@@ -16,7 +19,7 @@ void PG3PT1::Initialize()
     pGameEye_->SetTranslate({ 0.0f, 0.0f, -5.0f });
     pGameEye_->SetRotate({ 0.0f, 0.0f, 0.0f });
 
-    pBunny_->Initialize("Bunny.obj");
+    pBunny_->Initialize();
     pBunny_->SetTranslate({ 0.0f, -0.7f, 0.0f });
     pBunny_->SetRotate({ 0.0f, 0.0f, 0.0f });
     pBunny_->SetScale({ 1.0f, 1.0f, 1.0f });
@@ -47,15 +50,7 @@ void PG3PT1::Draw2dBackGround()
 
 void PG3PT1::Draw3d()
 {
-    pBunny_->Draw();
-}
-
-void PG3PT1::Draw2dMidground()
-{
-}
-
-void PG3PT1::Draw3dMidground()
-{
+    pBunny_->Draw(pModelBunny_);
 }
 
 void PG3PT1::DrawLine()

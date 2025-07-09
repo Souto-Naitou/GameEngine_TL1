@@ -14,21 +14,17 @@ void GameScene::Initialize()
 {
     pInput_ = Input::GetInstance();
 
-    pFirework_ = std::make_unique<ParticleEmitter>();
-    pSmoke_ = std::make_unique<ParticleEmitter>();
-    pSpark_ = std::make_unique<ParticleEmitter>();
+    // モデルマネージャーの取得
+    pModelManager_ = std::any_cast<ModelManager*>(pArgs_->Get("ModelManager"));
 
+    // 各種モデルの取得
+    pModelSkydome_  = pModelManager_->Load("Skydome.obj");
+    pModelGrid_     = pModelManager_->Load("Grid_v4.obj");
+    pModelSpark_    = pModelManager_->Load("Particle/ParticleSpark.obj");
+    pModelBox_      = pModelManager_->Load("Box/Box.obj");
 
+    // ゲームカメラの生成と初期化
     pGameEye_ = std::make_unique<FreeLookEye>();
-    pSkydome_ = std::make_unique<Object3d>();
-    pGrid_ = std::make_unique<Object3d>();
-
-    pGuideSprite_ = std::make_unique<Sprite>();
-    pGuideSprite_->Initialize("Text/SceneChangeGuide.png");
-    pGuideSprite_->SetName("GuideText");
-    pGuideSprite_->SetPosition(Vector2(WinSystem::clientWidth - 40.0f, WinSystem::clientHeight - 40.0f));
-    pGuideSprite_->SetAnchorPoint({ 1,1 });
-
     pGameEye_->SetRotate({ 0.1f, 0.0f, 0.0f });
     pGameEye_->SetTranslate({ 0.0f, 0.2f, -5.0f });
     pGameEye_->SetName("MainCamera");
@@ -38,22 +34,34 @@ void GameScene::Initialize()
     ParticleSystem::GetInstance()->SetGlobalEye(pGameEye_.get());
     LineSystem::GetInstance()->SetGlobalEye(pGameEye_.get());
 
-
-    pSkydome_->Initialize("Skydome.obj");
+    // 各種オブジェクトの生成と初期化
+    pSkydome_ = std::make_unique<Object3d>();
+    pSkydome_->Initialize();
     pSkydome_->SetScale({ 1.0f, 1.0f, 1.0f });
     pSkydome_->SetName("Skydome");
     pSkydome_->SetEnableLighting(false);
 
-    pGrid_->Initialize("Grid_v4.obj");
+    pGrid_ = std::make_unique<Object3d>();
+    pGrid_->Initialize();
     pGrid_->SetScale({ 1.0f, 1.0f, 1.0f });
     pGrid_->SetName("Grid");
     pGrid_->SetTilingMultiply({ 100.0f, 100.0f });
     pGrid_->SetEnableLighting(false);
 
-    /// エミッタの初期化
-    pFirework_->Initialize("Box/Box.obj", "", "Resources/Json/Box.json");
-    pSmoke_->Initialize("Particle/ParticleSpark.obj", "", "Resources/Json/Smoke.json");
-    pSpark_->Initialize("Particle/ParticleSpark.obj", "", "Resources/Json/Spark.json");
+    // ガイド用のスプライトを生成
+    pGuideSprite_ = std::make_unique<Sprite>();
+    pGuideSprite_->Initialize("Text/SceneChangeGuide.png");
+    pGuideSprite_->SetName("GuideText");
+    pGuideSprite_->SetPosition(Vector2(WinSystem::clientWidth - 40.0f, WinSystem::clientHeight - 40.0f));
+    pGuideSprite_->SetAnchorPoint({ 1,1 });
+
+    // パーティクルエミッターの生成
+    pFirework_ = std::make_unique<ParticleEmitter>();
+    pFirework_->Initialize(pModelBox_, "Resources/Json/Box.json");
+    pSmoke_ = std::make_unique<ParticleEmitter>();
+    pSmoke_->Initialize(pModelSpark_, "Resources/Json/Smoke.json");
+    pSpark_ = std::make_unique<ParticleEmitter>();
+    pSpark_->Initialize(pModelSpark_, "Resources/Json/Spark.json");
 
     /// 音声の取得
     pAudio_ = AudioManager::GetInstance()->GetNewAudio("pi.wav");
@@ -91,14 +99,6 @@ void GameScene::Draw2dBackGround()
 {
 }
 
-void GameScene::Draw3dMidground()
-{
-}
-
-void GameScene::Draw2dMidground()
-{
-}
-
 void GameScene::DrawLine()
 {
     pFirework_->Draw();
@@ -108,8 +108,8 @@ void GameScene::DrawLine()
 
 void GameScene::Draw3d()
 {
-    pSkydome_->Draw();
-    pGrid_->Draw();
+    pSkydome_->Draw(pModelSkydome_);
+    pGrid_->Draw(pModelGrid_);
 }
 
 void GameScene::Draw2dForeground()

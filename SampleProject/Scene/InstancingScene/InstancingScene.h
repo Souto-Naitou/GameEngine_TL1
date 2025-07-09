@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Interfaces/IScene.h>
+#include <Scene/SceneBase.h>
 #include <Features/Particle/Particle.h>
 #include <Features/GameEye/GameEye.h>
 #include <Features/Input/Input.h>
@@ -8,9 +8,11 @@
 
 #include <memory>
 
-class InstancingScene : public IScene
+class InstancingScene : public SceneBase
 {
 public:
+    InstancingScene(ISceneArgs* pArgs_) : SceneBase(pArgs_) {}
+
     void Initialize() override;
 
     void Finalize() override;
@@ -20,10 +22,6 @@ public:
     void Draw2dBackGround() override;
 
     void Draw3d() override;
-
-    void Draw2dMidground() override;
-
-    void Draw3dMidground() override;
 
     void DrawLine() override;
 
@@ -36,9 +34,9 @@ private:
     std::unique_ptr<GameEye> pGameEye_ = nullptr;
     std::unique_ptr<Sprite> pGuideSprite_ = nullptr;
 
-
-private: /// 他クラスのインスタンス
+    // Pointers
     Input* pInput_ = nullptr;
+    ModelManager* pModelManager_ = nullptr;
 
 
 private:

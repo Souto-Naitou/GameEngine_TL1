@@ -10,6 +10,11 @@ void DepthScene::Initialize()
 {
     pInput_ = Input::GetInstance();
 
+    // モデル管理クラスの取得
+    pModelManager_ = std::any_cast<ModelManager*>(pArgs_->Get("ModelManager"));
+
+    pModelPlane_ = pModelManager_->Load("plane.obj");
+
 #ifdef _DEBUG
     DebugManager::GetInstance()->SetComponent("Scene", windowName_, std::bind(&DepthScene::DebugWindow, this));
 #endif // _DEBUG
@@ -59,16 +64,8 @@ void DepthScene::Draw3d()
 {
     for ( auto& obj : objectList_ )
     {
-        obj->Draw();
+        obj->Draw(pModelPlane_);
     }
-}
-
-void DepthScene::Draw2dMidground()
-{
-}
-
-void DepthScene::Draw3dMidground()
-{
 }
 
 void DepthScene::DrawLine()
@@ -87,7 +84,7 @@ void DepthScene::CreateObject()
 {
     objectList_.push_back(std::make_unique<Object3d>());
     Object3d* obj = objectList_.back().get();
-    obj->Initialize("plane.obj");
+    obj->Initialize();
     obj->SetTranslate(Vector3(0.0f, 0.0f, nextObjZ_));
     obj->SetGameEye(pGameEye_.get());
     nextObjZ_ += objZInterval_;

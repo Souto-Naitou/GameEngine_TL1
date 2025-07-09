@@ -15,7 +15,7 @@
 
 const uint32_t ParticleEmitter::kDefaultReserveCount_;
 
-void ParticleEmitter::Initialize(const std::string& _modelPath, const std::string& _texturePath, const std::string& _jsonPath)
+void ParticleEmitter::Initialize(IModel* _pModel, const std::string& _jsonPath)
 {
 #ifdef _DEBUG
     ptrHex_ = utl::string::to_string(this);
@@ -33,7 +33,7 @@ void ParticleEmitter::Initialize(const std::string& _modelPath, const std::strin
 
     // パーティクル初期化
     particle_ = ParticleManager::GetInstance()->CreateParticle();
-    particle_->Initialize(_modelPath, _texturePath);
+    particle_->Initialize(_pModel);
     particle_->reserve(kDefaultReserveCount_);
 
     if (jsonPath_.empty())

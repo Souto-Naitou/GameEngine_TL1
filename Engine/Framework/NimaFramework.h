@@ -76,7 +76,6 @@ protected:
     Logger*                         pLogger_                    = nullptr;
     DebugManager*                   pDebugManager_              = nullptr;
     WinSystem*                      pWinSystem_                 = nullptr;
-    ModelManager*                   pModelManager_              = nullptr;
     SRVManager*                     pSRVManager_                = nullptr;
     TextureManager*                 pTextureManager_            = nullptr;
     SceneManager*                   pSceneManager_              = nullptr;

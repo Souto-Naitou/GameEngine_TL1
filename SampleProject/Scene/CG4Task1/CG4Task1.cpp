@@ -7,11 +7,14 @@
 #include <Features/GameEye/FreeLook/FreeLookEye.h>
 
 #include <DebugTools/DebugManager/DebugManager.h>
+#include <Core/DirectX12/TextureManager.h>
+#include <Features/Model/ModelFromObj.h>
 
 
 void CG4Task1::Initialize()
 {
     pInput_ = Input::GetInstance();
+    pModelManager_ = std::any_cast<ModelManager*>(pArgs_->Get("ModelManager"));
 
     pGameEye_ = std::make_unique<FreeLookEye>();
     pGameEye_->SetRotate({ 0.1f, 0.0f, 0.0f });
@@ -23,36 +26,54 @@ void CG4Task1::Initialize()
     ParticleSystem::GetInstance()->SetGlobalEye(pGameEye_.get());
     LineSystem::GetInstance()->SetGlobalEye(pGameEye_.get());
 
+    // グリッドの初期化
+    pModelGrid_ = std::make_unique<ModelFromObj>();
+    pModelGrid_->Clone(pModelManager_->Load("Grid_v4/Grid_v4.obj"));
     pGrid_ = std::make_unique<Object3d>();
-    pGrid_->Initialize("Grid_v4.obj");
+    pGrid_->Initialize();
     pGrid_->SetScale({ 1.0f, 1.0f, 1.0f });
     pGrid_->SetName("Grid");
     pGrid_->SetTilingMultiply({ 100.0f, 100.0f });
     pGrid_->SetEnableLighting(false);
     pGrid_->SetColor({ 1.0f, 1.0f, 1.0f, 0.3f });
 
+    // テクスチャの読み込み
+    auto tm = TextureManager::GetInstance();
+    tm->LoadTexture("circle2.png");
+    tm->LoadTexture("spark.png");
+
+    // パーティクルとモデルの初期化
+    auto pSrc = pModelManager_->Load("Particle/ParticleSpark.obj");
+    pModelSpark_ = std::make_unique<ModelFromObj>();
+    pModelCircle_ = std::make_unique<ModelFromObj>();
+    pModelSpark_->Clone(pSrc);
+    pModelCircle_->Clone(pSrc);
+
+    pModelSpark_->ChangeTexture(tm->GetSrvHandleGPU("spark.png"));
+    pModelCircle_->ChangeTexture(tm->GetSrvHandleGPU("circle2.png"));
+
     pEmitter_Basic_ = std::make_unique<ParticleEmitter>();
-    pEmitter_Basic_->Initialize("Particle/ParticleSpark.obj", "circle2.png", "Resources/Json/CG4Task.json");
+    pEmitter_Basic_->Initialize(pModelCircle_.get(), "Resources/Json/CG4Task.json");
     pEmitter_Basic_->SetEnableBillboard(false);
 
     pEmitter_Stars_ = std::make_unique<ParticleEmitter>();
-    pEmitter_Stars_->Initialize("Particle/ParticleSpark.obj", "circle2.png", "Resources/Json/Stars.json");
+    pEmitter_Stars_->Initialize(pModelCircle_.get(), "Resources/Json/Stars.json");
     pEmitter_Stars_->SetEnableBillboard(true);
 
     pEmitter_Rain_ = std::make_unique<ParticleEmitter>();
-    pEmitter_Rain_->Initialize("Particle/ParticleSpark.obj", "spark.png", "Resources/Json/Rain.json");
+    pEmitter_Rain_->Initialize(pModelSpark_.get(), "Resources/Json/Rain.json");
     pEmitter_Rain_->SetEnableBillboard(true);
     
     pEmitter_Snow_ = std::make_unique<ParticleEmitter>();
-    pEmitter_Snow_->Initialize("Particle/ParticleSpark.obj", "spark.png", "Resources/Json/Snow.json");
+    pEmitter_Snow_->Initialize(pModelSpark_.get(), "Resources/Json/Snow.json");
     pEmitter_Snow_->SetEnableBillboard(true);
 
     pEmitter_Spark_ = std::make_unique<ParticleEmitter>();
-    pEmitter_Spark_->Initialize("Particle/ParticleSpark.obj", "spark.png", "Resources/Json/Spark.json");
+    pEmitter_Spark_->Initialize(pModelSpark_.get(), "Resources/Json/Spark.json");
     pEmitter_Spark_->SetEnableBillboard(true);
 
     pEmitter_Test_ = std::make_unique<ParticleEmitter>();
-    pEmitter_Test_->Initialize("Particle/ParticleSpark.obj", "spark.png");
+    pEmitter_Test_->Initialize(pModelSpark_.get());
     pEmitter_Test_->SetEnableBillboard(true);
 
     pText_ = std::make_unique<Text>();
@@ -82,6 +103,9 @@ void CG4Task1::Update()
 {
     /// 更新処理
     pGameEye_->Update();
+    pModelGrid_->Update();
+    pModelSpark_->Update();
+    pModelCircle_->Update();
     pGrid_->Update();
     pEmitter_Basic_->Update();
     pEmitter_Stars_->Update();
@@ -97,14 +121,6 @@ void CG4Task1::Draw2dBackGround()
 {
 }
 
-void CG4Task1::Draw3dMidground()
-{
-}
-
-void CG4Task1::Draw2dMidground()
-{
-}
-
 void CG4Task1::DrawLine()
 {
     pEmitter_Test_->Draw();
@@ -112,7 +128,7 @@ void CG4Task1::DrawLine()
 
 void CG4Task1::Draw3d()
 {    
-    pGrid_->Draw();
+    pGrid_->Draw(pModelGrid_.get());
 }
 
 void CG4Task1::Draw2dForeground()

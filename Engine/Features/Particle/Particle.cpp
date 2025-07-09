@@ -13,7 +13,7 @@
 
 using namespace Type::ParticleEmitter;
 
-void Particle::Initialize(const std::string& _filepath, const std::string& _texturePath)
+void Particle::Initialize(IModel* _pModel)
 {
 #if defined(_DEBUG) && defined(DEBUG_ENGINE)
     std::stringstream ss;
@@ -32,10 +32,8 @@ void Particle::Initialize(const std::string& _filepath, const std::string& _text
     if (!particleData_.capacity()) reserve(1, true);
 
     /// モデルを読み込む
-    modelPath_ = _filepath;
-    ModelManager::GetInstance()->LoadModel(_filepath, _texturePath);
-    pModel_ = ModelManager::GetInstance()->FindModel(_filepath);
-    if (pModel_->IsUploaded()) GetModelData();
+    pModel_ = _pModel;
+    if (pModel_->IsEndLoading()) this->GetModelData();
 
     /// 正面を向く行列を作成
     backToFrontMatrix_ = Matrix4x4::RotateYMatrix(std::numbers::pi_v<float>);
@@ -44,8 +42,7 @@ void Particle::Initialize(const std::string& _filepath, const std::string& _text
 void Particle::Update()
 {
     /// モデル情報の取得
-    if (!pModel_) pModel_ = ModelManager::GetInstance()->FindModel(modelPath_);
-    else if (pModel_->IsUploaded()) GetModelData();
+    if (pModel_->IsEndLoading()) this->GetModelData();
 
     /// パーティクルの更新
     if (particleData_.empty()) return;
@@ -116,13 +113,13 @@ void Particle::Finalize()
 void Particle::Draw()
 {
     /// モデルのテクスチャがアップロードされていない場合は描画しない
-    if (!pModel_->IsUploaded()) return;
+    if (!pModel_->IsEndLoading()) return;
 
     ParticleSystem::CommandListData data = {};
     data.pVBV = &vertexBufferView_;
     data.srvHandle = srvGpuHandle_;
     data.textureSrvHandle = textureSRVHandleGPU_;
-    data.vertexCount = static_cast<UINT>(pModelData_->vertices.size());
+    data.vertexCount = static_cast<UINT>(vertexCount_);
     data.instanceCount = static_cast<UINT>(particleData_.size());
 
     pSystem_->AddCommandListData(data);
@@ -181,9 +178,9 @@ void Particle::CreateSRV()
 
 void Particle::GetModelData()
 {
-    pModelData_ = pModel_->GetModelData();
+    vertexCount_ = pModel_->GetVertexCount();
     vertexBufferView_ = pModel_->GetVertexBufferView();
-    textureSRVHandleGPU_ = pModel_->GetTextureSrvHandleGPU();
+    textureSRVHandleGPU_ = pModel_->GetTextureSrvHandle();
 }
 
 void Particle::InitializeTransform()

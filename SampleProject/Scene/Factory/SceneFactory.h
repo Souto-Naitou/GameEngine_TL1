@@ -1,7 +1,7 @@
 #pragma once
 
 #include <Interfaces/ISceneFactory.h>
-#include <Interfaces/IScene.h>
+#include <Scene/SceneBase.h>
 
 #include <memory>
 
@@ -15,5 +15,5 @@ public:
     /// </summary>
     /// <param name="_sceneName">シーン名</param>
     /// <returns>生成したシーン</returns>
-    std::unique_ptr<IScene> CreateScene(const std::string& _sceneName) override;
+    std::unique_ptr<SceneBase> CreateScene(const std::string& _sceneName, ISceneArgs* _pArgs) override;
 };

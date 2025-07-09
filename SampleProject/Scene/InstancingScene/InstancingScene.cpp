@@ -18,8 +18,11 @@ void InstancingScene::Initialize()
     pGuideSprite_->SetPosition(Vector2(1280.0f - 40.0f, 720.0f - 40.0f));
     pGuideSprite_->SetAnchorPoint({ 1,1 });
 
+    // モデルマネージャーの取得
+    pModelManager_ = std::any_cast<ModelManager*>(pArgs_->Get("ModelManager"));
+
     particle_ = ParticleManager::GetInstance()->CreateParticle();
-    particle_->Initialize("plane.obj");
+    particle_->Initialize(pModelManager_->Load("plane.obj"));
     particle_->reserve(10);
     InitializeParticle();
 }
@@ -54,14 +57,6 @@ void InstancingScene::Draw2dBackGround()
 void InstancingScene::Draw3d()
 {
 
-}
-
-void InstancingScene::Draw2dMidground()
-{
-}
-
-void InstancingScene::Draw3dMidground()
-{
 }
 
 void InstancingScene::DrawLine()

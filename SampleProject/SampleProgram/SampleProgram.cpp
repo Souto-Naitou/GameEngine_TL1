@@ -19,9 +19,19 @@ void SampleProgram::Initialize()
     pSceneFactory_ = std::make_unique<SceneFactory>();
     pSceneManager_->SetSceneFactory(pSceneFactory_.get());
 
-    /// モデルを全てロード
-    pModelManager_->LoadAllModel();
+    pModelLoader_ = std::make_unique<ModelLoader>();
+    pModelLoader_->Initialize();
+    pModelLoader_->SetDirectX12(pDirectX_.get());
+    pModelStorage_ = std::make_unique<ModelStorage>();
 
+    pModelManager_ = std::make_unique<ModelManager>();
+    pModelManager_->Initialize();
+    pModelManager_->SetModelLoader(pModelLoader_.get());
+    pModelManager_->SetModelStorage(pModelStorage_.get());
+
+    pSceneManager_->SetModelManager(pModelManager_.get());
+
+    /// モデルを全てロード
     pTextureManager_->LoadTexture("noise0.png");
     pPEDissolve_->SetTextureResource(pTextureManager_->GetTextureResource("noise0.png"));
 
@@ -39,6 +49,7 @@ void SampleProgram::Update()
 {
     /// 基底クラスの更新処理
     NimaFramework::Update();
+    pModelLoader_->Update();
     pPERandomFilter_->SetSeed(globalTimer_.GetNow<float>() * 0.01f);
 }
 

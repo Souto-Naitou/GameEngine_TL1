@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Interfaces/IScene.h>
+#include <Scene/SceneBase.h>
 #include <Features/Object3d/Object3d.h>
 #include <Features/Input/Input.h>
 #include <Features/GameEye/GameEye.h>
@@ -8,10 +8,10 @@
 #include <list>
 #include <memory>
 
-class DepthScene : public IScene
+class DepthScene : public SceneBase
 {
 public:
-    DepthScene() = default;
+    DepthScene(ISceneArgs* pArgs_) : SceneBase(pArgs_) {}
     ~DepthScene() = default;
 
     void Initialize() override;
@@ -19,13 +19,12 @@ public:
     void Update() override;
     void Draw2dBackGround() override;
     void Draw3d() override;
-    void Draw2dMidground() override;
-    void Draw3dMidground() override;
     void DrawLine() override;
     void Draw2dForeground() override;
     void DrawTexts() override;
 
 private:
+    IModel* pModelPlane_ = nullptr;
     std::unique_ptr<GameEye> pGameEye_ = nullptr;
     std::list<std::unique_ptr<Object3d>> objectList_;
     float nextObjZ_ = 0;
@@ -33,11 +32,14 @@ private:
     unsigned int nextCreateCount_ = 0;
     int nextCreateCountTemp_ = 0;
 
-private:
+    // Pointers
     Input* pInput_ = nullptr;
+    ModelManager* pModelManager_ = nullptr;
 
-private:
+    // Internal functions
     void CreateObject();
     void DebugWindow();
+    
+    // For debug
     std::string windowName_ = "DepthScene";
 };

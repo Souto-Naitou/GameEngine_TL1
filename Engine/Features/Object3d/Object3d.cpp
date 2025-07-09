@@ -16,7 +16,7 @@
 #endif // DEBUG_ENGINE && _DEBUG
 
 
-void Object3d::Initialize(const std::string& _filePath, bool _enableDebugWindow)
+void Object3d::Initialize(bool _enableDebugWindow)
 {
     /// 必要なインスタンスを取得
     pSystem_ = Object3dSystem::GetInstance();
@@ -60,23 +60,11 @@ void Object3d::Initialize(const std::string& _filePath, bool _enableDebugWindow)
 
     /// マテリアルリソースを作成
     CreateMaterialResource();
-
-    /// モデルを読み込む
-    modelPath_ = _filePath;
-    ModelManager::GetInstance()->LoadModel(modelPath_);
-    pModel_ = ModelManager::GetInstance()->FindModel(modelPath_);
 }
 
 void Object3d::Update()
 {
     if (!isUpdate_) return;
-
-
-    /// モデルが読み込まれていない場合は読み込む
-    if (!pModel_)
-    {
-        pModel_ = ModelManager::GetInstance()->FindModel(modelPath_);
-    }
 
     rotateMatrix_ = Matrix4x4::RotateXMatrix(transform_.rotate.x) * (Matrix4x4::RotateYMatrix(transform_.rotate.y) * Matrix4x4::RotateZMatrix(transform_.rotate.z));
     Matrix4x4 wMatrix = Matrix4x4::AffineMatrix(transform_.scale, transform_.rotate, transform_.translate);
@@ -136,10 +124,9 @@ void Object3d::Update()
         cameraForGPU_->worldPosition = (*ppSystemGameEye_)->GetTransform().translate;
     }
 
-    if (pModel_) pModel_->Update();
 }
 
-void Object3d::Draw()
+void Object3d::Draw(IModel* _pModel)
 {
     if (!isDraw_) return;
 
@@ -151,7 +138,7 @@ void Object3d::Draw()
     data.cbuffers[5] = cameraForGPUResource_.Get();
     data.cbuffers[6] = lightingResource_.Get();
     data.cbuffers[7] = pointLightResource_.Get();
-    data.model = pModel_;
+    data.model = _pModel;
 
     pSystem_->AddCommandListData(data);
 }

@@ -136,9 +136,6 @@
     <Filter Include="Feature\Shape\OBB">
       <UniqueIdentifier>{4490bcaf-3130-4655-9eca-14949ee03dde}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Utility\FilePathSearcher">
-      <UniqueIdentifier>{30e80ed6-8006-4ad8-b828-27e9a6a6cfc1}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Feature\SceneTransition">
       <UniqueIdentifier>{18b88b04-4484-4566-97ff-989e4dca9e4c}</UniqueIdentifier>
     </Filter>
@@ -289,6 +286,27 @@
     <Filter Include="Effect\PostEffect\RandomFilter">
       <UniqueIdentifier>{3d98c8fa-48b9-4be5-a62e-40363c273462}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Feature\Model\Loader">
+      <UniqueIdentifier>{80b8eb5c-4876-4a3e-9661-2b772e2ade41}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Feature\Model\Storage">
+      <UniqueIdentifier>{e86362d5-04be-4fe4-8f6f-dd1bb8deb791}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utility\FileSystem">
+      <UniqueIdentifier>{c235e41a-279c-4804-8dd7-9468f742786e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Feature\ThreadPool">
+      <UniqueIdentifier>{b9c54677-0800-48d8-8b8a-5afdf1b3b66a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utility\PathResolver">
+      <UniqueIdentifier>{30e80ed6-8006-4ad8-b828-27e9a6a6cfc1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene">
+      <UniqueIdentifier>{c0189ff3-447a-43f5-82c1-1a5a38b19bbf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\Args">
+      <UniqueIdentifier>{11cc3948-5543-4400-98b3-0076cd2d2db9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DebugTools\DebugManager\DebugManager.cpp">
@@ -321,7 +339,7 @@
     <ClCompile Include="Features\Model\Helper\ModelHelper.cpp">
       <Filter>Feature\Model\Helper</Filter>
     </ClCompile>
-    <ClCompile Include="Features\Model\Model.cpp">
+    <ClCompile Include="Features\Model\ModelFromObj.cpp">
       <Filter>Feature\Model</Filter>
     </ClCompile>
     <ClCompile Include="Features\Model\ModelManager.cpp">
@@ -398,9 +416,6 @@
     </ClCompile>
     <ClCompile Include="Features\Primitive\OBB.cpp">
       <Filter>Feature\Shape\OBB</Filter>
-    </ClCompile>
-    <ClCompile Include="Utility\FilePathSearcher\FilePathSearcher.cpp">
-      <Filter>Utility\FilePathSearcher</Filter>
     </ClCompile>
     <ClCompile Include="Features\SceneTransition\TransFadeInOut.cpp">
       <Filter>Feature\SceneTransition\FadeInOut</Filter>
@@ -534,6 +549,23 @@
     <ClCompile Include="Effects\PostEffects\RandomFilter\RandomFilter.cpp">
       <Filter>Effect\PostEffect\RandomFilter</Filter>
     </ClCompile>
+    <ClCompile Include="Features\Model\ModelStorage.cpp">
+      <Filter>Feature\Model\Storage</Filter>
+    </ClCompile>
+    <ClCompile Include="Features\Model\Loader\ModelLoader.cpp">
+      <Filter>Feature\Model\Loader</Filter>
+    </ClCompile>
+    <ClCompile Include="Utility\FileSystem\fsutl.cpp">
+      <Filter>Utility\FileSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="Features\ThreadPool\ThreadPool.cpp">
+      <Filter>Feature\ThreadPool</Filter>
+    </ClCompile>
+    <ClCompile Include="Utility\PathResolver\PathResolver.cpp">
+      <Filter>Utility\PathResolver</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\SceneBase.cpp" />
+    <ClCompile Include="Scene\Args\SceneArgs.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common\define.h">
@@ -569,7 +601,7 @@
     <ClInclude Include="Features\Model\Helper\ModelHelper.h">
       <Filter>Feature\Model\Helper</Filter>
     </ClInclude>
-    <ClInclude Include="Features\Model\Model.h">
+    <ClInclude Include="Features\Model\ModelFromObj.h">
       <Filter>Feature\Model</Filter>
     </ClInclude>
     <ClInclude Include="Features\Model\ModelManager.h">
@@ -629,9 +661,6 @@
     <ClInclude Include="Features\SceneManager\SceneManager.h">
       <Filter>Feature\SceneManager</Filter>
     </ClInclude>
-    <ClInclude Include="Interfaces\IScene.h">
-      <Filter>Interface</Filter>
-    </ClInclude>
     <ClInclude Include="Features\Particle\ParticleSystem.h">
       <Filter>Feature\Particle\System</Filter>
     </ClInclude>
@@ -670,9 +699,6 @@
     </ClInclude>
     <ClInclude Include="Features\Primitive\OBB.h">
       <Filter>Feature\Shape\OBB</Filter>
-    </ClInclude>
-    <ClInclude Include="Utility\FilePathSearcher\FilePathSearcher.h">
-      <Filter>Utility\FilePathSearcher</Filter>
     </ClInclude>
     <ClInclude Include="Features\SceneTransition\TransBase.h">
       <Filter>Feature\SceneTransition</Filter>
@@ -829,6 +855,36 @@
     </ClInclude>
     <ClInclude Include="Effects\PostEffects\RandomFilter\RandomFilter.h">
       <Filter>Effect\PostEffect\RandomFilter</Filter>
+    </ClInclude>
+    <ClInclude Include="Features\Model\IModel.h">
+      <Filter>Feature\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Features\Model\ModelStorage.h">
+      <Filter>Feature\Model\Storage</Filter>
+    </ClInclude>
+    <ClInclude Include="Features\Model\Loader\IModelLoader.h">
+      <Filter>Feature\Model\Loader</Filter>
+    </ClInclude>
+    <ClInclude Include="Features\Model\Loader\ModelLoader.h">
+      <Filter>Feature\Model\Loader</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility\FileSystem\fsutl.h">
+      <Filter>Utility\FileSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Features\ThreadPool\ThreadPool.h">
+      <Filter>Feature\ThreadPool</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility\PathResolver\PathResolver.h">
+      <Filter>Utility\PathResolver</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\SceneBase.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Interfaces\ISceneArgs.h">
+      <Filter>Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\Args\SceneArgs.h">
+      <Filter>Scene\Args</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

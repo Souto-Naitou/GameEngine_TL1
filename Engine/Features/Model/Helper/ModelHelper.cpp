@@ -10,7 +10,7 @@
 #include <cassert>
 #include <filesystem>
 
-ModelData ModelHelper::LoadObjFile(const std::string& _directoryPath, const std::string& _filename, const std::string& _texturePath)
+ModelData Helper::Model::LoadObjFile(const std::string& _directoryPath, const std::string& _filename, const std::string& _texturePath)
 {
     // 1 Decleare variable
     ModelData modelData;
@@ -136,7 +136,7 @@ ModelData ModelHelper::LoadObjFile(const std::string& _directoryPath, const std:
     return modelData;
 }
 
-MaterialData ModelHelper::LoadMaterialTemplateFile(const std::string& _directoryPath, const std::string& _filename, const std::string& _texturePath)
+MaterialData Helper::Model::LoadMaterialTemplateFile(const std::string& _directoryPath, const std::string& _filename, const std::string& _texturePath)
 {
     // 1 Decleare variable
     MaterialData materialData;

@@ -9,7 +9,7 @@ void AudioManager::Initialize()
     hr_ = XAudio2Create(&pXAudio2_, 0, XAUDIO2_DEFAULT_PROCESSOR);
     hr_ = pXAudio2_->CreateMasteringVoice(&pMasteringVoice_);
 
-    pFilePathSearcher_ = std::make_unique<FilePathSearcher>();
+    pFilePathSearcher_ = std::make_unique<PathResolver>();
     pFilePathSearcher_->Initialize();
 
     // 設定ファイルからパスを取得して登録
