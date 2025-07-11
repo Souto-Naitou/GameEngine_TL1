@@ -10,6 +10,7 @@
 #include <Features/Model/Animation.h>
 #include <optional>
 #include <vector>
+#include <Features/Model/SkinCluster.h>
 
 // モデル読み込みクラス
 // - Assimpを使用してモデルを読み込む
@@ -34,4 +35,12 @@ private:
     Skeleton _CreateSkeleton(const Node& _rootNode);
 
     int32_t CreateJoint(const Node& _node, const std::optional<int32_t>& _parentIndex, std::vector<Joint>& _joints);
+
+    SkinCluster _CreateSkinCluster(
+        const Microsoft::WRL::ComPtr<ID3D12Device>& _device,
+        const Skeleton& _skeleton,
+        const ModelData& _modelData,
+        const ID3D12DescriptorHeap* _descriptorHeap,
+        uint32_t descriptorSize
+    );
 };

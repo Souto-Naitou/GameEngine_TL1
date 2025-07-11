@@ -33,10 +33,23 @@ struct VertexData
     Vector3 normal = {};
 };
 
+struct VertexWeightData
+{
+    float weight = 0.0f; // 重み
+    uint32_t vertexIndex = 0; // 頂点のインデックス
+};
+
+struct JointWeightData
+{
+    Matrix4x4 inverseBindPoseMatrix = {};
+    std::vector<VertexWeightData> vertexWeights = {};
+};
+
 struct ModelData
 {
     std::vector<VertexData> vertices = {};
     std::vector<uint32_t> indices = {};
+    std::unordered_map<std::string, JointWeightData> skinClusterData = {};
     MaterialData material = {};
     Node rootNode = {};
 };

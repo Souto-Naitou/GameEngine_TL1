@@ -362,6 +362,7 @@
     <ClInclude Include="Features\Model\ModelManager.h" />
     <ClInclude Include="Features\Model\ModelStorage.h" />
     <ClInclude Include="Features\Model\Skeleton.h" />
+    <ClInclude Include="Features\Model\SkinCluster.h" />
     <ClInclude Include="Features\NiGui\NiGuiDebug.h" />
     <ClInclude Include="Features\NiGui\NiGuiDrawer.h" />
     <ClInclude Include="Features\Object3d\Object3d.h" />
