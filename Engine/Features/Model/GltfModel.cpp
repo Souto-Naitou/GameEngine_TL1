@@ -38,10 +38,18 @@ void GltfModel::Draw(ID3D12GraphicsCommandList* _cl)
 
     // 頂点バッファを設定
     _cl->IASetVertexBuffers(0, 1, &vertexBufferView_);
+    // インデックスバッファを設定
+    _cl->IASetIndexBuffer(&indexBufferView_);
     // SRVの設定
     _cl->SetGraphicsRootDescriptorTable(2, textureSrvHandleGPU_);
     // 描画！（DrawCall/ドローコール）
-    _cl->DrawInstanced(static_cast<uint32_t>(modelData_.vertices.size()), 1, 0, 0);
+    _cl->DrawIndexedInstanced(
+        static_cast<UINT>(modelData_.indices.size()), // インデックス数
+        1, // インスタンス数
+        0, // インデックスバッファの開始オフセット
+        0, // 頂点バッファの開始オフセット
+        0  // グループID（インスタンス化描画用）
+    );
 
 }
 
@@ -55,6 +63,9 @@ void GltfModel::CreateGPUResource()
 {
     /// 頂点リソースを作成
     _CreateVertexResource();
+
+    /// インデックスリソースを作成
+    _CreateIndexResource();
 
     /// テクスチャを読み込む
     _LoadModelTexture();
@@ -139,6 +150,21 @@ void GltfModel::_CreateVertexResource()
     vertexBufferView_.StrideInBytes = sizeof(VertexData);
 }
 
+void GltfModel::_CreateIndexResource()
+{
+    /// インデックスリソースを作成
+    indexResource_ = DX12Helper::CreateBufferResource(pDx12_->GetDevice(), sizeof(uint32_t) * modelData_.indices.size());
+    indexResource_->Map(0, nullptr, reinterpret_cast<void**>(&indexData_));
+
+    /// インデックスデータを初期化
+    std::memcpy(indexData_, modelData_.indices.data(), sizeof(uint32_t) * modelData_.indices.size());
+
+    /// インデックスバッファービューを初期化
+    indexBufferView_.BufferLocation = indexResource_->GetGPUVirtualAddress();
+    indexBufferView_.SizeInBytes = static_cast<uint32_t>(sizeof(uint32_t) * modelData_.indices.size());
+    indexBufferView_.Format = DXGI_FORMAT_R32_UINT;
+}
+
 
 void GltfModel::_LoadModelTexture()
 {
@@ -183,6 +209,7 @@ void GltfModel::_CopyFrom(GltfModel* _pCopySrc)
     this->skeleton_ = _pCopySrc->skeleton_;
     // 頂点リソースを作成
     this->_CreateVertexResource();
+    this->_CreateIndexResource();
 
     isReadyDraw_ = true;
 }

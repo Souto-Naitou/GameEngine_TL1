@@ -32,11 +32,14 @@ public:
 
 private:
     Microsoft::WRL::ComPtr<ID3D12Resource>  vertexResource_         = nullptr;
+    Microsoft::WRL::ComPtr<ID3D12Resource>  indexResource_          = nullptr;  //< インデックスバッファリソース
     ModelData                               modelData_              = {};
     Skeleton                                skeleton_;                          //< スケルトンデータ
     Animation                               animationData_          = {};
     D3D12_VERTEX_BUFFER_VIEW                vertexBufferView_       = {};
+    D3D12_INDEX_BUFFER_VIEW                 indexBufferView_        = {};
     VertexData*                             vertexData_             = nullptr;  //< 頂点データのポインタ
+    uint32_t*                               indexData_              = nullptr;  //< インデックスデータのポインタ
     D3D12_GPU_DESCRIPTOR_HANDLE             textureSrvHandleGPU_    = {};
     bool                                    isReadyDraw_            = false;
     GltfModel*                              pCloneSrc_              = nullptr;  //< クローン元のインスタンス
@@ -44,6 +47,7 @@ private:
     TimeMeasurer                            timer_                  = {};       //< タイマー
 
     void _CreateVertexResource();
+    void _CreateIndexResource();
     void _LoadModelTexture();
     void _CopyFrom(GltfModel* _pCopySrc);
     void _UpdateLocalMatrixByAnimation();

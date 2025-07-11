@@ -76,6 +76,8 @@ ModelData ModelLoaderAssimp::_LoadModelByAssimp(const std::string& _path)
             throw std::runtime_error("Mesh does not have texture coordinates: " + _path);
         }
 
+        result.vertices.reserve(mesh->mNumVertices);
+
         // Face(面)の処理
         for (uint32_t faceIndex = 0; faceIndex < mesh->mNumFaces; ++faceIndex)
         {
@@ -86,23 +88,28 @@ ModelData ModelLoaderAssimp::_LoadModelByAssimp(const std::string& _path)
                 throw std::runtime_error("Mesh face is not a triangle: " + _path);
             }
 
-            // 頂点データの追加
             for (uint32_t element = 0; element < face.mNumIndices; ++element)
             {
-                const uint32_t vertexIndex = face.mIndices[element];
-                const aiVector3D& position = mesh->mVertices[vertexIndex];
-                const aiVector3D& normal = mesh->mNormals[vertexIndex];
-                const aiVector3D& texcoord = mesh->mTextureCoords[0][vertexIndex];
-
-                VertexData vertex;
-                vertex.position = Vector4(position.x, position.y, position.z, 1.0f);
-                vertex.normal = Vector3(normal.x, normal.y, normal.z);
-                vertex.texcoord = Vector2(texcoord.x, texcoord.y);
-                // aiProcess_MakeLeftHandedが有効な場合、X軸を反転
-                vertex.position.x *= -1.0f;
-                vertex.normal.x *= -1.0f;
-                result.vertices.push_back(vertex);
+                uint32_t vertexIndex = face.mIndices[element];
+                result.indices.push_back(vertexIndex);
             }
+        }
+
+        // 頂点データの追加
+        for (uint32_t vertexIndex = 0; vertexIndex < mesh->mNumVertices; ++vertexIndex)
+        {
+            const aiVector3D& position = mesh->mVertices[vertexIndex];
+            const aiVector3D& normal = mesh->mNormals[vertexIndex];
+            const aiVector3D& texcoord = mesh->mTextureCoords[0][vertexIndex];
+
+            VertexData vertex;
+            vertex.position = Vector4(position.x, position.y, position.z, 1.0f);
+            vertex.normal = Vector3(normal.x, normal.y, normal.z);
+            vertex.texcoord = Vector2(texcoord.x, texcoord.y);
+            // aiProcess_MakeLeftHandedが有効な場合、X軸を反転
+            vertex.position.x *= -1.0f;
+            vertex.normal.x *= -1.0f;
+            result.vertices.push_back(vertex);
         }
     }
 
