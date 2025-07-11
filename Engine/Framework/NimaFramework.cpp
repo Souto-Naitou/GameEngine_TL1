@@ -182,6 +182,7 @@ void NimaFramework::Initialize()
     pDirectX_->AddCommandList(pObject3dSystem_->GetCommandList());
     pDirectX_->AddCommandList(pParticleSystem_->GetCommandList());
     pDirectX_->AddCommandList(pSpriteSystem_->GetCommandList());
+    pDirectX_->AddCommandList(pLineSystem_->GetCommandList());
     pDirectX_->AddCommandList(pPostEffectExecuter_->GetCommandList());
 
     pDirectX_->AddOnResize("PostEffect", std::bind(&PostEffectExecuter::OnResize, pPostEffectExecuter_));
@@ -343,6 +344,7 @@ void NimaFramework::PreProcess()
     pObject3dSystem_->SetRTVHandle(pPostEffectExecuter_->GetRTVHandle());
     pSpriteSystem_->SetRTVHandle(pPostEffectExecuter_->GetRTVHandle());
     pParticleSystem_->SetRTVHandle(pPostEffectExecuter_->GetRTVHandle());
+    pLineSystem_->SetRTVHandle(pPostEffectExecuter_->GetRTVHandle());
 }
 
 void NimaFramework::PostProcess()
@@ -351,5 +353,6 @@ void NimaFramework::PostProcess()
     pObject3dSystem_->PostDraw();
     pSpriteSystem_->PostDraw();
     pParticleSystem_->PostDraw();
+    pLineSystem_->PostDraw();
     pPostEffectExecuter_->PostDraw();
 }

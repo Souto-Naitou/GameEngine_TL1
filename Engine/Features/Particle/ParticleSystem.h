@@ -33,8 +33,8 @@ public:
     void Initialize() override;
     void PresentDraw();
 
-    void DrawCall() override;
-    void Sync() override;
+    void DrawCall();
+    void Sync();
 
 
 public: /// Setter

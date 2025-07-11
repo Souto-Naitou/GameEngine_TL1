@@ -55,8 +55,8 @@ public:
 
     // Common function
     void    Initialize() override;
-    void    DrawCall() override;
-    void    Sync() override;
+    void    DrawCall();
+    void    Sync();
 
     // Draw settings
     void    DepthDrawSetting();

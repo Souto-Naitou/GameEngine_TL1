@@ -2,6 +2,8 @@
 
 #include <Features/SceneManager/SceneManager.h>
 #include <Scene/Factory/SceneFactory.h>
+#include <Features/Model/Loader/Assimp/ModelLoaderAssimp.h>
+#include <Features/Model/Loader/ModelLoaderLegacy.h>
 
 
 void SampleProgram::Initialize()
@@ -19,7 +21,7 @@ void SampleProgram::Initialize()
     pSceneFactory_ = std::make_unique<SceneFactory>();
     pSceneManager_->SetSceneFactory(pSceneFactory_.get());
 
-    pModelLoader_ = std::make_unique<ModelLoader>();
+    pModelLoader_ = std::make_unique<ModelLoaderAssimp>();
     pModelLoader_->Initialize();
     pModelLoader_->SetDirectX12(pDirectX_.get());
     pModelStorage_ = std::make_unique<ModelStorage>();

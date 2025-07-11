@@ -53,7 +53,7 @@ void Particle::Update()
         if (itr == particleData_.end()) break;
         if (index >= currentInstancingSize_) break;
 
-        Transform& transform = itr->transform_;
+        EulerTransform& transform = itr->transform_;
         Vector4& currentColor = itr->currentColor_;
 
         /// パーティクルデータの更新
@@ -187,7 +187,7 @@ void Particle::InitializeTransform()
 {
     for (auto& datum : particleData_)
     {
-        Transform& transform = datum.transform_;
+        EulerTransform& transform = datum.transform_;
         transform.scale = Vector3(1.0f, 1.0f, 1.0f);
         transform.rotate = Vector3(0.0f, 0.0f, 0.0f);
         transform.translate = Vector3(0.0f, 0.0f, 0.0f);
@@ -200,9 +200,9 @@ void Particle::ParticleDataUpdate(std::vector<ParticleData>::iterator& _itr)
     bool isGround = false;
     float deltaTime = 1.0f / 60.0f;
 
-    Timer&              timer = _itr->timer_;
+    TimeMeasurer&       timer = _itr->timer_;
 
-    Transform&          transform = _itr->transform_;
+    EulerTransform&          transform = _itr->transform_;
     Vector3&            velocity = _itr->velocity_;
     Vector3&            acceleration = _itr->acceleration_;
     Vector3&            gravity = _itr->accGravity_;

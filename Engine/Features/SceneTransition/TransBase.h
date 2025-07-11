@@ -1,6 +1,6 @@
 #pragma once
 #include <string>
-#include <timer/Timer.h>
+#include <Features/TimeMeasurer/TimeMeasurer.h>
 
 
 class TransBase
@@ -16,6 +16,6 @@ public:
     bool IsEnd() const { return isEnd_; }
 
 protected:
-    Timer timer_;
+    TimeMeasurer timer_;
     bool isEnd_ = false;
 };

@@ -3,7 +3,7 @@
 #include "Features/SceneTransition/TransBase.h"
 #include <string>
 #include <Features/Sprite/Sprite.h>
-#include <Timer/Timer.h>
+#include <Features/TimeMeasurer/TimeMeasurer.h>
 
 
 class TransFadeInOut : public TransBase
@@ -32,4 +32,5 @@ private:
 
     std::string sceneName_;
     std::unique_ptr<Sprite> sprite_;
+    std::unordered_map<std::string, TimeMeasurer> fadeTimers_;
 };

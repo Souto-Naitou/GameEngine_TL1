@@ -14,8 +14,6 @@ public:
     // Virtual functions
     virtual         ~ObjectSystemBase() = default;      // dtor
     virtual void    Initialize();                       // Create the command list
-    virtual void    DrawCall() = 0;                     // Draw call (e.g. processing a batch of draw commands)
-    virtual void    Sync() = 0;                         // Sync with main thread
     virtual void    PostDraw();                         // Reset the command allocator and command list
     
     // Getters

@@ -1,8 +1,8 @@
 #pragma once
 
 #include <Framework/NimaFramework.h>
-#include <Timer/Timer.h>
-#include <Features/Model/Loader/ModelLoader.h>
+#include <Features/TimeMeasurer/TimeMeasurer.h>
+#include <Features/Model/Loader/IModelLoader.h>
 #include <Features/Model/ModelStorage.h>
 #include <Features/Model/ModelManager.h>
 
@@ -36,8 +36,8 @@ public:
 
 
 private: /// ゲーム内オブジェクト
-    Timer globalTimer_;     // !< グローバルタイマー
-    std::unique_ptr<ModelLoader> pModelLoader_ = nullptr; // !< モデルローダー
+    TimeMeasurer globalTimer_;     // !< グローバルタイマー
+    std::unique_ptr<IModelLoader> pModelLoader_ = nullptr; // !< モデルローダー
     std::unique_ptr<ModelStorage> pModelStorage_ = nullptr; // !< モデルストレージ
     std::unique_ptr<ModelManager> pModelManager_ = nullptr; // !< モデルマネージャー
 };

@@ -32,6 +32,7 @@ void CG3PT2::Initialize()
     pMonsterBall_->SetName("MonsterBall");
     pMonsterBall_->SetEnableLighting(true);
     pMonsterBall_->SetShininess(12.f);
+    pMonsterBall_->SetModel(pModelMonsterBall_);
 
     pGrid_ = std::make_unique<Object3d>();
     pGrid_->Initialize(pModelManager_->Load("Grid_v3.obj"));
@@ -39,6 +40,7 @@ void CG3PT2::Initialize()
     pGrid_->SetName("Grid");
     pGrid_->SetTilingMultiply({ 100.0f, 100.0f });
     pGrid_->SetEnableLighting(true);
+    pGrid_->SetModel(pModelGrid_);
 
     /// 平行光源
     directionalLight_.direction = { 0.0f, -1.0f, 0.0f };
@@ -102,8 +104,8 @@ void CG3PT2::Draw2dBackGround()
 void CG3PT2::Draw3d()
 {
     pointLight_.Draw();
-    pMonsterBall_->Draw(pModelMonsterBall_);
-    pGrid_->Draw(pModelGrid_);
+    pMonsterBall_->Draw();
+    pGrid_->Draw();
 }
 
 void CG3PT2::DrawLine()

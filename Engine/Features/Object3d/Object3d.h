@@ -39,7 +39,7 @@ public:
     /// <summary>
     /// 描画
     /// </summary>
-    void Draw(IModel* _pModel);
+    void Draw();
 
     /// <summary>
     /// 終了処理
@@ -67,10 +67,11 @@ public: /// Setter
     void SetLightingType(LightingType _type)                    { lightingData_->lightingType = _type; }
     void SetPointLight(PointLight* _light)                      { pointLight_ = _light; }
     void SetShininess(float _shininess)                         { materialData_->shininess = _shininess; }
+    void SetModel(IModel* _pModel)                              { pModel_ = _pModel; }
 
 
 private: /// メンバ変数
-    Transform                                       transform_                      = {};
+    EulerTransform                                       transform_                      = {};
     Matrix4x4                                       rotateMatrix_                   = {};
     std::string                                     name_                           = {};
 
@@ -101,6 +102,7 @@ private: /// メンバ変数
     std::string                                     modelPath_                      = {};
     GameEye*                                        pGameEye_                       = nullptr;
     GameEye**                                       ppSystemGameEye_                = nullptr;
+    IModel*                                         pModel_                         = nullptr;
 
 private: /// 非公開メンバ関数
     void CreateTransformationMatrixResource();

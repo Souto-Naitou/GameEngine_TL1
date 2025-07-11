@@ -2,13 +2,13 @@
 
 #include <Features/Object3d/Object3dSystem.h>
 #include <Features/Particle/ParticleSystem.h>
-#include <Features/SceneManager/SceneManager.h>
+#include <Features/Particle/ParticleManager.h>
 #include <Features/Line/LineSystem.h>
 #include <Features/GameEye/FreeLook/FreeLookEye.h>
 
 #include <DebugTools/DebugManager/DebugManager.h>
 #include <Core/DirectX12/TextureManager.h>
-#include <Features/Model/ModelFromObj.h>
+#include <Features/Model/ObjModel.h>
 
 
 void CG4Task1::Initialize()
@@ -27,7 +27,7 @@ void CG4Task1::Initialize()
     LineSystem::GetInstance()->SetGlobalEye(pGameEye_.get());
 
     // グリッドの初期化
-    pModelGrid_ = std::make_unique<ModelFromObj>();
+    pModelGrid_ = std::make_unique<ObjModel>();
     pModelGrid_->Clone(pModelManager_->Load("Grid_v4/Grid_v4.obj"));
     pGrid_ = std::make_unique<Object3d>();
     pGrid_->Initialize();
@@ -36,6 +36,7 @@ void CG4Task1::Initialize()
     pGrid_->SetTilingMultiply({ 100.0f, 100.0f });
     pGrid_->SetEnableLighting(false);
     pGrid_->SetColor({ 1.0f, 1.0f, 1.0f, 0.3f });
+    pGrid_->SetModel(pModelGrid_.get());
 
     // テクスチャの読み込み
     auto tm = TextureManager::GetInstance();
@@ -44,8 +45,8 @@ void CG4Task1::Initialize()
 
     // パーティクルとモデルの初期化
     auto pSrc = pModelManager_->Load("Particle/ParticleSpark.obj");
-    pModelSpark_ = std::make_unique<ModelFromObj>();
-    pModelCircle_ = std::make_unique<ModelFromObj>();
+    pModelSpark_ = std::make_unique<ObjModel>();
+    pModelCircle_ = std::make_unique<ObjModel>();
     pModelSpark_->Clone(pSrc);
     pModelCircle_->Clone(pSrc);
 
@@ -90,6 +91,7 @@ void CG4Task1::Initialize()
 void CG4Task1::Finalize()
 {
     pText_->Finalize();
+    ParticleManager::GetInstance()->ReleaseAllParticle();
     pEmitter_Test_->Finalize();
     pEmitter_Spark_->Finalize();
     pEmitter_Snow_->Finalize();
@@ -128,7 +130,7 @@ void CG4Task1::DrawLine()
 
 void CG4Task1::Draw3d()
 {    
-    pGrid_->Draw(pModelGrid_.get());
+    pGrid_->Draw();
 }
 
 void CG4Task1::Draw2dForeground()

@@ -1,7 +1,7 @@
 #pragma once
 
 #include <chrono>
-#include <Timer/Timer.h>
+#include <Features/TimeMeasurer/TimeMeasurer.h>
 
 class FrameRate
 {
@@ -25,7 +25,7 @@ private:
     ~FrameRate() = default;
     std::chrono::steady_clock::time_point reference_;
 
-    Timer timer_ = {};
+    TimeMeasurer timer_ = {};
 
     double          fps_                    = 0.0;
     unsigned int    frameCount_             = 0u;

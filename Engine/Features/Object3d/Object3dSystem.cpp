@@ -69,8 +69,7 @@ void Object3dSystem::DrawCall()
                 auto& [key, value] = cbuffer;
                 _commandList->SetGraphicsRootConstantBufferView(key, value->GetGPUVirtualAddress());
             }
-            data.model->SetCommandList(_commandList);
-            data.model->Draw();
+            data.model->Draw(_commandList);
         }
 
         /// ルートシグネチャをセットする
@@ -90,8 +89,7 @@ void Object3dSystem::DrawCall()
                 _commandList->SetGraphicsRootConstantBufferView(key, value->GetGPUVirtualAddress());
             }
 
-            data.model->SetCommandList(_commandList);
-            data.model->Draw();
+            data.model->Draw(_commandList);
         }
     };
 

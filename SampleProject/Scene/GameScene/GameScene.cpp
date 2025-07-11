@@ -40,6 +40,7 @@ void GameScene::Initialize()
     pSkydome_->SetScale({ 1.0f, 1.0f, 1.0f });
     pSkydome_->SetName("Skydome");
     pSkydome_->SetEnableLighting(false);
+    pSkydome_->SetModel(pModelSkydome_);
 
     pGrid_ = std::make_unique<Object3d>();
     pGrid_->Initialize();
@@ -47,6 +48,7 @@ void GameScene::Initialize()
     pGrid_->SetName("Grid");
     pGrid_->SetTilingMultiply({ 100.0f, 100.0f });
     pGrid_->SetEnableLighting(false);
+    pGrid_->SetModel(pModelGrid_);
 
     // ガイド用のスプライトを生成
     pGuideSprite_ = std::make_unique<Sprite>();
@@ -108,8 +110,8 @@ void GameScene::DrawLine()
 
 void GameScene::Draw3d()
 {
-    pSkydome_->Draw(pModelSkydome_);
-    pGrid_->Draw(pModelGrid_);
+    pSkydome_->Draw();
+    pGrid_->Draw();
 }
 
 void GameScene::Draw2dForeground()

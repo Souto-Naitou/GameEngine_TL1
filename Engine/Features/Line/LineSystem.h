@@ -4,9 +4,10 @@
 #include <dxgi1_6.h>
 #include <wrl.h>
 #include <Core/DirectX12/DirectX12.h>
-#include <Features/GameEye/GameEye.h>
+#include <BaseClasses/ObjectSystemBase.h>
 
-class LineSystem : public EngineFeature
+
+class LineSystem : public ObjectSystemBase
 {
 public:
     LineSystem(const LineSystem&) = delete;
@@ -27,14 +28,6 @@ public:
 private:
     LineSystem() = default;
     ~LineSystem() = default;
-
-
-public: /// Getter
-    GameEye** GetSharedGameEye() { return &pDefaultGameEye_; }
-
-
-public: /// Setter
-    void SetGlobalEye(GameEye* _pGameEye) { pDefaultGameEye_ = _pGameEye; }
 
 
 private: /// メンバ変数
@@ -59,7 +52,6 @@ private: /// 処理郡
     void SetDSVDesc();
 
 private: /// 他クラスのインスタンス
-    GameEye* pDefaultGameEye_ = nullptr;
     ID3D12Device* device_ = nullptr;
     IDxcUtils* dxcUtils_ = nullptr;
     IDxcCompiler3* dxcCompiler_ = nullptr;

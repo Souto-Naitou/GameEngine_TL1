@@ -26,8 +26,8 @@ public:
     // Common functions
     void Initialize() override;
     void PresentDraw();
-    void DrawCall() override;
-    void Sync() override;
+    void DrawCall();
+    void Sync();
 
     // Setter
     void AddCommandListData(const CommandListData& _data);

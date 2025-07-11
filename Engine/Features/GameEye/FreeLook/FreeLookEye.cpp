@@ -74,7 +74,7 @@ void FreeLookEye::CatchRotateCommands()
         static_cast<float>(currCursorPos_.y - prevCursorPos_.y) 
     };
 
-    Transform transform = GetTransform();
+    EulerTransform transform = GetTransform();
     transform.rotate.x += diff.y * 0.003f;
     transform.rotate.y += diff.x * 0.003f;
 

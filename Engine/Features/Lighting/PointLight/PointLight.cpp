@@ -11,6 +11,7 @@ void PointLight::Initialize()
     pIcon_->SetScale({ 0.05f, 0.05f, 0.05f });
     pIcon_->SetEnableLighting(true);
     pIcon_->SetPointLight(this);
+    pIcon_->SetModel(pIconModel_);
 
     std::stringstream ss;
     ss << "PointLight##0x" << std::hex << this;
@@ -26,7 +27,7 @@ void PointLight::Update()
 
 void PointLight::Draw()
 {
-    pIcon_->Draw(pIconModel_);
+    pIcon_->Draw();
 }
 
 void PointLight::Finalize()

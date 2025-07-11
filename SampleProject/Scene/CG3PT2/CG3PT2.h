@@ -10,6 +10,7 @@
 
 #include <memory>
 #include <string>
+#include <Features/Model/ModelManager.h>
 
 class CG3PT2 : public SceneBase
 {

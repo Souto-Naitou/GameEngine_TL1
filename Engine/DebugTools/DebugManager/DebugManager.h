@@ -3,7 +3,7 @@
 #include <Core/Localization/LanguageData.h>
 #include <Core/DirectX12/DirectX12.h>
 #include <Features/Text/Text.h>
-#include <Timer/Timer.h>
+#include <Features/TimeMeasurer/TimeMeasurer.h>
 
 #include <functional>
 #include <list>
@@ -66,8 +66,8 @@ private:
     std::list<ComponentData>    componentList_;
 
     // Timing utilities for frame measurement
-    Timer                   timer_ = {};
-    Timer                   frameTimer_ = {};
+    TimeMeasurer            timer_ = {};
+    TimeMeasurer            frameTimer_ = {};
 
     // FPS calculation data
     double                  elapsedFrameCount_ = 0.0;
