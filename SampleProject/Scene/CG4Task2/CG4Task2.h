@@ -7,7 +7,6 @@
 
 
 #include <memory>
-#include <Features/Particle/Emitter/ParticleEmitter.h>
 #include <Features/Text/Text.h>
 #include <Features/Model/IModel.h>
 #include <Features/Model/ModelManager.h>
@@ -20,10 +19,7 @@ public:
     void    Initialize() override;
     void    Finalize() override;
     void    Update() override;
-    void    DrawLine() override;
-    void    Draw3d() override;
-    void    Draw2dBackGround() override;
-    void    Draw2dForeground() override;
+    void    Draw() override;
     void    DrawTexts() override;
 
 private:

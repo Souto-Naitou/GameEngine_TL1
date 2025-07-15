@@ -137,7 +137,7 @@ void Viewport::CreateSRV()
 void Viewport::CreateUAV()
 {
     outputUAVIndex_ = pSRVManager_->Allocate();
-    pSRVManager_->CreateForUAV(outputUAVIndex_, outputTexture_->resource.Get(), DXGI_FORMAT_R8G8B8A8_UNORM);
+    pSRVManager_->CreateUAV(outputUAVIndex_, outputTexture_->resource.Get(), DXGI_FORMAT_R8G8B8A8_UNORM);
 }
 
 void Viewport::Compute()

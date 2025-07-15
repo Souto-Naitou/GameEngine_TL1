@@ -3,6 +3,7 @@
 #include <cassert>
 #include <Core/DirectX12/Helper/DX12Helper.h>
 #include <Core/Win32/WinSystem.h>
+#include <Core/DirectX12/SRVManager.h>
 
 Object3dSystem::Object3dSystem()
 {
@@ -51,6 +52,10 @@ void Object3dSystem::DrawCall()
     {
         /// コマンドリストの設定
         DX12Helper::CommandListCommonSetting(pDx12_, _commandList, rtvHandle_);
+
+        /// Compute::Start
+
+        /// Compute::End
 
         /// ルートシグネチャをセットする
         _commandList->SetGraphicsRootSignature(rootSignature_.Get());
@@ -358,3 +363,53 @@ void Object3dSystem::CreateDepthPipelineState()
 
     return;
 }
+
+void Object3dSystem::CreateRootSignatureCS()
+{
+    RootParameters<3> rootParametersCS;
+    rootParametersCS
+        .SetParameter(0, "t0", D3D12_SHADER_VISIBILITY_ALL)
+        .SetParameter(1, "t1", D3D12_SHADER_VISIBILITY_ALL)
+        .SetParameter(2, "t2", D3D12_SHADER_VISIBILITY_ALL)
+        .SetParameter(3, "u0", D3D12_SHADER_VISIBILITY_ALL)
+        .SetParameter(4, "b0", D3D12_SHADER_VISIBILITY_ALL);
+
+    D3D12_ROOT_SIGNATURE_DESC rootSignatureDesc = {};
+    rootSignatureDesc.pParameters = rootParametersCS.GetParams();
+    rootSignatureDesc.NumParameters = rootParametersCS.GetSize();
+    rootSignatureDesc.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
+    rootSignatureDesc.pStaticSamplers = nullptr; // CSではStaticSamplerは使用しない
+    rootSignatureDesc.NumStaticSamplers = 0;
+
+    // シリアライズしてバイナリにする
+    Microsoft::WRL::ComPtr<ID3DBlob> signatureBlob = nullptr;
+    Microsoft::WRL::ComPtr<ID3DBlob> errorBlob = nullptr;
+    HRESULT hr = D3D12SerializeRootSignature(&rootSignatureDesc,
+        D3D_ROOT_SIGNATURE_VERSION_1, &signatureBlob, &errorBlob);
+    if (FAILED(hr))
+    {
+        Logger::GetInstance()->LogError(
+            "Object3dSystem",
+            __func__,
+            reinterpret_cast<char*>(errorBlob->GetBufferPointer())
+        );
+
+        assert(false);
+    }
+    // バイナリをもとに生成
+    hr = pDx12_->GetDevice()->CreateRootSignature(0, signatureBlob->GetBufferPointer(),
+        signatureBlob->GetBufferSize(), IID_PPV_ARGS(&rootSignature_));
+    assert(SUCCEEDED(hr));
+}
+
+void Object3dSystem::CreatePipelineStateCS()
+{
+    D3D12_COMPUTE_PIPELINE_STATE_DESC computePipelineStateDesc = {};
+    computePipelineStateDesc.CS = {
+        .pShaderBytecode = computeShaderBlob_->GetBufferPointer(),
+        .BytecodeLength = computeShaderBlob_->GetBufferSize()
+    };
+    computePipelineStateDesc.pRootSignature = computeRootSig_.Get();
+    HRESULT hr = pDx12_->GetDevice()->CreateComputePipelineState(&computePipelineStateDesc, IID_PPV_ARGS(&psoCompute_));
+}
+

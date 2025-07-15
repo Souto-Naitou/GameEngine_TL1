@@ -1053,5 +1053,8 @@
     <FxCompile Include="EngineResources\Shaders\SkinningObject3d.PS.hlsl">
       <Filter>HLSL</Filter>
     </FxCompile>
+    <FxCompile Include="EngineResources\Shaders\Skinning.CS.hlsl">
+      <Filter>HLSL</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

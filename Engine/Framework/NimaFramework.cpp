@@ -186,6 +186,17 @@ void NimaFramework::Initialize()
     pDirectX_->AddCommandList(pPostEffectExecuter_->GetCommandList());
 
     pDirectX_->AddOnResize("PostEffect", std::bind(&PostEffectExecuter::OnResize, pPostEffectExecuter_));
+
+    /// デフォルトシーン引数の設定
+    (*pSceneManager_)
+        .AddInitialArg("DirectX12", pDirectX_.get())
+        .AddInitialArg("PostEffectExecuter", pPostEffectExecuter_)
+        .AddInitialArg("Object3dSystem", pObject3dSystem_)
+        .AddInitialArg("ParticleSystem", pParticleSystem_)
+        .AddInitialArg("SpriteSystem", pSpriteSystem_)
+        .AddInitialArg("LineSystem", pLineSystem_)
+        .AddInitialArg("ParticleManager", pParticleManager_)
+        .AddInitialArg("AudioManager", pAudioManager_);
 }
 
 void NimaFramework::Finalize()
@@ -293,9 +304,11 @@ void NimaFramework::Draw()
     pParticleSystem_->DrawCall();
 
     /// 前景スプライトの描画
-    pSceneManager_->SceneDraw2dForeground();
     NiGui::DrawUI();
     pSpriteSystem_->DrawCall();
+
+    // シーンの描画 (テキスト以外)
+    pSceneManager_->SceneDraw();
 
     // 同期待ち
     pObject3dSystem_->Sync();

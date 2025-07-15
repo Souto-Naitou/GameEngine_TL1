@@ -77,15 +77,21 @@ private:
     void    CreateRootSignature();          // Create root signature
     void    CreateMainPipelineState();      // for main drawing
     void    CreateDepthPipelineState();     // for Early-Z
+    void    CreateRootSignatureCS();          // Create root signature
+    void    CreatePipelineStateCS();
+    void    CreateUAV();
 
     // DirectX objects and paths
     static constexpr wchar_t        kVertexShaderPath[]     = L"EngineResources/Shaders/SkinningObject3d.VS.hlsl";
     static constexpr wchar_t        kPixelShaderPath[]      = L"EngineResources/Shaders/SkinningObject3d.PS.hlsl";
     ComPtr<ID3D12RootSignature>     rootSignature_          = nullptr;  // Root signature
+    ComPtr<ID3D12RootSignature>     computeRootSig_         = nullptr;  // Root signature
     ComPtr<ID3D12PipelineState>     psoMain_                = nullptr;  // Pipeline state object for main drawing
     ComPtr<ID3D12PipelineState>     psoEarlyZ_              = nullptr;  // Pipeline state object for Early-Z
+    ComPtr<ID3D12PipelineState>     psoCompute_             = nullptr;  // Pipeline state object for Early-Z
     ComPtr<IDxcBlob>                vertexShaderBlob_       = nullptr;  // Blob of vertex shader
     ComPtr<IDxcBlob>                pixelShaderBlob_        = nullptr;  // Blob of pixel shader
+    ComPtr<IDxcBlob>                computeShaderBlob_      = nullptr;  // Blob of compute shader
     std::list<CommandListData>      commandListDatas_       = {};       // Container for draw settings
     RootParameters<9>               rootParameters_         = {};       // Root parameters for root signature
     D3D12_INPUT_ELEMENT_DESC        inputElementDescs_[5]   = {};

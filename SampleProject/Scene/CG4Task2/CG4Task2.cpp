@@ -85,24 +85,31 @@ void CG4Task2::Update()
     pText_->Update();
 }
 
-void CG4Task2::Draw2dBackGround()
+void CG4Task2::Draw()
 {
-}
-
-void CG4Task2::DrawLine()
-{
-    auto ptr = dynamic_cast<GltfModel*>(pModelSimple_.get());
-    ptr->GetSkeleton()->DrawLine();
-}
-
-void CG4Task2::Draw3d()
-{    
+    // ==============================
+    // [Draw3d Begin]
+    
     //pGrid_->Draw();
     pSimple_->Draw();
-}
 
-void CG4Task2::Draw2dForeground()
-{
+    // [Draw3d End]
+    // ==============================
+
+    // =============================================
+    // [DrawSprite Begin]
+
+    // [DrawSprite End]
+    // =============================================
+
+    // ==============================
+    // [DrawLine Begin]
+
+    auto ptr = dynamic_cast<GltfModel*>(pModelSimple_.get());
+    ptr->GetSkeleton()->DrawLine();
+
+    // [DrawLine End]
+    // ==============================
 }
 
 void CG4Task2::DrawTexts()

@@ -22,6 +22,12 @@ void SceneManager::SetModelManager(ModelManager* _pModelManager)
     pModelManager_ = _pModelManager;
 }
 
+SceneManager& SceneManager::AddInitialArg(const std::string& _key, const std::any& _value)
+{
+    initialArgs_[_key] = _value;
+    return *this;
+}
+
 void SceneManager::ReserveScene(const std::string& _name)
 {
     isReserveScene_ = true;
@@ -61,37 +67,11 @@ void SceneManager::Update()
     pSceneTransitionManager_->Update();
 }
 
-void SceneManager::SceneDraw2dBackGround()
+void SceneManager::SceneDraw()
 {
     if (pCurrentScene_ != nullptr)
     {
-        pCurrentScene_->Draw2dBackGround();
-    }
-}
-
-void SceneManager::SceneDraw3d()
-{
-    if (pCurrentScene_ != nullptr)
-    {
-        pCurrentScene_->Draw3d();
-    }
-}
-
-void SceneManager::SceneDrawLine()
-{
-    if (pCurrentScene_ != nullptr)
-    {
-        pCurrentScene_->DrawLine();
-    }
-}
-
-void SceneManager::SceneDraw2dForeground()
-{
-    pSceneTransitionManager_->Draw();
-
-    if (pCurrentScene_ != nullptr)
-    {
-        pCurrentScene_->Draw2dForeground();
+        pCurrentScene_->Draw();
     }
 }
 

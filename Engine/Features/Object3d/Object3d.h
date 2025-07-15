@@ -103,6 +103,8 @@ private: /// メンバ変数
     GameEye*                                        pGameEye_                       = nullptr;
     GameEye**                                       ppSystemGameEye_                = nullptr;
     IModel*                                         pModel_                         = nullptr;
+    uint32_t                                        uavIndex_                       = 0; // UAV index 
+
 
 private: /// 非公開メンバ関数
     void CreateTransformationMatrixResource();
@@ -112,6 +114,7 @@ private: /// 非公開メンバ関数
     void CreateLightingResource();
     void CreatePointLightResource();
     void CreateMaterialResource();
+    void CreateUAV();
 
 
 #ifdef DEBUG_ENGINE
