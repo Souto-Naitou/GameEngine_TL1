@@ -17,6 +17,7 @@ public:
     // Common functions
     ~ObjModel()                                     override = default;
     void    Initialize()                            override;
+    void    Finalize()                              override {};
     void    Update()                                override;
     void    Draw(ID3D12GraphicsCommandList* _cl)    override;
     void    CreateGPUResource()                     override;

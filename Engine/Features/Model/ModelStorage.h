@@ -10,6 +10,8 @@
 class ModelStorage
 {
 public:
+    void Finalize();
+
     /// <summary>
     /// モデルデータを取得
     /// </summary>

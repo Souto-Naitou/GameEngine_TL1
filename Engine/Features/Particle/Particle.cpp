@@ -202,7 +202,7 @@ void Particle::ParticleDataUpdate(std::vector<ParticleData>::iterator& _itr)
 
     TimeMeasurer&       timer = _itr->timer_;
 
-    EulerTransform&          transform = _itr->transform_;
+    EulerTransform&     transform = _itr->transform_;
     Vector3&            velocity = _itr->velocity_;
     Vector3&            acceleration = _itr->acceleration_;
     Vector3&            gravity = _itr->accGravity_;

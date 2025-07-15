@@ -3,7 +3,6 @@
 #include <cassert>
 #include <Core/DirectX12/Helper/DX12Helper.h>
 #include <Core/Win32/WinSystem.h>
-#include <Core/DirectX12/RootParameters/RootParameters.h>
 
 Object3dSystem::Object3dSystem()
 {
@@ -123,8 +122,7 @@ void Object3dSystem::CreateRootSignature()
         D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
 
     // RootParameter作成。複数設定できるので配列
-    RootParameters<8> rootParameters = {};
-    rootParameters
+    rootParameters_
         .SetParameter(0, "b0", D3D12_SHADER_VISIBILITY_PIXEL)
         .SetParameter(1, "b0", D3D12_SHADER_VISIBILITY_VERTEX)
         .SetParameter(2, "t0", D3D12_SHADER_VISIBILITY_PIXEL)
@@ -132,10 +130,11 @@ void Object3dSystem::CreateRootSignature()
         .SetParameter(4, "b2", D3D12_SHADER_VISIBILITY_PIXEL)
         .SetParameter(5, "b3", D3D12_SHADER_VISIBILITY_PIXEL)
         .SetParameter(6, "b4", D3D12_SHADER_VISIBILITY_PIXEL)   // Lighting
-        .SetParameter(7, "b5", D3D12_SHADER_VISIBILITY_PIXEL);  // PointLight
+        .SetParameter(7, "b5", D3D12_SHADER_VISIBILITY_PIXEL)   // PointLight
+        .SetParameter(8, "t0", D3D12_SHADER_VISIBILITY_VERTEX); // MatrixPalette
 
-    descriptionRootSignature.pParameters = rootParameters.GetParams();      // ルートパラメータ配列へのポインタ
-    descriptionRootSignature.NumParameters = rootParameters.GetSize();      // 配列の長さ
+    descriptionRootSignature.pParameters = rootParameters_.GetParams();      // ルートパラメータ配列へのポインタ
+    descriptionRootSignature.NumParameters = rootParameters_.GetSize();      // 配列の長さ
 
     D3D12_STATIC_SAMPLER_DESC staticSamplers[1] = {};
     staticSamplers[0].Filter = D3D12_FILTER_MAXIMUM_ANISOTROPIC;            // 異方性フィルタリング
@@ -198,6 +197,17 @@ void Object3dSystem::CreateMainPipelineState()
     inputElementDescs_[2].SemanticIndex = 0;
     inputElementDescs_[2].Format = DXGI_FORMAT_R32G32B32_FLOAT;
     inputElementDescs_[2].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
+    inputElementDescs_[3].SemanticName = "WEIGHT";
+    inputElementDescs_[3].SemanticIndex = 0;
+    inputElementDescs_[3].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+    inputElementDescs_[3].InputSlot = 1;  // スキニング用の頂点データは別のスロットを使用
+    inputElementDescs_[3].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
+    inputElementDescs_[4].SemanticName = "INDEX";
+    inputElementDescs_[4].SemanticIndex = 0;
+    inputElementDescs_[4].Format = DXGI_FORMAT_R32G32B32A32_SINT;
+    inputElementDescs_[4].InputSlot = 1;  // スキニング用の頂点データは別のスロットを使用
+    inputElementDescs_[4].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
+
 
 
     inputLayoutDesc_.pInputElementDescs = inputElementDescs_;

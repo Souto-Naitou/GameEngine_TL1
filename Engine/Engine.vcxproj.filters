@@ -1047,5 +1047,11 @@
     <FxCompile Include="EngineResources\Shaders\RandomFilter.PS.hlsl">
       <Filter>HLSL\PostEffect</Filter>
     </FxCompile>
+    <FxCompile Include="EngineResources\Shaders\SkinningObject3d.VS.hlsl">
+      <Filter>HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="EngineResources\Shaders\SkinningObject3d.PS.hlsl">
+      <Filter>HLSL</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

@@ -8,6 +8,7 @@ class IModel : public EngineFeature
 public:
     virtual ~IModel() = default;
     virtual void Initialize() = 0;
+    virtual void Finalize() = 0;
     virtual void Update() = 0;
     virtual void Draw(ID3D12GraphicsCommandList* _cl) = 0;
     virtual void ChangeTexture(D3D12_GPU_DESCRIPTOR_HANDLE _texSrvHnd) = 0;

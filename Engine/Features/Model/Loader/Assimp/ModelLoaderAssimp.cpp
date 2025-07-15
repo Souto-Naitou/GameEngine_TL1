@@ -42,6 +42,11 @@ std::shared_ptr<IModel> ModelLoaderAssimp::LoadModel(const std::string& _path)
         *gltfModel->GetModelData() = this->_LoadModelByAssimp(_path);
         *gltfModel->GetAnimationData() = this->_LoadAnimation(_path);
         *gltfModel->GetSkeleton() = this->_CreateSkeleton(gltfModel->GetModelData()->rootNode);
+        *gltfModel->GetSkinCluster() = this->_CreateSkinCluster(
+            pDx12_->GetDevice(),
+            *gltfModel->GetSkeleton(),
+            *gltfModel->GetModelData()
+        );
         gltfModel->CreateGPUResource();
         model = gltfModel;
     }
@@ -272,7 +277,7 @@ Skeleton ModelLoaderAssimp::_CreateSkeleton(const Node& _rootNode)
     Skeleton skeleton;
     skeleton.Initialize();
     SkeletonData& skeletonData = skeleton.GetSkeletonData();
-    skeletonData.rootIndex = CreateJoint(_rootNode, {}, skeletonData.joints);
+    skeletonData.rootIndex = _CreateJoint(_rootNode, {}, skeletonData.joints);
 
     // 名前とindexのマッピングを行いアクセスしやすくする
     for (const Joint& joint : skeletonData.joints)
@@ -305,7 +310,7 @@ Skeleton ModelLoaderAssimp::_CreateSkeleton(const Node& _rootNode)
     return skeleton;
 }
 
-int32_t ModelLoaderAssimp::CreateJoint(const Node& _node, const std::optional<int32_t>& _parentIndex, std::vector<Joint>& _joints)
+int32_t ModelLoaderAssimp::_CreateJoint(const Node& _node, const std::optional<int32_t>& _parentIndex, std::vector<Joint>& _joints)
 {
     Joint joint;
     joint.Initialize();
@@ -320,7 +325,7 @@ int32_t ModelLoaderAssimp::CreateJoint(const Node& _node, const std::optional<in
     for (const Node& child : _node.children)
     {
         // 子Jointを作成してそのIndexを登録
-        int32_t childIndex = this->CreateJoint(child, jointData.index, _joints);
+        int32_t childIndex = this->_CreateJoint(child, jointData.index, _joints);
         _joints[jointData.index].GetJointData().childrenIndices.push_back(childIndex);
     }
     return jointData.index;
@@ -329,9 +334,7 @@ int32_t ModelLoaderAssimp::CreateJoint(const Node& _node, const std::optional<in
 SkinCluster ModelLoaderAssimp::_CreateSkinCluster(
     const Microsoft::WRL::ComPtr<ID3D12Device>& _device,
     const Skeleton& _skeleton, 
-    const ModelData& _modelData, 
-    const ID3D12DescriptorHeap* _descriptorHeap, 
-    uint32_t descriptorSize
+    const ModelData& _modelData
 )
 {
     SkinCluster skinCluster;
@@ -357,7 +360,7 @@ SkinCluster ModelLoaderAssimp::_CreateSkinCluster(
     sm->CreateForStructuredBuffer(
         skinCluster.srvIndex,
         skinCluster.paletteResource.Get(),
-        skeletonData.joints.size(),
+        static_cast<uint32_t>(skeletonData.joints.size()),
         sizeof(WellForGPU)
     );
 
@@ -369,6 +372,7 @@ SkinCluster ModelLoaderAssimp::_CreateSkinCluster(
     VertexInfluence* mappedInfluences = nullptr;
     skinCluster.influenceResource->Map(0, nullptr, reinterpret_cast<void**>(&mappedInfluences));
     std::memset(mappedInfluences, 0, sizeof(VertexInfluence) * _modelData.vertices.size());
+    skinCluster.mappedInfluences = { mappedInfluences, _modelData.vertices.size() };
 
     // インフルエンスのバッファビューを作成
     skinCluster.influenceBufferView.BufferLocation = skinCluster.influenceResource->GetGPUVirtualAddress();
@@ -378,7 +382,7 @@ SkinCluster ModelLoaderAssimp::_CreateSkinCluster(
     // InverseBindPoseMatrixを格納する場所を作成して、単位行列で埋める
     auto& ibpm = skinCluster.inverseBindPoseMatrices;
     ibpm.resize(skeletonData.joints.size());
-    std::generate(ibpm.begin(), ibpm.end(), Matrix4x4::Identity());
+    std::generate(ibpm.begin(), ibpm.end(), Matrix4x4::Identity);
     
     for (const auto& jointWeight : _modelData.skinClusterData)
     {
@@ -406,4 +410,6 @@ SkinCluster ModelLoaderAssimp::_CreateSkinCluster(
             }
         }
     }
+
+    return skinCluster;
 }

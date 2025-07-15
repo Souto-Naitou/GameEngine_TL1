@@ -45,6 +45,7 @@ void SampleProgram::Finalize()
 {
     /// 基底クラスの終了処理
     NimaFramework::Finalize();
+    pModelStorage_->Finalize();
 }
 
 void SampleProgram::Update()

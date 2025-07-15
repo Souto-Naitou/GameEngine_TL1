@@ -7,6 +7,7 @@
 #include <Vector4.h>
 #include <Vector3.h>
 #include <Math/Transform.h>
+#include <unordered_map>
 
 // contained in ModelData
 struct Node

@@ -71,7 +71,7 @@ public: /// Setter
 
 
 private: /// メンバ変数
-    EulerTransform                                       transform_                      = {};
+    EulerTransform                                  transform_                      = {};
     Matrix4x4                                       rotateMatrix_                   = {};
     std::string                                     name_                           = {};
 
@@ -112,6 +112,7 @@ private: /// 非公開メンバ関数
     void CreateLightingResource();
     void CreatePointLightResource();
     void CreateMaterialResource();
+
 
 #ifdef DEBUG_ENGINE
     void DebugWindow();

@@ -26,22 +26,23 @@ void CG4Task2::Initialize()
     LineSystem::GetInstance()->SetGlobalEye(pGameEye_.get());
 
     // モデルの初期化
-    auto pSrc = pModelManager_->Load("Human/sneakWalk.gltf");
+    //auto pSrc = pModelManager_->Load("Human/sneakWalk.gltf");
+    auto pSrc = pModelManager_->Load("Human/Walk.gltf");
     pModelSimple_ = std::make_unique<GltfModel>();
     pModelSimple_->Initialize();
     pModelSimple_->Clone(pSrc);
 
     // グリッドの初期化
-    pModelGrid_ = std::make_unique<ObjModel>();
-    pModelGrid_->Clone(pModelManager_->Load("Grid_v4/Grid_v4.obj"));
-    pGrid_ = std::make_unique<Object3d>();
-    pGrid_->Initialize();
-    pGrid_->SetScale({ 1.0f, 1.0f, 1.0f });
-    pGrid_->SetName("Grid");
-    pGrid_->SetTilingMultiply({ 100.0f, 100.0f });
-    pGrid_->SetEnableLighting(false);
-    pGrid_->SetColor({ 1.0f, 1.0f, 1.0f, 0.3f });
-    pGrid_->SetModel(pModelGrid_.get());
+    //pModelGrid_ = std::make_unique<ObjModel>();
+    //pModelGrid_->Clone(pModelManager_->Load("Grid_v4/Grid_v4.obj"));
+    //pGrid_ = std::make_unique<Object3d>();
+    //pGrid_->Initialize();
+    //pGrid_->SetScale({ 1.0f, 1.0f, 1.0f });
+    //pGrid_->SetName("Grid");
+    //pGrid_->SetTilingMultiply({ 100.0f, 100.0f });
+    //pGrid_->SetEnableLighting(false);
+    //pGrid_->SetColor({ 1.0f, 1.0f, 1.0f, 0.3f });
+    //pGrid_->SetModel(pModelGrid_.get());
 
     pSimple_ = std::make_unique<Object3d>();
     pSimple_->Initialize();
@@ -63,8 +64,10 @@ void CG4Task2::Initialize()
 void CG4Task2::Finalize()
 {
     pText_->Finalize();
-    pGrid_->Finalize();
+    //pGrid_->Finalize();
     pSimple_->Finalize();
+    //pModelGrid_->Finalize();
+    pModelSimple_->Finalize();
 }
 
 void CG4Task2::Update()
@@ -72,10 +75,10 @@ void CG4Task2::Update()
     /// 更新処理
     pGameEye_->Update();
 
-    pModelGrid_->Update();
+    //pModelGrid_->Update();
     pModelSimple_->Update();
 
-    pGrid_->Update();
+    //pGrid_->Update();
     pSimple_->Update();
 
     pText_->SetText("FPS: " + std::to_string(static_cast<int>(DebugManager::GetInstance()->GetFPS())));
@@ -94,7 +97,7 @@ void CG4Task2::DrawLine()
 
 void CG4Task2::Draw3d()
 {    
-    pGrid_->Draw();
+    //pGrid_->Draw();
     pSimple_->Draw();
 }
 
