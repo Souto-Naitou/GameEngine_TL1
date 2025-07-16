@@ -11,7 +11,7 @@ Object3dSystem::Object3dSystem()
 
 void Object3dSystem::Initialize()
 {
-    ObjectSystemBase::Initialize();
+    ObjectSystemBaseMT::Initialize();
 
     CreateRootSignature();
     CreateMainPipelineState();
@@ -115,16 +115,9 @@ void Object3dSystem::CreateRootSignature()
 {
     ID3D12Device* device = pDx12_->GetDevice();
 
-    D3D12_DESCRIPTOR_RANGE descriptorRange[1] = {};
-    descriptorRange[0].BaseShaderRegister = 0; // 0から始まる
-    descriptorRange[0].NumDescriptors = 1; // 数は1つ
-    descriptorRange[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV; // SRVを使う
-    descriptorRange[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND; // Offsetを自動計算
-
     /// RootSignature作成
     D3D12_ROOT_SIGNATURE_DESC descriptionRootSignature{};
-    descriptionRootSignature.Flags =
-        D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
+    descriptionRootSignature.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
 
     // RootParameter作成。複数設定できるので配列
     rootParameters_
@@ -135,8 +128,7 @@ void Object3dSystem::CreateRootSignature()
         .SetParameter(4, "b2", D3D12_SHADER_VISIBILITY_PIXEL)
         .SetParameter(5, "b3", D3D12_SHADER_VISIBILITY_PIXEL)
         .SetParameter(6, "b4", D3D12_SHADER_VISIBILITY_PIXEL)   // Lighting
-        .SetParameter(7, "b5", D3D12_SHADER_VISIBILITY_PIXEL)   // PointLight
-        .SetParameter(8, "t0", D3D12_SHADER_VISIBILITY_VERTEX); // MatrixPalette
+        .SetParameter(7, "b5", D3D12_SHADER_VISIBILITY_PIXEL);  // PointLight
 
     descriptionRootSignature.pParameters = rootParameters_.GetParams();      // ルートパラメータ配列へのポインタ
     descriptionRootSignature.NumParameters = rootParameters_.GetSize();      // 配列の長さ
@@ -202,16 +194,6 @@ void Object3dSystem::CreateMainPipelineState()
     inputElementDescs_[2].SemanticIndex = 0;
     inputElementDescs_[2].Format = DXGI_FORMAT_R32G32B32_FLOAT;
     inputElementDescs_[2].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
-    inputElementDescs_[3].SemanticName = "WEIGHT";
-    inputElementDescs_[3].SemanticIndex = 0;
-    inputElementDescs_[3].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
-    inputElementDescs_[3].InputSlot = 1;  // スキニング用の頂点データは別のスロットを使用
-    inputElementDescs_[3].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
-    inputElementDescs_[4].SemanticName = "INDEX";
-    inputElementDescs_[4].SemanticIndex = 0;
-    inputElementDescs_[4].Format = DXGI_FORMAT_R32G32B32A32_SINT;
-    inputElementDescs_[4].InputSlot = 1;  // スキニング用の頂点データは別のスロットを使用
-    inputElementDescs_[4].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
 
 
 
@@ -363,53 +345,3 @@ void Object3dSystem::CreateDepthPipelineState()
 
     return;
 }
-
-void Object3dSystem::CreateRootSignatureCS()
-{
-    RootParameters<3> rootParametersCS;
-    rootParametersCS
-        .SetParameter(0, "t0", D3D12_SHADER_VISIBILITY_ALL)
-        .SetParameter(1, "t1", D3D12_SHADER_VISIBILITY_ALL)
-        .SetParameter(2, "t2", D3D12_SHADER_VISIBILITY_ALL)
-        .SetParameter(3, "u0", D3D12_SHADER_VISIBILITY_ALL)
-        .SetParameter(4, "b0", D3D12_SHADER_VISIBILITY_ALL);
-
-    D3D12_ROOT_SIGNATURE_DESC rootSignatureDesc = {};
-    rootSignatureDesc.pParameters = rootParametersCS.GetParams();
-    rootSignatureDesc.NumParameters = rootParametersCS.GetSize();
-    rootSignatureDesc.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
-    rootSignatureDesc.pStaticSamplers = nullptr; // CSではStaticSamplerは使用しない
-    rootSignatureDesc.NumStaticSamplers = 0;
-
-    // シリアライズしてバイナリにする
-    Microsoft::WRL::ComPtr<ID3DBlob> signatureBlob = nullptr;
-    Microsoft::WRL::ComPtr<ID3DBlob> errorBlob = nullptr;
-    HRESULT hr = D3D12SerializeRootSignature(&rootSignatureDesc,
-        D3D_ROOT_SIGNATURE_VERSION_1, &signatureBlob, &errorBlob);
-    if (FAILED(hr))
-    {
-        Logger::GetInstance()->LogError(
-            "Object3dSystem",
-            __func__,
-            reinterpret_cast<char*>(errorBlob->GetBufferPointer())
-        );
-
-        assert(false);
-    }
-    // バイナリをもとに生成
-    hr = pDx12_->GetDevice()->CreateRootSignature(0, signatureBlob->GetBufferPointer(),
-        signatureBlob->GetBufferSize(), IID_PPV_ARGS(&rootSignature_));
-    assert(SUCCEEDED(hr));
-}
-
-void Object3dSystem::CreatePipelineStateCS()
-{
-    D3D12_COMPUTE_PIPELINE_STATE_DESC computePipelineStateDesc = {};
-    computePipelineStateDesc.CS = {
-        .pShaderBytecode = computeShaderBlob_->GetBufferPointer(),
-        .BytecodeLength = computeShaderBlob_->GetBufferSize()
-    };
-    computePipelineStateDesc.pRootSignature = computeRootSig_.Get();
-    HRESULT hr = pDx12_->GetDevice()->CreateComputePipelineState(&computePipelineStateDesc, IID_PPV_ARGS(&psoCompute_));
-}
-

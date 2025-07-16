@@ -19,14 +19,24 @@ struct WellForGPU
     Matrix4x4 skeletonSpaceInverseTransposeMatrix = {}; // 法線用
 };
 
+struct SkinningInformation
+{
+    uint32_t numVertices;
+};
+
 struct SkinCluster
 {
-    std::vector<Matrix4x4>                  inverseBindPoseMatrices;
-    Microsoft::WRL::ComPtr<ID3D12Resource>  influenceResource;
+    std::vector<Matrix4x4>                  inverseBindPoseMatrices = {};
     D3D12_VERTEX_BUFFER_VIEW                influenceBufferView = {};
+    Microsoft::WRL::ComPtr<ID3D12Resource>  resourceInfluence = nullptr;
+    Microsoft::WRL::ComPtr<ID3D12Resource>  resourcePalette = nullptr;
+    Microsoft::WRL::ComPtr<ID3D12Resource>  resourceSkinningInformation = nullptr;
     std::span<VertexInfluence>              mappedInfluences = {};
-    Microsoft::WRL::ComPtr<ID3D12Resource>  paletteResource = {};
     std::span<WellForGPU>                   mappedPalette = {};
-    uint32_t                                srvIndex = 0; // SRVのインデックス
-    std::pair<D3D12_CPU_DESCRIPTOR_HANDLE, D3D12_GPU_DESCRIPTOR_HANDLE> paletteSrvHandle = {};
+    std::span<SkinningInformation>          mappedSkinningInformation = {};
+    uint32_t                                srvIndexPalette = 0;
+    uint32_t                                srvIndexInfluence = 0;
+    uint32_t                                srvIndexSkinningInformation = 0;
+    std::pair<D3D12_CPU_DESCRIPTOR_HANDLE, D3D12_GPU_DESCRIPTOR_HANDLE> srvHandlePalette = {};
+    std::pair<D3D12_CPU_DESCRIPTOR_HANDLE, D3D12_GPU_DESCRIPTOR_HANDLE> srvHandleInfluence = {};
 };

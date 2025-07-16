@@ -11,6 +11,7 @@
 #include <Features/Text/Text.h>
 #include <Features/Model/IModel.h>
 #include <Features/Model/ModelManager.h>
+#include <Interfaces/ISceneArgs.h>
 
 class CG4Task1 : public SceneBase
 {
@@ -20,10 +21,7 @@ public:
     void    Initialize() override;
     void    Finalize() override;
     void    Update() override;
-    void    DrawLine() override;
-    void    Draw3d() override;
-    void    Draw2dBackGround() override;
-    void    Draw2dForeground() override;
+    void    Draw() override;
     void    DrawTexts() override;
 
 private:

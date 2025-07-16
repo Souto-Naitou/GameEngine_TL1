@@ -8,6 +8,7 @@
 #include <Features/GameEye/FreeLook/FreeLookEye.h>
 #include <NiGui/NiGui.h>
 #include <Features/Audio/AudioManager.h>
+#include <Features/Model/ModelManager.h>
 
 
 void GameScene::Initialize()
@@ -97,26 +98,26 @@ void GameScene::Update()
     pSpark_->Update();
 }
 
-void GameScene::Draw2dBackGround()
+void GameScene::Draw()
 {
-}
-
-void GameScene::DrawLine()
-{
-    pFirework_->Draw();
-    //pSmoke_->Draw();
-    //pSpark_->Draw();
-}
-
-void GameScene::Draw3d()
-{
+    // =============================================
+    // [Object3d Begin]
     pSkydome_->Draw();
     pGrid_->Draw();
-}
+    // [Object3d End]
+    // =============================================
 
-void GameScene::Draw2dForeground()
-{
+    // =============================================
+    // [Particle Begin]
+    pFirework_->Draw();
+    // [Particle End]
+    // =============================================
+
+    // =============================================
+    // [Sprite Begin]
     pGuideSprite_->Draw();
+    // [Sprite End]
+    // =============================================
 }
 
 void GameScene::DrawTexts()

@@ -288,19 +288,33 @@ Microsoft::WRL::ComPtr<IDxcBlob> DX12Helper::CompileShader(
 
 Microsoft::WRL::ComPtr<ID3D12Resource> DX12Helper::CreateBufferResource(const Microsoft::WRL::ComPtr<ID3D12Device>& _device, size_t _sizeInBytes)
 {
+    return CreateBufferResource(_device, _sizeInBytes, D3D12_RESOURCE_FLAG_NONE);
+}
+
+Microsoft::WRL::ComPtr<ID3D12Resource> DX12Helper::CreateBufferResource(const ComPtr<ID3D12Device>& _device, size_t _sizeInBytes, D3D12_RESOURCE_FLAGS _flag)
+{
     Microsoft::WRL::ComPtr<ID3D12Resource> result = nullptr;
     D3D12_HEAP_PROPERTIES uploadHeapProperties{};
-    uploadHeapProperties.Type = D3D12_HEAP_TYPE_UPLOAD;
-    D3D12_RESOURCE_DESC vertexResourceDesc{};
-    vertexResourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
-    vertexResourceDesc.Width = _sizeInBytes;
-    vertexResourceDesc.Height = 1;
-    vertexResourceDesc.DepthOrArraySize = 1;
-    vertexResourceDesc.MipLevels = 1;
-    vertexResourceDesc.SampleDesc.Count = 1;
-    vertexResourceDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
+    if (_flag & D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS)
+    {
+        uploadHeapProperties.Type = D3D12_HEAP_TYPE_DEFAULT;
+    }
+    else
+    {
+        uploadHeapProperties.Type = D3D12_HEAP_TYPE_UPLOAD;
+    }
+
+    D3D12_RESOURCE_DESC desc{};
+    desc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
+    desc.Width = _sizeInBytes;
+    desc.Height = 1;
+    desc.DepthOrArraySize = 1;
+    desc.MipLevels = 1;
+    desc.SampleDesc.Count = 1;
+    desc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
+    desc.Flags = _flag;
     HRESULT hr = _device->CreateCommittedResource(&uploadHeapProperties, D3D12_HEAP_FLAG_NONE,
-        &vertexResourceDesc, D3D12_RESOURCE_STATE_COMMON, nullptr,
+        &desc, D3D12_RESOURCE_STATE_COMMON, nullptr,
         IID_PPV_ARGS(&result));
 
     if (FAILED(hr))

@@ -221,14 +221,6 @@ void Object3d::CreateMaterialResource()
     materialData_->shininess = 1.0f;
 }
 
-void Object3d::CreateUAV()
-{
-    auto srvManager = SRVManager::GetInstance();
-    uavIndex_ = srvManager->Allocate();
-
-    SRVManager::GetInstance()->CreateUAV4Buffer(uavIndex_, outputResource_, DXGI_FORMAT_UNKNOWN, pModel_->GetVertexCount(), sizeof(VertexData));
-}
-
 #ifdef DEBUG_ENGINE
 void Object3d::DebugWindow()
 {

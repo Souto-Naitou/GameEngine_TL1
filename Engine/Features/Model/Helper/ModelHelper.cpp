@@ -10,6 +10,7 @@
 #include <sstream>
 #include <cassert>
 #include <filesystem>
+#include <Features/Model/GltfModel.h>
 
 ModelData Helper::Model::LoadObjFile(const std::string& _directoryPath, const std::string& _filename, const std::string& _texturePath)
 {
@@ -178,4 +179,12 @@ MaterialData Helper::Model::LoadMaterialTemplateFile(const std::string& _directo
     }
     // 4 Return MaterialData
     return materialData;
+}
+
+void Helper::Model::DispatchModel(IModel* _pModel)
+{
+    auto ptr = dynamic_cast<GltfModel*>(_pModel);
+    if (!ptr) return;
+
+    ptr->DispatchSkinning();
 }

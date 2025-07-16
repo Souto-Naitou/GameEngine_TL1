@@ -468,9 +468,6 @@
     <ClCompile Include="Features\GameEye\FreeLook\FreeLookEye.cpp">
       <Filter>Feature\GameEye\FreeLookEye</Filter>
     </ClCompile>
-    <ClCompile Include="BaseClasses\ObjectSystemBase.cpp">
-      <Filter>BaseClass</Filter>
-    </ClCompile>
     <ClCompile Include="Features\NiGui\NiGuiDebug.cpp">
       <Filter>Feature\NiGuiDerived</Filter>
     </ClCompile>
@@ -588,6 +585,10 @@
     <ClCompile Include="Features\Model\Skeleton.cpp">
       <Filter>Feature\Model</Filter>
     </ClCompile>
+    <ClCompile Include="BaseClasses\ObjectSystemBaseMT.cpp">
+      <Filter>BaseClass</Filter>
+    </ClCompile>
+    <ClCompile Include="Features\Model\GltfModelSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common\define.h">
@@ -776,9 +777,6 @@
     <ClInclude Include="ClassStyles\SingletonStyle.h">
       <Filter>ClassStyle</Filter>
     </ClInclude>
-    <ClInclude Include="BaseClasses\ObjectSystemBase.h">
-      <Filter>BaseClass</Filter>
-    </ClInclude>
     <ClInclude Include="Features\NiGui\NiGuiDrawer.h">
       <Filter>Feature\NiGuiDerived</Filter>
     </ClInclude>
@@ -931,6 +929,15 @@
     </ClInclude>
     <ClInclude Include="Features\Model\SkinCluster.h">
       <Filter>Feature\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Features\Model\GltfModelSystem.h">
+      <Filter>Feature\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseClasses\ObjectSystemBaseMT.h">
+      <Filter>BaseClass</Filter>
+    </ClInclude>
+    <ClInclude Include="Interfaces\IObjectSystem.h">
+      <Filter>Interface</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

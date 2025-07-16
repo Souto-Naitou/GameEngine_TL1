@@ -1,37 +1,37 @@
-#include "ObjectSystemBase.h"
+#include "./ObjectSystemBaseMT.h"
 
-void ObjectSystemBase::Initialize()
+void ObjectSystemBaseMT::Initialize()
 {
     CreateCommandList();
 }
 
-void ObjectSystemBase::PostDraw()
+void ObjectSystemBaseMT::PostDraw()
 {
     commandAllocator_->Reset();
     commandList_->Reset(commandAllocator_.Get(), nullptr);
 }
 
-ID3D12GraphicsCommandList* ObjectSystemBase::GetCommandList()
+ID3D12GraphicsCommandList* ObjectSystemBaseMT::GetCommandList()
 {
     return commandList_.Get();
 }
 
-GameEye** ObjectSystemBase::GetGlobalEye()
+GameEye** ObjectSystemBaseMT::GetGlobalEye()
 {
     return &pGlobalEye_;
 }
 
-void ObjectSystemBase::SetGlobalEye(GameEye* _pGameEye)
+void ObjectSystemBaseMT::SetGlobalEye(GameEye* _pGameEye)
 {
     pGlobalEye_ = _pGameEye;
 }
 
-void ObjectSystemBase::SetRTVHandle(D3D12_CPU_DESCRIPTOR_HANDLE* _handle)
+void ObjectSystemBaseMT::SetRTVHandle(D3D12_CPU_DESCRIPTOR_HANDLE* _handle)
 {
     rtvHandle_ = _handle;
 }
 
-void ObjectSystemBase::CreateCommandList()
+void ObjectSystemBaseMT::CreateCommandList()
 {
     auto device = pDx12_->GetDevice();
     device->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(commandAllocator_.GetAddressOf()));

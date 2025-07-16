@@ -342,42 +342,63 @@ SkinCluster ModelLoaderAssimp::_CreateSkinCluster(
     auto& skeletonData = _skeleton.GetSkeletonData();
 
     // Palette用のResourceを作成
-    skinCluster.paletteResource = DX12Helper::CreateBufferResource(
+    skinCluster.resourcePalette = DX12Helper::CreateBufferResource(
         _device,
         sizeof(WellForGPU) * _skeleton.GetSkeletonData().joints.size()
     );
     WellForGPU* mappedPalette = nullptr;
-    skinCluster.paletteResource->Map(0, nullptr, reinterpret_cast<void**>(&mappedPalette));
+    skinCluster.resourcePalette->Map(0, nullptr, reinterpret_cast<void**>(&mappedPalette));
     skinCluster.mappedPalette = { mappedPalette, _skeleton.GetSkeletonData().joints.size() };
     
     // SRVを割り当てる
     auto* sm = SRVManager::GetInstance();
-    skinCluster.srvIndex = sm->Allocate();
-    skinCluster.paletteSrvHandle.first = sm->GetCPUDescriptorHandle(skinCluster.srvIndex);
-    skinCluster.paletteSrvHandle.second = sm->GetGPUDescriptorHandle(skinCluster.srvIndex);
+    skinCluster.srvIndexPalette = sm->Allocate();
+    skinCluster.srvHandlePalette.first = sm->GetCPUDescriptorHandle(skinCluster.srvIndexPalette);
+    skinCluster.srvHandlePalette.second = sm->GetGPUDescriptorHandle(skinCluster.srvIndexPalette);
 
     // palette用のSRVを作成 StructuredBufferとして作成
     sm->CreateForStructuredBuffer(
-        skinCluster.srvIndex,
-        skinCluster.paletteResource.Get(),
+        skinCluster.srvIndexPalette,
+        skinCluster.resourcePalette.Get(),
         static_cast<uint32_t>(skeletonData.joints.size()),
         sizeof(WellForGPU)
     );
 
     // インフルエンス用のResourceを作成
-    skinCluster.influenceResource = DX12Helper::CreateBufferResource(
+    skinCluster.resourceInfluence = DX12Helper::CreateBufferResource(
         _device,
         sizeof(VertexInfluence) * _modelData.vertices.size()
     );
     VertexInfluence* mappedInfluences = nullptr;
-    skinCluster.influenceResource->Map(0, nullptr, reinterpret_cast<void**>(&mappedInfluences));
+    skinCluster.resourceInfluence->Map(0, nullptr, reinterpret_cast<void**>(&mappedInfluences));
     std::memset(mappedInfluences, 0, sizeof(VertexInfluence) * _modelData.vertices.size());
     skinCluster.mappedInfluences = { mappedInfluences, _modelData.vertices.size() };
 
-    // インフルエンスのバッファビューを作成
-    skinCluster.influenceBufferView.BufferLocation = skinCluster.influenceResource->GetGPUVirtualAddress();
-    skinCluster.influenceBufferView.SizeInBytes = static_cast<uint32_t>(sizeof(VertexInfluence) * _modelData.vertices.size());
-    skinCluster.influenceBufferView.StrideInBytes = sizeof(VertexInfluence);
+    // SRVを割り当てる
+    skinCluster.srvIndexInfluence = sm->Allocate();
+    skinCluster.srvHandleInfluence.first = sm->GetCPUDescriptorHandle(skinCluster.srvIndexInfluence);
+    skinCluster.srvHandleInfluence.second = sm->GetGPUDescriptorHandle(skinCluster.srvIndexInfluence);
+    
+    // influence用のSRVを作成 StructuredBufferとして作成
+    sm->CreateForStructuredBuffer(
+        skinCluster.srvIndexInfluence,
+        skinCluster.resourceInfluence.Get(),
+        static_cast<uint32_t>(_modelData.vertices.size()),
+        sizeof(VertexInfluence)
+    );
+
+    // SkinningInformation用のResourceを作成
+    skinCluster.resourceSkinningInformation = DX12Helper::CreateBufferResource(
+        _device,
+        sizeof(SkinningInformation)
+    );
+    SkinningInformation* mappedSkinningInformation = nullptr;
+    skinCluster.resourceSkinningInformation->Map(0, nullptr, reinterpret_cast<void**>(&mappedSkinningInformation));
+    mappedSkinningInformation->numVertices = static_cast<uint32_t>(_modelData.vertices.size());
+    skinCluster.mappedSkinningInformation = { mappedSkinningInformation, 1 };
+
+    // SRVを割り当てる
+    skinCluster.srvIndexSkinningInformation = sm->Allocate();
 
     // InverseBindPoseMatrixを格納する場所を作成して、単位行列で埋める
     auto& ibpm = skinCluster.inverseBindPoseMatrices;

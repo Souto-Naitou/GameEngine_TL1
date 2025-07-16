@@ -5,6 +5,7 @@
 #include <Features/GameEye/GameEye.h>
 #include <Features/Input/Input.h>
 #include <Common/structs.h>
+#include <Features/Model/ModelManager.h>
 
 class PG3PT1 : public SceneBase
 {
@@ -14,10 +15,7 @@ public:
     void Initialize() override;
     void Finalize() override;
     void Update() override;
-    void Draw2dBackGround() override;
-    void Draw3d() override;
-    void DrawLine() override;
-    void Draw2dForeground() override;
+    void Draw() override;
     void DrawTexts() override;
 
 private:

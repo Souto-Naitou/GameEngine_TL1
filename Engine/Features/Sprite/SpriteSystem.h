@@ -5,11 +5,11 @@
 #include <list>
 
 #include <ClassStyles/SingletonStyle.h>
-#include <BaseClasses/ObjectSystemBase.h>
+#include <BaseClasses/ObjectSystemBaseMT.h>
 
 class SpriteSystem : 
     public SingletonStyle<SpriteSystem>,
-    public ObjectSystemBase
+    public ObjectSystemBaseMT
 {
     friend class SingletonStyle<SpriteSystem>;
 

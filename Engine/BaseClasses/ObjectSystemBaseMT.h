@@ -8,11 +8,11 @@
 // Forward declarations
 class GameEye;
 
-class ObjectSystemBase : public EngineFeature
+class ObjectSystemBaseMT : public EngineFeature
 {
 public:
     // Virtual functions
-    virtual         ~ObjectSystemBase() = default;      // dtor
+    virtual         ~ObjectSystemBaseMT() = default;      // dtor
     virtual void    Initialize();                       // Create the command list
     virtual void    PostDraw();                         // Reset the command allocator and command list
     

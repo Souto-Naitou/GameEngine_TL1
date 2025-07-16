@@ -9,6 +9,7 @@
 #include <Features/Audio/Audio.h>
 
 #include <memory>
+#include <Features/Model/ModelManager.h>
 
 class GameScene : public SceneBase
 {
@@ -21,13 +22,7 @@ public:
 
     void Update() override;
 
-    void Draw2dBackGround() override;
-
-    void DrawLine() override;
-
-    void Draw3d() override;
-
-    void Draw2dForeground() override;
+    void Draw() override;
 
     void DrawTexts() override;
 
@@ -44,9 +39,9 @@ private:
     std::unique_ptr<Object3d> pSkydome_;
     std::unique_ptr<Object3d> pGrid_;
     std::unique_ptr<Sprite> pGuideSprite_;
-    Audio* pAudio_;
 
     // Pointers
-    Input* pInput_;
+    Audio* pAudio_ = nullptr;
+    Input* pInput_ = nullptr;
     ModelManager* pModelManager_ = nullptr;
 };

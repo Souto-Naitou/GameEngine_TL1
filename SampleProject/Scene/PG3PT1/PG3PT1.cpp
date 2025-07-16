@@ -1,6 +1,7 @@
 #include "PG3PT1.h"
 
 #include <Features/GameEye/FreeLook/FreeLookEye.h>
+#include <Features/Model/ModelManager.h>
 
 void PG3PT1::Initialize()
 {
@@ -45,21 +46,9 @@ void PG3PT1::Update()
     pBunny_->Update();
 }
 
-void PG3PT1::Draw2dBackGround()
-{
-}
-
-void PG3PT1::Draw3d()
+void PG3PT1::Draw()
 {
     pBunny_->Draw();
-}
-
-void PG3PT1::DrawLine()
-{
-}
-
-void PG3PT1::Draw2dForeground()
-{
 }
 
 void PG3PT1::DrawTexts()

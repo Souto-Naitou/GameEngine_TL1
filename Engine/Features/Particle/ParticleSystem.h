@@ -3,10 +3,10 @@
 #include <wrl.h>
 #include <Core/DirectX12/DirectX12.h>
 #include <Features/GameEye/GameEye.h>
-#include <BaseClasses/ObjectSystemBase.h>
+#include <BaseClasses/ObjectSystemBaseMT.h>
 #include <list>
 
-class ParticleSystem : public ObjectSystemBase
+class ParticleSystem : public ObjectSystemBaseMT
 {
 public:
     struct CommandListData

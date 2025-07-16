@@ -154,29 +154,11 @@ void NimaFramework::Initialize()
    
     NiGui::SetDebug(pNiGuiDebug_.get());
 
-    /// ポストエフェクト
-    pPostEffectExecuter_->SetDirectX12(pDirectX_.get());
-    pPostEffectExecuter_->Initialize();
+    pGltfModelSystem_ = std::make_unique<GltfModelSystem>();
+    pGltfModelSystem_->SetDirectX12(pDirectX_.get());
+    pGltfModelSystem_->Initialize();
 
-    pPEGrayscale_           = Helper::PostEffect::CreatePostEffect<Grayscale>(pDirectX_.get());
-    pPEVignette_            = Helper::PostEffect::CreatePostEffect<Vignette>(pDirectX_.get());
-    pPEBoxFilter_           = Helper::PostEffect::CreatePostEffect<BoxFilter>(pDirectX_.get());
-    pPEGaussianFilter_      = Helper::PostEffect::CreatePostEffect<GaussianFilter>(pDirectX_.get());
-    pPEPrewittOutline_      = Helper::PostEffect::CreatePostEffect<PrewittOutline>(pDirectX_.get());
-    pPEDepthBasedOutline_   = Helper::PostEffect::CreatePostEffect<DepthBasedOutline>(pDirectX_.get());
-    pPERadialBlur_          = Helper::PostEffect::CreatePostEffect<RadialBlur>(pDirectX_.get());
-    pPEDissolve_            = Helper::PostEffect::CreatePostEffect<Dissolve>(pDirectX_.get());
-    pPERandomFilter_        = Helper::PostEffect::CreatePostEffect<RandomFilter>(pDirectX_.get());
-
-    pPostEffectExecuter_->AddPostEffect(pPEGrayscale_.get())
-        .AddPostEffect(pPEVignette_.get())
-        .AddPostEffect(pPEBoxFilter_.get())
-        .AddPostEffect(pPEGaussianFilter_.get())
-        .AddPostEffect(pPEPrewittOutline_.get())
-        .AddPostEffect(pPEDepthBasedOutline_.get())
-        .AddPostEffect(pPERadialBlur_.get())
-        .AddPostEffect(pPEDissolve_.get())
-        .AddPostEffect(pPERandomFilter_.get());
+    this->InitializePostEffects();
 
     /// コマンドリストを追加
     pDirectX_->AddCommandList(pObject3dSystem_->GetCommandList());
@@ -196,7 +178,8 @@ void NimaFramework::Initialize()
         .AddInitialArg("SpriteSystem", pSpriteSystem_)
         .AddInitialArg("LineSystem", pLineSystem_)
         .AddInitialArg("ParticleManager", pParticleManager_)
-        .AddInitialArg("AudioManager", pAudioManager_);
+        .AddInitialArg("AudioManager", pAudioManager_)
+        .AddInitialArg("GltfModelSystem", pGltfModelSystem_.get());
 }
 
 void NimaFramework::Finalize()
@@ -291,14 +274,6 @@ void NimaFramework::Draw()
     /// イベント計測開始
     pEventTimer_->BeginEvent("Draw");
 
-    /// 3D描画
-    pSceneManager_->SceneDraw3d();
-    pObject3dSystem_->DrawCall();
-
-    /// ライン描画
-    pLineSystem_->PresentDraw();
-    pSceneManager_->SceneDrawLine();
-
     /// パーティクル描画
     pParticleManager_->Draw();
     pParticleSystem_->DrawCall();
@@ -309,6 +284,7 @@ void NimaFramework::Draw()
 
     // シーンの描画 (テキスト以外)
     pSceneManager_->SceneDraw();
+    pObject3dSystem_->DrawCall();
 
     // 同期待ち
     pObject3dSystem_->Sync();
@@ -318,15 +294,15 @@ void NimaFramework::Draw()
     // ポストエフェクトの適用
     pPostEffectExecuter_->ApplyPostEffects();
 
-    /// レンダーターゲットの初期化
+    // レンダーターゲットの初期化
     pDirectX_->NewFrame();
 
     // ポストエフェクト後のテクスチャをスワップチェーンリソースに描画
     pPostEffectExecuter_->Draw();
 
-    /// レンダーターゲットからビューポート用リソースにコピー (Releaseでは実行されない)
+    // レンダーターゲットからビューポート用リソースにコピー (Releaseでは実行されない)
     pDirectX_->CopyFromRTV(pDirectX_->GetCommandListsLast());
-    /// コンピュートシェーダーの実行
+    // コンピュートシェーダーの実行
     pViewport_->Compute();
 
     /// イベント計測終了と出力
@@ -368,4 +344,31 @@ void NimaFramework::PostProcess()
     pParticleSystem_->PostDraw();
     pLineSystem_->PostDraw();
     pPostEffectExecuter_->PostDraw();
+}
+
+void NimaFramework::InitializePostEffects()
+{
+    /// ポストエフェクト
+    pPostEffectExecuter_->SetDirectX12(pDirectX_.get());
+    pPostEffectExecuter_->Initialize();
+
+    pPEGrayscale_           = Helper::PostEffect::CreatePostEffect<Grayscale>(pDirectX_.get());
+    pPEVignette_            = Helper::PostEffect::CreatePostEffect<Vignette>(pDirectX_.get());
+    pPEBoxFilter_           = Helper::PostEffect::CreatePostEffect<BoxFilter>(pDirectX_.get());
+    pPEGaussianFilter_      = Helper::PostEffect::CreatePostEffect<GaussianFilter>(pDirectX_.get());
+    pPEPrewittOutline_      = Helper::PostEffect::CreatePostEffect<PrewittOutline>(pDirectX_.get());
+    pPEDepthBasedOutline_   = Helper::PostEffect::CreatePostEffect<DepthBasedOutline>(pDirectX_.get());
+    pPERadialBlur_          = Helper::PostEffect::CreatePostEffect<RadialBlur>(pDirectX_.get());
+    pPEDissolve_            = Helper::PostEffect::CreatePostEffect<Dissolve>(pDirectX_.get());
+    pPERandomFilter_        = Helper::PostEffect::CreatePostEffect<RandomFilter>(pDirectX_.get());
+
+    pPostEffectExecuter_->AddPostEffect(pPEGrayscale_.get())
+        .AddPostEffect(pPEVignette_.get())
+        .AddPostEffect(pPEBoxFilter_.get())
+        .AddPostEffect(pPEGaussianFilter_.get())
+        .AddPostEffect(pPEPrewittOutline_.get())
+        .AddPostEffect(pPEDepthBasedOutline_.get())
+        .AddPostEffect(pPERadialBlur_.get())
+        .AddPostEffect(pPEDissolve_.get())
+        .AddPostEffect(pPERandomFilter_.get());
 }

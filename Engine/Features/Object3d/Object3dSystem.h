@@ -9,7 +9,7 @@
 #include <map> // std::map
 #include <list> // std::list
 
-#include <BaseClasses/ObjectSystemBase.h>
+#include <BaseClasses/ObjectSystemBaseMT.h>
 #include <Features/Model/IModel.h>
 #include <Core/DirectX12/RootParameters/RootParameters.h>
 
@@ -32,7 +32,7 @@ struct CameraForGPU
 };
 
 // 3D object common 
-class Object3dSystem : public ObjectSystemBase
+class Object3dSystem : public ObjectSystemBaseMT
 {
 public:
     struct CommandListData
@@ -67,7 +67,7 @@ public:
     void    AddCommandListData(CommandListData& _data);
 
     // Getter
-    RootParameters<9> GetRootParameters() const {return rootParameters_;}
+    RootParameters<8> GetRootParameters() const {return rootParameters_;}
 
 private:
     // Ctor
@@ -77,24 +77,18 @@ private:
     void    CreateRootSignature();          // Create root signature
     void    CreateMainPipelineState();      // for main drawing
     void    CreateDepthPipelineState();     // for Early-Z
-    void    CreateRootSignatureCS();          // Create root signature
-    void    CreatePipelineStateCS();
-    void    CreateUAV();
 
     // DirectX objects and paths
-    static constexpr wchar_t        kVertexShaderPath[]     = L"EngineResources/Shaders/SkinningObject3d.VS.hlsl";
-    static constexpr wchar_t        kPixelShaderPath[]      = L"EngineResources/Shaders/SkinningObject3d.PS.hlsl";
+    static constexpr wchar_t        kVertexShaderPath[]     = L"EngineResources/Shaders/Object3d.VS.hlsl";
+    static constexpr wchar_t        kPixelShaderPath[]      = L"EngineResources/Shaders/Object3d.PS.hlsl";
     ComPtr<ID3D12RootSignature>     rootSignature_          = nullptr;  // Root signature
-    ComPtr<ID3D12RootSignature>     computeRootSig_         = nullptr;  // Root signature
     ComPtr<ID3D12PipelineState>     psoMain_                = nullptr;  // Pipeline state object for main drawing
     ComPtr<ID3D12PipelineState>     psoEarlyZ_              = nullptr;  // Pipeline state object for Early-Z
-    ComPtr<ID3D12PipelineState>     psoCompute_             = nullptr;  // Pipeline state object for Early-Z
     ComPtr<IDxcBlob>                vertexShaderBlob_       = nullptr;  // Blob of vertex shader
     ComPtr<IDxcBlob>                pixelShaderBlob_        = nullptr;  // Blob of pixel shader
-    ComPtr<IDxcBlob>                computeShaderBlob_      = nullptr;  // Blob of compute shader
     std::list<CommandListData>      commandListDatas_       = {};       // Container for draw settings
-    RootParameters<9>               rootParameters_         = {};       // Root parameters for root signature
-    D3D12_INPUT_ELEMENT_DESC        inputElementDescs_[5]   = {};
+    RootParameters<8>               rootParameters_         = {};       // Root parameters for root signature
+    D3D12_INPUT_ELEMENT_DESC        inputElementDescs_[3]   = {};
     D3D12_INPUT_LAYOUT_DESC         inputLayoutDesc_        = {};
     D3D12_RASTERIZER_DESC           rasterizerDesc_         = {};
 };

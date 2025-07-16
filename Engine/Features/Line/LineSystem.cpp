@@ -6,7 +6,7 @@
 
 void LineSystem::Initialize()
 {
-    ObjectSystemBase::Initialize();
+    ObjectSystemBaseMT::Initialize();
 
     device_ = pDx12_->GetDevice();
     dxcUtils_ = pDx12_->GetDxcUtils();

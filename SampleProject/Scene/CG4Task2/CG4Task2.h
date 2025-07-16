@@ -10,6 +10,8 @@
 #include <Features/Text/Text.h>
 #include <Features/Model/IModel.h>
 #include <Features/Model/ModelManager.h>
+#include <Features/Model/GltfModelSystem.h>
+#include <Features/Line/LineSystem.h>
 
 class CG4Task2 : public SceneBase
 {
@@ -34,4 +36,6 @@ private:
     // Pointers
     Input*  pInput_     = nullptr;
     ModelManager* pModelManager_ = nullptr;
+    GltfModelSystem* pGltfModelSystem_ = nullptr;
+    LineSystem* pLineSystem_ = nullptr;
 };

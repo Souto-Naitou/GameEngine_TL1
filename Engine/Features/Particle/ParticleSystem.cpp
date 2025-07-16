@@ -8,7 +8,7 @@
 
 void ParticleSystem::Initialize()
 {
-    ObjectSystemBase::Initialize();
+    ObjectSystemBaseMT::Initialize();
 
     CreateRootSignature();
 

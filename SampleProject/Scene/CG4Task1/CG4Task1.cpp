@@ -119,22 +119,19 @@ void CG4Task1::Update()
     pText_->Update();
 }
 
-void CG4Task1::Draw2dBackGround()
-{
-}
-
-void CG4Task1::DrawLine()
-{
-    pEmitter_Test_->Draw();
-}
-
-void CG4Task1::Draw3d()
+void CG4Task1::Draw()
 {    
-    pGrid_->Draw();
-}
+    // =============================================
+    // [DrawLine Begin]
+    pEmitter_Test_->Draw();
+    // [DrawLine End]
+    // =============================================
 
-void CG4Task1::Draw2dForeground()
-{
+    // =============================================
+    // [Object3d Begin]
+    pGrid_->Draw();
+    // [Object3d End]
+    // =============================================
 }
 
 void CG4Task1::DrawTexts()

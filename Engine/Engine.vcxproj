@@ -197,7 +197,7 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="BaseClasses\ObjectSystemBase.cpp" />
+    <ClCompile Include="BaseClasses\ObjectSystemBaseMT.cpp" />
     <ClCompile Include="Common\HRESULT_ASSERT.cpp" />
     <ClCompile Include="Core\ConfigManager\ConfigManager.cpp" />
     <ClCompile Include="Core\ConfigManager\ConfigType.cpp" />
@@ -247,6 +247,7 @@
     <ClCompile Include="Features\Lighting\PointLight\PointLight.cpp" />
     <ClCompile Include="Features\Line\Line.cpp" />
     <ClCompile Include="Features\Line\LineSystem.cpp" />
+    <ClCompile Include="Features\Model\GltfModelSystem.cpp" />
     <ClCompile Include="Features\Model\Helper\AnimationHelper.cpp" />
     <ClCompile Include="Features\Model\Helper\ModelHelper.cpp" />
     <ClCompile Include="Features\Model\Loader\Assimp\ModelLoaderAssimp.cpp" />
@@ -290,7 +291,7 @@
     <ClCompile Include="Utility\String\strutl.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="BaseClasses\ObjectSystemBase.h" />
+    <ClInclude Include="BaseClasses\ObjectSystemBaseMT.h" />
     <ClInclude Include="ClassStyles\SingletonStyle.h" />
     <ClInclude Include="Common\define.h" />
     <ClInclude Include="Common\HRESULT_ASSERT.h" />
@@ -350,6 +351,7 @@
     <ClInclude Include="Features\Line\LineSystem.h" />
     <ClInclude Include="Features\Line\Manager\LineManager.h" />
     <ClInclude Include="Features\Model\Animation.h" />
+    <ClInclude Include="Features\Model\GltfModelSystem.h" />
     <ClInclude Include="Features\Model\Helper\AnimationHelper.h" />
     <ClInclude Include="Features\Model\Helper\ModelHelper.h" />
     <ClInclude Include="Features\Model\IModel.h" />
@@ -389,6 +391,7 @@
     <ClInclude Include="Features\TimeMeasurer\TimeMeasurer.h" />
     <ClInclude Include="Features\Viewport\Viewport.h" />
     <ClInclude Include="Framework\NimaFramework.h" />
+    <ClInclude Include="Interfaces\IObjectSystem.h" />
     <ClInclude Include="Interfaces\ISceneArgs.h" />
     <ClInclude Include="Interfaces\ISceneFactory.h" />
     <ClInclude Include="Math\Transform.h" />

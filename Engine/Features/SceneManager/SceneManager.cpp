@@ -128,5 +128,11 @@ void SceneManager::PackSceneArgs()
     {
         pSceneArgs_ = std::make_unique<SceneArgs>();
     }
+
+    for (const auto& [key, value] : initialArgs_)
+    {
+        pSceneArgs_->Set(key, value);
+    }
+
     pSceneArgs_->Set("ModelManager", pModelManager_);
 }

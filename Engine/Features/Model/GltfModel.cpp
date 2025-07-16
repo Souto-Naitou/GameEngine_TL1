@@ -2,7 +2,6 @@
 #include <DebugTools/DebugManager/DebugManager.h>
 #include <Core/DirectX12/TextureManager.h>
 #include <Features/Model/Helper/AnimationHelper.h>
-#include <cmath>
 #include <stdexcept>
 
 GltfModel::~GltfModel()
@@ -18,12 +17,11 @@ void GltfModel::Initialize()
     isOverwroteTexture_ = false;
     timer_.Reset();
     timer_.Start();
+    srvManager_ = SRVManager::GetInstance();
 }
 
 void GltfModel::Finalize()
 {
-    SRVManager::GetInstance()->Deallocate(wellSRVIndex_);
-
     is_called_finalize_ = true;
 }
 
@@ -54,19 +52,12 @@ void GltfModel::Draw(ID3D12GraphicsCommandList* _cl)
 {
     if (isReadyDraw_ == false) return;
 
-    // 頂点バッファを設定
-    D3D12_VERTEX_BUFFER_VIEW vbvs[2] = {
-        vertexBufferView_,                  // 通常の頂点バッファ
-        skinCluster_.influenceBufferView    // スキンクラスターの頂点バッファ
-    };
-
-    _cl->IASetVertexBuffers(0, 2, vbvs);
+    // 頂点バッファビューを設定
+    _cl->IASetVertexBuffers(0, 1, &vertexBufferView_);
     // インデックスバッファを設定
     _cl->IASetIndexBuffer(&indexBufferView_);
     // SRVの設定
     _cl->SetGraphicsRootDescriptorTable(2, textureSrvHandleGPU_);
-    // Wellリソースを設定
-    _cl->SetGraphicsRootDescriptorTable(8, wellSrvHandleGPU_);
     // 描画！（DrawCall/ドローコール）
     _cl->DrawIndexedInstanced(
         static_cast<UINT>(modelData_.indices.size()), // インデックス数
@@ -86,16 +77,19 @@ void GltfModel::ChangeTexture(D3D12_GPU_DESCRIPTOR_HANDLE _texSrvHnd)
 void GltfModel::CreateGPUResource()
 {
     /// 頂点リソースを作成
-    _CreateVertexResource();
+    this->_CreateVertexResource();
 
     /// インデックスリソースを作成
-    _CreateIndexResource();
+    this->_CreateIndexResource();
 
     /// テクスチャを読み込む
-    _LoadModelTexture();
+    this->_LoadModelTexture();
 
-    /// ウェルリソースを作成
-    _CreateWellResource();
+    /// スキニング結果を格納するリソースを作成
+    this->_CreateSkinnedResource();
+
+    /// UAVの生成
+    this->_CreateUAV();
 
     // フラグを立てる
     isReadyDraw_ = true;
@@ -103,7 +97,7 @@ void GltfModel::CreateGPUResource()
 
 bool GltfModel::IsEndLoading() const
 {
-    return isReadyDraw_; 
+    return isReadyDraw_;
 }
 
 void GltfModel::Clone(IModel* _src)
@@ -131,6 +125,40 @@ void GltfModel::Clone(IModel* _src)
     this->_CopyFrom(pSrc);
 }
 
+void GltfModel::DispatchSkinning()
+{
+    auto cl = pDx12_->GetCommandList();
+
+    // リソースの状態を更新
+    DX12Helper::ChangeStateResource(
+        cl,
+        resourceSkinned_,
+        D3D12_RESOURCE_STATE_UNORDERED_ACCESS
+    );
+
+    // 準備
+    ID3D12DescriptorHeap* ppHeaps[] = { srvManager_->GetDescriptorHeap() };
+    cl->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
+    cl->SetComputeRootDescriptorTable(0, skinCluster_.srvHandlePalette.second);
+    cl->SetComputeRootDescriptorTable(1, srvHandleGpuInputVertex_);
+    cl->SetComputeRootDescriptorTable(2, skinCluster_.srvHandleInfluence.second);
+    cl->SetComputeRootDescriptorTable(3, srvHandleGpuSkinned_);
+    cl->SetComputeRootConstantBufferView(4, skinCluster_.resourceSkinningInformation->GetGPUVirtualAddress());
+
+    cl->Dispatch(
+        static_cast<uint32_t>(modelData_.vertices.size() + 1023) / 1024, // グループ数X
+        1, // グループ数Y
+        1  // グループ数Z
+    );
+
+    // リソースの状態を更新
+    DX12Helper::ChangeStateResource(
+        cl,
+        resourceSkinned_,
+        D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER
+    );
+}
+
 D3D12_VERTEX_BUFFER_VIEW GltfModel::GetVertexBufferView() const
 {
     return vertexBufferView_;
@@ -143,7 +171,7 @@ size_t GltfModel::GetVertexCount() const
 
 D3D12_GPU_DESCRIPTOR_HANDLE GltfModel::GetTextureSrvHandle() const
 {
-    return textureSrvHandleGPU_; 
+    return textureSrvHandleGPU_;
 }
 
 ModelData* GltfModel::GetModelData()
@@ -175,10 +203,10 @@ void GltfModel::_CreateVertexResource()
     /// 頂点データを初期化
     std::memcpy(vertexData_, modelData_.vertices.data(), sizeof(VertexData) * modelData_.vertices.size());
 
-    /// 頂点バッファービューを初期化
-    vertexBufferView_.BufferLocation = vertexResource_->GetGPUVirtualAddress();
-    vertexBufferView_.SizeInBytes = static_cast<uint32_t>(sizeof(VertexData) * modelData_.vertices.size());
-    vertexBufferView_.StrideInBytes = sizeof(VertexData);
+    /// SRVの生成
+    srvIndexInputVertex_ = srvManager_->Allocate();
+    srvManager_->CreateForStructuredBuffer(srvIndexInputVertex_, vertexResource_.Get(), static_cast<uint32_t>(modelData_.vertices.size()), sizeof(VertexData));
+    srvHandleGpuInputVertex_ = srvManager_->GetGPUDescriptorHandle(srvIndexInputVertex_);
 }
 
 void GltfModel::_CreateIndexResource()
@@ -194,6 +222,20 @@ void GltfModel::_CreateIndexResource()
     indexBufferView_.BufferLocation = indexResource_->GetGPUVirtualAddress();
     indexBufferView_.SizeInBytes = static_cast<uint32_t>(sizeof(uint32_t) * modelData_.indices.size());
     indexBufferView_.Format = DXGI_FORMAT_R32_UINT;
+}
+
+void GltfModel::_CreateSkinnedResource()
+{
+    resourceSkinned_.resource = DX12Helper::CreateBufferResource(
+        pDx12_->GetDevice(),
+        sizeof(VertexData) * modelData_.vertices.size(),
+        D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS
+    );
+
+    /// 頂点バッファービューを初期化
+    vertexBufferView_.BufferLocation = resourceSkinned_.resource->GetGPUVirtualAddress();
+    vertexBufferView_.SizeInBytes = static_cast<uint32_t>(sizeof(VertexData) * modelData_.vertices.size());
+    vertexBufferView_.StrideInBytes = sizeof(VertexData);
 }
 
 
@@ -242,7 +284,8 @@ void GltfModel::_CopyFrom(GltfModel* _pCopySrc)
     // リソースを作成
     this->_CreateVertexResource();
     this->_CreateIndexResource();
-    this->_CreateWellResource();
+    this->_CreateSkinnedResource();
+    this->_CreateUAV();
 
     isReadyDraw_ = true;
 }
@@ -303,9 +346,9 @@ void GltfModel::_UpdateSkinCluster()
             // Jointの数がSkinClusterの逆バインドポーズマトリックスの数を超えた場合はエラー
             throw std::runtime_error("Joint index exceeds the size of inverseBindPoseMatrices in SkinCluster.");
         }
-        skinCluster_.mappedPalette[jointIndex].skeletonSpaceMatrix = 
+        skinCluster_.mappedPalette[jointIndex].skeletonSpaceMatrix =
             skinCluster_.inverseBindPoseMatrices[jointIndex] * skeletonData.joints[jointIndex].GetJointData().skeletonSpaceMatrix;
-        skinCluster_.mappedPalette[jointIndex].skeletonSpaceInverseTransposeMatrix = 
+        skinCluster_.mappedPalette[jointIndex].skeletonSpaceInverseTransposeMatrix =
             skinCluster_.mappedPalette[jointIndex].skeletonSpaceMatrix.Inverse().Transpose();
     }
 }
@@ -333,20 +376,16 @@ void GltfModel::_ApplyAnimationToSkeleton()
     }
 }
 
-void GltfModel::_CreateWellResource()
+void GltfModel::_CreateUAV()
 {
-    uint32_t stride = sizeof(WellForGPU);
-    uint32_t countJoints = static_cast<uint32_t>(skeleton_.GetSkeletonData().joints.size());
+    srvIndexSkinned_ = srvManager_->Allocate();
+    srvHandleGpuSkinned_ = srvManager_->GetGPUDescriptorHandle(srvIndexSkinned_);
 
-    wellResource_ = DX12Helper::CreateBufferResource(pDx12_->GetDevice(), stride * countJoints);
-    wellResource_->Map(0, nullptr, reinterpret_cast<void**>(&skinCluster_.mappedPalette));
-
-    // 初期化いる？
-    //wellForGPUData_->skeletonSpaceMatrix = Matrix4x4::Identity();
-    //wellForGPUData_->skeletonSpaceInverseTransposeMatrix = Matrix4x4::Identity();
-
-    // SRVの作成
-    wellSRVIndex_ = SRVManager::GetInstance()->Allocate();
-    SRVManager::GetInstance()->CreateForStructuredBuffer(wellSRVIndex_, wellResource_.Get(), countJoints, stride);
-    wellSrvHandleGPU_ = SRVManager::GetInstance()->GetGPUDescriptorHandle(wellSRVIndex_);
+    srvManager_->CreateUAV4Buffer(
+        srvIndexSkinned_,
+        resourceSkinned_.resource.Get(),
+        DXGI_FORMAT_UNKNOWN,
+        static_cast<uint32_t>(modelData_.vertices.size()),
+        sizeof(VertexData)
+    );
 }

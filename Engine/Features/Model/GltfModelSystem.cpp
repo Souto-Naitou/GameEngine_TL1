@@ -1,0 +1,83 @@
+#include "GltfModelSystem.h"
+#include <Core/DirectX12/RootParameters/RootParameters.h>
+#include <Core/Win32/WinSystem.h>
+
+void GltfModelSystem::Initialize()
+{
+    _CompileShader();
+    _CreateRootSignatureCS();
+    _CreatePipelineStateCS();
+}
+
+void GltfModelSystem::PrepareDispatch()
+{
+    auto cl = pDx12_->GetCommandList();
+    cl->SetComputeRootSignature(rootSignature_.Get());
+    cl->SetPipelineState(pso_.Get());
+}
+
+void GltfModelSystem::_CompileShader()
+{
+    ID3D12Device* device = pDx12_->GetDevice();
+    IDxcUtils* dxcUtils = pDx12_->GetDxcUtils();
+    IDxcCompiler3* dxcCompiler = pDx12_->GetDxcCompiler();
+    IDxcIncludeHandler* includeHandler = pDx12_->GetIncludeHandler();
+    uint32_t clientWidth = WinSystem::clientWidth;
+    uint32_t clientHeight = WinSystem::clientWidth;
+
+    /// ShaderをCompileする
+    computeShaderBlob_ = DX12Helper::CompileShader(kComputeShaderPath, L"cs_6_0", dxcUtils, dxcCompiler, includeHandler);
+    assert(computeShaderBlob_ != nullptr);
+}
+
+void GltfModelSystem::_CreatePipelineStateCS()
+{
+    D3D12_COMPUTE_PIPELINE_STATE_DESC computePipelineStateDesc = {};
+    computePipelineStateDesc.CS = {
+        .pShaderBytecode = computeShaderBlob_->GetBufferPointer(),
+        .BytecodeLength = computeShaderBlob_->GetBufferSize()
+    };
+    computePipelineStateDesc.pRootSignature = rootSignature_.Get();
+    HRESULT hr = pDx12_->GetDevice()->CreateComputePipelineState(&computePipelineStateDesc, IID_PPV_ARGS(&pso_));
+}
+
+void GltfModelSystem::_CreateRootSignatureCS()
+{
+    RootParameters<5> rootParametersCS;
+    rootParametersCS
+        .SetParameter(0, "t0", D3D12_SHADER_VISIBILITY_ALL)
+        .SetParameter(1, "t1", D3D12_SHADER_VISIBILITY_ALL)
+        .SetParameter(2, "t2", D3D12_SHADER_VISIBILITY_ALL)
+        .SetParameter(3, "u0", D3D12_SHADER_VISIBILITY_ALL)
+        .SetParameter(4, "b0", D3D12_SHADER_VISIBILITY_ALL);
+
+    D3D12_ROOT_SIGNATURE_DESC rootSignatureDesc = {};
+    rootSignatureDesc.pParameters = rootParametersCS.GetParams();
+    rootSignatureDesc.NumParameters = rootParametersCS.GetSize();
+    rootSignatureDesc.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
+    rootSignatureDesc.pStaticSamplers = nullptr; // CSではStaticSamplerは使用しない
+    rootSignatureDesc.NumStaticSamplers = 0;
+
+    // シリアライズしてバイナリにする
+    Microsoft::WRL::ComPtr<ID3DBlob> signatureBlob = nullptr;
+    Microsoft::WRL::ComPtr<ID3DBlob> errorBlob = nullptr;
+    HRESULT hr = D3D12SerializeRootSignature(&rootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1, &signatureBlob, &errorBlob);
+    if (FAILED(hr))
+    {
+        Logger::GetInstance()->LogError(
+            "Object3dSystem",
+            __func__,
+            reinterpret_cast<char*>(errorBlob->GetBufferPointer())
+        );
+
+        assert(false);
+    }
+    // バイナリをもとに生成
+    hr = pDx12_->GetDevice()->CreateRootSignature(
+        0, 
+        signatureBlob->GetBufferPointer(), 
+        signatureBlob->GetBufferSize(), 
+        IID_PPV_ARGS(&rootSignature_)
+    );
+    assert(SUCCEEDED(hr));
+}

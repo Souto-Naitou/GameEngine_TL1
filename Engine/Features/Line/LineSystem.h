@@ -4,10 +4,10 @@
 #include <dxgi1_6.h>
 #include <wrl.h>
 #include <Core/DirectX12/DirectX12.h>
-#include <BaseClasses/ObjectSystemBase.h>
+#include <BaseClasses/ObjectSystemBaseMT.h>
 
 
-class LineSystem : public ObjectSystemBase
+class LineSystem : public ObjectSystemBaseMT
 {
 public:
     LineSystem(const LineSystem&) = delete;

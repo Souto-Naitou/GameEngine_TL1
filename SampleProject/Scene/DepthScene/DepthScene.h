@@ -7,6 +7,7 @@
 
 #include <list>
 #include <memory>
+#include <Features/Model/ModelManager.h>
 
 class DepthScene : public SceneBase
 {
@@ -17,10 +18,7 @@ public:
     void Initialize() override;
     void Finalize() override;
     void Update() override;
-    void Draw2dBackGround() override;
-    void Draw3d() override;
-    void DrawLine() override;
-    void Draw2dForeground() override;
+    void Draw() override;
     void DrawTexts() override;
 
 private:

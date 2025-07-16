@@ -37,6 +37,7 @@
 
 #include <memory> /// std::unique_ptr
 #include <Core/DirectX12/PostEffect.h>
+#include <Features/Model/GltfModelSystem.h>
 
 
 /// ゲーム共通のフレームワーククラス
@@ -61,11 +62,12 @@ public:
 
 protected: 
     /// システムクラスのインスタンス
-    std::unique_ptr<DirectX12>      pDirectX_                   = nullptr;
-    std::unique_ptr<ISceneFactory>  pSceneFactory_              = nullptr;
-    std::unique_ptr<Viewport>       pViewport_                  = nullptr;
-    std::unique_ptr<NiGuiDrawer>    pDrawer_                    = nullptr;
-    std::unique_ptr<NiGuiDebug>     pNiGuiDebug_                = nullptr;
+    std::unique_ptr<DirectX12>          pDirectX_                   = nullptr;
+    std::unique_ptr<ISceneFactory>      pSceneFactory_              = nullptr;
+    std::unique_ptr<Viewport>           pViewport_                  = nullptr;
+    std::unique_ptr<NiGuiDrawer>        pDrawer_                    = nullptr;
+    std::unique_ptr<NiGuiDebug>         pNiGuiDebug_                = nullptr;
+    std::unique_ptr<GltfModelSystem>    pGltfModelSystem_           = nullptr;
 
     #ifdef _DEBUG
     std::unique_ptr<ImGuiManager>   pImGuiManager_              = nullptr;
@@ -103,6 +105,8 @@ protected:
     std::unique_ptr<RandomFilter>       pPERandomFilter_        = nullptr;
 
     bool                                isExitProgram_          = false;
+
+    void    InitializePostEffects();
 };
 
 #define CREATE_APPLICATION(class) \

@@ -97,23 +97,15 @@ void CG3PT2::Update()
     }
 }
 
-void CG3PT2::Draw2dBackGround()
+void CG3PT2::Draw()
 {
-}
-
-void CG3PT2::Draw3d()
-{
+    // =============================================
+    // [Object3d Begin]
     pointLight_.Draw();
     pMonsterBall_->Draw();
     pGrid_->Draw();
-}
-
-void CG3PT2::DrawLine()
-{
-}
-
-void CG3PT2::Draw2dForeground()
-{
+    // [Object3d End]
+    // =============================================
 }
 
 void CG3PT2::DrawTexts()
