@@ -6,10 +6,12 @@
 
 GltfModel::~GltfModel()
 {
+    #ifdef _DEBUG
     if (is_called_finalize_ == false)
     {
         assert(false && "GltfModel::Finalize() must be called before destruction.");
     }
+    #endif // _DEBUG
 }
 
 void GltfModel::Initialize()
