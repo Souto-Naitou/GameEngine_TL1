@@ -24,7 +24,9 @@ void GltfModel::Initialize()
 
 void GltfModel::Finalize()
 {
+    #ifdef _DEBUG
     is_called_finalize_ = true;
+    #endif // _DEBUG
 }
 
 void GltfModel::Update()

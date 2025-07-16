@@ -70,8 +70,6 @@ void Object3d::Update()
     Matrix4x4 wMatrix = Matrix4x4::AffineMatrix(transform_.scale, transform_.rotate, transform_.translate);
     Matrix4x4 wvpMatrix = {};
 
-    const auto& localMatrix = pModel_->GetModelData()->rootNode.localMatrix;
-
     /// カメラの行列計算
     auto vpMatrix = Matrix4x4::Identity();
     if (pGameEye_)
