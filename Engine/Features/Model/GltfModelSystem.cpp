@@ -18,12 +18,9 @@ void GltfModelSystem::PrepareDispatch()
 
 void GltfModelSystem::_CompileShader()
 {
-    ID3D12Device* device = pDx12_->GetDevice();
     IDxcUtils* dxcUtils = pDx12_->GetDxcUtils();
     IDxcCompiler3* dxcCompiler = pDx12_->GetDxcCompiler();
     IDxcIncludeHandler* includeHandler = pDx12_->GetIncludeHandler();
-    uint32_t clientWidth = WinSystem::clientWidth;
-    uint32_t clientHeight = WinSystem::clientWidth;
 
     /// ShaderをCompileする
     computeShaderBlob_ = DX12Helper::CompileShader(kComputeShaderPath, L"cs_6_0", dxcUtils, dxcCompiler, includeHandler);
