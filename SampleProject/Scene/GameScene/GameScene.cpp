@@ -8,6 +8,7 @@
 #include <Features/GameEye/FreeLook/FreeLookEye.h>
 #include <NiGui/NiGui.h>
 #include <Features/Audio/AudioManager.h>
+#include <Features/Model/ModelManager.h>
 
 
 void GameScene::Initialize()
@@ -40,6 +41,7 @@ void GameScene::Initialize()
     pSkydome_->SetScale({ 1.0f, 1.0f, 1.0f });
     pSkydome_->SetName("Skydome");
     pSkydome_->SetEnableLighting(false);
+    pSkydome_->SetModel(pModelSkydome_);
 
     pGrid_ = std::make_unique<Object3d>();
     pGrid_->Initialize();
@@ -47,6 +49,7 @@ void GameScene::Initialize()
     pGrid_->SetName("Grid");
     pGrid_->SetTilingMultiply({ 100.0f, 100.0f });
     pGrid_->SetEnableLighting(false);
+    pGrid_->SetModel(pModelGrid_);
 
     // ガイド用のスプライトを生成
     pGuideSprite_ = std::make_unique<Sprite>();
@@ -95,26 +98,26 @@ void GameScene::Update()
     pSpark_->Update();
 }
 
-void GameScene::Draw2dBackGround()
+void GameScene::Draw()
 {
-}
+    // =============================================
+    // [Object3d Begin]
+    pSkydome_->Draw();
+    pGrid_->Draw();
+    // [Object3d End]
+    // =============================================
 
-void GameScene::DrawLine()
-{
+    // =============================================
+    // [Particle Begin]
     pFirework_->Draw();
-    //pSmoke_->Draw();
-    //pSpark_->Draw();
-}
+    // [Particle End]
+    // =============================================
 
-void GameScene::Draw3d()
-{
-    pSkydome_->Draw(pModelSkydome_);
-    pGrid_->Draw(pModelGrid_);
-}
-
-void GameScene::Draw2dForeground()
-{
+    // =============================================
+    // [Sprite Begin]
     pGuideSprite_->Draw();
+    // [Sprite End]
+    // =============================================
 }
 
 void GameScene::DrawTexts()

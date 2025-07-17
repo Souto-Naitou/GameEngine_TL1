@@ -11,13 +11,7 @@ void InstancingScene::Initialize()
     pGameEye_->SetName("InstancingScene_Camera");
     pGameEye_->SetTranslate(Vector3(0.0f, 0.0f, -10.0f));
     ParticleSystem::GetInstance()->SetGlobalEye(pGameEye_.get());
-
-    pGuideSprite_ = std::make_unique<Sprite>();
-    pGuideSprite_->Initialize("Text/SceneChangeGuide.png");
-    pGuideSprite_->SetName("GuideText");
-    pGuideSprite_->SetPosition(Vector2(1280.0f - 40.0f, 720.0f - 40.0f));
-    pGuideSprite_->SetAnchorPoint({ 1,1 });
-
+    
     // モデルマネージャーの取得
     pModelManager_ = std::any_cast<ModelManager*>(pArgs_->Get("ModelManager"));
 
@@ -29,9 +23,6 @@ void InstancingScene::Initialize()
 
 void InstancingScene::Finalize()
 {
-    pGuideSprite_->Finalize();
-
-
     ParticleManager::GetInstance()->ReleaseParticle(particle_);
     particle_ = nullptr;
 }
@@ -39,7 +30,6 @@ void InstancingScene::Finalize()
 void InstancingScene::Update()
 {
     pGameEye_->Update();
-    pGuideSprite_->Update();
 
     if (pInput_->PushKey(DIK_LCONTROL) && pInput_->TriggerKey(DIK_2))
     {
@@ -49,23 +39,8 @@ void InstancingScene::Update()
     particle_->Update();
 }
 
-void InstancingScene::Draw2dBackGround()
+void InstancingScene::Draw()
 {
-
-}
-
-void InstancingScene::Draw3d()
-{
-
-}
-
-void InstancingScene::DrawLine()
-{
-}
-
-void InstancingScene::Draw2dForeground()
-{
-    pGuideSprite_->Draw();
 }
 
 void InstancingScene::DrawTexts()

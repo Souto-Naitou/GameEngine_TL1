@@ -4,7 +4,9 @@
 #include <Vector3.h>
 #include <Vector2.h>
 #include <Core/DirectX12/DirectX12.h>
+#include <Math/Transform.h>
 #include <Common/structs.h>
+#include <Features/Model/ModelData.h>
 #include <string>
 #include <DirectXTex/DirectXTex.h>
 
@@ -70,7 +72,7 @@ private: /// メンバ変数
     bool                                        isUpdate_                       = true;                 // 有効かどうか。falseにするとUpdateとDrawをスキップする
     bool                                        isDraw_                         = true;                 // 描画するかどうか。falseにするとDrawをスキップする
 
-    Transform                                   transform_                      = {};                   // 位置、回転、拡大縮小
+    EulerTransform                              transform_                      = {};                   // 位置、回転、拡大縮小
     Vector2                                     size_                           = {};                   // サイズ
     float                                       rotate_                         = {};                   // 回転角
     Vector2                                     translate_                      = {};                   // 位置
@@ -80,7 +82,7 @@ private: /// メンバ変数
 
     Vector2                                     textureLeftTop_                 = {};                   // テクスチャの左上uv
     Vector2                                     textureSize_                    = {};                   // テクスチャのuv範囲
-    Transform                                   uvTransform_                    = {};                   // UV変換
+    EulerTransform                              uvTransform_                    = {};                   // UV変換
     Matrix4x4                                   uvTransformMatrix_              = {};                   // UV変換行列
 
     std::string                                 texturePath_                    = {};                   // テクスチャファイルパス

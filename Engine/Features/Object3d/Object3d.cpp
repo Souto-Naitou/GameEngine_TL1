@@ -70,20 +70,18 @@ void Object3d::Update()
     Matrix4x4 wMatrix = Matrix4x4::AffineMatrix(transform_.scale, transform_.rotate, transform_.translate);
     Matrix4x4 wvpMatrix = {};
 
-
     /// カメラの行列計算
+    auto vpMatrix = Matrix4x4::Identity();
     if (pGameEye_)
     {
-        auto& vpMatrix = pGameEye_->GetViewProjectionMatrix();
-        wvpMatrix = wMatrix * vpMatrix;
+        vpMatrix = pGameEye_->GetViewProjectionMatrix();
     }
     else if (ppSystemGameEye_ && *ppSystemGameEye_)
     {
-        auto& vpMatrix = (*ppSystemGameEye_)->GetViewProjectionMatrix();
-        wvpMatrix = wMatrix * vpMatrix;
+        vpMatrix = (*ppSystemGameEye_)->GetViewProjectionMatrix();
     }
-    else wvpMatrix = wMatrix;
 
+    wvpMatrix = wMatrix * vpMatrix;
 
     /// 座標変換行列データを更新
     transformationMatrixData_->wvp = wvpMatrix;
@@ -124,9 +122,10 @@ void Object3d::Update()
         cameraForGPU_->worldPosition = (*ppSystemGameEye_)->GetTransform().translate;
     }
 
+
 }
 
-void Object3d::Draw(IModel* _pModel)
+void Object3d::Draw()
 {
     if (!isDraw_) return;
 
@@ -138,7 +137,7 @@ void Object3d::Draw(IModel* _pModel)
     data.cbuffers[5] = cameraForGPUResource_.Get();
     data.cbuffers[6] = lightingResource_.Get();
     data.cbuffers[7] = pointLightResource_.Get();
-    data.model = _pModel;
+    data.model = pModel_;
 
     pSystem_->AddCommandListData(data);
 }

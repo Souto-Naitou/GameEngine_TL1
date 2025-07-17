@@ -197,7 +197,7 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="BaseClasses\ObjectSystemBase.cpp" />
+    <ClCompile Include="BaseClasses\ObjectSystemBaseMT.cpp" />
     <ClCompile Include="Common\HRESULT_ASSERT.cpp" />
     <ClCompile Include="Core\ConfigManager\ConfigManager.cpp" />
     <ClCompile Include="Core\ConfigManager\ConfigType.cpp" />
@@ -231,7 +231,6 @@
     <ClCompile Include="Effects\PostEffects\RadialBlur\RadialBlur.cpp" />
     <ClCompile Include="Effects\PostEffects\RandomFilter\RandomFilter.cpp" />
     <ClCompile Include="Effects\PostEffects\Vignette\Vignette.cpp" />
-    <ClCompile Include="Externals\Timer\Timer.cpp" />
     <ClCompile Include="Features\Audio\Audio.cpp" />
     <ClCompile Include="Features\Audio\AudioManager.cpp" />
     <ClCompile Include="Features\Collision\Collider\Collider.cpp" />
@@ -248,11 +247,16 @@
     <ClCompile Include="Features\Lighting\PointLight\PointLight.cpp" />
     <ClCompile Include="Features\Line\Line.cpp" />
     <ClCompile Include="Features\Line\LineSystem.cpp" />
+    <ClCompile Include="Features\Model\GltfModelSystem.cpp" />
+    <ClCompile Include="Features\Model\Helper\AnimationHelper.cpp" />
     <ClCompile Include="Features\Model\Helper\ModelHelper.cpp" />
-    <ClCompile Include="Features\Model\Loader\ModelLoader.cpp" />
-    <ClCompile Include="Features\Model\ModelFromObj.cpp" />
+    <ClCompile Include="Features\Model\Loader\Assimp\ModelLoaderAssimp.cpp" />
+    <ClCompile Include="Features\Model\Loader\ModelLoaderLegacy.cpp" />
+    <ClCompile Include="Features\Model\GltfModel.cpp" />
+    <ClCompile Include="Features\Model\ObjModel.cpp" />
     <ClCompile Include="Features\Model\ModelManager.cpp" />
     <ClCompile Include="Features\Model\ModelStorage.cpp" />
+    <ClCompile Include="Features\Model\Skeleton.cpp" />
     <ClCompile Include="Features\NiGui\NiGuiDebug.cpp" />
     <ClCompile Include="Features\NiGui\NiGuiDrawer.cpp" />
     <ClCompile Include="Features\Object3d\Object3d.cpp" />
@@ -274,6 +278,7 @@
     <ClCompile Include="Features\Text\Text.cpp" />
     <ClCompile Include="Features\Text\TextSystem.cpp" />
     <ClCompile Include="Features\ThreadPool\ThreadPool.cpp" />
+    <ClCompile Include="Features\TimeMeasurer\TimeMeasurer.cpp" />
     <ClCompile Include="Features\Viewport\Viewport.cpp" />
     <ClCompile Include="Framework\NimaFramework.cpp" />
     <ClCompile Include="Scene\Args\SceneArgs.cpp" />
@@ -286,7 +291,7 @@
     <ClCompile Include="Utility\String\strutl.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="BaseClasses\ObjectSystemBase.h" />
+    <ClInclude Include="BaseClasses\ObjectSystemBaseMT.h" />
     <ClInclude Include="ClassStyles\SingletonStyle.h" />
     <ClInclude Include="Common\define.h" />
     <ClInclude Include="Common\HRESULT_ASSERT.h" />
@@ -325,7 +330,6 @@
     <ClInclude Include="Effects\PostEffects\RadialBlur\RadialBlur.h" />
     <ClInclude Include="Effects\PostEffects\RandomFilter\RandomFilter.h" />
     <ClInclude Include="Effects\PostEffects\Vignette\Vignette.h" />
-    <ClInclude Include="Externals\Timer\Timer.h" />
     <ClInclude Include="Features\Audio\Audio.h" />
     <ClInclude Include="Features\Audio\AudioManager.h" />
     <ClInclude Include="Features\Collision\Collider\Collider.h" />
@@ -346,13 +350,21 @@
     <ClInclude Include="Features\Line\Line.h" />
     <ClInclude Include="Features\Line\LineSystem.h" />
     <ClInclude Include="Features\Line\Manager\LineManager.h" />
+    <ClInclude Include="Features\Model\Animation.h" />
+    <ClInclude Include="Features\Model\GltfModelSystem.h" />
+    <ClInclude Include="Features\Model\Helper\AnimationHelper.h" />
     <ClInclude Include="Features\Model\Helper\ModelHelper.h" />
     <ClInclude Include="Features\Model\IModel.h" />
+    <ClInclude Include="Features\Model\Loader\Assimp\ModelLoaderAssimp.h" />
     <ClInclude Include="Features\Model\Loader\IModelLoader.h" />
-    <ClInclude Include="Features\Model\Loader\ModelLoader.h" />
-    <ClInclude Include="Features\Model\ModelFromObj.h" />
+    <ClInclude Include="Features\Model\Loader\ModelLoaderLegacy.h" />
+    <ClInclude Include="Features\Model\GltfModel.h" />
+    <ClInclude Include="Features\Model\ModelData.h" />
+    <ClInclude Include="Features\Model\ObjModel.h" />
     <ClInclude Include="Features\Model\ModelManager.h" />
     <ClInclude Include="Features\Model\ModelStorage.h" />
+    <ClInclude Include="Features\Model\Skeleton.h" />
+    <ClInclude Include="Features\Model\SkinCluster.h" />
     <ClInclude Include="Features\NiGui\NiGuiDebug.h" />
     <ClInclude Include="Features\NiGui\NiGuiDrawer.h" />
     <ClInclude Include="Features\Object3d\Object3d.h" />
@@ -376,10 +388,13 @@
     <ClInclude Include="Features\Text\Text.h" />
     <ClInclude Include="Features\Text\TextSystem.h" />
     <ClInclude Include="Features\ThreadPool\ThreadPool.h" />
+    <ClInclude Include="Features\TimeMeasurer\TimeMeasurer.h" />
     <ClInclude Include="Features\Viewport\Viewport.h" />
     <ClInclude Include="Framework\NimaFramework.h" />
+    <ClInclude Include="Interfaces\IObjectSystem.h" />
     <ClInclude Include="Interfaces\ISceneArgs.h" />
     <ClInclude Include="Interfaces\ISceneFactory.h" />
+    <ClInclude Include="Math\Transform.h" />
     <ClInclude Include="Scene\Args\SceneArgs.h" />
     <ClInclude Include="Scene\SceneBase.h" />
     <ClInclude Include="Type\Color.h" />
@@ -564,6 +579,21 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="EngineResources\Shaders\RandomFilter.VS.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_ASAN|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="EngineResources\Shaders\Skinning.CS.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_ASAN|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="EngineResources\Shaders\SkinningObject3d.PS.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_ASAN|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="EngineResources\Shaders\SkinningObject3d.VS.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_ASAN|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>

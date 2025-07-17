@@ -84,7 +84,7 @@ namespace DX12Helper
     /// <param name="_sizeInBytes">バイト数</param>
     /// <returns>リソース</returns>
     ComPtr<ID3D12Resource> CreateBufferResource(const ComPtr<ID3D12Device>& _device, size_t _sizeInBytes);
-
+    ComPtr<ID3D12Resource> CreateBufferResource(const ComPtr<ID3D12Device>& _device, size_t _sizeInBytes, D3D12_RESOURCE_FLAGS _flag);
 
     /// <summary>
     /// テクスチャリソースを生成

@@ -43,6 +43,9 @@
     <Filter Include="Game\Scene\CG4Task1">
       <UniqueIdentifier>{15886c4d-903c-47a4-9d77-074f3c1b4343}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game\Scene\CG4Task2">
+      <UniqueIdentifier>{7aabeae0-5209-458a-a0ee-0a7175f78d68}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -75,6 +78,9 @@
     <ClCompile Include="Scene\CG4Task1\CG4Task1.cpp">
       <Filter>Game\Scene\CG4Task1</Filter>
     </ClCompile>
+    <ClCompile Include="Scene\CG4Task2\CG4Task2.cpp">
+      <Filter>Game\Scene\CG4Task2</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SampleProgram\SampleProgram.h">
@@ -103,6 +109,9 @@
     </ClInclude>
     <ClInclude Include="Scene\CG4Task1\CG4Task1.h">
       <Filter>Game\Scene\CG4Task1</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\CG4Task2\CG4Task2.h">
+      <Filter>Game\Scene\CG4Task2</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

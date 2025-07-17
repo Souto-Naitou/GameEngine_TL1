@@ -9,10 +9,11 @@
 #include <map> // std::map
 #include <list> // std::list
 
-#include <BaseClasses/ObjectSystemBase.h>
+#include <BaseClasses/ObjectSystemBaseMT.h>
 #include <Features/Model/IModel.h>
+#include <Core/DirectX12/RootParameters/RootParameters.h>
 
-struct Material
+struct Material // TODO: Rename to MaterialForGPU
 {
     Vector4 color;
     Matrix4x4 uvTransform;
@@ -31,7 +32,7 @@ struct CameraForGPU
 };
 
 // 3D object common 
-class Object3dSystem : public ObjectSystemBase
+class Object3dSystem : public ObjectSystemBaseMT
 {
 public:
     struct CommandListData
@@ -55,8 +56,8 @@ public:
 
     // Common function
     void    Initialize() override;
-    void    DrawCall() override;
-    void    Sync() override;
+    void    DrawCall();
+    void    Sync();
 
     // Draw settings
     void    DepthDrawSetting();
@@ -64,6 +65,9 @@ public:
 
     // Setter
     void    AddCommandListData(CommandListData& _data);
+
+    // Getter
+    RootParameters<8> GetRootParameters() const {return rootParameters_;}
 
 private:
     // Ctor
@@ -83,6 +87,7 @@ private:
     ComPtr<IDxcBlob>                vertexShaderBlob_       = nullptr;  // Blob of vertex shader
     ComPtr<IDxcBlob>                pixelShaderBlob_        = nullptr;  // Blob of pixel shader
     std::list<CommandListData>      commandListDatas_       = {};       // Container for draw settings
+    RootParameters<8>               rootParameters_         = {};       // Root parameters for root signature
     D3D12_INPUT_ELEMENT_DESC        inputElementDescs_[3]   = {};
     D3D12_INPUT_LAYOUT_DESC         inputLayoutDesc_        = {};
     D3D12_RASTERIZER_DESC           rasterizerDesc_         = {};

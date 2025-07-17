@@ -3,63 +3,63 @@
   <Class Name="Grayscale" Collapsed="true">
     <Position X="10" Y="8.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>gACAIAgAILBIAYAAAAEACCAAAAAAAiAAQgAABBBINAk=</HashCode>
+      <HashCode>gACAIAgAILBIAYAAAAEACCAAAAAAgiAAQgAABABINAk=</HashCode>
       <FileName>Effects\PostEffects\Grayscale\Grayscale.h</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Vignette" Collapsed="true">
     <Position X="10" Y="3.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>gACAIAgAILBoAYAAAAEACCAAEAAgAyAAQgAABhBINAk=</HashCode>
+      <HashCode>gACAIAgAILBoAYAAAAEACCAAEAAggyAAQgAABgBINAk=</HashCode>
       <FileName>Effects\PostEffects\Vignette\Vignette.h</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="BoxFilter" Collapsed="true">
     <Position X="10" Y="1.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>gACAIAgAILBoAYAAAAEACCAAAAAgAyAAQgAABBBINAk=</HashCode>
+      <HashCode>gACAIAgAILBoAYAAAAEACCAAAAAggyAAQgAABABINAk=</HashCode>
       <FileName>Effects\PostEffects\BoxFilter\BoxFilter.h</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="GaussianFilter" Collapsed="true">
     <Position X="10" Y="4.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>gACAIAgAILBoAYAAAAEACCAAAAAgAyAAQgAABBBINAk=</HashCode>
+      <HashCode>gACAIAgAILBoAYAAAAEACCAAAAAggyAAQgAABABINAk=</HashCode>
       <FileName>Effects\PostEffects\GaussianFilter\GaussianFilter.h</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="PrewittOutline" Collapsed="true">
     <Position X="10" Y="5.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>gACAIAgAILBoAYAAAAEACCAAAAAgAyAAQgAABBBINAk=</HashCode>
+      <HashCode>gACAIAgAILBoAYAAAAEACCAAAAAggyAAQgAABABINAk=</HashCode>
       <FileName>Effects\PostEffects\PrewittOutline\PrewittOutline.h</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="DepthBasedOutline" Collapsed="true">
     <Position X="10" Y="7.5" Width="1.75" />
     <TypeIdentifier>
-      <HashCode>gACAIEgAILBoIYCAAAEACCACAAAgAyAAQgAAJBBsNAk=</HashCode>
+      <HashCode>gACAIEgAILBoIYCAAAEACCACAAAggyAAQgAAJABsNAk=</HashCode>
       <FileName>Effects\PostEffects\DepthBasedOutline\DepthBasedOutline.h</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="RadialBlur" Collapsed="true">
     <Position X="10" Y="2.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>gACAIAgAILBoAYgAAAEACCIAAAAgAyAAQgAABhBINAk=</HashCode>
+      <HashCode>gACAIAgAILBoAYgAAAEACCIAAAAggyAAQgAABgBINAk=</HashCode>
       <FileName>Effects\PostEffects\RadialBlur\RadialBlur.h</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Dissolve" Collapsed="true">
     <Position X="10" Y="6.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>gACAIAgAILBoAYABAAEECCAAACAgAyAAQgAABBBINAk=</HashCode>
+      <HashCode>gACAIAgAILBoAYABAAEECCAAACAggyAAQgAABABINAk=</HashCode>
       <FileName>Effects\PostEffects\Dissolve\Dissolve.h</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="NimaFramework">
     <Position X="19.25" Y="1.75" Width="2" />
     <TypeIdentifier>
-      <HashCode>AIQBEQCACoBoKwgAAEQIACQwABEAoASABCaAAAACCAM=</HashCode>
+      <HashCode>AIQBEQCACoBoKwgAAEQIACQwABEAoASABCaAAAICCAM=</HashCode>
       <FileName>Framework\NimaFramework.h</FileName>
     </TypeIdentifier>
   </Class>
@@ -73,7 +73,7 @@
   <Class Name="TextureManager" Collapsed="true">
     <Position X="3.5" Y="0.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAEAEAAAgAAAQAAJAABAAAIBAAAQAAAABAgAAAAAAg=</HashCode>
+      <HashCode>AAAEAEAAAgAAAQAAJAAAAAAIBAAAQAAAABAoAAAAAAg=</HashCode>
       <FileName>Core\DirectX12\TextureManager.h</FileName>
     </TypeIdentifier>
   </Class>
@@ -87,21 +87,14 @@
   <Class Name="IPostEffect" Collapsed="true">
     <Position X="11.75" Y="0.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>gAAAIAgAAJAIAYAAAAEACAAAAAAAAAAAAABAABBABAA=</HashCode>
+      <HashCode>gAAAIAgAAJAIAYAAAAEACAAAAAAAgAAAAABAAABABAA=</HashCode>
       <FileName>Core\DirectX12\IPostEffect.h</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="Model" Collapsed="true">
-    <Position X="3.5" Y="2.25" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AYSgQAAAgAAEIwAABAAAAEgAAAAEAkJABAACBAABAAA=</HashCode>
-      <FileName>Features\Model\Model.h</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="ModelManager" Collapsed="true">
     <Position X="3.5" Y="1.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AASAAAAAggAAAQEAIJAMAQABBAAAgIAAAAAwAAAAEAA=</HashCode>
+      <HashCode>AAAAgAAAAAAAAQAAIRAABAAAAAAAAAABBAAIEAACAAE=</HashCode>
       <FileName>Features\Model\ModelManager.h</FileName>
     </TypeIdentifier>
   </Class>

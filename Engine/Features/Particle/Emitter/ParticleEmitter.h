@@ -2,7 +2,7 @@
 
 #pragma warning(disable: 4324) // 構造体のメンバがアライメントのためにパディングされる
 
-#include <Timer/Timer.h>
+#include <Features/TimeMeasurer/TimeMeasurer.h>
 #include <Features/Particle/Particle.h>
 #include <Features/Primitive/AABB.h>
 #include <WinTools/WinTools.h>
@@ -13,7 +13,6 @@
 #include <memory>
 #include <cstdint>
 #include <Features/Particle/Emitter/EmitterData.h>
-
 
 class ParticleEmitter
 {
@@ -46,8 +45,8 @@ private:
     std::string                 ptrHex_                 = {};               // ポインタの16進数表記
     std::string                 particleName_           = {};               // 名前
     std::string                 jsonPath_               = {};               // JSONファイルパス
-    Timer                       timer_                  = {};               // 計測用タイマー
-    Timer                       reloadTimer_            = {};               // リロード用タイマー
+    TimeMeasurer                timer_                  = {};               // 計測用タイマー
+    TimeMeasurer                reloadTimer_            = {};               // リロード用タイマー
     double                      reloadInterval_         = 1.0;              // リロード間隔
     EmitterData                 emitterData_            = {};               // エミッタデータ
     EmitterData                 fromJsonData_           = {};

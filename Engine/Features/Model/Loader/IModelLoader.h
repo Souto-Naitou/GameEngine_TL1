@@ -1,7 +1,7 @@
 #pragma once
 
 #include <Features/Model/IModel.h>
-#include <Features/Model/ModelStorage.h>
+#include <Core/DirectX12/DirectX12.h>
 
 #include <memory>
 #include <string>
@@ -9,7 +9,7 @@
 
 // モデルローダーインターフェイス
 // - モデルをファイルから読み込む
-class IModelLoader
+class IModelLoader : public EngineFeature
 {
 public:
     virtual ~IModelLoader() = default;

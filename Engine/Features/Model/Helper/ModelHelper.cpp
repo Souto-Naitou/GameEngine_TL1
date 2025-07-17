@@ -1,6 +1,7 @@
 #include "ModelHelper.h"
 
 #include <Common/structs.h>
+#include <Features/Model/ModelData.h>
 #include <Vector4.h>
 #include <Vector3.h>
 #include <Vector2.h>
@@ -9,6 +10,7 @@
 #include <sstream>
 #include <cassert>
 #include <filesystem>
+#include <Features/Model/GltfModel.h>
 
 ModelData Helper::Model::LoadObjFile(const std::string& _directoryPath, const std::string& _filename, const std::string& _texturePath)
 {
@@ -123,7 +125,7 @@ ModelData Helper::Model::LoadObjFile(const std::string& _directoryPath, const st
             std::string materialFilename;
             s >> materialFilename;
             // 基本的にobjファイルと同一階層にmtlを配置するためディレクトリ名とファイル名を渡す
-            modelData.materialData = LoadMaterialTemplateFile(directoryPath, materialFilename);
+            modelData.material = LoadMaterialTemplateFile(directoryPath, materialFilename);
         }
         else if (identifier == "mtllib" && !_texturePath.empty())
         {
@@ -177,4 +179,12 @@ MaterialData Helper::Model::LoadMaterialTemplateFile(const std::string& _directo
     }
     // 4 Return MaterialData
     return materialData;
+}
+
+void Helper::Model::DispatchModel(IModel* _pModel)
+{
+    auto ptr = dynamic_cast<GltfModel*>(_pModel);
+    if (!ptr) return;
+
+    ptr->DispatchSkinning();
 }

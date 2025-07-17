@@ -5,6 +5,7 @@
 #ifdef _DEBUG
 #include <imgui.h>
 #endif // _DEBUG
+#include <Features/Model/ModelManager.h>
 
 void DepthScene::Initialize()
 {
@@ -56,24 +57,16 @@ void DepthScene::Update()
     pGameEye_->Update();
 }
 
-void DepthScene::Draw2dBackGround()
+void DepthScene::Draw()
 {
-}
-
-void DepthScene::Draw3d()
-{
+    // =============================================
+    // [Object3d Begin]
     for ( auto& obj : objectList_ )
     {
-        obj->Draw(pModelPlane_);
+        obj->Draw();
     }
-}
-
-void DepthScene::DrawLine()
-{
-}
-
-void DepthScene::Draw2dForeground()
-{
+    // [Object3d End]
+    // =============================================
 }
 
 void DepthScene::DrawTexts()
@@ -87,6 +80,7 @@ void DepthScene::CreateObject()
     obj->Initialize();
     obj->SetTranslate(Vector3(0.0f, 0.0f, nextObjZ_));
     obj->SetGameEye(pGameEye_.get());
+    obj->SetModel(pModelPlane_);
     nextObjZ_ += objZInterval_;
 }
 

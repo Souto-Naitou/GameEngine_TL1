@@ -5,11 +5,11 @@
 #include <list>
 
 #include <ClassStyles/SingletonStyle.h>
-#include <BaseClasses/ObjectSystemBase.h>
+#include <BaseClasses/ObjectSystemBaseMT.h>
 
 class SpriteSystem : 
     public SingletonStyle<SpriteSystem>,
-    public ObjectSystemBase
+    public ObjectSystemBaseMT
 {
     friend class SingletonStyle<SpriteSystem>;
 
@@ -26,8 +26,8 @@ public:
     // Common functions
     void Initialize() override;
     void PresentDraw();
-    void DrawCall() override;
-    void Sync() override;
+    void DrawCall();
+    void Sync();
 
     // Setter
     void AddCommandListData(const CommandListData& _data);

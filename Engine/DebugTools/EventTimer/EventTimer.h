@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Timer/Timer.h>
+#include <Features/TimeMeasurer/TimeMeasurer.h>
 #include <string>
 #include <unordered_map>
 #include <functional>
@@ -35,12 +35,12 @@ private:
     ~EventTimer() = default;
 
 private:
-    Timer globalTimer_;
+    TimeMeasurer globalTimer_;
     float deltaTime_ = 0.0f;
     int durationMaxTimeDisplay_ = 3;
     std::unordered_map<std::string, float> events_;
-    std::unordered_map<std::string, Timer> timers_;
+    std::unordered_map<std::string, TimeMeasurer> timers_;
     std::unordered_map<std::string, float> maxTime_;
-    std::unordered_map<std::string, Timer> maxTimeResetTimers_;
+    std::unordered_map<std::string, TimeMeasurer> maxTimeResetTimers_;
     bool isDisplayProgressBar_ = true;
 };

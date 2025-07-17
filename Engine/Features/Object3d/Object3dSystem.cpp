@@ -3,7 +3,7 @@
 #include <cassert>
 #include <Core/DirectX12/Helper/DX12Helper.h>
 #include <Core/Win32/WinSystem.h>
-#include <Core/DirectX12/RootParameters/RootParameters.h>
+#include <Core/DirectX12/SRVManager.h>
 
 Object3dSystem::Object3dSystem()
 {
@@ -11,7 +11,7 @@ Object3dSystem::Object3dSystem()
 
 void Object3dSystem::Initialize()
 {
-    ObjectSystemBase::Initialize();
+    ObjectSystemBaseMT::Initialize();
 
     CreateRootSignature();
     CreateMainPipelineState();
@@ -53,6 +53,10 @@ void Object3dSystem::DrawCall()
         /// コマンドリストの設定
         DX12Helper::CommandListCommonSetting(pDx12_, _commandList, rtvHandle_);
 
+        /// Compute::Start
+
+        /// Compute::End
+
         /// ルートシグネチャをセットする
         _commandList->SetGraphicsRootSignature(rootSignature_.Get());
 
@@ -69,8 +73,7 @@ void Object3dSystem::DrawCall()
                 auto& [key, value] = cbuffer;
                 _commandList->SetGraphicsRootConstantBufferView(key, value->GetGPUVirtualAddress());
             }
-            data.model->SetCommandList(_commandList);
-            data.model->Draw();
+            data.model->Draw(_commandList);
         }
 
         /// ルートシグネチャをセットする
@@ -90,8 +93,7 @@ void Object3dSystem::DrawCall()
                 _commandList->SetGraphicsRootConstantBufferView(key, value->GetGPUVirtualAddress());
             }
 
-            data.model->SetCommandList(_commandList);
-            data.model->Draw();
+            data.model->Draw(_commandList);
         }
     };
 
@@ -113,20 +115,12 @@ void Object3dSystem::CreateRootSignature()
 {
     ID3D12Device* device = pDx12_->GetDevice();
 
-    D3D12_DESCRIPTOR_RANGE descriptorRange[1] = {};
-    descriptorRange[0].BaseShaderRegister = 0; // 0から始まる
-    descriptorRange[0].NumDescriptors = 1; // 数は1つ
-    descriptorRange[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV; // SRVを使う
-    descriptorRange[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND; // Offsetを自動計算
-
     /// RootSignature作成
     D3D12_ROOT_SIGNATURE_DESC descriptionRootSignature{};
-    descriptionRootSignature.Flags =
-        D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
+    descriptionRootSignature.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
 
     // RootParameter作成。複数設定できるので配列
-    RootParameters<8> rootParameters = {};
-    rootParameters
+    rootParameters_
         .SetParameter(0, "b0", D3D12_SHADER_VISIBILITY_PIXEL)
         .SetParameter(1, "b0", D3D12_SHADER_VISIBILITY_VERTEX)
         .SetParameter(2, "t0", D3D12_SHADER_VISIBILITY_PIXEL)
@@ -136,8 +130,8 @@ void Object3dSystem::CreateRootSignature()
         .SetParameter(6, "b4", D3D12_SHADER_VISIBILITY_PIXEL)   // Lighting
         .SetParameter(7, "b5", D3D12_SHADER_VISIBILITY_PIXEL);  // PointLight
 
-    descriptionRootSignature.pParameters = rootParameters.GetParams();      // ルートパラメータ配列へのポインタ
-    descriptionRootSignature.NumParameters = rootParameters.GetSize();      // 配列の長さ
+    descriptionRootSignature.pParameters = rootParameters_.GetParams();      // ルートパラメータ配列へのポインタ
+    descriptionRootSignature.NumParameters = rootParameters_.GetSize();      // 配列の長さ
 
     D3D12_STATIC_SAMPLER_DESC staticSamplers[1] = {};
     staticSamplers[0].Filter = D3D12_FILTER_MAXIMUM_ANISOTROPIC;            // 異方性フィルタリング
@@ -200,6 +194,7 @@ void Object3dSystem::CreateMainPipelineState()
     inputElementDescs_[2].SemanticIndex = 0;
     inputElementDescs_[2].Format = DXGI_FORMAT_R32G32B32_FLOAT;
     inputElementDescs_[2].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
+
 
 
     inputLayoutDesc_.pInputElementDescs = inputElementDescs_;

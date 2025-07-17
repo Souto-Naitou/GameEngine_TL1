@@ -1,12 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Externals">
-      <UniqueIdentifier>{4a863a72-ff1f-460f-9840-3ea3ebb8c64f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Externals\Timer">
-      <UniqueIdentifier>{eadfca40-62e7-4a72-b41e-3818d23dafb1}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Feature">
       <UniqueIdentifier>{a77adb65-0ab2-4143-a805-264c3fa04373}</UniqueIdentifier>
     </Filter>
@@ -307,6 +301,18 @@
     <Filter Include="Scene\Args">
       <UniqueIdentifier>{11cc3948-5543-4400-98b3-0076cd2d2db9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Feature\Model\Loader\Legacy">
+      <UniqueIdentifier>{f52e4b78-be1f-4180-8ae4-acc018de9228}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Feature\Model\Loader\Assimp">
+      <UniqueIdentifier>{b0764b50-1546-47ae-9fec-d98f58289f2a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Feature\TimeMeasurer">
+      <UniqueIdentifier>{495f3d05-1ecb-471c-908f-a0a1fc1eb033}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Math">
+      <UniqueIdentifier>{ec067c63-c8a9-466a-aff3-c54c9a64be1c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DebugTools\DebugManager\DebugManager.cpp">
@@ -339,7 +345,7 @@
     <ClCompile Include="Features\Model\Helper\ModelHelper.cpp">
       <Filter>Feature\Model\Helper</Filter>
     </ClCompile>
-    <ClCompile Include="Features\Model\ModelFromObj.cpp">
+    <ClCompile Include="Features\Model\ObjModel.cpp">
       <Filter>Feature\Model</Filter>
     </ClCompile>
     <ClCompile Include="Features\Model\ModelManager.cpp">
@@ -365,9 +371,6 @@
     </ClCompile>
     <ClCompile Include="Core\Win32\WinSystem.cpp">
       <Filter>Core\WinSystem</Filter>
-    </ClCompile>
-    <ClCompile Include="Externals\Timer\Timer.cpp">
-      <Filter>Externals\Timer</Filter>
     </ClCompile>
     <ClCompile Include="Features\GameEye\GameEye.cpp">
       <Filter>Feature\GameEye</Filter>
@@ -465,9 +468,6 @@
     <ClCompile Include="Features\GameEye\FreeLook\FreeLookEye.cpp">
       <Filter>Feature\GameEye\FreeLookEye</Filter>
     </ClCompile>
-    <ClCompile Include="BaseClasses\ObjectSystemBase.cpp">
-      <Filter>BaseClass</Filter>
-    </ClCompile>
     <ClCompile Include="Features\NiGui\NiGuiDebug.cpp">
       <Filter>Feature\NiGuiDerived</Filter>
     </ClCompile>
@@ -552,9 +552,6 @@
     <ClCompile Include="Features\Model\ModelStorage.cpp">
       <Filter>Feature\Model\Storage</Filter>
     </ClCompile>
-    <ClCompile Include="Features\Model\Loader\ModelLoader.cpp">
-      <Filter>Feature\Model\Loader</Filter>
-    </ClCompile>
     <ClCompile Include="Utility\FileSystem\fsutl.cpp">
       <Filter>Utility\FileSystem</Filter>
     </ClCompile>
@@ -564,8 +561,34 @@
     <ClCompile Include="Utility\PathResolver\PathResolver.cpp">
       <Filter>Utility\PathResolver</Filter>
     </ClCompile>
-    <ClCompile Include="Scene\SceneBase.cpp" />
-    <ClCompile Include="Scene\Args\SceneArgs.cpp" />
+    <ClCompile Include="Features\Model\Loader\ModelLoaderLegacy.cpp">
+      <Filter>Feature\Model\Loader\Legacy</Filter>
+    </ClCompile>
+    <ClCompile Include="Features\Model\GltfModel.cpp">
+      <Filter>Feature\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\Args\SceneArgs.cpp">
+      <Filter>Scene\Args</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\SceneBase.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Features\Model\Loader\Assimp\ModelLoaderAssimp.cpp">
+      <Filter>Feature\Model\Loader\Assimp</Filter>
+    </ClCompile>
+    <ClCompile Include="Features\TimeMeasurer\TimeMeasurer.cpp">
+      <Filter>Feature\TimeMeasurer</Filter>
+    </ClCompile>
+    <ClCompile Include="Features\Model\Helper\AnimationHelper.cpp">
+      <Filter>Feature\Model\Helper</Filter>
+    </ClCompile>
+    <ClCompile Include="Features\Model\Skeleton.cpp">
+      <Filter>Feature\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseClasses\ObjectSystemBaseMT.cpp">
+      <Filter>BaseClass</Filter>
+    </ClCompile>
+    <ClCompile Include="Features\Model\GltfModelSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common\define.h">
@@ -601,7 +624,7 @@
     <ClInclude Include="Features\Model\Helper\ModelHelper.h">
       <Filter>Feature\Model\Helper</Filter>
     </ClInclude>
-    <ClInclude Include="Features\Model\ModelFromObj.h">
+    <ClInclude Include="Features\Model\ObjModel.h">
       <Filter>Feature\Model</Filter>
     </ClInclude>
     <ClInclude Include="Features\Model\ModelManager.h">
@@ -633,9 +656,6 @@
     </ClInclude>
     <ClInclude Include="Core\Win32\WinSystem.h">
       <Filter>Core\WinSystem</Filter>
-    </ClInclude>
-    <ClInclude Include="Externals\Timer\Timer.h">
-      <Filter>Externals\Timer</Filter>
     </ClInclude>
     <ClInclude Include="Features\GameEye\GameEye.h">
       <Filter>Feature\GameEye</Filter>
@@ -757,9 +777,6 @@
     <ClInclude Include="ClassStyles\SingletonStyle.h">
       <Filter>ClassStyle</Filter>
     </ClInclude>
-    <ClInclude Include="BaseClasses\ObjectSystemBase.h">
-      <Filter>BaseClass</Filter>
-    </ClInclude>
     <ClInclude Include="Features\NiGui\NiGuiDrawer.h">
       <Filter>Feature\NiGuiDerived</Filter>
     </ClInclude>
@@ -865,9 +882,6 @@
     <ClInclude Include="Features\Model\Loader\IModelLoader.h">
       <Filter>Feature\Model\Loader</Filter>
     </ClInclude>
-    <ClInclude Include="Features\Model\Loader\ModelLoader.h">
-      <Filter>Feature\Model\Loader</Filter>
-    </ClInclude>
     <ClInclude Include="Utility\FileSystem\fsutl.h">
       <Filter>Utility\FileSystem</Filter>
     </ClInclude>
@@ -885,6 +899,45 @@
     </ClInclude>
     <ClInclude Include="Scene\Args\SceneArgs.h">
       <Filter>Scene\Args</Filter>
+    </ClInclude>
+    <ClInclude Include="Features\Model\GltfModel.h">
+      <Filter>Feature\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Features\Model\Loader\ModelLoaderLegacy.h">
+      <Filter>Feature\Model\Loader\Legacy</Filter>
+    </ClInclude>
+    <ClInclude Include="Features\Model\Loader\Assimp\ModelLoaderAssimp.h">
+      <Filter>Feature\Model\Loader\Assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="Features\Model\ModelData.h">
+      <Filter>Feature\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Features\TimeMeasurer\TimeMeasurer.h">
+      <Filter>Feature\TimeMeasurer</Filter>
+    </ClInclude>
+    <ClInclude Include="Features\Model\Animation.h">
+      <Filter>Feature\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Features\Model\Helper\AnimationHelper.h">
+      <Filter>Feature\Model\Helper</Filter>
+    </ClInclude>
+    <ClInclude Include="Math\Transform.h">
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Features\Model\Skeleton.h">
+      <Filter>Feature\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Features\Model\SkinCluster.h">
+      <Filter>Feature\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Features\Model\GltfModelSystem.h">
+      <Filter>Feature\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseClasses\ObjectSystemBaseMT.h">
+      <Filter>BaseClass</Filter>
+    </ClInclude>
+    <ClInclude Include="Interfaces\IObjectSystem.h">
+      <Filter>Interface</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1000,6 +1053,15 @@
     </FxCompile>
     <FxCompile Include="EngineResources\Shaders\RandomFilter.PS.hlsl">
       <Filter>HLSL\PostEffect</Filter>
+    </FxCompile>
+    <FxCompile Include="EngineResources\Shaders\SkinningObject3d.VS.hlsl">
+      <Filter>HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="EngineResources\Shaders\SkinningObject3d.PS.hlsl">
+      <Filter>HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="EngineResources\Shaders\Skinning.CS.hlsl">
+      <Filter>HLSL</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

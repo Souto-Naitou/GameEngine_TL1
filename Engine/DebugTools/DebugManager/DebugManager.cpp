@@ -97,7 +97,7 @@ void DebugManager::Window_ObjectList()
 {
     #ifdef _DEBUG
 
-    ImGuiTreeNodeFlags treeNodeFlags = ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanAvailWidth;
+    ImGuiTreeNodeFlags treeNodeFlags = ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanAvailWidth;
 
     std::list<ComponentData*> uncategorizedComponents;
     std::unordered_map<std::string, std::list<ComponentData*>> parentMap;

@@ -8,6 +8,7 @@
 #include <wrl.h>
 #include <Core/DirectX12/DirectX12.h>
 #include <vector>
+#include <Features/GameEye/GameEye.h>
 
 class Line
 {
@@ -26,6 +27,7 @@ public:
 
 public:
     void Resize(size_t _size);
+    void ResizeLine(size_t _numLines);
     void SetColor(const Vector4& _color) { color_ = _color; }
     void SetGameEye(GameEye** _eye) { pGameEye_ = _eye; }
 
@@ -34,6 +36,7 @@ public: /// Getter
     Vector3& GetVertex(size_t _idx) { return vertices_[_idx]; }
     std::vector<Vector3>& GetVertices() { return vertices_; }
     Vector4& GetColorData() { return color_; }
+    size_t GetLineCount() const { return vertices_.size() / 2; }
 
 
 private:

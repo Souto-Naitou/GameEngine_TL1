@@ -105,12 +105,25 @@ void SRVManager::CreateForStructuredBuffer(uint32_t _index, ID3D12Resource* _pBu
     pDx12_->GetDevice()->CreateShaderResourceView(_pBuffer, &srvDesc, GetCPUDescriptorHandle(_index));
 }
 
-void SRVManager::CreateForUAV(uint32_t _index, ID3D12Resource* _pTexture, DXGI_FORMAT _format)
+void SRVManager::CreateUAV(uint32_t _index, ID3D12Resource* _pTexture, DXGI_FORMAT _format)
 {
     D3D12_UNORDERED_ACCESS_VIEW_DESC uavDesc = {};
     uavDesc.ViewDimension      = D3D12_UAV_DIMENSION_TEXTURE2D;
     uavDesc.Format             = _format;
     uavDesc.Texture2D.MipSlice = 0;
+
+    pDx12_->GetDevice()->CreateUnorderedAccessView(_pTexture, nullptr, &uavDesc, GetCPUDescriptorHandle(_index));
+}
+
+void SRVManager::CreateUAV4Buffer(uint32_t _index, ID3D12Resource* _pTexture, DXGI_FORMAT _format, uint32_t _numElements, uint32_t _structureByteStride)
+{
+    D3D12_UNORDERED_ACCESS_VIEW_DESC uavDesc = {};
+    uavDesc.Format             = _format;
+    uavDesc.ViewDimension      = D3D12_UAV_DIMENSION_BUFFER;
+    uavDesc.Buffer.FirstElement = 0;
+    uavDesc.Buffer.NumElements  = _numElements;
+    uavDesc.Buffer.Flags        = D3D12_BUFFER_UAV_FLAG_NONE;
+    uavDesc.Buffer.StructureByteStride = _structureByteStride;
 
     pDx12_->GetDevice()->CreateUnorderedAccessView(_pTexture, nullptr, &uavDesc, GetCPUDescriptorHandle(_index));
 }

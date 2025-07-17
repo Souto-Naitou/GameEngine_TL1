@@ -1,6 +1,7 @@
 #include "PG3PT1.h"
 
 #include <Features/GameEye/FreeLook/FreeLookEye.h>
+#include <Features/Model/ModelManager.h>
 
 void PG3PT1::Initialize()
 {
@@ -26,6 +27,7 @@ void PG3PT1::Initialize()
     pBunny_->SetEnableLighting(true);
     pBunny_->SetGameEye(pGameEye_.get());
     pBunny_->SetDirectionalLight(&directionalLight_);
+    pBunny_->SetModel(pModelBunny_);
 }
 
 void PG3PT1::Finalize()
@@ -44,21 +46,9 @@ void PG3PT1::Update()
     pBunny_->Update();
 }
 
-void PG3PT1::Draw2dBackGround()
+void PG3PT1::Draw()
 {
-}
-
-void PG3PT1::Draw3d()
-{
-    pBunny_->Draw(pModelBunny_);
-}
-
-void PG3PT1::DrawLine()
-{
-}
-
-void PG3PT1::Draw2dForeground()
-{
+    pBunny_->Draw();
 }
 
 void PG3PT1::DrawTexts()

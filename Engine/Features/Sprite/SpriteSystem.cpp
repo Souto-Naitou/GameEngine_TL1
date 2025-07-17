@@ -7,7 +7,7 @@
 
 void SpriteSystem::Initialize()
 {
-    ObjectSystemBase::Initialize();
+    ObjectSystemBaseMT::Initialize();
 
     CreateRootSignature();
     CreatePipelineState();

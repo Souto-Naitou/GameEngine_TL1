@@ -13,7 +13,7 @@ void Line::Initialize()
     pDx12_ = pLineSystem_->GetDirectX12();
     device_ = pDx12_->GetDevice();
 
-    pGameEye_ = pLineSystem_->GetSharedGameEye();
+    pGameEye_ = pLineSystem_->GetGlobalEye();
 
     if (vertices_.size() == 0)
     {
@@ -47,7 +47,7 @@ void Line::Update()
 
 void Line::Draw()
 {
-    ID3D12GraphicsCommandList* commandList = pDx12_->GetCommandList();
+    ID3D12GraphicsCommandList* commandList = pLineSystem_->GetCommandList();
 
     commandList->SetGraphicsRootConstantBufferView(0, colorResource_->GetGPUVirtualAddress());
     commandList->SetGraphicsRootConstantBufferView(1, wvpMatrixResource_->GetGPUVirtualAddress());
@@ -64,6 +64,11 @@ void Line::Resize(size_t _size)
     vertices_.resize(_size);
     vertexResource_.Reset();
     CreateVertexResource();
+}
+
+void Line::ResizeLine(size_t _numLines)
+{
+    this->Resize(_numLines * 2);
 }
 
 void Line::CreateVertexResource()

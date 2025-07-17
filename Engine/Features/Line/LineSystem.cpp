@@ -6,6 +6,8 @@
 
 void LineSystem::Initialize()
 {
+    ObjectSystemBaseMT::Initialize();
+
     device_ = pDx12_->GetDevice();
     dxcUtils_ = pDx12_->GetDxcUtils();
     dxcCompiler_ = pDx12_->GetDxcCompiler();
@@ -22,13 +24,15 @@ void LineSystem::Initialize()
 
 void LineSystem::PresentDraw()
 {
-    ID3D12GraphicsCommandList* commandList = pDx12_->GetCommandList();
+    /// コマンドリストの設定
+    DX12Helper::CommandListCommonSetting(pDx12_, commandList_.Get(), rtvHandle_);
+
     /// ルートシグネチャをセットする
-    commandList->SetGraphicsRootSignature(rootSignature_.Get());
+    commandList_->SetGraphicsRootSignature(rootSignature_.Get());
     /// グラフィックスパイプラインステートをセットする
-    commandList->SetPipelineState(pipelineState_.Get());
+    commandList_->SetPipelineState(pipelineState_.Get());
     /// プリミティブトポロジーをセットする
-    commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_LINELIST);
+    commandList_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_LINELIST);
 }
 
 void LineSystem::CreateRootSignature()

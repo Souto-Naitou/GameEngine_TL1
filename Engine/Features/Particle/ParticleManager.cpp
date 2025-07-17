@@ -3,11 +3,6 @@
 
 void ParticleManager::Update()
 {
-    for (auto& particle : particles_)
-    {
-        particle->Update();
-    }
-
     deleteParticles_.remove_if([&](Particle* _particle)
     {
         if (_particle->IsAbleDelete())
@@ -17,6 +12,11 @@ void ParticleManager::Update()
         }
         return false;
     });
+
+    for (auto& particle : particles_)
+    {
+        particle->Update();
+    }
 }
 
 void ParticleManager::Draw()
@@ -51,8 +51,6 @@ void ParticleManager::ReleaseParticle(Particle* _particle)
             return;
         }
     }
-
-    assert(false);
 
     return;
 }

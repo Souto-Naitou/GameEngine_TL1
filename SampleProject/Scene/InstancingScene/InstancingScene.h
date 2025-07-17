@@ -7,6 +7,7 @@
 #include <Features/Sprite/Sprite.h>
 
 #include <memory>
+#include <Features/Model/ModelManager.h>
 
 class InstancingScene : public SceneBase
 {
@@ -19,20 +20,13 @@ public:
 
     void Update() override;
 
-    void Draw2dBackGround() override;
-
-    void Draw3d() override;
-
-    void DrawLine() override;
-
-    void Draw2dForeground() override;
+    void Draw() override;
 
     void DrawTexts() override;
 
 private:
     Particle* particle_ = nullptr;
     std::unique_ptr<GameEye> pGameEye_ = nullptr;
-    std::unique_ptr<Sprite> pGuideSprite_ = nullptr;
 
     // Pointers
     Input* pInput_ = nullptr;

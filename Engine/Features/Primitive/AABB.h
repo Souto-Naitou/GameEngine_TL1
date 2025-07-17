@@ -36,7 +36,7 @@ public: /// Getter
 private:
     Vector3 min_; // 最小点
     Vector3 max_; // 最大点
-    std::unique_ptr<Line> lines = nullptr; // 線
+    Line lines = {12}; // 線
 
 
 private:
