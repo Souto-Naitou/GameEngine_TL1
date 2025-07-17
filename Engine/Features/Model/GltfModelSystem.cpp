@@ -36,6 +36,15 @@ void GltfModelSystem::_CreatePipelineStateCS()
     };
     computePipelineStateDesc.pRootSignature = rootSignature_.Get();
     HRESULT hr = pDx12_->GetDevice()->CreateComputePipelineState(&computePipelineStateDesc, IID_PPV_ARGS(&pso_));
+    if (FAILED(hr))
+    {
+        Logger::GetInstance()->LogError(
+            "GltfModelSystem",
+            __func__,
+            "Failed to create compute pipeline state."
+        );
+        throw std::runtime_error("Failed to create compute pipeline state.");
+    }
 }
 
 void GltfModelSystem::_CreateRootSignatureCS()
