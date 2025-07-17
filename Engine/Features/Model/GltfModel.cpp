@@ -134,11 +134,7 @@ void GltfModel::DispatchSkinning()
     auto cl = pDx12_->GetCommandList();
 
     // リソースの状態を更新
-    DX12Helper::ChangeStateResource(
-        cl,
-        resourceSkinned_,
-        D3D12_RESOURCE_STATE_UNORDERED_ACCESS
-    );
+    resourceSkinned_.ChangeState(cl, D3D12_RESOURCE_STATE_UNORDERED_ACCESS);
 
     // 準備
     ID3D12DescriptorHeap* ppHeaps[] = { srvManager_->GetDescriptorHeap() };
@@ -156,11 +152,7 @@ void GltfModel::DispatchSkinning()
     );
 
     // リソースの状態を更新
-    DX12Helper::ChangeStateResource(
-        cl,
-        resourceSkinned_,
-        D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER
-    );
+    resourceSkinned_.ChangeState(cl, D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER);
 }
 
 D3D12_VERTEX_BUFFER_VIEW GltfModel::GetVertexBufferView() const
@@ -278,7 +270,7 @@ void GltfModel::_CopyFrom(GltfModel* _pCopySrc)
     this->modelData_ = _pCopySrc->modelData_;
     this->animationData_ = _pCopySrc->animationData_;
     // テクスチャのSRVハンドルをコピー
-    // NOTE: クローン元のテクスチャを上書きしていない場合に限る
+    //   NOTE: クローン元のテクスチャを上書きしていない場合に限る
     if (!isOverwroteTexture_)
     {
         this->textureSrvHandleGPU_ = _pCopySrc->textureSrvHandleGPU_;

@@ -9,4 +9,5 @@ struct ResourceStateTracker
     DXGI_FORMAT format;
 
     void Reset();
+    void ChangeState(ID3D12GraphicsCommandList* commandList, D3D12_RESOURCE_STATES newState);
 };
