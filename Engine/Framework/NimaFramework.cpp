@@ -352,15 +352,16 @@ void NimaFramework::InitializePostEffects()
     pPostEffectExecuter_->SetDirectX12(pDirectX_.get());
     pPostEffectExecuter_->Initialize();
 
-    pPEGrayscale_           = Helper::PostEffect::CreatePostEffect<Grayscale>(pDirectX_.get());
-    pPEVignette_            = Helper::PostEffect::CreatePostEffect<Vignette>(pDirectX_.get());
-    pPEBoxFilter_           = Helper::PostEffect::CreatePostEffect<BoxFilter>(pDirectX_.get());
-    pPEGaussianFilter_      = Helper::PostEffect::CreatePostEffect<GaussianFilter>(pDirectX_.get());
-    pPEPrewittOutline_      = Helper::PostEffect::CreatePostEffect<PrewittOutline>(pDirectX_.get());
-    pPEDepthBasedOutline_   = Helper::PostEffect::CreatePostEffect<DepthBasedOutline>(pDirectX_.get());
-    pPERadialBlur_          = Helper::PostEffect::CreatePostEffect<RadialBlur>(pDirectX_.get());
-    pPEDissolve_            = Helper::PostEffect::CreatePostEffect<Dissolve>(pDirectX_.get());
-    pPERandomFilter_        = Helper::PostEffect::CreatePostEffect<RandomFilter>(pDirectX_.get());
+    pPEGrayscale_               = Helper::PostEffect::CreatePostEffect<Grayscale>(pDirectX_.get());
+    pPEVignette_                = Helper::PostEffect::CreatePostEffect<Vignette>(pDirectX_.get());
+    pPEBoxFilter_               = Helper::PostEffect::CreatePostEffect<BoxFilter>(pDirectX_.get());
+    pPEGaussianFilter_          = Helper::PostEffect::CreatePostEffect<GaussianFilter>(pDirectX_.get());
+    pPEPrewittOutline_          = Helper::PostEffect::CreatePostEffect<PrewittOutline>(pDirectX_.get());
+    pPEDepthBasedOutline_       = Helper::PostEffect::CreatePostEffect<DepthBasedOutline>(pDirectX_.get());
+    pPERadialBlur_              = Helper::PostEffect::CreatePostEffect<RadialBlur>(pDirectX_.get());
+    pPEDissolve_                = Helper::PostEffect::CreatePostEffect<Dissolve>(pDirectX_.get());
+    pPERandomFilter_            = Helper::PostEffect::CreatePostEffect<RandomFilter>(pDirectX_.get());
+    pPESeparatedGaussianFilter_ = Helper::PostEffect::CreatePostEffect<SeparatedGaussianFilter>(pDirectX_.get());
 
     pPostEffectExecuter_->AddPostEffect(pPEGrayscale_.get())
         .AddPostEffect(pPEVignette_.get())
@@ -370,5 +371,6 @@ void NimaFramework::InitializePostEffects()
         .AddPostEffect(pPEDepthBasedOutline_.get())
         .AddPostEffect(pPERadialBlur_.get())
         .AddPostEffect(pPEDissolve_.get())
-        .AddPostEffect(pPERandomFilter_.get());
+        .AddPostEffect(pPERandomFilter_.get())
+        .AddPostEffect(pPESeparatedGaussianFilter_.get());
 }

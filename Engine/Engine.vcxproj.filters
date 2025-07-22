@@ -313,6 +313,9 @@
     <Filter Include="Math">
       <UniqueIdentifier>{ec067c63-c8a9-466a-aff3-c54c9a64be1c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Effect\PostEffect\SeparatedGaussianFilter">
+      <UniqueIdentifier>{9fb29472-52fe-4435-a648-0459a076ef41}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DebugTools\DebugManager\DebugManager.cpp">
@@ -589,6 +592,9 @@
       <Filter>BaseClass</Filter>
     </ClCompile>
     <ClCompile Include="Features\Model\GltfModelSystem.cpp" />
+    <ClCompile Include="Effects\PostEffects\SeparatedGaussianFilter\SeparatedGaussianFilter.cpp">
+      <Filter>Effect\PostEffect\SeparatedGaussianFilter</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common\define.h">
@@ -939,6 +945,12 @@
     <ClInclude Include="Interfaces\IObjectSystem.h">
       <Filter>Interface</Filter>
     </ClInclude>
+    <ClInclude Include="Effects\PostEffects\SeparatedGaussianFilter\SeparatedGaussianFilter.h">
+      <Filter>Effect\PostEffect\SeparatedGaussianFilter</Filter>
+    </ClInclude>
+    <ClInclude Include="Math\Functions.hpp">
+      <Filter>Math</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
@@ -1062,6 +1074,12 @@
     </FxCompile>
     <FxCompile Include="EngineResources\Shaders\Skinning.CS.hlsl">
       <Filter>HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="EngineResources\Shaders\SeparatedGaussianFilter.PS.hlsl">
+      <Filter>HLSL\PostEffect</Filter>
+    </FxCompile>
+    <FxCompile Include="EngineResources\Shaders\SeparatedGaussianFilter.VS.hlsl">
+      <Filter>HLSL\PostEffect</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>
