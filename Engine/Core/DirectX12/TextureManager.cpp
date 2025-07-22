@@ -40,7 +40,7 @@ void TextureManager::LoadTexture(const std::string& _filePath)
 
     if (DirectX::IsCompressed(metadata.format)) {
         DirectX::ScratchImage decompressed;
-        DirectX::Decompress(image.GetImages(), image.GetImageCount(), metadata, DXGI_FORMAT_R8G8B8A8_UNORM, decompressed);
+        DirectX::Decompress(image.GetImages(), image.GetImageCount(), metadata, DirectX12::kRenderTargetFormat_, decompressed);
         image = std::move(decompressed);
     }
 
