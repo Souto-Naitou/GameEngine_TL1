@@ -145,17 +145,9 @@ void Viewport::Compute()
     #ifdef _DEBUG
 
     /// ステートの変更
-    DX12Helper::ChangeStateResource(
-        commandList_, 
-        *outputTexture_, 
-        D3D12_RESOURCE_STATE_UNORDERED_ACCESS
-    );
+    outputTexture_->ChangeState(commandList_, D3D12_RESOURCE_STATE_UNORDERED_ACCESS);
 
-    DX12Helper::ChangeStateResource(
-        commandList_,
-        *inputTexture_,
-        D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE
-    );
+    inputTexture_->ChangeState(commandList_, D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE);
 
     commandList_->SetPipelineState(pipelineState_.Get());
     commandList_->SetComputeRootSignature(rootSignature_.Get());
@@ -177,18 +169,10 @@ void Viewport::Compute()
         1
     );
 
-    DX12Helper::ChangeStateResource(
-        commandList_,
-        *inputTexture_,
-        D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE
-    );
+    inputTexture_->ChangeState(commandList_, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
 
     /// ステートの変更
-    DX12Helper::ChangeStateResource(
-        commandList_,
-        *outputTexture_,
-        D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE
-    );
+    outputTexture_->ChangeState(commandList_, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
 
     #endif // _DEBUG
 }

@@ -50,11 +50,7 @@ void PostEffectExecuter::ApplyPostEffects()
     rtvHandleSwapChain_ = pDx12_->GetRTVHandle()[indexBackbuffer];
     DX12Helper::CommandListCommonSetting(pDx12_, commandListForDraw_.Get(), &rtvHandleSwapChain_);
 
-    DX12Helper::ChangeStateResource(
-        commandListForDraw_,
-        renderTexture_,
-        D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE
-    );
+    renderTexture_.ChangeState(commandListForDraw_.Get(), D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
 
     outputHandleGpu_ = rtvHandleGpu_;
 
@@ -95,11 +91,7 @@ void PostEffectExecuter::Draw()
     commandListForDraw_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     commandListForDraw_->DrawInstanced(3, 1, 0, 0);
 
-    DX12Helper::ChangeStateResource(
-        commandListForDraw_,
-        renderTexture_,
-        D3D12_RESOURCE_STATE_RENDER_TARGET
-    );
+    renderTexture_.ChangeState(commandListForDraw_.Get(), D3D12_RESOURCE_STATE_RENDER_TARGET);
 }
 
 void PostEffectExecuter::NewFrame()

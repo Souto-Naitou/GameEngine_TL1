@@ -53,21 +53,23 @@ void Object3dSystem::DrawCall()
         /// コマンドリストの設定
         DX12Helper::CommandListCommonSetting(pDx12_, _commandList, rtvHandle_);
 
-        /// Compute::Start
+        // =============================================
+        // [DepthDraw Begin]
 
-        /// Compute::End
-
-        /// ルートシグネチャをセットする
+        // ルートシグネチャをセットする
         _commandList->SetGraphicsRootSignature(rootSignature_.Get());
 
-        /// グラフィックスパイプラインステートをセットする
+        // グラフィックスパイプラインステートをセットする
         _commandList->SetPipelineState(psoEarlyZ_.Get());
 
-        /// プリミティブトポロジーをセットする
+        // プリミティブトポロジーをセットする
         _commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
         for(auto& data : commandListDatas_)
         {
+            // モデルがnullptrでない場合のみ描画
+            if (data.model == nullptr) continue;
+
             for(auto& cbuffer : data.cbuffers)
             {
                 auto& [key, value] = cbuffer;
@@ -75,6 +77,12 @@ void Object3dSystem::DrawCall()
             }
             data.model->Draw(_commandList);
         }
+
+        // [DepthDraw End]
+        // =============================================
+
+        // =============================================
+        // [MainDraw Begin]
 
         /// ルートシグネチャをセットする
         _commandList->SetGraphicsRootSignature(rootSignature_.Get());
@@ -87,6 +95,7 @@ void Object3dSystem::DrawCall()
 
         for(auto& data : commandListDatas_)
         {
+            if (data.model == nullptr) continue;
             for(auto& cbuffer : data.cbuffers)
             {
                 auto& [key, value] = cbuffer;
@@ -95,6 +104,9 @@ void Object3dSystem::DrawCall()
 
             data.model->Draw(_commandList);
         }
+
+        // [MainDraw End]
+        // =============================================
     };
 
     worker_ = std::async(std::launch::async, record, commandList_.Get());

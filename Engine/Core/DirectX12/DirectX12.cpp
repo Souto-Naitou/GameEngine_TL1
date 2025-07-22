@@ -11,8 +11,6 @@
 
 
 #include <cassert>
-#include <format>
-#include <iostream>
 
 #pragma comment(lib, "d3d12.lib")
 #pragma comment(lib, "d3d11.lib")
@@ -132,7 +130,7 @@ void DirectX12::OnResizedWindow()
 void DirectX12::NewFrame()
 {
     // リソースバリアの設定
-    DX12Helper::ChangeStateResource(commandList_, swapChainResources_[backBufferIndex_], D3D12_RESOURCE_STATE_RENDER_TARGET);
+    swapChainResources_[backBufferIndex_].ChangeState(commandList_.Get(), D3D12_RESOURCE_STATE_RENDER_TARGET);
 
     /// 描画先のRTV/DSVの設定
     commandList_->OMSetRenderTargets(1, &rtvHandles_[backBufferIndex_], false, nullptr);
@@ -154,11 +152,8 @@ void DirectX12::CommandExecute()
     {
         commandList_end = commandLists_.back();
     }
-    DX12Helper::ChangeStateResource(
-        commandList_end,
-        swapChainResources_[backBufferIndex_],
-        D3D12_RESOURCE_STATE_PRESENT
-    );
+
+    swapChainResources_[backBufferIndex_].ChangeState(commandList_end, D3D12_RESOURCE_STATE_PRESENT);
 
     /// コマンドリストの内容を確定させる。すべてのコマンドを積んでからCloseする
     hr_ = commandList_->Close();
@@ -227,9 +222,9 @@ void DirectX12::CopyFromRTV(ID3D12GraphicsCommandList* _commandList)
     #ifdef _DEBUG
 
     /// レンダーターゲットからコピー元状態にする
-    DX12Helper::ChangeStateResource(_commandList, swapChainResources_[backBufferIndex_], D3D12_RESOURCE_STATE_COPY_SOURCE);
+    swapChainResources_[backBufferIndex_].ChangeState(_commandList, D3D12_RESOURCE_STATE_COPY_SOURCE);
 
-    DX12Helper::ChangeStateResource(_commandList, gameScreenResource_, D3D12_RESOURCE_STATE_COPY_DEST);
+    gameScreenResource_.ChangeState(_commandList, D3D12_RESOURCE_STATE_COPY_DEST);
 
 
     D3D12_TEXTURE_COPY_LOCATION srcLocation = {};
@@ -254,13 +249,9 @@ void DirectX12::CopyFromRTV(ID3D12GraphicsCommandList* _commandList)
     _commandList->CopyTextureRegion(&dstLocation, 0, 0, 0, &srcLocation, &srcBox);
 
     /// バリアを戻す
-    DX12Helper::ChangeStateResource(_commandList, swapChainResources_[backBufferIndex_], D3D12_RESOURCE_STATE_RENDER_TARGET);
+    swapChainResources_[backBufferIndex_].ChangeState(_commandList, D3D12_RESOURCE_STATE_RENDER_TARGET);
 
-    DX12Helper::ChangeStateResource(
-        _commandList, 
-        gameScreenResource_, 
-        D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE
-    );
+    gameScreenResource_.ChangeState(_commandList, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
 
     /// rtvのクリア
     _commandList->ClearRenderTargetView(rtvHandles_[backBufferIndex_], &editorBG_.x, 0, nullptr);

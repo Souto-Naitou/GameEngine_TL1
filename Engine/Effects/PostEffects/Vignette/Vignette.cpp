@@ -105,11 +105,7 @@ void Vignette::OnResizedBuffers()
 void Vignette::ToShaderResourceState()
 {
     // レンダーテクスチャをシェーダーリソース状態に変更
-    DX12Helper::ChangeStateResource(
-        commandList_,
-        renderTexture_,
-        D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE
-    );
+    renderTexture_.ChangeState(commandList_, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
 }
 
 void Vignette::DebugOverlay()
@@ -238,11 +234,7 @@ void Vignette::CreatePipelineStateObject()
 void Vignette::ToRenderTargetState()
 {
     // レンダーテクスチャをレンダーターゲット状態に変更
-    DX12Helper::ChangeStateResource(
-        commandList_,
-        renderTexture_,
-        D3D12_RESOURCE_STATE_RENDER_TARGET
-    );
+    renderTexture_.ChangeState(commandList_, D3D12_RESOURCE_STATE_RENDER_TARGET);
 }
 
 void Vignette::CreateResourceCBuffer()

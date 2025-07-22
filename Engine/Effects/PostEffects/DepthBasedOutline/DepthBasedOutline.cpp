@@ -68,9 +68,9 @@ DepthBasedOutlineMaterial* DepthBasedOutline::GetMaterial()
 void DepthBasedOutline::Apply()
 {
     auto dsResource = pDx12_->GetDepthStencilResource();
-    DX12Helper::ChangeStateResource(commandList_, *dsResource, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
+    dsResource->ChangeState(commandList_, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
     commandList_->DrawInstanced(3, 1, 0, 0); // 三角形を1つ描画
-    DX12Helper::ChangeStateResource(commandList_, *dsResource, D3D12_RESOURCE_STATE_DEPTH_WRITE);
+    dsResource->ChangeState(commandList_, D3D12_RESOURCE_STATE_DEPTH_WRITE);
 }
 
 void DepthBasedOutline::Finalize()
@@ -121,11 +121,7 @@ void DepthBasedOutline::OnResizedBuffers()
 void DepthBasedOutline::ToShaderResourceState()
 {
     // 完成したレンダーテクスチャをシェーダーリソース状態に変更
-    DX12Helper::ChangeStateResource(
-        commandList_,
-        renderTexture_,
-        D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE
-    );
+    renderTexture_.ChangeState(commandList_, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
 }
 
 void DepthBasedOutline::DebugOverlay()
@@ -290,11 +286,7 @@ void DepthBasedOutline::CreatePipelineStateObject()
 void DepthBasedOutline::ToRenderTargetState()
 {
     // レンダーテクスチャをレンダーターゲット状態に変更
-    DX12Helper::ChangeStateResource(
-        commandList_,
-        renderTexture_,
-        D3D12_RESOURCE_STATE_RENDER_TARGET
-    );
+    renderTexture_.ChangeState(commandList_, D3D12_RESOURCE_STATE_RENDER_TARGET);
 }
 
 void DepthBasedOutline::CreateResourceCBuffer()

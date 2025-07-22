@@ -103,11 +103,7 @@ void PrewittOutline::OnResizedBuffers()
 void PrewittOutline::ToShaderResourceState()
 {
     // レンダーテクスチャをシェーダーリソース状態に変更
-    DX12Helper::ChangeStateResource(
-        commandList_,
-        renderTexture_,
-        D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE
-    );
+    renderTexture_.ChangeState(commandList_, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
 }
 
 void PrewittOutline::DebugOverlay()
@@ -257,11 +253,7 @@ void PrewittOutline::CreatePipelineStateObject()
 void PrewittOutline::ToRenderTargetState()
 {
     // レンダーテクスチャをレンダーターゲット状態に変更
-    DX12Helper::ChangeStateResource(
-        commandList_,
-        renderTexture_,
-        D3D12_RESOURCE_STATE_RENDER_TARGET
-    );
+    renderTexture_.ChangeState(commandList_, D3D12_RESOURCE_STATE_RENDER_TARGET);
 }
 
 void PrewittOutline::CreateResourceCBuffer()
