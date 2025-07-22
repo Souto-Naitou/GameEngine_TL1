@@ -463,20 +463,6 @@ void DX12Helper::ChangeStateResource(const Microsoft::WRL::ComPtr<ID3D12Graphics
     _commandList->ResourceBarrier(1, &barrier);
 }
 
-void DX12Helper::ChangeStateResource(const ComPtr<ID3D12GraphicsCommandList>& _commandList, ResourceStateTracker& _resource, D3D12_RESOURCE_STATES _after)
-{
-    if (_resource.state == _after) return;
-
-    D3D12_RESOURCE_BARRIER barrier{};
-    barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
-    barrier.Transition.pResource = _resource.resource.Get();
-    barrier.Transition.StateBefore = _resource.state;
-    barrier.Transition.StateAfter = _after;
-    barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
-    _commandList->ResourceBarrier(1, &barrier);
-    _resource.state = _after;
-}
-
 void DX12Helper::CommandListCommonSetting(const DirectX12* _pDx12, ID3D12GraphicsCommandList* _commandList, const D3D12_CPU_DESCRIPTOR_HANDLE* rtvHandle)
 {
     /// 必要なデータを取得

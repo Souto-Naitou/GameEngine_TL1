@@ -126,12 +126,6 @@ namespace DX12Helper
         D3D12_RESOURCE_STATES _after
     );
 
-    void ChangeStateResource(
-        const ComPtr<ID3D12GraphicsCommandList>& _commandList, 
-        ResourceStateTracker& _resource,
-        D3D12_RESOURCE_STATES _after
-    );
-
     void CommandListCommonSetting(const DirectX12* _pDx12, ID3D12GraphicsCommandList* _commandList, const D3D12_CPU_DESCRIPTOR_HANDLE* rtvHandle);
 
     /// <summary>

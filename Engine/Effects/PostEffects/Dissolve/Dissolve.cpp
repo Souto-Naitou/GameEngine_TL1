@@ -113,11 +113,7 @@ void Dissolve::OnResizedBuffers()
 void Dissolve::ToShaderResourceState()
 {
     // レンダーテクスチャをシェーダーリソース状態に変更
-    DX12Helper::ChangeStateResource(
-        commandList_,
-        renderTexture_,
-        D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE
-    );
+    renderTexture_.ChangeState(commandList_, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
 }
 
 void Dissolve::DebugOverlay()
@@ -281,11 +277,7 @@ void Dissolve::CreatePipelineStateObject()
 void Dissolve::ToRenderTargetState()
 {
     // レンダーテクスチャをレンダーターゲット状態に変更
-    DX12Helper::ChangeStateResource(
-        commandList_,
-        renderTexture_,
-        D3D12_RESOURCE_STATE_RENDER_TARGET
-    );
+    renderTexture_.ChangeState(commandList_, D3D12_RESOURCE_STATE_RENDER_TARGET);
 }
 
 void Dissolve::CreateResourceCBuffer()

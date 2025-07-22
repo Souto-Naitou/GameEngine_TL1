@@ -105,11 +105,7 @@ void BoxFilter::OnResizedBuffers()
 void BoxFilter::ToShaderResourceState()
 {
     // レンダーテクスチャをシェーダーリソース状態に変更
-    DX12Helper::ChangeStateResource(
-        commandList_,
-        renderTexture_,
-        D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE
-    );
+    renderTexture_.ChangeState(commandList_, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
 }
 
 void BoxFilter::DebugOverlay()
@@ -226,11 +222,7 @@ void BoxFilter::CreatePipelineStateObject()
 void BoxFilter::ToRenderTargetState()
 {
     // レンダーテクスチャをレンダーターゲット状態に変更
-    DX12Helper::ChangeStateResource(
-        commandList_,
-        renderTexture_,
-        D3D12_RESOURCE_STATE_RENDER_TARGET
-    );
+    renderTexture_.ChangeState(commandList_, D3D12_RESOURCE_STATE_RENDER_TARGET);
 }
 
 void BoxFilter::CreateResourceCBuffer()

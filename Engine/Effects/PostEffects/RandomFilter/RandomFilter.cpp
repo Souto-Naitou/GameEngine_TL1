@@ -121,11 +121,7 @@ void RandomFilter::OnResizedBuffers()
 void RandomFilter::ToShaderResourceState()
 {
     // レンダーテクスチャをシェーダーリソース状態に変更
-    DX12Helper::ChangeStateResource(
-        commandList_,
-        renderTexture_,
-        D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE
-    );
+    renderTexture_.ChangeState(commandList_, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
 }
 
 void RandomFilter::DebugOverlay()
@@ -252,11 +248,7 @@ void RandomFilter::CreatePipelineStateObject()
 void RandomFilter::ToRenderTargetState()
 {
     // レンダーテクスチャをレンダーターゲット状態に変更
-    DX12Helper::ChangeStateResource(
-        commandList_,
-        renderTexture_,
-        D3D12_RESOURCE_STATE_RENDER_TARGET
-    );
+    renderTexture_.ChangeState(commandList_, D3D12_RESOURCE_STATE_RENDER_TARGET);
 }
 
 void RandomFilter::CreateResourceCBuffer()
