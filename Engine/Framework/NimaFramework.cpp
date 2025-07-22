@@ -329,11 +329,11 @@ void NimaFramework::PreProcess()
 {
     pPostEffectExecuter_->NewFrame();
     pSRVManager_->SetDescriptorHeaps();
-
-    pObject3dSystem_->SetRTVHandle(pPostEffectExecuter_->GetRTVHandle());
-    pSpriteSystem_->SetRTVHandle(pPostEffectExecuter_->GetRTVHandle());
-    pParticleSystem_->SetRTVHandle(pPostEffectExecuter_->GetRTVHandle());
-    pLineSystem_->SetRTVHandle(pPostEffectExecuter_->GetRTVHandle());
+    auto rtvHandle = pPostEffectExecuter_->GetRTVHandle();
+    pObject3dSystem_->SetRTVHandle(rtvHandle);
+    pSpriteSystem_->SetRTVHandle(rtvHandle);
+    pParticleSystem_->SetRTVHandle(rtvHandle);
+    pLineSystem_->SetRTVHandle(rtvHandle);
 }
 
 void NimaFramework::PostProcess()
