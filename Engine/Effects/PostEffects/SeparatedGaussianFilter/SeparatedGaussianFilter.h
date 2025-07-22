@@ -10,6 +10,7 @@
 struct alignas(16) SeparatedGaussianFilterOption
 {
     int kernelSize = 5;
+    float padding[3];
     struct alignas(16) Weight
     {
         float value;
@@ -20,6 +21,7 @@ struct alignas(16) SeparatedGaussianFilterOption
 struct alignas(16) SeparatedGaussianFilterExecInfo
 {
     int direction[2];
+    float padding[2]; // 16バイト境界に揃えるためのパディング
 };
 
 /// <ボックスフィルタ>
