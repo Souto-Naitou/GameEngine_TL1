@@ -27,8 +27,6 @@ public:
     void    Enable(bool _flag) override;
     bool    Enabled() const override;
 
-private:
-    // PostEffectクラスがアクセスする
     void    Apply() override;
     void    Setting() override;
     void    OnResizeBefore() override;

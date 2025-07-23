@@ -1,27 +1,28 @@
-#include "RadialBlur.h"
+#include "LuminanceOutput.h"
 #include <cassert>
 #include <Core/DirectX12/DirectX12.h>
 #include <Core/DirectX12/PostEffect.h>
 #include <Effects/PostEffects/.Helper/PostEffectHelper.h>
 #include <Core/DirectX12/SRVManager.h>
 #include <Core/DirectX12/Helper/DX12Helper.h>
-#include <imgui.h>
-#include <Core/DirectX12/BlendDesc.h>
-#include <Core/DirectX12/StaticSamplerDesc/StaticSamplerDesc.h>
 #include <Core/DirectX12/RootParameters/RootParameters.h>
+#include <Core/DirectX12/StaticSamplerDesc/StaticSamplerDesc.h>
+#include <Core/DirectX12/BlendDesc.h>
 #include <Core/DirectX12/PipelineStateObject/PipelineStateObject.h>
+#include <imgui.h>
+#include <Math/Functions.hpp>
 
-void RadialBlur::Initialize()
+void LuminanceOutput::Initialize()
 {
     device_ = pDx12_->GetDevice();
     commandList_ = PostEffectExecuter::GetInstance()->GetCommandList();
 
     // レンダーテクスチャの生成
-    Helper::CreateRenderTexture(pDx12_, device_, renderTexture_, rtvHandleCpu_, rtvHeapIndex_);
-    renderTexture_.resource->SetName(L"RadialBlurRenderTexture");
+    Helper::CreateRenderTexture(pDx12_, device_, outputTexture_, rtvHandleCpu_, rtvHeapIndex_);
+    outputTexture_.resource->SetName(L"LuminanceOutputRenderTexture");
 
     // レンダーテクスチャのSRVを生成
-    Helper::CreateSRV(renderTexture_, rtvHandleGpu_, srvHeapIndex_);
+    Helper::CreateSRV(outputTexture_, rtvHandleGpu_, srvHeapIndex_);
 
     // ルートシグネチャの生成
     this->CreateRootSignature();
@@ -30,106 +31,80 @@ void RadialBlur::Initialize()
     this->CreatePipelineStateObject();
 
     // 設定用リソースの生成と初期化
-    this->CreateResourceCBuffer();
+    this->_CreateResourceCBuffer();
 }
 
-void RadialBlur::Enable(bool _flag)
+void LuminanceOutput::Enable(bool _flag)
 {
     isEnabled_ = _flag;
 }
 
-void RadialBlur::SetInputTextureHandle(D3D12_GPU_DESCRIPTOR_HANDLE _gpuHandle)
+void LuminanceOutput::SetInputTextureHandle(D3D12_GPU_DESCRIPTOR_HANDLE _gpuHandle)
 {
     inputGpuHandle_ = _gpuHandle;
 }
 
-bool RadialBlur::Enabled() const
+bool LuminanceOutput::Enabled() const
 {
     return isEnabled_;
 }
 
-D3D12_GPU_DESCRIPTOR_HANDLE RadialBlur::GetOutputTextureHandle() const
+D3D12_GPU_DESCRIPTOR_HANDLE LuminanceOutput::GetOutputTextureHandle() const
 {
     return rtvHandleGpu_;
 }
 
-const std::string& RadialBlur::GetName() const
+const std::string& LuminanceOutput::GetName() const
 {
     return name_;
 }
 
-RadialBlurOption& RadialBlur::GetOption()
-{
-    return *pOption_;
-}
-
-const RadialBlurOption& RadialBlur::GetOption() const
-{
-    return *pOption_;
-}
-
-void RadialBlur::Apply()
+void LuminanceOutput::Apply()
 {
     commandList_->DrawInstanced(3, 1, 0, 0); // 三角形を1つ描画
 }
 
-void RadialBlur::Finalize()
+void LuminanceOutput::Finalize()
 {
 }
 
-void RadialBlur::Setting()
+void LuminanceOutput::Setting()
 {
-    // レンダーテクスチャをレンダーターゲット状態に変更
-    this->ToRenderTargetState();
-
-    // レンダーターゲットを設定 (自分が所有するテクスチャに対して設定)
-    commandList_->OMSetRenderTargets(1, &rtvHandleCpu_, FALSE, nullptr);
-
-    // PSOとルートシグネチャを設定
-    commandList_->SetGraphicsRootSignature(rootSignature_.Get());
-    commandList_->SetPipelineState(pso_.Get());
-
-    // 入力テクスチャのSRVを設定する（自分が所有するテクスチャのSRVではないため注意)
-    commandList_->SetGraphicsRootDescriptorTable(0, inputGpuHandle_);
-
-    commandList_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
-    commandList_->SetGraphicsRootConstantBufferView(1, optionResource_->GetGPUVirtualAddress());
+    this->_ToRenderTargetState(outputTexture_);
+    this->_Setting(inputGpuHandle_, rtvHandleCpu_);
 }
 
-void RadialBlur::OnResizeBefore()
+void LuminanceOutput::OnResizeBefore()
 {
     SRVManager::GetInstance()->Deallocate(srvHeapIndex_);
-    renderTexture_.resource.Reset();
-    renderTexture_.state = D3D12_RESOURCE_STATE_PRESENT;
+    outputTexture_.Reset();
 }
 
-void RadialBlur::OnResizedBuffers()
+void LuminanceOutput::OnResizedBuffers()
 {
     // レンダーテクスチャの生成
-    Helper::CreateRenderTexture(pDx12_, device_, renderTexture_, rtvHandleCpu_, rtvHeapIndex_);
-    renderTexture_.resource->SetName(L"RadialBlurRenderTexture");
+    Helper::CreateRenderTexture(pDx12_, device_, outputTexture_, rtvHandleCpu_, rtvHeapIndex_);
+    outputTexture_.resource->SetName(L"LuminanceOutputRenderTexture");
+
     // レンダーテクスチャのSRVを生成
-    Helper::CreateSRV(renderTexture_, rtvHandleGpu_, srvHeapIndex_);
+    Helper::CreateSRV(outputTexture_, rtvHandleGpu_, srvHeapIndex_);
 }
 
-void RadialBlur::ToShaderResourceState()
+void LuminanceOutput::ToShaderResourceState()
 {
-    renderTexture_.ChangeState(commandList_, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
+    this->_ToShaderResourceState(outputTexture_);
 }
 
-void RadialBlur::DebugOverlay()
+void LuminanceOutput::DebugOverlay()
 {
     #ifdef _DEBUG
+    
+    ImGui::DragFloat("threshold", &pOption_->threshold, 0.001f, 0.0001f, 1.0f, "%.3f", ImGuiSliderFlags_AlwaysClamp);
 
-    ImGui::DragFloat2("Center", &pOption_->center.x, 0.01f, FLT_MIN);
-    ImGui::InputInt("Samples", &pOption_->samples, 1, 2);
-    ImGui::DragFloat("BlurWidth", &pOption_->blurWidth, 0.0001f);
-
-    #endif //_DEBUG
+    #endif // _DEBUG
 }
 
-void RadialBlur::CreateRootSignature()
+void LuminanceOutput::CreateRootSignature()
 {
     D3D12_ROOT_SIGNATURE_DESC descriptionRootSignature{};
     descriptionRootSignature.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
@@ -142,14 +117,14 @@ void RadialBlur::CreateRootSignature()
     descriptionRootSignature.pParameters = rootParameters.GetParams();
     descriptionRootSignature.NumParameters = rootParameters.GetSize();
 
-    StaticSamplerDesc staticSampler = {};
-    staticSampler
-        .PresetPointClamp()
+    StaticSamplerDesc staticSamplerDesc = {};
+    staticSamplerDesc
+        .PresetPointWrap()
         .SetMaxAnisotropy(16)
         .SetShaderRegister(0)
         .SetRegisterSpace(0);
 
-    descriptionRootSignature.pStaticSamplers = &staticSampler.Get();
+    descriptionRootSignature.pStaticSamplers = &staticSamplerDesc.Get();
     descriptionRootSignature.NumStaticSamplers = 1;
 
     Microsoft::WRL::ComPtr<ID3DBlob> signatureBlob = nullptr;
@@ -164,7 +139,7 @@ void RadialBlur::CreateRootSignature()
     assert(SUCCEEDED(hr));
 }
 
-void RadialBlur::CreatePipelineStateObject()
+void LuminanceOutput::CreatePipelineStateObject()
 {
     IDxcUtils* dxcUtils = pDx12_->GetDxcUtils();
     IDxcCompiler3* dxcCompiler = pDx12_->GetDxcCompiler();
@@ -197,7 +172,7 @@ void RadialBlur::CreatePipelineStateObject()
             .SetPixelShader(pixelShaderBlob_.Get()->GetBufferPointer(), pixelShaderBlob_.Get()->GetBufferSize())
             .SetBlendState(blendDesc.Get())
             .SetRasterizerState(rasterizerDesc)
-            .SetRenderTargetFormats(1, &renderTexture_.format, DXGI_FORMAT_D24_UNORM_S8_UINT)
+            .SetRenderTargetFormats(1, &outputTexture_.format, DXGI_FORMAT_D24_UNORM_S8_UINT)
             .SetPrimitiveTopologyType(D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE)
             .SetSampleDesc({ 1, 0 })
             .SetSampleMask(D3D12_DEFAULT_SAMPLE_MASK)
@@ -212,18 +187,39 @@ void RadialBlur::CreatePipelineStateObject()
     return;
 }
 
-void RadialBlur::ToRenderTargetState()
+void LuminanceOutput::_ToRenderTargetState(ResourceStateTracker& _resource)
 {
     // レンダーテクスチャをレンダーターゲット状態に変更
-    renderTexture_.ChangeState(commandList_, D3D12_RESOURCE_STATE_RENDER_TARGET);
+    _resource.ChangeState(commandList_, D3D12_RESOURCE_STATE_RENDER_TARGET);
 }
 
-void RadialBlur::CreateResourceCBuffer()
+void LuminanceOutput::_ToShaderResourceState(ResourceStateTracker& _resource)
 {
-    optionResource_ = DX12Helper::CreateBufferResource(device_, sizeof(RadialBlurOption));
+    _resource.ChangeState(commandList_, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
+}
+
+void LuminanceOutput::_CreateResourceCBuffer()
+{
+    optionResource_ = DX12Helper::CreateBufferResource(device_, sizeof(LuminanceOutputOption));
     optionResource_->Map(0, nullptr, reinterpret_cast<void**>(&pOption_));
 
-    pOption_->center = { 0.5f, 0.5f };
-    pOption_->samples = 4;
-    pOption_->blurWidth = 0.01f;
+    // 初期化
+    pOption_->threshold = 1.0f; // カーネルサイズの初期値
+}
+
+void LuminanceOutput::_Setting(D3D12_GPU_DESCRIPTOR_HANDLE _inputGpuHandle, D3D12_CPU_DESCRIPTOR_HANDLE _outputCpuHandle)
+{
+    // レンダーターゲットを設定 (自分が所有するテクスチャに対して設定)
+    commandList_->OMSetRenderTargets(1, &_outputCpuHandle, FALSE, nullptr);
+
+    // PSOとルートシグネチャを設定
+    commandList_->SetGraphicsRootSignature(rootSignature_.Get());
+    commandList_->SetPipelineState(pso_.Get());
+
+    // 入力テクスチャのSRVを設定する（自分が所有するテクスチャのSRVではないため注意)
+    commandList_->SetGraphicsRootDescriptorTable(0, _inputGpuHandle);
+
+    commandList_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+    commandList_->SetGraphicsRootConstantBufferView(1, optionResource_->GetGPUVirtualAddress());
 }

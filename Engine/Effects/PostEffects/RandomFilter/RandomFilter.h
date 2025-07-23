@@ -34,8 +34,6 @@ public:
     void    SetOpacity(float _opacity);
     void    SetSeed(float _seed);
 
-private:
-    // PostEffectクラスがアクセスする
     void    Apply() override;
     void    Setting() override;
     void    OnResizeBefore() override;

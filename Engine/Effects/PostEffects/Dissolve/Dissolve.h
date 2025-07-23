@@ -34,8 +34,6 @@ public:
 
     void    SetTextureResource(const TextureResource& _texResource);
 
-private:
-    // PostEffectクラスがアクセスする
     void    Apply() override;
     void    Setting() override;
     void    OnResizeBefore() override;
