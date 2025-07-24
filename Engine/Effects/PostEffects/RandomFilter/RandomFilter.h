@@ -47,6 +47,8 @@ public:
     // Getters
     D3D12_GPU_DESCRIPTOR_HANDLE     GetOutputTextureHandle() const override;
     const std::string&              GetName() const override;
+    RandomFilterOption&             GetOption();
+    const RandomFilterOption&       GetOption() const;
 
 private:
     ID3D12Device*                                       device_                 = nullptr;

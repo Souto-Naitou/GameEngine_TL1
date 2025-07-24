@@ -64,6 +64,16 @@ const std::string& Dissolve::GetName() const
     return name_;
 }
 
+DissolveOption& Dissolve::GetOption()
+{
+    return *pOption_;
+}
+
+const DissolveOption& Dissolve::GetOption() const
+{
+    return *pOption_;
+}
+
 void Dissolve::Apply()
 {
     commandList_->DrawInstanced(3, 1, 0, 0); // 三角形を1つ描画

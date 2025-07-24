@@ -58,6 +58,16 @@ const std::string& GaussianFilter::GetName() const
     return name_;
 }
 
+GaussianFilterOption& GaussianFilter::GetOption()
+{
+    return *pOption_;
+}
+
+const GaussianFilterOption& GaussianFilter::GetOption() const
+{
+    return *pOption_;
+}
+
 void GaussianFilter::Apply()
 {
     commandList_->DrawInstanced(3, 1, 0, 0); // 三角形を1つ描画

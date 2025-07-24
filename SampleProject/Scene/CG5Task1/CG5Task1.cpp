@@ -1,68 +1,108 @@
 #include "CG5Task1.h"
 #include <Features/Model/ObjModel.h>
 #include <Features/GameEye/FreeLook/FreeLookEye.h>
+#include <Features/Particle/ParticleSystem.h>
 
 void CG5Task1::Initialize()
 {
     pLogger_ = Logger::GetInstance();
     pTextureManager_ = TextureManager::GetInstance();
 
+    // 引数の分解
     this->_DecomposeArg();
 
+    // カメラの初期化
     pGameEye_ = std::make_unique<FreeLookEye>();
     pGameEye_->SetRotate({ 0.1f, 0.0f, 0.0f });
-    pGameEye_->SetTranslate({ 0.0f, 0.2f, -5.0f });
+    pGameEye_->SetTranslate({ 0.0f, 1.0f, -5.0f });
     pGameEye_->SetName("MainCamera");
 
-    /// システムにデフォルトのゲームカメラを設定
+    // システムにデフォルトのゲームカメラを設定 (カメラ生成後に実行)
     Object3dSystem::GetInstance()->SetGlobalEye(pGameEye_.get());
+    ParticleSystem::GetInstance()->SetGlobalEye(pGameEye_.get());
 
     // ポストエフェクトの初期化
     this->_InitializePostEffects();
 
-    pPEDissolve_->SetTextureResource(pTextureManager_->GetTextureResource("noise0.png"));
+    // モデルの初期化
+    this->_InitializeModels();
 
-    // グリッドの初期化
-    pModelGrid_ = std::make_unique<ObjModel>();
-    pModelGrid_->Clone(pModelManager_->Load("Grid_v4/Grid_v4.obj"));
-    pGrid_ = std::make_unique<Object3d>();
-    pGrid_->Initialize();
-    pGrid_->SetScale({ 1.0f, 1.0f, 1.0f });
-    pGrid_->SetName("Grid");
-    pGrid_->SetTilingMultiply({ 100.0f, 100.0f });
-    pGrid_->SetEnableLighting(false);
-    pGrid_->SetColor({ 1.0f, 1.0f, 1.0f, 0.3f });
-    pGrid_->SetModel(pModelGrid_.get());
+    // パーティクルの初期化 (Modelに依存)
+    this->_InitializeParticles();
+
+    // Object3dの初期化 (Modelに依存)
+    this->_InitializeObject3d();
+
+    // ディゾルブにテクスチャを設定
+    pPEDissolve_->SetTextureResource(pTextureManager_->GetTextureResource("noise0.png"));
 
     // 計測スタート
     globalTimer_.Start();
 }
 
+// 終了処理
 void CG5Task1::Finalize()
 {
     pGrid_->Finalize();
+    pShelf_->Finalize();
+    pBench_->Finalize();
+    pStreetLight_->Finalize();
 
+    pModelGrid_->Finalize();
+    pModelSpark_->Finalize();
+    pModelShelf_->Finalize();
+    pModelBench_->Finalize();
+    pModelStreetLight_->Finalize();
+
+    pEmitter_Spark_->Finalize();
+    pEmitter_Firework_->Finalize();
+    pEmitter_Test1_->Finalize();
+
+    // パーティクルの終了処理
     this->_FinalizePostEffects();
 }
 
+
+// 更新処理
 void CG5Task1::Update()
 {
     pGameEye_->Update();
     pPERandomFilter_->SetSeed(globalTimer_.GetNow<float>() * 0.01f);
 
     pModelGrid_->Update();
+    pModelSpark_->Update();
+    pModelShelf_->Update();
+    pModelBench_->Update();
+    pModelStreetLight_->Update();
     pGrid_->Update();
+    pShelf_->Update();
+    pBench_->Update();
+    pStreetLight_->Update();
+    pEmitter_Spark_->Update();
+    pEmitter_Firework_->Update();
+    pEmitter_Test1_->Update();
 }
 
+
+// 描画処理
 void CG5Task1::Draw()
 {
     pGrid_->Draw();
+    pShelf_->Draw();
+    pBench_->Draw();
+    pStreetLight_->Draw();
 }
 
+// テキストの描画
 void CG5Task1::DrawTexts()
 {
 }
 
+
+
+
+
+/// ポストエフェクトの初期化
 void CG5Task1::_InitializePostEffects()
 {
     pPEGrayscale_               = Helper::PostEffect::CreatePostEffect<Grayscale>(pDirectX_);
@@ -91,8 +131,22 @@ void CG5Task1::_InitializePostEffects()
         .RegisterPostEffect(pPESeparatedGaussianFilter_.get())
         .RegisterPostEffect(pPEGaussianBloom_.get())
         .RegisterPostEffect(pPELuminanceOutput_.get());
+
+    // GaussianBloom
+    auto& optLuminance = pPEGaussianBloom_->GetLuminanceOutputFilter()->GetOption();
+    auto& optGaussian = pPEGaussianBloom_->GetSeparatedGaussianFilter()->GetOption();
+    auto& optBloom = pPEGaussianBloom_->GetOption();
+    optGaussian.kernelSize = 21;
+    optLuminance.threshold = 0.5f;
+    optBloom.bloomIntensity = 2.0f;
+    pPEGaussianBloom_->GetSeparatedGaussianFilter()->SetSigma(7.5f);
+
+    // DepthOutline
+    auto& optDepthOutline = pPEDepthBasedOutline_->GetOption();
+    optDepthOutline.weightMultiply = 1.0f;
 }
 
+/// ポストエフェクトの終了処理
 void CG5Task1::_FinalizePostEffects()
 {
     (*pPostEffectExecuter_)
@@ -110,6 +164,7 @@ void CG5Task1::_FinalizePostEffects()
         .UnregisterPostEffect(pPELuminanceOutput_.get());
 }
 
+/// 引数の分解
 void CG5Task1::_DecomposeArg()
 {
     try
@@ -123,4 +178,82 @@ void CG5Task1::_DecomposeArg()
         pLogger_->LogError(__FILE__, __FUNCTION__, e.what());
         assert(0);
     }
+}
+
+/// パーティクルの初期化
+void CG5Task1::_InitializeParticles()
+{
+    pEmitter_Spark_ = std::make_unique<ParticleEmitter>();
+    pEmitter_Spark_->Initialize(pModelSpark_.get(), "Resources/Json/Spark.json");
+    pEmitter_Spark_->SetEnableBillboard(true);
+
+    pEmitter_Firework_ = std::make_unique<ParticleEmitter>();
+    pEmitter_Firework_->Initialize(pModelSpark_.get(), "Resources/Json/Firework.json");
+    pEmitter_Firework_->SetEnableBillboard(true);
+
+    pEmitter_Test1_ = std::make_unique<ParticleEmitter>();
+    pEmitter_Test1_->Initialize(pModelSpark_.get());
+    pEmitter_Test1_->SetEnableBillboard(true);
+}
+
+/// モデルの初期化
+void CG5Task1::_InitializeModels()
+{
+    // グリッドの初期化
+    pModelGrid_ = std::make_unique<ObjModel>();
+    pModelGrid_->Clone(pModelManager_->Load("Grid_v4/Grid_v4.obj"));
+
+    // スパークの初期化
+    pModelSpark_ = std::make_unique<ObjModel>();
+    pModelSpark_->Clone(pModelManager_->Load("Particle/ParticleSpark.obj"));
+
+    // L-Shelfの初期化
+    pModelShelf_ = std::make_unique<ObjModel>();
+    pModelShelf_->Clone(pModelManager_->Load("L-Shelf/L-Shelf.obj"));
+
+    // Benchの初期化
+    pModelBench_ = std::make_unique<ObjModel>();
+    pModelBench_->Clone(pModelManager_->Load("Bench/Bench_HighRes.obj"));
+
+    // StreetLightの初期化
+    pModelStreetLight_ = std::make_unique<ObjModel>();
+    pModelStreetLight_->Clone(pModelManager_->Load("StreetLight/StreetLight_HighRes.obj"));
+}
+
+/// Object3dの初期化
+void CG5Task1::_InitializeObject3d()
+{
+    pGrid_ = std::make_unique<Object3d>();
+    pGrid_->Initialize();
+    pGrid_->SetScale({ 1.0f, 1.0f, 1.0f });
+    pGrid_->SetName("Grid");
+    pGrid_->SetTilingMultiply({ 100.0f, 100.0f });
+    pGrid_->SetEnableLighting(false);
+    pGrid_->SetColor({ 1.0f, 1.0f, 1.0f, 0.3f });
+    pGrid_->SetModel(pModelGrid_.get());
+
+    pShelf_ = std::make_unique<Object3d>();
+    pShelf_->Initialize();
+    pShelf_->SetScale({ 10.0f, 7.0f, 3.0f });
+    pShelf_->SetRotate({ 0.0f, -3.14f, 0.0f });
+    pShelf_->SetTranslate({ -6.26f, 0.0f, 8.81f });
+    pShelf_->SetName("Shelf");
+    pShelf_->SetColor({ 1.0f, 1.0f, 1.0f, 1.0f });
+    pShelf_->SetModel(pModelShelf_.get());
+
+    pBench_ = std::make_unique<Object3d>();
+    pBench_->Initialize();
+    pBench_->SetScale({ 1.0f, 1.0f, 1.0f });
+    pBench_->SetName("Bench");
+    pBench_->SetModel(pModelBench_.get());
+    pBench_->SetRotate({ 0.0f, -3.38f, 0.0f });
+    pBench_->SetTranslate({ -7.83f, 0.34f, 8.52f });
+
+    pStreetLight_ = std::make_unique<Object3d>();
+    pStreetLight_->Initialize();
+    pStreetLight_->SetScale({ 1.0f, 1.0f, 1.0f });
+    pStreetLight_->SetRotate({ 0.0f, -2.2f, 0.0f });
+    pStreetLight_->SetName("StreetLight");
+    pStreetLight_->SetModel(pModelStreetLight_.get());
+    pStreetLight_->SetTranslate({ -4.28f, 0.33f, 8.55f });
 }

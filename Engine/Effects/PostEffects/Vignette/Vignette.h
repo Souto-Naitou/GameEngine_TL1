@@ -50,6 +50,8 @@ public:
     // Getters
     D3D12_GPU_DESCRIPTOR_HANDLE     GetOutputTextureHandle() const override;
     const std::string&              GetName() const override;
+    VignetteOption&                 GetOption();
+    const VignetteOption&           GetOption() const;
 
 private:
     ID3D12Device*                                       device_                 = nullptr;

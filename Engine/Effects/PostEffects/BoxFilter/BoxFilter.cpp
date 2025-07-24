@@ -57,6 +57,16 @@ const std::string& BoxFilter::GetName() const
     return name_;
 }
 
+BoxFilterOption& BoxFilter::GetOption()
+{
+    return *pOption_;
+}
+
+const BoxFilterOption& BoxFilter::GetOption() const
+{
+    return *pOption_;
+}
+
 void BoxFilter::Apply()
 {
     commandList_->DrawInstanced(3, 1, 0, 0); // 三角形を1つ描画

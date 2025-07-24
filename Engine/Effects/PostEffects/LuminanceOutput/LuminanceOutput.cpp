@@ -59,6 +59,16 @@ const std::string& LuminanceOutput::GetName() const
     return name_;
 }
 
+LuminanceOutputOption& LuminanceOutput::GetOption()
+{
+    return *pOption_;
+}
+
+const LuminanceOutputOption& LuminanceOutput::GetOption() const
+{
+    return *pOption_;
+}
+
 void LuminanceOutput::Apply()
 {
     commandList_->DrawInstanced(3, 1, 0, 0); // 三角形を1つ描画

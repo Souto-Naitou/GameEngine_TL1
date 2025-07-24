@@ -24,6 +24,7 @@
 #include <Features/Model/ModelManager.h>
 #include <Features/Object3d/Object3d.h>
 #include <Features/Model/IModel.h>
+#include <Features/Particle/Emitter/ParticleEmitter.h>
 
 class CG5Task1 : public SceneBase
 {
@@ -56,13 +57,32 @@ private:
     std::unique_ptr<GaussianBloom>              pPEGaussianBloom_           = nullptr;
     std::unique_ptr<LuminanceOutput>            pPELuminanceOutput_         = nullptr;
 
-    TimeMeasurer                        globalTimer_;     // !< グローバルタイマー
-    std::unique_ptr<IModel>             pModelGrid_         = nullptr;
-    std::unique_ptr<Object3d>           pGrid_              = nullptr;
-    std::unique_ptr<GameEye>            pGameEye_           = nullptr;
+    TimeMeasurer                                globalTimer_;     // !< グローバルタイマー
+    std::unique_ptr<GameEye>                    pGameEye_           = nullptr;
+
+    // オブジェクト
+    std::unique_ptr<Object3d>                   pGrid_              = nullptr;
+    std::unique_ptr<Object3d>                   pShelf_             = nullptr;
+    std::unique_ptr<Object3d>                   pBench_             = nullptr;
+    std::unique_ptr<Object3d>                   pStreetLight_       = nullptr;
+
+    // モデル
+    std::unique_ptr<IModel>                     pModelGrid_         = nullptr;
+    std::unique_ptr<IModel>                     pModelSpark_        = nullptr;
+    std::unique_ptr<IModel>                     pModelShelf_        = nullptr;
+    std::unique_ptr<IModel>                     pModelBench_        = nullptr;
+    std::unique_ptr<IModel>                     pModelStreetLight_  = nullptr;
+
+    // パーティクル
+    std::unique_ptr<ParticleEmitter>            pEmitter_Spark_     = nullptr;
+    std::unique_ptr<ParticleEmitter>            pEmitter_Firework_     = nullptr;
+    std::unique_ptr<ParticleEmitter>            pEmitter_Test1_     = nullptr;
 
 
     void    _InitializePostEffects();
     void    _FinalizePostEffects();
     void    _DecomposeArg();
+    void    _InitializeParticles();
+    void    _InitializeModels();
+    void    _InitializeObject3d();
 };

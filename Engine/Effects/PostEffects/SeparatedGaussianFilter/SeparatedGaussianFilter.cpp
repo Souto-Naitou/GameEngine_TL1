@@ -47,6 +47,12 @@ void SeparatedGaussianFilter::SetInputTextureHandle(D3D12_GPU_DESCRIPTOR_HANDLE 
     inputGpuHandle_ = _gpuHandle;
 }
 
+void SeparatedGaussianFilter::SetSigma(float _sigma)
+{
+    sigma_ = _sigma;
+    this->CreateKernel();
+}
+
 bool SeparatedGaussianFilter::Enabled() const
 {
     return isEnabled_;
@@ -60,6 +66,16 @@ D3D12_GPU_DESCRIPTOR_HANDLE SeparatedGaussianFilter::GetOutputTextureHandle() co
 const std::string& SeparatedGaussianFilter::GetName() const
 {
     return name_;
+}
+
+SeparatedGaussianFilterOption& SeparatedGaussianFilter::GetOption()
+{
+    return *pOption_;
+}
+
+const SeparatedGaussianFilterOption& SeparatedGaussianFilter::GetOption() const
+{
+    return *pOption_;
 }
 
 void SeparatedGaussianFilter::Apply()

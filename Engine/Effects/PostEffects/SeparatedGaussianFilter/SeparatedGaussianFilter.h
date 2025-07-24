@@ -46,6 +46,7 @@ public:
 
     // Setters
     void    SetInputTextureHandle(D3D12_GPU_DESCRIPTOR_HANDLE _gpuHandle) override;
+    void    SetSigma(float _sigma);
 
     // Getters
     D3D12_GPU_DESCRIPTOR_HANDLE             GetOutputTextureHandle() const override;
