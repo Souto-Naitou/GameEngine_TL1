@@ -13,8 +13,8 @@ void CG5Task1::Initialize()
 
     // カメラの初期化
     pGameEye_ = std::make_unique<FreeLookEye>();
-    pGameEye_->SetRotate({ 0.1f, 0.0f, 0.0f });
-    pGameEye_->SetTranslate({ 0.0f, 1.0f, -5.0f });
+    pGameEye_->SetRotate({ 0.0f, 0.0f, 0.0f });
+    pGameEye_->SetTranslate({ -5.6f, 4.0f, -28.0f });
     pGameEye_->SetName("MainCamera");
 
     // システムにデフォルトのゲームカメラを設定 (カメラ生成後に実行)
