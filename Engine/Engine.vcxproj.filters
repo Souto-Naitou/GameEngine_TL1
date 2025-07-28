@@ -597,7 +597,6 @@
     <ClCompile Include="BaseClasses\ObjectSystemBaseMT.cpp">
       <Filter>BaseClass</Filter>
     </ClCompile>
-    <ClCompile Include="Features\Model\GltfModelSystem.cpp" />
     <ClCompile Include="Effects\PostEffects\SeparatedGaussianFilter\SeparatedGaussianFilter.cpp">
       <Filter>Effect\PostEffect\SeparatedGaussianFilter</Filter>
     </ClCompile>
@@ -606,6 +605,9 @@
     </ClCompile>
     <ClCompile Include="Effects\PostEffects\LuminanceOutput\LuminanceOutput.cpp">
       <Filter>Effect\PostEffect\LuminanceOutput</Filter>
+    </ClCompile>
+    <ClCompile Include="Features\Model\GltfModelSystem.cpp">
+      <Filter>Feature\Model</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
