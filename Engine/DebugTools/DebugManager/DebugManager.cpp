@@ -212,31 +212,49 @@ void DebugManager::SetComponent(const std::string& _category, const std::string&
 
 void DebugManager::DeleteComponent(const std::string& _name)
 {
-    componentList_.remove_if([_name](const ComponentData& component)
+    try
     {
-        bool result = false;
-        if (!component.categoryId.has_value())
+        componentList_.remove_if([_name](const ComponentData& component)
         {
-            std::string id = component.id_ptr ? *component.id_ptr : component.id_cpy;
-            result = id.compare(_name) == 0;
-        }
-        return result;
-    });
+            bool result = false;
+            if (!component.categoryId.has_value())
+            {
+                std::string id = component.id_ptr ? *component.id_ptr : component.id_cpy;
+                result = id.compare(_name) == 0;
+            }
+            return result;
+        });
+    }
+    catch (const std::exception& e)
+    {
+        // エラー処理: 例外をログに記録するなど
+        Logger::GetInstance()->LogError(__FILE__, __FUNCTION__, e.what());
+        assert(false && "mismatch categoryID or name");
+    }
 }
 
 void DebugManager::DeleteComponent(const std::string& _categoryID, const std::string& _name)
 {
-    componentList_.remove_if([_categoryID, _name](const ComponentData& component)
+    try
     {
-        bool result = false;
-        if (component.categoryId.has_value())
+        componentList_.remove_if([_categoryID, _name](const ComponentData& component)
         {
-            std::string parentId = component.categoryId.value();
-            std::string childId = component.id_ptr ? *component.id_ptr : component.id_cpy;
-            result = parentId.compare(_categoryID) == 0 && childId.compare(_name) == 0;
-        }
-        return result;
-    });
+            bool result = false;
+            if (component.categoryId.has_value())
+            {
+                std::string parentId = component.categoryId.value();
+                std::string childId = component.id_ptr ? *component.id_ptr : component.id_cpy;
+                result = parentId.compare(_categoryID) == 0 && childId.compare(_name) == 0;
+            }
+            return result;
+        });
+    }
+    catch (const std::exception& e)
+    {
+        // エラー処理: 例外をログに記録するなど
+        Logger::GetInstance()->LogError(__FILE__, __FUNCTION__, e.what());
+        assert(false && "mismatch categoryID or name");
+    }
 }
 
 void DebugManager::Update()
