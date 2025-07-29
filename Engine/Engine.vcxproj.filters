@@ -612,7 +612,7 @@
     <ClCompile Include="Features\Model\GltfModelSystem.cpp">
       <Filter>Feature\Model</Filter>
     </ClCompile>
-    <ClCompile Include="Features\LevelLoader\LevelLoader.cpp">
+    <ClCompile Include="Features\LevelLoader\LevelHelper.cpp">
       <Filter>Feature\LevelLoader</Filter>
     </ClCompile>
     <ClCompile Include="Features\LevelLoader\LevelData.cpp">
@@ -983,7 +983,7 @@
     <ClInclude Include="Effects\PostEffects\LuminanceOutput\LuminanceOutput.h">
       <Filter>Effect\PostEffect\LuminanceOutput</Filter>
     </ClInclude>
-    <ClInclude Include="Features\LevelLoader\LevelLoader.h">
+    <ClInclude Include="Features\LevelLoader\LevelHelper.h">
       <Filter>Feature\LevelLoader</Filter>
     </ClInclude>
     <ClInclude Include="Features\LevelLoader\LevelData.h">

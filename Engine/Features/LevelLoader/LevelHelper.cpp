@@ -1,4 +1,6 @@
-#include "./LevelLoader.h"
+#include "./LevelHelper.h"
+
+#include <Utility/JSONIO/jsonio.h>
 
 SceneObjects Helper::Level::LoadScene(const std::string& _path, ModelManager* _pModelManager)
 {
@@ -7,6 +9,7 @@ SceneObjects Helper::Level::LoadScene(const std::string& _path, ModelManager* _p
     levelData = json;
 
     SceneObjects sceneObjects;
+    sceneObjects.Initialize();
     sceneObjects.SetLevelData(levelData);
     sceneObjects.Build(_pModelManager);
     return sceneObjects;

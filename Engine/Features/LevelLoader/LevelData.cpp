@@ -12,18 +12,18 @@ void BlenderLevel::assign_from_json(const nlohmann::json& _j, EulerTransform& _t
 {
     auto& j_scales = _j.at("scales");
     _transform.scale.x = j_scales[0];
-    _transform.scale.y = j_scales[1];
-    _transform.scale.z = j_scales[2];
+    _transform.scale.y = j_scales[2];
+    _transform.scale.z = j_scales[1];
 
     auto& j_rotation = _j.at("rotation");
     _transform.rotate.x = j_rotation[0];
-    _transform.rotate.y = j_rotation[1];
-    _transform.rotate.z = j_rotation[2];
+    _transform.rotate.y = j_rotation[2];
+    _transform.rotate.z = j_rotation[1];
 
     auto& j_translation = _j.at("translation");
     _transform.translate.x = j_translation[0];
-    _transform.translate.y = j_translation[1];
-    _transform.translate.z = j_translation[2];
+    _transform.translate.y = j_translation[2];
+    _transform.translate.z = j_translation[1];
 }
 
 void BlenderLevel::assign_from_json(const nlohmann::json& _j, Collider& _collider)
@@ -76,7 +76,7 @@ void BlenderLevel::from_json(const nlohmann::json& _j, Object& _object)
     assign_from_json(_j.at("transform"), _object.transform);
 
     // オプション項目
-    utl::json::try_assign(_j, "filename", _object.filename);
+    utl::json::try_assign(_j, "file_name", _object.filename);
     if (_j.contains("collider"))
     {
         _object.collider = std::make_optional<Collider>();

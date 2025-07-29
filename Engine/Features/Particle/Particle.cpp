@@ -107,7 +107,6 @@ void Particle::Finalize()
     instancingResource_.Reset();
     SRVManager::GetInstance()->Deallocate(srvIndex_);
     return;
-
 }
 
 void Particle::Draw()

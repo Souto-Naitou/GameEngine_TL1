@@ -247,7 +247,7 @@
     <ClCompile Include="Features\GameEye\GameEye.cpp" />
     <ClCompile Include="Features\Input\Input.cpp" />
     <ClCompile Include="Features\LevelLoader\LevelData.cpp" />
-    <ClCompile Include="Features\LevelLoader\LevelLoader.cpp" />
+    <ClCompile Include="Features\LevelLoader\LevelHelper.cpp" />
     <ClCompile Include="Features\LevelLoader\SceneObjects.cpp" />
     <ClCompile Include="Features\Lighting\Manager\LightingManager.cpp" />
     <ClCompile Include="Features\Lighting\PointLight\PointLight.cpp" />
@@ -356,7 +356,7 @@
     <ClInclude Include="Features\Input\Input.h" />
     <ClInclude Include="Features\LevelLoader\ISceneObjects.h" />
     <ClInclude Include="Features\LevelLoader\LevelData.h" />
-    <ClInclude Include="Features\LevelLoader\LevelLoader.h" />
+    <ClInclude Include="Features\LevelLoader\LevelHelper.h" />
     <ClInclude Include="Features\LevelLoader\SceneObjects.h" />
     <ClInclude Include="Features\Lighting\Manager\LightingManager.h" />
     <ClInclude Include="Features\Lighting\PointLight\PointLight.h" />
