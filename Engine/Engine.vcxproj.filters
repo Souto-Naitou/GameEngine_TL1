@@ -618,6 +618,9 @@
     <ClCompile Include="Features\LevelLoader\LevelData.cpp">
       <Filter>Feature\LevelLoader</Filter>
     </ClCompile>
+    <ClCompile Include="Features\LevelLoader\SceneObjects.cpp">
+      <Filter>Feature\LevelLoader</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common\define.h">
@@ -984,6 +987,12 @@
       <Filter>Feature\LevelLoader</Filter>
     </ClInclude>
     <ClInclude Include="Features\LevelLoader\LevelData.h">
+      <Filter>Feature\LevelLoader</Filter>
+    </ClInclude>
+    <ClInclude Include="Features\LevelLoader\ISceneObjects.h">
+      <Filter>Feature\LevelLoader</Filter>
+    </ClInclude>
+    <ClInclude Include="Features\LevelLoader\SceneObjects.h">
       <Filter>Feature\LevelLoader</Filter>
     </ClInclude>
   </ItemGroup>

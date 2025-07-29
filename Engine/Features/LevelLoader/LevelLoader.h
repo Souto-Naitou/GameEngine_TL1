@@ -1,12 +1,10 @@
 #pragma once
+#include <string>
 
+#include <Utility/JSONIO/jsonio.h>
+#include <Features/LevelLoader/SceneObjects.h>
 
-
-class LevelLoader
+namespace Helper::Level
 {
-public:
-    LevelLoader() = default;
-    ~LevelLoader() = default;
-
-
-};
+    SceneObjects LoadScene(const std::string& _path, ModelManager* _pModelManager);
+}
