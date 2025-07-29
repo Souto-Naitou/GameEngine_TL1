@@ -615,7 +615,9 @@
     <ClCompile Include="Features\LevelLoader\LevelLoader.cpp">
       <Filter>Feature\LevelLoader</Filter>
     </ClCompile>
-    <ClCompile Include="Features\LevelLoader\LevelData.cpp" />
+    <ClCompile Include="Features\LevelLoader\LevelData.cpp">
+      <Filter>Feature\LevelLoader</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common\define.h">

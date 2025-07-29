@@ -10,10 +10,12 @@
 namespace BlenderLevel
 {
 
+    void assign_from_json_vec3(const nlohmann::json& _j, Vector3& _vec);
+
     // =============================================
     // [Transform Begin]
     using Transform = EulerTransform;
-    void _from_json(const nlohmann::json& _j, EulerTransform& _transform);
+    void assign_from_json(const nlohmann::json& _j, EulerTransform& _transform);
     // [Transform End]
     // =============================================
 
@@ -35,7 +37,7 @@ namespace BlenderLevel
 
     using Collider = std::variant<BoxCollider, SphereCollider>;
 
-    void _from_json(const nlohmann::json& _j, Collider& _collider);
+    void assign_from_json(const nlohmann::json& _j, Collider& _collider);
     // [Collider End]
     // =============================================
 

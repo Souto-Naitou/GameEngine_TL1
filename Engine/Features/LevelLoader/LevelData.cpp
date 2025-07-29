@@ -1,7 +1,14 @@
 #include "LevelData.h"
 #include <Utility/JSON/jsonutl.h>
 
-void BlenderLevel::_from_json(const nlohmann::json& _j, EulerTransform& _transform)
+void BlenderLevel::assign_from_json_vec3(const nlohmann::json& _j, Vector3& _vec)
+{
+    _j[0].get_to<float>(_vec.x);
+    _j[1].get_to<float>(_vec.y);
+    _j[2].get_to<float>(_vec.z);
+}
+
+void BlenderLevel::assign_from_json(const nlohmann::json& _j, EulerTransform& _transform)
 {
     auto& j_scales = _j.at("scales");
     _transform.scale.x = j_scales[0];
@@ -19,7 +26,7 @@ void BlenderLevel::_from_json(const nlohmann::json& _j, EulerTransform& _transfo
     _transform.translate.z = j_translation[2];
 }
 
-void BlenderLevel::_from_json(const nlohmann::json& _j, Collider& _collider)
+void BlenderLevel::assign_from_json(const nlohmann::json& _j, Collider& _collider)
 {
     const auto& j_type = _j.at("type");
     if (j_type == "BOX")
@@ -51,14 +58,14 @@ void BlenderLevel::from_json(const nlohmann::json& _j, LevelData& _levelData)
 
 void BlenderLevel::from_json(const nlohmann::json& _j, BoxCollider& _boxCollider)
 {
-    utl::json::try_assign(_j, "center", _boxCollider.center);
-    utl::json::try_assign(_j, "size", _boxCollider.size);
+    utl::json::try_assign<Vector3>(_j, "center", assign_from_json_vec3, _boxCollider.center);
+    utl::json::try_assign<Vector3>(_j, "size", assign_from_json_vec3, _boxCollider.size);
 }
 
 void BlenderLevel::from_json(const nlohmann::json& _j, SphereCollider& _sphereCollider)
 {
-    utl::json::try_assign(_j, "center", _sphereCollider.center);
-    utl::json::try_assign(_j, "radius", _sphereCollider.radius);
+    utl::json::try_assign<Vector3>(_j, "center", assign_from_json_vec3, _sphereCollider.center);
+    utl::json::try_assign<float>(_j, "radius", _sphereCollider.radius);
 }
 
 void BlenderLevel::from_json(const nlohmann::json& _j, Object& _object)
@@ -66,13 +73,13 @@ void BlenderLevel::from_json(const nlohmann::json& _j, Object& _object)
     // 必須項目
     utl::json::try_assign(_j, "type", _object.type);
     utl::json::try_assign(_j, "name", _object.name);
-    _from_json(_j.at("transform"), _object.transform);
+    assign_from_json(_j.at("transform"), _object.transform);
 
     // オプション項目
     utl::json::try_assign(_j, "filename", _object.filename);
     if (_j.contains("collider"))
     {
         _object.collider = std::make_optional<Collider>();
-        _from_json(_j.at("collider"), _object.collider.value());
+        assign_from_json(_j.at("collider"), _object.collider.value());
     }
 }
