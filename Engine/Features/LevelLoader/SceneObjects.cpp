@@ -3,6 +3,7 @@
 #include <utility>
 #include <Features/GameEye/FreeLook/FreeLookEye.h>
 #include <Features/Object3d/Object3dSystem.h>
+#include <imgui.h>
 
 void SceneObjects::Initialize()
 {
@@ -55,9 +56,26 @@ std::string SceneObjects::GetName() const
     return levelData_.name.empty() ? "Unnamed Scene" : levelData_.name;
 }
 
+void SceneObjects::ImGui()
+{
+    ImGui::Button("Reload");
+}
+
 void SceneObjects::SetLevelData(const BlenderLevel::LevelData& _levelData)
 {
     levelData_ = _levelData;
+}
+
+void SceneObjects::SetDirectionalLight(DirectionalLight* _light)
+{
+    for (auto& obj : objects_)
+    {
+        if (obj)
+        {
+            obj->SetEnableLighting(true);
+            obj->SetDirectionalLight(_light);
+        }
+    }
 }
 
 void SceneObjects::Build(ModelManager* _modelManager)

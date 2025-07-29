@@ -10,6 +10,7 @@
 #include <Features/Model/ModelManager.h>
 #include <Features/Model/IModel.h>
 #include <Features/GameEye/GameEye.h>
+#include <Common/structs.h>
 
 class SceneObjects : public ISceneObjects
 {
@@ -23,8 +24,10 @@ public:
     void Draw() override;
 
     std::string GetName() const override;
+    void ImGui();
 
     void SetLevelData(const BlenderLevel::LevelData& _levelData);
+    void SetDirectionalLight(DirectionalLight* _light);
     void Build(ModelManager* _modelManager);
 
 private:

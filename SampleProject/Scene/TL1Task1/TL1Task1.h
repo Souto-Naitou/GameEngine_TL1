@@ -18,7 +18,12 @@ public:
     void DrawTexts() override;
 
 private:
+    void _LoadLevel();
+    void _ReloadLevel();
+    void ImGui();
+
     SceneObjects sceneObjects_ = {};
     std::unique_ptr<GameEye> pGameEye_ = nullptr;
     ModelManager* pModelManager_ = nullptr;
+    DirectionalLight directionalLight_ = {};
 };
