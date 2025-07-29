@@ -1,14 +1,15 @@
 #pragma once
 
-#include <Features/Object3d/Object3d.h>
 #include <list>
 #include <memory>
 #include <d3d12.h>
 #include <string>
+#include <Features/Object3d/Object3d.h>
 #include <Features/LevelLoader/ISceneObjects.h>
 #include <Features/LevelLoader/LevelData.h>
 #include <Features/Model/ModelManager.h>
 #include <Features/Model/IModel.h>
+#include <Features/GameEye/GameEye.h>
 
 class SceneObjects : public ISceneObjects
 {
@@ -29,5 +30,6 @@ public:
 private:
     std::list<std::shared_ptr<Object3d>> objects_;
     std::list<std::shared_ptr<IModel>> models_;
+    std::shared_ptr<GameEye> gameeye_; // ゲーム目のオブジェクト
     BlenderLevel::LevelData levelData_; // レベルデータ
 };

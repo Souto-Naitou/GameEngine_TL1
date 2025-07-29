@@ -1,6 +1,8 @@
 #include "./SceneObjects.h"
 #include <Features/Model/ObjModel.h>
 #include <utility>
+#include <Features/GameEye/FreeLook/FreeLookEye.h>
+#include <Features/Object3d/Object3dSystem.h>
 
 void SceneObjects::Initialize()
 {
@@ -9,6 +11,10 @@ void SceneObjects::Initialize()
 
 void SceneObjects::Finalize()
 {
+    for (auto& obj : objects_)
+    {
+        obj->Finalize();
+    }
     objects_.clear();
 }
 
@@ -29,6 +35,8 @@ void SceneObjects::Update()
             obj->Update();
         }
     }
+
+    gameeye_->Update();
 }
 
 void SceneObjects::Draw()
@@ -72,7 +80,17 @@ void SceneObjects::Build(ModelManager* _modelManager)
             object3d->SetScale(object.transform.scale);
             object3d->SetRotate(object.transform.rotate);
             object3d->SetTranslate(object.transform.translate);
+            object3d->SetEnableLighting(false);
             objects_.emplace_back(std::move(object3d));
         }
+        else if (object.type == "CAMERA")
+        {
+            gameeye_ = std::make_shared<FreeLookEye>();
+            gameeye_->SetTransform(object.transform);
+            gameeye_->SetName(object.name);
+        }
     }
+
+    // GameEyeを渡す
+    Object3dSystem::GetInstance()->SetGlobalEye(gameeye_.get());
 }
