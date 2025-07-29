@@ -58,14 +58,14 @@ void BlenderLevel::from_json(const nlohmann::json& _j, LevelData& _levelData)
 
 void BlenderLevel::from_json(const nlohmann::json& _j, BoxCollider& _boxCollider)
 {
-    utl::json::try_assign<Vector3>(_j, "center", assign_from_json_vec3, _boxCollider.center);
-    utl::json::try_assign<Vector3>(_j, "size", assign_from_json_vec3, _boxCollider.size);
+    utl::json::try_assign(_j, "center", assign_from_json_vec3, _boxCollider.center);
+    utl::json::try_assign(_j, "size", assign_from_json_vec3, _boxCollider.size);
 }
 
 void BlenderLevel::from_json(const nlohmann::json& _j, SphereCollider& _sphereCollider)
 {
-    utl::json::try_assign<Vector3>(_j, "center", assign_from_json_vec3, _sphereCollider.center);
-    utl::json::try_assign<float>(_j, "radius", _sphereCollider.radius);
+    utl::json::try_assign(_j, "center", assign_from_json_vec3, _sphereCollider.center);
+    utl::json::try_assign(_j, "radius", _sphereCollider.radius);
 }
 
 void BlenderLevel::from_json(const nlohmann::json& _j, Object& _object)

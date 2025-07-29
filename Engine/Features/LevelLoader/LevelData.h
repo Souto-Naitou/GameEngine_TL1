@@ -9,7 +9,6 @@
 
 namespace BlenderLevel
 {
-
     void assign_from_json_vec3(const nlohmann::json& _j, Vector3& _vec);
 
     // =============================================
@@ -43,7 +42,7 @@ namespace BlenderLevel
 
     struct Object
     {
-        // e.g. "Mesh", "Light", "Camera"
+        // e.g. "MESH", "LIGHT", "CAMERA"
         std::string type;
         std::string name;
         Transform transform;
