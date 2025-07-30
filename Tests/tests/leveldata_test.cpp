@@ -1,7 +1,6 @@
 #include <gtest/gtest.h>
 #include <Features/LevelLoader/LevelData.h>
 #include <nlohmann/json.hpp>
-#include <sstream>
 
 using namespace BlenderLevel;
 using json = nlohmann::json;
@@ -20,7 +19,7 @@ protected:
                 {"rotation", {0.0, 45.0, 90.0}},
                 {"translation", {10.0, 20.0, 30.0}}
             }},
-            {"filename", "cube.obj"},
+            {"file_name", "cube.obj"},
             {"collider", {
                 {"type", "BOX"},
                 {"center", {0.0, 0.0, 0.0}},

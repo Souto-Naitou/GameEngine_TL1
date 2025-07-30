@@ -8,8 +8,9 @@ void TL1Task1::Initialize()
 {
     pModelManager_ = std::any_cast<ModelManager*>(pArgs_->Get("ModelManager"));
 
-    directionalLight_.color = { 1.0f, 1.0f, 1.0f, 1.0f};
-    directionalLight_.intensity = 1.0f;
+    directionalLight_.color = { 1.0f, 1.0f, 1.0f, 1.0f };       // 白色光
+    directionalLight_.direction = { 0.0f, -1.0f, 0.0f };        // 真上から下
+    directionalLight_.intensity = 0.4f;                         // 多少強めに
 
     sceneObjects_ = Helper::Level::LoadScene("Resources/Json/Levels/test.json", pModelManager_);
     sceneObjects_.SetDirectionalLight(&directionalLight_);
@@ -39,7 +40,10 @@ void TL1Task1::DrawTexts()
 
 void TL1Task1::ImGui()
 {
-    if (ImGui::Button("Reload Level"));
+    if (ImGui::Button("Reload Level"))
+    {
+        this->_ReloadLevel();
+    }
 }
 
 void TL1Task1::_LoadLevel()
