@@ -4,10 +4,20 @@
 #include <Features/GameEye/FreeLook/FreeLookEye.h>
 #include <Features/Object3d/Object3dSystem.h>
 #include <imgui.h>
+#include <DebugTools/DebugManager/DebugManager.h>
+
+SceneObjects::SceneObjects()
+{
+    RegisterDebugWindowC("SceneObjects", name_, SceneObjects::ImGui, false);
+}
+
+SceneObjects::~SceneObjects()
+{
+    UnregisterDebugWindowC("SceneObjects", name_);
+}
 
 void SceneObjects::Initialize()
 {
-
 }
 
 void SceneObjects::Finalize()
@@ -56,9 +66,37 @@ std::string SceneObjects::GetName() const
     return levelData_.name.empty() ? "Unnamed Scene" : levelData_.name;
 }
 
+void ImGuiTextTransform(const EulerTransform& _tf)
+{
+    const auto& [scale, rotate, translate] = _tf;
+    ImGui::Text("Scale: (%.2f, %.2f, %.2f)", scale.x, scale.y, scale.z);
+    ImGui::Text("Rotate: (%.2f, %.2f, %.2f)", rotate.x, rotate.y, rotate.z);
+    ImGui::Text("Translate: (%.2f, %.2f, %.2f)", translate.x, translate.y, translate.z);
+}
+
 void SceneObjects::ImGui()
 {
-    ImGui::Button("Reload");
+    if (objects_.empty()) return;
+
+    ImGui::Spacing();
+    ImGui::SeparatorText("Scene Objects");
+    for (const auto& obj : levelData_.objects)
+    {
+        const auto& [type, name, transform, filename, collider, uvScale] = obj;
+
+        std::string lavel = std::format("[{}] {}", type, name);
+        if (ImGui::TreeNode(lavel.c_str()))
+        {
+            if (!filename.empty()) ImGui::Text("filename : %s", filename.c_str());
+            if (ImGui::TreeNode("Transform"))
+            {
+                ImGuiTextTransform(transform);
+                ImGui::TreePop();
+            }
+            ImGui::Text("UV Scale : (%.2f, %.2f)", uvScale.x, uvScale.y);
+            ImGui::TreePop();
+        }
+    }
 }
 
 void SceneObjects::SetLevelData(const BlenderLevel::LevelData& _levelData)
@@ -85,7 +123,15 @@ void SceneObjects::Build(ModelManager* _modelManager)
         if (object.type == "MESH")
         {
             // Create a model from the object data
-            auto model = _modelManager->Load(object.filename);
+            IModel* model = nullptr;
+            try { model = _modelManager->Load(object.filename); }
+            catch (const std::runtime_error& e)
+            {
+                Logger::GetInstance()->LogError(__FILE__, __FUNCTION__, e.what());
+            }
+
+            name_ = object.name.empty() ? "Unnamed Scene" : object.name;
+
             std::shared_ptr<ObjModel> objModel = std::make_shared<ObjModel>();
             objModel->Clone(model);
             models_.emplace_back(std::move(objModel));
@@ -98,6 +144,7 @@ void SceneObjects::Build(ModelManager* _modelManager)
             object3d->SetScale(object.transform.scale);
             object3d->SetRotate(object.transform.rotate);
             object3d->SetTranslate(object.transform.translate);
+            object3d->SetTilingMultiply(object.uvScale);
             object3d->SetEnableLighting(false);
             objects_.emplace_back(std::move(object3d));
         }

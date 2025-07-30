@@ -6,10 +6,12 @@
 #include <optional>
 #include <list>
 #include <nlohmann/json.hpp>
+#include <Vector2.h>
 
 namespace BlenderLevel
 {
     void assign_from_json_vec3(const nlohmann::json& _j, Vector3& _vec);
+    void assign_from_json_vec2(const nlohmann::json& _j, Vector2& _vec);
 
     // =============================================
     // [Transform Begin]
@@ -48,6 +50,7 @@ namespace BlenderLevel
         Transform transform;
         std::string filename;
         std::optional<Collider> collider;
+        Vector2 uvScale = { 1.0f, 1.0f }; // UVスケール
     };
     void from_json(const nlohmann::json& _j, Object& _object);
 

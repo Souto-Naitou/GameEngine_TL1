@@ -8,22 +8,28 @@ void BlenderLevel::assign_from_json_vec3(const nlohmann::json& _j, Vector3& _vec
     _j[2].get_to<float>(_vec.z);
 }
 
+void BlenderLevel::assign_from_json_vec2(const nlohmann::json& _j, Vector2& _vec)
+{
+    _j[0].get_to<float>(_vec.x);
+    _j[1].get_to<float>(_vec.y);
+}
+
 void BlenderLevel::assign_from_json(const nlohmann::json& _j, EulerTransform& _transform)
 {
     auto& j_scales = _j.at("scales");
     _transform.scale.x = j_scales[0];
-    _transform.scale.y = j_scales[2];
-    _transform.scale.z = j_scales[1];
+    _transform.scale.y = j_scales[1];
+    _transform.scale.z = j_scales[2];
 
     auto& j_rotation = _j.at("rotation");
     _transform.rotate.x = j_rotation[0];
-    _transform.rotate.y = j_rotation[2];
-    _transform.rotate.z = j_rotation[1];
+    _transform.rotate.y = j_rotation[1];
+    _transform.rotate.z = j_rotation[2];
 
     auto& j_translation = _j.at("translation");
     _transform.translate.x = j_translation[0];
-    _transform.translate.y = j_translation[2];
-    _transform.translate.z = j_translation[1];
+    _transform.translate.y = j_translation[1];
+    _transform.translate.z = j_translation[2];
 }
 
 void BlenderLevel::assign_from_json(const nlohmann::json& _j, Collider& _collider)
@@ -81,5 +87,10 @@ void BlenderLevel::from_json(const nlohmann::json& _j, Object& _object)
     {
         _object.collider = std::make_optional<Collider>();
         assign_from_json(_j.at("collider"), _object.collider.value());
+    }
+    utl::json::try_assign(_j, "uv_tiling", assign_from_json_vec2, _object.uvScale);
+    if (_object.uvScale.x == 0.0f || _object.uvScale.y == 0.0f)
+    {
+        _object.uvScale = Vector2(1.0f, 1.0f); // デフォルト値
     }
 }

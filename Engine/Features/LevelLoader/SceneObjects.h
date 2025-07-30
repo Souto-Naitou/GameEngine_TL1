@@ -15,8 +15,8 @@
 class SceneObjects : public ISceneObjects
 {
 public:
-    SceneObjects() = default;
-    ~SceneObjects() = default;
+    SceneObjects();
+    ~SceneObjects();
 
     void Initialize() override;
     void Finalize() override;
@@ -35,4 +35,5 @@ private:
     std::list<std::shared_ptr<IModel>> models_;
     std::shared_ptr<GameEye> gameeye_; // ゲーム目のオブジェクト
     BlenderLevel::LevelData levelData_; // レベルデータ
+    std::string name_ = "empty"; // シーン名
 };
