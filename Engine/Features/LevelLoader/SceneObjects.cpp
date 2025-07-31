@@ -66,7 +66,7 @@ std::string SceneObjects::GetName() const
     return levelData_.name.empty() ? "Unnamed Scene" : levelData_.name;
 }
 
-#ifdef DEBUG
+#ifdef _DEBUG
 void ImGuiTextTransform(const EulerTransform& _tf)
 {
 
@@ -79,7 +79,7 @@ void ImGuiTextTransform(const EulerTransform& _tf)
 
 void SceneObjects::ImGui()
 {
-    #ifdef DEBUG
+    #ifdef _DEBUG
 
     if (objects_.empty()) return;
 

@@ -12,7 +12,7 @@ mkdir build
 cd build
 
 echo Configuring with CMake...
-cmake .. -G "Visual Studio 17 2022" -A x64 -Dgtest_force_shared_crt=OFF
+cmake .. -G "Visual Studio 17 2022" -A x64 -Dgtest_force_shared_crt=ON
 
 echo Building Debug configuration...
 cmake --build . --config Debug
