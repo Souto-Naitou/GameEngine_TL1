@@ -66,17 +66,16 @@ std::string SceneObjects::GetName() const
     return levelData_.name.empty() ? "Unnamed Scene" : levelData_.name;
 }
 
+#ifdef DEBUG
 void ImGuiTextTransform(const EulerTransform& _tf)
 {
-    #ifdef DEBUG
 
     const auto& [scale, rotate, translate] = _tf;
     ImGui::Text("Scale: (%.2f, %.2f, %.2f)", scale.x, scale.y, scale.z);
     ImGui::Text("Rotate: (%.2f, %.2f, %.2f)", rotate.x, rotate.y, rotate.z);
     ImGui::Text("Translate: (%.2f, %.2f, %.2f)", translate.x, translate.y, translate.z);
-
-    #endif // DEBUG
 }
+#endif // DEBUG
 
 void SceneObjects::ImGui()
 {
