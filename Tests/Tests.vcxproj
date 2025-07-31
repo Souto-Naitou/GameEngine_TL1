@@ -69,6 +69,9 @@
       <AdditionalLibraryDirectories>$(ProjectDir)..\Engine\Bin\Debug;$(ProjectDir)..\Engine\Externals\googletest\build\lib\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>Engine.lib;gtest.lib;gtest_main.lib;gmock.lib;gmock_main.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PreBuildEvent>
+      <Command>call ../build_gtest.bat</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -90,6 +93,9 @@
       <AdditionalLibraryDirectories>$(ProjectDir)..\Engine\Bin\Release;$(ProjectDir)..\Engine\Externals\googletest\build\lib\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>Engine.lib;gtest.lib;gtest_main.lib;gmock.lib;gmock_main.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PreBuildEvent>
+      <Command>call ../build_gtest.bat</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
