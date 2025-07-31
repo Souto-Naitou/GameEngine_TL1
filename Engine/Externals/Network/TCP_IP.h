@@ -23,6 +23,7 @@ namespace TCP
         bool                    Send(const std::string& _data);
         std::string             Receive();
 
+        SOCKET                  GetSocket() const;
 
     private:
         SOCKET                  clientSocket_;
@@ -49,6 +50,7 @@ namespace TCP
 
         uint32_t                ListenAndAccept();
 
+        SOCKET                  GetSocket() const;
 
     private:
         SOCKET                  serverSocket_;
@@ -59,6 +61,8 @@ namespace TCP
         int                     iResult_ = 0;
         std::vector<SOCKET>     clientSockets_;
     };
+
+    bool IsEmptyReceiveBuffer(const SOCKET& _socket, LONG _timeout_ms);
 }
 
 std::string GetErrorMessage(DWORD _errorCode);

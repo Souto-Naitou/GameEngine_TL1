@@ -325,6 +325,12 @@
     <Filter Include="Feature\LevelLoader">
       <UniqueIdentifier>{eb43caa4-c991-4307-af62-48f06e59afba}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Feature\BlenderConnect">
+      <UniqueIdentifier>{359ce9aa-70d7-45d7-a597-a064bc049393}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Feature\BlenderConnect\OrderExecuter">
+      <UniqueIdentifier>{728b7fc4-82c5-4fed-ac1a-bae3c195b0ba}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DebugTools\DebugManager\DebugManager.cpp">
@@ -620,6 +626,15 @@
     </ClCompile>
     <ClCompile Include="Features\LevelLoader\SceneObjects.cpp">
       <Filter>Feature\LevelLoader</Filter>
+    </ClCompile>
+    <ClCompile Include="Features\BlenderConnect\BlenderConnect.cpp">
+      <Filter>Feature\BlenderConnect</Filter>
+    </ClCompile>
+    <ClCompile Include="Features\BlenderConnect\OrderExecuter\SendModelList.cpp">
+      <Filter>Feature\BlenderConnect\OrderExecuter</Filter>
+    </ClCompile>
+    <ClCompile Include="Features\BlenderConnect\OrderExecuter\ReloadScene.cpp">
+      <Filter>Feature\BlenderConnect\OrderExecuter</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -995,6 +1010,19 @@
     <ClInclude Include="Features\LevelLoader\SceneObjects.h">
       <Filter>Feature\LevelLoader</Filter>
     </ClInclude>
+    <ClInclude Include="Features\BlenderConnect\BlenderConnect.h">
+      <Filter>Feature\BlenderConnect</Filter>
+    </ClInclude>
+    <ClInclude Include="Features\BlenderConnect\OrderExecuter\IOrderExecuter.h">
+      <Filter>Feature\BlenderConnect\OrderExecuter</Filter>
+    </ClInclude>
+    <ClInclude Include="Features\BlenderConnect\OrderExecuter\SendModelList.h">
+      <Filter>Feature\BlenderConnect\OrderExecuter</Filter>
+    </ClInclude>
+    <ClInclude Include="Features\BlenderConnect\OrderExecuter\ReloadScene.h">
+      <Filter>Feature\BlenderConnect\OrderExecuter</Filter>
+    </ClInclude>
+    <ClInclude Include="force_winsock2.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

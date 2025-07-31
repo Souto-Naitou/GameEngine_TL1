@@ -92,7 +92,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
-      <ForcedIncludeFiles>%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles>force_winsock2.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
@@ -131,7 +131,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
-      <ForcedIncludeFiles>%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles>force_winsock2.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <ExpandAttributedSource>false</ExpandAttributedSource>
@@ -169,7 +169,7 @@
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(ProjectDir)Externals\;$(ProjectDir)</AdditionalIncludeDirectories>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>$(ProjectDir)Common\stdafx.h</PrecompiledHeaderFile>
-      <ForcedIncludeFiles>%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles>force_winsock2.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <Optimization>Disabled</Optimization>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <TreatWarningAsError>true</TreatWarningAsError>
@@ -236,6 +236,9 @@
     <ClCompile Include="Effects\PostEffects\Vignette\Vignette.cpp" />
     <ClCompile Include="Features\Audio\Audio.cpp" />
     <ClCompile Include="Features\Audio\AudioManager.cpp" />
+    <ClCompile Include="Features\BlenderConnect\BlenderConnect.cpp" />
+    <ClCompile Include="Features\BlenderConnect\OrderExecuter\ReloadScene.cpp" />
+    <ClCompile Include="Features\BlenderConnect\OrderExecuter\SendModelList.cpp" />
     <ClCompile Include="Features\Collision\Collider\Collider.cpp" />
     <ClCompile Include="Features\Collision\Manager\CollisionManager.cpp" />
     <ClCompile Include="Features\CSV\CSVLoader.cpp" />
@@ -341,6 +344,10 @@
     <ClInclude Include="Effects\PostEffects\Vignette\Vignette.h" />
     <ClInclude Include="Features\Audio\Audio.h" />
     <ClInclude Include="Features\Audio\AudioManager.h" />
+    <ClInclude Include="Features\BlenderConnect\BlenderConnect.h" />
+    <ClInclude Include="Features\BlenderConnect\OrderExecuter\IOrderExecuter.h" />
+    <ClInclude Include="Features\BlenderConnect\OrderExecuter\ReloadScene.h" />
+    <ClInclude Include="Features\BlenderConnect\OrderExecuter\SendModelList.h" />
     <ClInclude Include="Features\Collision\Collider\Collider.h" />
     <ClInclude Include="Features\Collision\Manager\CollisionManager.h" />
     <ClInclude Include="Features\Collision\Shape.h" />
@@ -403,6 +410,7 @@
     <ClInclude Include="Features\ThreadPool\ThreadPool.h" />
     <ClInclude Include="Features\TimeMeasurer\TimeMeasurer.h" />
     <ClInclude Include="Features\Viewport\Viewport.h" />
+    <ClInclude Include="force_winsock2.h" />
     <ClInclude Include="Framework\NimaFramework.h" />
     <ClInclude Include="Interfaces\IObjectSystem.h" />
     <ClInclude Include="Interfaces\ISceneArgs.h" />

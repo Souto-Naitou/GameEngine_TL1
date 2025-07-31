@@ -11,6 +11,7 @@
 #include <Features/Model/IModel.h>
 #include <Features/GameEye/GameEye.h>
 #include <Common/structs.h>
+#include <Features/BlenderConnect/BlenderConnect.h>
 
 class SceneObjects : public ISceneObjects
 {
@@ -36,4 +37,5 @@ private:
     std::shared_ptr<GameEye> gameeye_; // ゲーム目のオブジェクト
     BlenderLevel::LevelData levelData_; // レベルデータ
     std::string name_ = "empty"; // シーン名
+    BlenderConnect blenderConnect_; // BlenderConnectのインスタンス
 };

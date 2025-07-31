@@ -5,6 +5,7 @@
 #include <Features/Model/Loader/Assimp/ModelLoaderAssimp.h>
 #include <Features/Model/Loader/ModelLoaderLegacy.h>
 
+#pragma comment(lib, "ws2_32.lib")
 
 void SampleProgram::Initialize()
 {

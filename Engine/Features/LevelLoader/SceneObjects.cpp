@@ -18,6 +18,7 @@ SceneObjects::~SceneObjects()
 
 void SceneObjects::Initialize()
 {
+    blenderConnect_.Initialize();
 }
 
 void SceneObjects::Finalize()
@@ -66,7 +67,7 @@ std::string SceneObjects::GetName() const
     return levelData_.name.empty() ? "Unnamed Scene" : levelData_.name;
 }
 
-#ifdef DEBUG
+#ifdef _DEBUG
 void ImGuiTextTransform(const EulerTransform& _tf)
 {
 
@@ -79,7 +80,12 @@ void ImGuiTextTransform(const EulerTransform& _tf)
 
 void SceneObjects::ImGui()
 {
-    #ifdef DEBUG
+    #ifdef _DEBUG
+
+    if (ImGui::Button("Connect to Blender"))
+    {
+        blenderConnect_.OpenConnection();
+    }
 
     if (objects_.empty()) return;
 
