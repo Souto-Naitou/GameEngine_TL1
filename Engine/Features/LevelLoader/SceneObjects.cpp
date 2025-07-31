@@ -76,6 +76,8 @@ void ImGuiTextTransform(const EulerTransform& _tf)
 
 void SceneObjects::ImGui()
 {
+    #ifdef DEBUG
+
     if (objects_.empty()) return;
 
     ImGui::Spacing();
@@ -97,6 +99,8 @@ void SceneObjects::ImGui()
             ImGui::TreePop();
         }
     }
+
+    #endif // DEBUG
 }
 
 void SceneObjects::SetLevelData(const BlenderLevel::LevelData& _levelData)
