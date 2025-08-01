@@ -160,6 +160,7 @@ void SceneObjects::Build(ModelManager* _modelManager)
             gameeye_ = std::make_shared<FreeLookEye>();
             gameeye_->SetTransform(object.transform);
             gameeye_->SetName(object.name);
+            gameeye_->SetFov(0.270f);
         }
     }
 
