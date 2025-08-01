@@ -66,7 +66,7 @@ std::string SceneObjects::GetName() const
     return levelData_.name.empty() ? "Unnamed Scene" : levelData_.name;
 }
 
-#ifdef DEBUG
+#ifdef _DEBUG
 void ImGuiTextTransform(const EulerTransform& _tf)
 {
 
@@ -79,7 +79,7 @@ void ImGuiTextTransform(const EulerTransform& _tf)
 
 void SceneObjects::ImGui()
 {
-    #ifdef DEBUG
+    #ifdef _DEBUG
 
     if (objects_.empty()) return;
 
@@ -160,6 +160,7 @@ void SceneObjects::Build(ModelManager* _modelManager)
             gameeye_ = std::make_shared<FreeLookEye>();
             gameeye_->SetTransform(object.transform);
             gameeye_->SetName(object.name);
+            gameeye_->SetFov(0.270f);
         }
     }
 

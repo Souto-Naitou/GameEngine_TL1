@@ -18,7 +18,7 @@ SceneObjects Helper::Level::LoadScene(const std::string& _path, ModelManager* _p
         // スケールと平行移動：軸の入れ替え（Y ↔ Z）および X軸反転
         object.transform.scale.y = temp.scale.z;
         object.transform.scale.z = temp.scale.y;
-        object.transform.translate.x = -temp.translate.x;
+        object.transform.translate.x = temp.translate.x;
         object.transform.translate.y = temp.translate.z;
         object.transform.translate.z = temp.translate.y;
         
@@ -30,6 +30,10 @@ SceneObjects Helper::Level::LoadScene(const std::string& _path, ModelManager* _p
         if (object.type == "MESH")
         {
             object.transform.rotate.y -= std::numbers::pi_v<float>; // 180度回転
+        }
+        else if (object.type == "CAMERA")
+        {
+            object.transform.rotate.x *= -1.0f; // カメラのX軸回転を反転
         }
     }
 

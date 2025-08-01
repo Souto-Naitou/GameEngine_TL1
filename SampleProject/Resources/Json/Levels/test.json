@@ -2,18 +2,39 @@
     "name": "scene",
     "objects": [
         {
+            "type": "LIGHT",
+            "name": "Light",
+            "transform": {
+                "translation": [
+                    4.076245307922363,
+                    1.0054539442062378,
+                    5.903861999511719
+                ],
+                "rotation": [
+                    0.6503279805183411,
+                    0.055217139422893524,
+                    1.8663909435272217
+                ],
+                "scales": [
+                    1.0,
+                    0.9999999403953552,
+                    1.0
+                ]
+            }
+        },
+        {
             "type": "CAMERA",
             "name": "Camera",
             "transform": {
                 "translation": [
-                    0.0,
-                    -10.0,
-                    1.0
+                    30.436443328857422,
+                    -14.260539054870605,
+                    3.640087127685547
                 ],
                 "rotation": [
-                    1.570796251296997,
-                    -1.6083994580640137e-08,
-                    -0.3839724063873291
+                    1.5079740285873413,
+                    1.6416116750406218e-06,
+                    1.0872085094451904
                 ],
                 "scales": [
                     1.0,
@@ -24,7 +45,7 @@
         },
         {
             "type": "MESH",
-            "name": "Cube",
+            "name": "平面",
             "transform": {
                 "translation": [
                     0.0,
@@ -32,21 +53,25 @@
                     0.0
                 ],
                 "rotation": [
-                    0.9279829859733582,
-                    -0.20675374567508698,
-                    2.8740592002868652
+                    1.5707964897155762,
+                    -0.0,
+                    0.0
                 ],
                 "scales": [
-                    0.9999999403953552,
+                    1.0,
                     1.0,
                     1.0
                 ]
             },
-            "file_name": "L-Shelf/L-Shelf.obj"
+            "file_name": "Grid_v4/Grid_v4.obj",
+            "uv_tiling": [
+                100.0,
+                100.0
+            ]
         },
         {
             "type": "MESH",
-            "name": "平面",
+            "name": "Streetlight_HighRes",
             "transform": {
                 "translation": [
                     0.0,
@@ -64,11 +89,29 @@
                     1.0
                 ]
             },
-            "file_name": "Grid_v4/Grid_v4.obj",
-            "uv_tiling": [
-                100.0,
-                100.0
-            ]
+            "file_name": "StreetLight/StreetLight.obj"
+        },
+        {
+            "type": "MESH",
+            "name": "Bench_HighRes",
+            "transform": {
+                "translation": [
+                    -0.49000000953674316,
+                    -2.265133857727051,
+                    0.0
+                ],
+                "rotation": [
+                    1.570796251296997,
+                    4.825462696089744e-09,
+                    1.0297445058822632
+                ],
+                "scales": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "file_name": "Bench/Bench_HighRes.obj"
         }
     ]
 }
